@@ -1,0 +1,46 @@
+# Generic repo config
+logs
+*.log
+pids
+*.pid
+node_modules
+*.csv
+*.dat
+*.out
+*.gz
+npm-debug.log
+node_modules
+.DS_STORE
+.build
+.idea/
+coverage
+.npmrc
+.nyc_output/
+
+# Compiled output
+dist
+test-results.xml
+report.xml
+v8-compile-cache-*
+
+# Encryption config
+encryption-config.js
+
+build.json
+
+# Python version managers
+.python-version
+__pycache__
+
+# Code-coverage
+sonar-project.properties
+test/coverage
+.scannerwork/
+.coverage
+
+# upload data
+docker/data/minio/data/*
+docker/data/redis/data/*
+
+# tsconfig.json provided by chassis
+tsconfig.json

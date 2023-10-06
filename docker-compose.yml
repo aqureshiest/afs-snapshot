@@ -1,0 +1,134 @@
+version: '3.9'
+
+services:
+  # Tunnel
+  gateway:
+    image: nginx:stable-alpine
+    restart: always
+    volumes:
+      - ./docker/data/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/data/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - '4500:80'
+
+  dev:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: dev
+    entrypoint: ['']
+    command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
+    env_file:
+      - ./local.env
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 256M
+    depends_on:
+      - gateway
+      - vault
+      - redis
+      - postgres
+      - schema
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./dist:/usr/src/app/dist
+      - ./.npmrc:/usr/src/app/.npmrc
+      - ./package.json:/usr/src/app/package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json
+    ports:
+      - '9229:9229'
+
+  ci:
+    entrypoint: ['']
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: dev
+    command: ['npx', 'chassis-test']
+    volumes:
+      - ./:/usr/src/app
+      - ./docker/entrypoint.sh:/usr/bin/entrypoint
+      - /usr/src/app/node_modules
+    depends_on:
+      - vault
+      - postgres
+      - schema
+    env_file:
+      - ./test.env
+
+  prod:
+    image: earnest/apply-flow-service:${VERSION:-latest}
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: prod
+    environment:
+      - APP_ENV=production
+    ports:
+      - 3020:3000
+
+  vault:
+    environment:
+      - VAULT_AUTH_TOKEN=fnord
+    image: earnest/vault-dev:latest
+    volumes:
+      - ./docker/data/vault:/usr/src/app/vault-data
+
+  redis:
+    image: redis:6.0.20
+    volumes:
+      - ./docker/data/redis:/usr/local/etc/redis
+    ports:
+      - 6379
+
+# PERSISTENCE
+
+  postgres:
+    image: postgres:12
+    volumes:
+      - "./docker/data/postgres:/docker-entrypoint-initdb.d"
+      - database:/var/lib/postgresql
+    environment:
+      - POSTGRES_PASSWORD=pass
+      - PGPASSWORD=pass
+    command: postgres -c max_connections=200
+    ports:
+      - "5434:5432"
+
+  schema:
+    image: earnest/apply-flow-service-schema:${VERSION-latest}
+    command: 'migrate'
+    build:
+      context: schema
+    volumes:
+      - ./schema/sql:/usr/src/app/schema/sql
+    env_file:
+      - ./local.env
+    depends_on:
+      - postgres
+      - vault
+
+# TUNNELS
+
+  pgcli:
+    image: daxart/pgcli
+    command: [ 'postgresql://earnest:earnest@postgres:5432/applicationservice' ]
+    stdin_open: true
+    tty: true
+    depends_on:
+      - postgres
+
+volumes:
+  history:
+  database:
+  node_modules:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.6.0.0/24
