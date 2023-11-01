@@ -46,11 +46,11 @@ pipeline {
         printEnvSorted()
         prepareDockerEnv(true)
         prepareNpmEnv()
-        sh "docker-compose build ci"
-        sh "docker-compose run ci npx chassis-lint"
+        sh "docker-compose build --quiet ci"
+        sh "docker-compose run --quiet-pull ci npx chassis-lint"
         script {
           try {
-            sh "docker-compose run ci npx chassis-test"
+            sh "docker-compose run --quiet-pull ci npx chassis-test"
           } finally {
             uploadCodeMetricsToSonarCloud(env.GIT_BRANCH != "main")
           }

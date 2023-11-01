@@ -16,7 +16,6 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
       target: dev
-    entrypoint: ['']
     command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
     env_file:
       - ./local.env
@@ -32,6 +31,7 @@ services:
       - postgres
       - schema
     volumes:
+      - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
       - ./dist:/usr/src/app/dist
       - ./.npmrc:/usr/src/app/.npmrc
@@ -41,16 +41,20 @@ services:
       - '9229:9229'
 
   ci:
-    entrypoint: ['']
     build:
       context: .
       dockerfile: ./docker/Dockerfile
       target: dev
-    command: ['npx', 'chassis-test']
+    command: ['npx', 'chassis-test-watch']
     volumes:
-      - ./:/usr/src/app
-      - ./docker/entrypoint.sh:/usr/bin/entrypoint
-      - /usr/src/app/node_modules
+      - ./.coverage:/usr/src/app/.coverage
+      - ./flows:/usr/src/app/flows
+      - ./flows_test:/usr/src/app/flows_test
+      - ./src:/usr/src/app/src
+      - ./dist:/usr/src/app/dist
+      - ./.npmrc:/usr/src/app/.npmrc
+      - ./package.json:/usr/src/app/package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json
     depends_on:
       - vault
       - postgres
@@ -114,7 +118,7 @@ services:
 
   pgcli:
     image: daxart/pgcli
-    command: [ 'postgresql://earnest:earnest@postgres:5432/applicationservice' ]
+    command: [ 'postgresql://earnest:earnest@postgres:5432/applyflowservice' ]
     stdin_open: true
     tty: true
     depends_on:

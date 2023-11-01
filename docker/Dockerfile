@@ -74,7 +74,7 @@ COPY --from=prod-dependencies /usr/src/app/node_modules ./node_modules
 COPY --from=prod-dependencies /usr/src/app/dist ./dist
 
 # Add definition files
-COPY ./definitions ./
+COPY ./flows ./flows
 
 ARG VERSION
 ENV VERSION $VERSION

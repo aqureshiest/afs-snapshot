@@ -1,10 +1,7 @@
 {
   "database_host": "postgres",
-  "database_name": "applicationservice",
+  "database_name": "applyflowservice",
   "database_password": "earnest",
   "database_username": "earnest",
-  "AWS_ACCESS_KEY_ID": "secret",
-  "AWS_SECRET_ACCESS_KEY": "secret",
-  "signing_key": "signingkey",
-  "access_keys": "accesskeyTEST-1,accesskeyTEST-2"
+  "ACCESS_KEY": "accesskeyTEST-1"
 }

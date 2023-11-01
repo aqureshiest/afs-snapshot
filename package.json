@@ -6,7 +6,8 @@
   "author": "Earnest Inc.",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "rm -rf ./dist && npx chassis-tsc"
+    "build": "rm -rf ./dist && npx chassis-tsc",
+    "lint:prettify": "prettier --write '{src,test}/**/*.{js,ts}'"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,7 @@
     "@earnest-labs/microservice-chassis": "2.1.x",
     "@earnest-labs/microservice-chassis-knex": "^0.1.50",
     "@earnest-labs/ts-sensitivestring": "^0.1.26",
-    "@earnest/microservice-chassis-secret-loader": "^0.0.5",
+    "@earnest/microservice-chassis-secret-loader": "^0.1.19",
     "ajv": "^8.12.0",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.1",
