@@ -1,6 +1,17 @@
 import ContractType from "./base-contract.js";
 
-export default new ContractType<"identity", unknown, unknown>({
-  identity: ContractType.identity,
-  boolean: Boolean,
-});
+class IdentityContract<Identity> extends ContractType<Identity> {
+  get contractName(): string {
+    return "Identity";
+  }
+
+  toJSON() {
+    if (this.coercion) {
+      const coercion = this.coercion(this.definition);
+      return coercion;
+    }
+    return this.definition;
+  }
+}
+
+export default IdentityContract;

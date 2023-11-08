@@ -10,7 +10,7 @@ describe("[6bb0091c] ingestor", () => {
   let context;
   before(async () => {
     const pkg = await readJsonFile("./package.json");
-    pkg.logging = { level: "error" };
+    pkg.logging = { level: "fatal" };
     context = await createPluginContext(pkg);
   });
 
@@ -22,24 +22,21 @@ describe("[6bb0091c] ingestor", () => {
 
   it("[bbe0fb12] handles various contract error conditions", async () => {
     await assert.doesNotReject(
-      buildContracts(context, "flows_test/contracts_invalid"),
+      buildContracts(context, "flows/contracts_invalid"),
     );
   });
 
   it("[1e3dea67] handles various manifest error conditions", async () => {
-    const contracts = await buildContracts(
-      context,
-      "flows_test/contracts_invalid",
-    );
+    const contracts = await buildContracts(context, "flows/contracts_invalid");
     await assert.doesNotReject(
-      buildManifests(context, "flows_test/manifests_invalid", contracts),
+      buildManifests(context, "flows/manifests_invalid", contracts),
     );
   });
 
   it("[04deadd0] finds deeply nested manifests", async () => {
-    const contracts = await buildContracts(context, "flows_test/contracts");
+    const contracts = await buildContracts(context, "flows/contracts");
     await assert.doesNotReject(
-      buildManifests(context, "flows_test/manifests", contracts),
+      buildManifests(context, "flows/manifests", contracts),
     );
   });
 });

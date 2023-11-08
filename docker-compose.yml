@@ -48,8 +48,7 @@ services:
     command: ['npx', 'chassis-test-watch']
     volumes:
       - ./.coverage:/usr/src/app/.coverage
-      - ./flows:/usr/src/app/flows
-      - ./flows_test:/usr/src/app/flows_test
+      - ./flows_test:/usr/src/app/flows
       - ./src:/usr/src/app/src
       - ./dist:/usr/src/app/dist
       - ./.npmrc:/usr/src/app/.npmrc

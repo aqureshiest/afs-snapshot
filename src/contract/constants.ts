@@ -3,6 +3,10 @@
  * ============================== */
 
 export const CONTRACT_SUBSTITUTION_SYMBOL = "$";
+export const NOT_CONTRACT = `${CONTRACT_SUBSTITUTION_SYMBOL}NOT`;
+export const AND_CONTRACT = `${CONTRACT_SUBSTITUTION_SYMBOL}AND`;
+export const OR_CONTRACT = `${CONTRACT_SUBSTITUTION_SYMBOL}OR`;
+
 export const REFERENCE_SUBSTITUTION_SYMBOL = "#";
 export const CONCATENATION_SYMBOL = "&";
 export const OPERATION_SYMBOL = "%";

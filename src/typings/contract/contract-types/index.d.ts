@@ -1,26 +1,39 @@
+import type { Input as IContractInput, Manifest as IContractManifest } from "contract/contract-executor.test.js";
+
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {
   interface Execution<This, Input, Output = unknown> {
     (this: This, input: Input): Output;
   }
 
-  interface Coercion<This, Output, Coerced = unknown> {
-    (this: This, input: Output): Coerced;
+  interface Coercion<Input, Coerced> {
+    <This>(this: This, input: Input): Coerced;
   }
-
-  type Coercions<This, Key, Input, Output> = {
-    [key: string]: typeof key extends Key
-      ? Execution<This, Input, Output>
-      : Coercion<This, Output>;
-  };
-
-  type ContractTypeArguments<Key extends string, Input, Output> = Coercions<
-    ContractType<Key, Input, Output>,
-    Key,
-    Input,
-    Output
-  >;
 }
 
-import "contract/contract-types/operation.js";
-declare module "contract/contract-types/operation.js" {}
+import "contract/contract-types/application-event.js";
+declare module "contract/contract-types/application-event.js" {
+  type Definition = {
+    event: string;
+    [key: string]: unknown;
+  };
+  type Output = string;
+}
+
+import "contract/contract-types/or.test.js";
+declare module "contract/contract-types/or.test.js" {
+  type Input = IContractInput;
+  type Manifest = IContractManifest;
+}
+
+import "contract/contract-types/and.test.js";
+declare module "contract/contract-types/and.test.js" {
+  type Input = IContractInput;
+  type Manifest = IContractManifest;
+}
+
+import "contract/contract-types/not.test.js";
+declare module "contract/contract-types/not.test.js" {
+  type Input = IContractInput;
+  type Manifest = IContractManifest;
+}
