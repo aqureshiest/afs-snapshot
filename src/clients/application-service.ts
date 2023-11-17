@@ -1,6 +1,7 @@
 import  type { PluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 import type { Jwt, JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
+import * as gql from 'gql-query-builder'
 import axios from 'axios';
 
 export default class ApplicationServiceClient {
@@ -158,43 +159,34 @@ export default class ApplicationServiceClient {
   async query() {
     const { context: { logger }} = this;
 
-    // const graphqlQuery = gql.query({ 
-    //   operation: 'application',
-    //   variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
-    //   fields: ['createdAt', 'id']
-    // });
+    // const graphqlQuery = {
+    //   "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
+    //   "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
+    // };
+    const graphqlQuery = gql.query({ 
+      operation: 'application',
+      variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
+      fields: ['createdAt', 'id']
+    })
+    console.log('AJ DEBUG graphqlQuery', graphqlQuery);
 
-    // console.log('AJ DEBUG graphqlQuery', graphqlQuery);
-    /**
-     * TODO: come up with approach for dynamically generating graphql query strings
-     */
-    const placeholder = "";
-    try {
-      const response = await axios({
-        method: "post",
-        url: 'http://host.docker.internal:4500/graphql',
-        data: {
-          query: this.processSchema(await this.getSchema()),
-          meta: {
-            service: "apply-flow-service"
-          },
-
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: await this.getToken(),
-        }
-      });
-
-      return response.data;
-    } catch (error) {
+    const response = await axios({
+      method: "post",
+      url: 'http://host.docker.internal:4500/graphql',
+      data: graphqlQuery,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${await this.getToken()}`,
+      }
+    }).catch((error) => {        
       logger.error({
         message: "Failed to query application-service",
         error: error.message
       });
 
       throw error;
-    }
+    });
+    return response.data.data;
   }
 
   async mutate() {

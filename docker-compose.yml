@@ -9,7 +9,7 @@ services:
       - ./docker/data/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/data/nginx/conf.d:/etc/nginx/conf.d
     ports:
-      - '4500:80'
+      - '4501:80'
 
   dev:
     build:
@@ -38,7 +38,7 @@ services:
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
     ports:
-      - '9229:9229'
+      - '9230:9230'
 
   ci:
     build:
