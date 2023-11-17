@@ -8,8 +8,11 @@ export const plugin: Plugin = {
   registerOrder: 0,
   register: async (context: PluginContext ) => {
     const client = new ApplicationServiceClient(context);
-    const test = await client.requestToken();
-
+    // const test = await client.getToken();
+    // console.log('AJ DEBUG ', test);
+    
+    console.log('AJ DEBUG query response ', await client.query());
+    
     /**
      * TODO:
      * Check if client has a token

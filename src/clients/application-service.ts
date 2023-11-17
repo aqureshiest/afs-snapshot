@@ -83,36 +83,32 @@ export default class ApplicationServiceClient {
    */
   async query() {
     const { context: { logger }} = this;
-    /**
+    /**  
      * TODO: come up with approach for dynamically generating graphql query strings
-     */
-    const placeholder = "";
-    try {
-      const response = await axios({
-        method: "get",
-        url: 'http://host.docker.internal:4500/graphql',
-        data: {
-          query: placeholder,
-          meta: {
-            service: "apply-flow-service"
-          },
+     */    
+    const graphqlQuery = {
+      "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
+      "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
+    };
+    console.log('AJ DEBUG graphqlQuery', graphqlQuery);
 
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: await this.getToken(),
-        }
-      });
-
-      return response.data;
-    } catch (error) {
+    const response = await axios({
+      method: "post",
+      url: 'http://host.docker.internal:4500/graphql',
+      data: graphqlQuery,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${await this.getToken()}`,
+      }
+    }).catch((error) => {        
       logger.error({
         message: "Failed to query application-service",
         error: error.message
       });
 
       throw error;
-    }
+    });
+    return response.data.data;
   }
 
   async mutate() {
