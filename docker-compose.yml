@@ -28,8 +28,6 @@ services:
       - gateway
       - vault
       - redis
-      - postgres
-      - schema
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
@@ -56,8 +54,6 @@ services:
       - ./package-lock.json:/usr/src/app/package-lock.json
     depends_on:
       - vault
-      - postgres
-      - schema
     env_file:
       - ./test.env
 
@@ -85,43 +81,6 @@ services:
       - ./docker/data/redis:/usr/local/etc/redis
     ports:
       - 6379
-
-# PERSISTENCE
-
-  postgres:
-    image: postgres:12
-    volumes:
-      - "./docker/data/postgres:/docker-entrypoint-initdb.d"
-      - database:/var/lib/postgresql
-    environment:
-      - POSTGRES_PASSWORD=pass
-      - PGPASSWORD=pass
-    command: postgres -c max_connections=200
-    ports:
-      - "5434:5432"
-
-  schema:
-    image: earnest/apply-flow-service-schema:${VERSION-latest}
-    command: 'migrate'
-    build:
-      context: schema
-    volumes:
-      - ./schema/sql:/usr/src/app/schema/sql
-    env_file:
-      - ./local.env
-    depends_on:
-      - postgres
-      - vault
-
-# TUNNELS
-
-  pgcli:
-    image: daxart/pgcli
-    command: [ 'postgresql://earnest:earnest@postgres:5432/applyflowservice' ]
-    stdin_open: true
-    tty: true
-    depends_on:
-      - postgres
 
 volumes:
   history:

@@ -4,8 +4,8 @@
  * TODO: get authentication artifacts
  */
 const getInputs: Handler = async function (context, req, res, next) {
-  const application = req.body ? req.body : null;
-  res.locals.inputs = { request: req, application };
+  const inputs = req.body ? req.body : {};
+  res.locals.inputs = { ...inputs, request: req };
   return next();
 };
 

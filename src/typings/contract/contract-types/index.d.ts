@@ -1,7 +1,12 @@
-import type { Input as IContractInput, Manifest as IContractManifest } from "contract/contract-executor.test.js";
+import type {
+  Input as IContractInput,
+  Manifest as IContractManifest,
+} from "contract/contract-executor.test.js";
+import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {
+  type Context = ChassisPluginContext;
   interface Execution<This, Input, Output = unknown> {
     (this: This, input: Input): Output;
   }
@@ -13,11 +18,12 @@ declare module "contract/contract-types/base-contract.js" {
 
 import "contract/contract-types/application-event.js";
 declare module "contract/contract-types/application-event.js" {
+  type Context = ChassisPluginContext;
   type Definition = {
     event: string;
     [key: string]: unknown;
   };
-  type Output = string;
+  type Output = unknown;
 }
 
 import "contract/contract-types/or.test.js";
