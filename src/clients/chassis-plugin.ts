@@ -8,7 +8,6 @@ export const plugin: Plugin = {
   registerOrder: 0,
   register: async (context: PluginContext ) => {
     const client = new ApplicationServiceClient(context);
-    const test = await client.requestToken();
 
     /**
      * TODO:
