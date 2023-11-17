@@ -133,24 +133,46 @@ export default class ApplicationServiceClient {
     }
   }
 
-  processSchema(schema) {
+  processFields(schema) {
     const processed = schema.data.__type.fields.reduce((acc, field) => {
+      console.log("036f43f0 name", field.name);
       if (!field.fields && field.type.kind === "SCALAR") {
-        return acc + field.name + '\n';
+        acc.push(field.name);
+
+        return acc;
       }
 
-      if (field.type.fields) {
-        return acc + ` ${field.name}: {${(field.type.fields.map((c) => `${c.name}`))}}\n`
+      if (field.type.fields && field.type.name !== "Application") {
+        console.log("4aabcb34 name", field.name);
+        const composite = {
+          [field.name]: field.type.fields.map(i => i.name),
+        }
+        acc.push(composite);
+
+        return acc; 
       }
 
       if (!field.fields && field.type.kind === "LIST" && field.type.ofType.fields) {
-        return acc + ` ${field.name}: {${(field.type.ofType.fields.map((c) => `${c.name}`))}}\n`
+        const multi = {
+          [field.name]: field.type.ofType.fields.map(i => i.name)
+        }
+        acc.push(multi);
+
+        return acc;
       }
 
       return acc;
-    }, "");
+    }, []);
 
-    return `{ ${processed} }`;
+    return processed;
+  }
+
+  processQuery(operation, value, schema) {
+    return gql.query({
+      operation,
+      variables: { id: { value, required: true }},
+      fields: [...this.processFields(schema)]
+    });
   }
 
   /**
@@ -163,12 +185,15 @@ export default class ApplicationServiceClient {
     //   "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
     //   "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
     // };
-    const graphqlQuery = gql.query({ 
-      operation: 'application',
-      variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
-      fields: ['createdAt', 'id']
-    })
-    console.log('AJ DEBUG graphqlQuery', graphqlQuery);
+
+    // const graphqlQuery = gql.query({ 
+    //   operation: 'application',
+    //   variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
+    //   fields: ['createdAt', 'id']
+    // })
+    const schema = await this.getSchema();
+    const graphqlQuery = this.processQuery('application', '9edad8c8-d624-4849-bf3f-9a47a402fe83', schema);
+    console.log('a8cb3b89 graphqlQuery', graphqlQuery);
 
     const response = await axios({
       method: "post",
@@ -178,7 +203,7 @@ export default class ApplicationServiceClient {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${await this.getToken()}`,
       }
-    }).catch((error) => {        
+    }).catch((error) => {
       logger.error({
         message: "Failed to query application-service",
         error: error.message
