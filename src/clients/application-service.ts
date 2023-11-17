@@ -1,6 +1,7 @@
 import  type { PluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 import type { Jwt, JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
+import * as gql from 'gql-query-builder'
 import axios from 'axios';
 
 export default class ApplicationServiceClient {
@@ -86,10 +87,15 @@ export default class ApplicationServiceClient {
     /**  
      * TODO: come up with approach for dynamically generating graphql query strings
      */    
-    const graphqlQuery = {
-      "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
-      "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
-    };
+    // const graphqlQuery = {
+    //   "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
+    //   "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
+    // };
+    const graphqlQuery = gql.query({ 
+      operation: 'application',
+      variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
+      fields: ['createdAt', 'id']
+    })
     console.log('AJ DEBUG graphqlQuery', graphqlQuery);
 
     const response = await axios({
