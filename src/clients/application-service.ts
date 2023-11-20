@@ -3,7 +3,6 @@ import SensitiveString from "@earnest-labs/ts-sensitivestring";
 import type { Jwt, JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
 import * as gql from 'gql-query-builder'
 import axios from 'axios';
-import { application } from "express";
 
 export default class ApplicationServiceClient {
   private context: PluginContext;
@@ -12,7 +11,6 @@ export default class ApplicationServiceClient {
 
   constructor(context: PluginContext) {
     const key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
-  
     this.accessKey = Buffer.from(key).toString("base64");
     this.context = context;
   }
@@ -183,8 +181,8 @@ export default class ApplicationServiceClient {
     const { context: { logger }} = this;
 
     const graphqlQuery = {
-      "query": String.raw`query ($id: String!, $meta: EventMeta!) {
-        application(id: $id) {
+      "query": String.raw`query ($id: String!, $meta: EventMeta!){
+        application(id: $id){
           amount { approved, certified, requested },
           cognitoId,
           createdAt,
@@ -206,15 +204,26 @@ export default class ApplicationServiceClient {
           tags { createdAt, deletedAt, eventId, tag },
           status(meta: $meta),
           information(meta: $meta),
-          applicants { id, createdAt, deletedAt },
-          benefactor { id, createdAt, deletedAt },
-          beneficiary { id, createdAt, deletedAt },
-          cosigner { id, createdAt, deletedAt },
-          primary { id, createdAt, deletedAt },
-          root { id, createdAt, deletedAt },
-          serialization { id, createdAt, deletedAt },
-          serialization_of { id, createdAt, deletedAt }
+          applicants { ...applicantionFields },
+          benefactor { ...applicantionFields },
+          beneficiary { ...applicantionFields },
+          cosigner { ...applicantionFields },
+          primary { ...applicantionFields },
+          root { ...applicantionFields },
+          serialization { ...applicantionFields },
+          serialization_of { ...applicantionFields }
         }
+      }
+      fragment applicantionFields on Application {
+        id,
+        createdAt,
+        deletedAt,
+        name { first, last, middle, title },
+        dateOfBirth,
+        email,
+        phone { number, type },
+        income { amount, employer, end, name, start, title, type },
+        location { citizenship, city, state, street1, street2, zip }
       }`,
       "variables": { id: `${applicationId}`, meta:{service:"apply-flow-service"}},
     };
