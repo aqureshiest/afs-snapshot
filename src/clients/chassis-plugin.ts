@@ -9,8 +9,8 @@ export const plugin: Plugin = {
   register: async (context: PluginContext ) => {
     const client = new ApplicationServiceClient(context);
 
-    const queryTest = await client.query();
-    console.log("269a4a13 queryTest", queryTest);
+    const queryResponse = await client.query('d258886d-5f68-45d4-affe-60de184c19bc');
+    console.log("[5f0352f4] queryResponse", JSON.stringify(queryResponse, null, 2));
     /**
      * TODO:
      * Check if client has a token

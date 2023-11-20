@@ -3,6 +3,7 @@ import SensitiveString from "@earnest-labs/ts-sensitivestring";
 import type { Jwt, JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
 import * as gql from 'gql-query-builder'
 import axios from 'axios';
+import { application } from "express";
 
 export default class ApplicationServiceClient {
   private context: PluginContext;
@@ -178,22 +179,49 @@ export default class ApplicationServiceClient {
   /**
    * Performs a graphql Query 
    */
-  async query() {
+  async query(applicationId) {
     const { context: { logger }} = this;
 
-    // const graphqlQuery = {
-    //   "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
-    //   "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
-    // };
+    const graphqlQuery = {
+      "query": String.raw`query ($id: String!, $meta: EventMeta!) {
+        application(id: $id) {
+          amount { approved, certified, requested },
+          cognitoId,
+          createdAt,
+          dateOfBirth,
+          deletedAt,
+          education { credits, degree, enrollment, graduationDate, termEnd, termStart },
+          email,
+          events { event, id, data },
+          id,
+          income { amount, employer, end, name, start, title, type },
+          lendingCheckoutId,
+          lendingDecisionId,
+          location { citizenship, city, state, street1, street2, zip },
+          lookupHash,
+          monolithUserId,
+          name { first, last, middle, title },
+          phone { number, type },
+          product,
+          tags { createdAt, deletedAt, eventId, tag },
+          status(meta: $meta),
+          information(meta: $meta),
+          applicants { id, createdAt, deletedAt },
+          benefactor { id, createdAt, deletedAt },
+          beneficiary { id, createdAt, deletedAt },
+          cosigner { id, createdAt, deletedAt },
+          primary { id, createdAt, deletedAt },
+          root { id, createdAt, deletedAt },
+          serialization { id, createdAt, deletedAt },
+          serialization_of { id, createdAt, deletedAt }
+        }
+      }`,
+      "variables": { id: `${applicationId}`, meta:{service:"apply-flow-service"}},
+    };
 
-    // const graphqlQuery = gql.query({ 
-    //   operation: 'application',
-    //   variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
-    //   fields: ['createdAt', 'id']
-    // })
-    const schema = await this.getSchema();
-    const graphqlQuery = this.processQuery('application', '9edad8c8-d624-4849-bf3f-9a47a402fe83', schema);
-    console.log('a8cb3b89 graphqlQuery', graphqlQuery);
+    // const schema = await this.getSchema();
+    // const graphqlQuery = this.processQuery('application', '9edad8c8-d624-4849-bf3f-9a47a402fe83', schema);
+    console.log('[7a1314c0] graphqlQuery', graphqlQuery);
 
     const response = await axios({
       method: "post",
