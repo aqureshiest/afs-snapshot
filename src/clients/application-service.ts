@@ -172,7 +172,7 @@ export default class ApplicationServiceClient {
 
     const response = await axios({
       method: "post",
-      url: 'http://host.docker.internal:4500/graphql',
+      url: `${this.context.env.APPLICATION_SERVICE_URL}/graphql`,
       data: graphqlQuery,
       headers: {
         'Content-Type': 'application/json',
