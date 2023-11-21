@@ -10,7 +10,6 @@ export default class ApplicationServiceClient {
 
   constructor(context: PluginContext) {
     const key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
-  
     this.accessKey = Buffer.from(key).toString("base64");
     this.context = context;
   }
@@ -112,16 +111,64 @@ export default class ApplicationServiceClient {
   /**
    * Performs a graphql Query 
    */
-  async query() {
+  async query(applicationId) {
     const { context: { logger }} = this;
     // for example ...
     const fields = this.generateFields(["id", "createdAt", "deletedAt", "name.first", "income.type"]).split(",");
 
-    const graphqlQuery = gql.query({ 
+    const dynamicQuery = gql.query({ 
       operation: 'application',
       variables: { id: {value: "9edad8c8-d624-4849-bf3f-9a47a402fe83", required: true}},
       fields: [...fields]
     });
+
+    const graphqlQuery = {
+      "query": String.raw`query ($id: String!, $meta: EventMeta!){
+        application(id: $id){
+          amount { approved, certified, requested },
+          cognitoId,
+          createdAt,
+          dateOfBirth,
+          deletedAt,
+          education { credits, degree, enrollment, graduationDate, termEnd, termStart },
+          email,
+          events { event, id, data },
+          id,
+          income { amount, employer, end, name, start, title, type },
+          lendingCheckoutId,
+          lendingDecisionId,
+          location { citizenship, city, state, street1, street2, zip },
+          lookupHash,
+          monolithUserId,
+          name { first, last, middle, title },
+          phone { number, type },
+          product,
+          tags { createdAt, deletedAt, eventId, tag },
+          status(meta: $meta),
+          information(meta: $meta),
+          applicants { ...applicantionFields },
+          benefactor { ...applicantionFields },
+          beneficiary { ...applicantionFields },
+          cosigner { ...applicantionFields },
+          primary { ...applicantionFields },
+          root { ...applicantionFields },
+          serialization { ...applicantionFields },
+          serialization_of { ...applicantionFields }
+        }
+      }
+      fragment applicantionFields on Application {
+        id,
+        createdAt,
+        deletedAt,
+        name { first, last, middle, title },
+        dateOfBirth,
+        email,
+        phone { number, type },
+        income { amount, employer, end, name, start, title, type },
+        location { citizenship, city, state, street1, street2, zip }
+      }`,
+      "variables": { id: `${applicationId}`, meta:{service:"apply-flow-service"}},
+    };
 
     const response = await axios({
       method: "post",
