@@ -1,6 +1,5 @@
 import  type { PluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
-import type { Jwt, JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
 import * as gql from 'gql-query-builder'
 import axios from 'axios';
 
@@ -27,8 +26,7 @@ export default class ApplicationServiceClient {
   }
 
   /**
-   * Requests a new JWT if one doesnt exist or 
-   * the current token is expired
+   * Requests a new JWT if one doesnt exist or if the current token is expired
    */
   async getToken(): Promise<string> {
     const { token } = this;
@@ -80,99 +78,35 @@ export default class ApplicationServiceClient {
   }
 
   /**
-   * Schema
+   * Generates graphql fields given a list of strings, where each string represents a detail on a given application,
+   * and composite details are delineated by a "."
    */
-  async getSchema() {
-    const { context: { logger } } = this;
+  generateFields(fields: Array<string>): string {
+    return fields.reduce((acc, fieldString) => {
+      const fields = fieldString.split(".");
 
-    const jwt = await this.getToken();
+      if (fields.length === 1) {
+        acc = acc + fields[0] + ",";
 
-    const query = `query shcema {
-      __type(name: "Application") {
-        name
-        fields {
-          name
-          type {
-            kind
-            ofType {
-              kind
-              name
-              fields {
-                name
-              }
-            }
-            fields {
-              name
-            }
+        return acc;
+      } else {
+        let query = "";
+
+        while (fields.length) {
+          const field = fields.shift();
+
+          if (!fields.length) {
+            acc = acc + query + `${field} }, `;
+
+            return acc;
+          } else {
+            query = query + `${field} { `
           }
         }
       }
-    }`
-
-    try {
-      const { data } = await axios({
-        method: "post",
-        url: 'http://host.docker.internal:4500/graphql',
-        data: {
-          query,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`
-         }, 
-      });
-
-      return data;
-    } catch (error) {
-      logger.error({
-        message: "Failed to query application-service",
-        error: error.message
-      });
-
-      throw error;
-    }
-  }
-
-  processFields(schema) {
-    const processed = schema.data.__type.fields.reduce((acc, field) => {
-      console.log("036f43f0 name", field.name);
-      if (!field.fields && field.type.kind === "SCALAR") {
-        acc.push(field.name);
-
-        return acc;
-      }
-
-      if (field.type.fields && field.type.name !== "Application") {
-        console.log("4aabcb34 name", field.name);
-        const composite = {
-          [field.name]: field.type.fields.map(i => i.name),
-        }
-        acc.push(composite);
-
-        return acc; 
-      }
-
-      if (!field.fields && field.type.kind === "LIST" && field.type.ofType.fields) {
-        const multi = {
-          [field.name]: field.type.ofType.fields.map(i => i.name)
-        }
-        acc.push(multi);
-
-        return acc;
-      }
 
       return acc;
-    }, []);
-
-    return processed;
-  }
-
-  processQuery(operation, value, schema) {
-    return gql.query({
-      operation,
-      variables: { id: { value, required: true }},
-      fields: [...this.processFields(schema)]
-    });
+    }, "");
   }
 
   /**
@@ -180,20 +114,14 @@ export default class ApplicationServiceClient {
    */
   async query() {
     const { context: { logger }} = this;
+    // for example ...
+    const fields = this.generateFields(["id", "createdAt", "deletedAt", "name.first", "income.type"]).split(",");
 
-    // const graphqlQuery = {
-    //   "query": String.raw`query ($id: String!){application(id: $id){ createdAt, id }}`,
-    //   "variables": {id: "4640edbe-94c7-4807-8ea2-39d8a1ab867d"},
-    // };
-
-    // const graphqlQuery = gql.query({ 
-    //   operation: 'application',
-    //   variables: { id: {value: "4640edbe-94c7-4807-8ea2-39d8a1ab867d", required: true}},
-    //   fields: ['createdAt', 'id']
-    // })
-    const schema = await this.getSchema();
-    const graphqlQuery = this.processQuery('application', '9edad8c8-d624-4849-bf3f-9a47a402fe83', schema);
-    console.log('a8cb3b89 graphqlQuery', graphqlQuery);
+    const graphqlQuery = gql.query({ 
+      operation: 'application',
+      variables: { id: {value: "9edad8c8-d624-4849-bf3f-9a47a402fe83", required: true}},
+      fields: [...fields]
+    });
 
     const response = await axios({
       method: "post",
@@ -211,6 +139,7 @@ export default class ApplicationServiceClient {
 
       throw error;
     });
+
     return response.data.data;
   }
 
