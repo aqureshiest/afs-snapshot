@@ -7,7 +7,7 @@ export const plugin: Plugin = {
   registerOrder: 0,
   register: async (context: Context) => {
     const { contracts, manifests } = await ingestManifests(context);
-
+    
     plugin.instance = { execute, contracts, manifests };
   },
 };

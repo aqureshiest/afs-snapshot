@@ -12,6 +12,8 @@ export default class ApplicationServiceClient {
     const key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
     this.accessKey = Buffer.from(key).toString("base64");
     this.context = context;
+    // console.log('AJ DEBUG context', context);
+    
   }
 
   /**
@@ -111,7 +113,7 @@ export default class ApplicationServiceClient {
   /**
    * Performs a graphql Query 
    */
-  async query(applicationId) {
+  async query(request, applicationId) {
     const { context: { logger }} = this;
     // for example ...
     const fields = this.generateFields(["id", "createdAt", "deletedAt", "name.first", "income.type"]).split(",");
@@ -169,7 +171,12 @@ export default class ApplicationServiceClient {
       }`,
       "variables": { id: `${applicationId}`, meta:{service:"apply-flow-service"}},
     };
-
+    // console.log('AJ DEBUG context.env', this.context.env);
+    // const requestTraceIds = {
+    //   traceid: request.traceId,
+    //   parentId: request.parentId,
+    //   spanId: request.spanId,
+    // }
     const response = await axios({
       method: "post",
       url: `${this.context.env.APPLICATION_SERVICE_URL}/graphql`,
@@ -177,6 +184,7 @@ export default class ApplicationServiceClient {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${await this.getToken()}`,
+        // ...requestTraceIds
       }
     }).catch((error) => {
       logger.error({
