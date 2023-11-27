@@ -1,4 +1,3 @@
-import  type { PluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Client } from "@earnest/http";
 import * as gql from 'gql-query-builder'
 
@@ -8,7 +7,6 @@ export default class ApplicationServiceClient extends Client {
   private token: string;
   mutationSchema;
   
-  // NOTE: constructor functions cannot be async
   constructor(accessKey: string) {
     const options = { baseUrl: "http://host.docker.internal:4500"}
     

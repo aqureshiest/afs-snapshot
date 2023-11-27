@@ -5,7 +5,12 @@
  */
 const getInputs: Handler = async function (context, req, res, next) {
   const application = req.body ? req.body : null;
-  res.locals.inputs = { request: req, application };
+  // console.log('AJ DEBUG context', context);
+  
+  // const ApplicationServiceClient = context.loadedPlugins.appli
+  // const queryResponse = ApplicationServiceClient.query(req, id)
+  // res.locals.inputs = { request: req, application: queryResponse};
+  res.locals.inputs = { request: req, application};
   return next();
 };
 

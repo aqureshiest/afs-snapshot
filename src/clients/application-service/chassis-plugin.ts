@@ -3,7 +3,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import ApplicationServiceClient from "./application-service.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
-export const plugin: Plugin = {
+export const plugin: Plugin<ApplicationServiceClient> = {
   name: "applicationServiceClient",
   version: "1.0.0",
   registerOrder: 0,
@@ -20,5 +20,7 @@ export const plugin: Plugin = {
     client.mutationSchema = processedSchema;
 
     const mutationResponse = client.mutate("createApplication", ["id", "application.id"], { relationships: null, meta: { service: "test" } });
+
+    plugin.instance = client;
   },
 };
