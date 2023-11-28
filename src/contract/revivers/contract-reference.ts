@@ -1,5 +1,5 @@
 import * as constants from "../constants.js";
-import * as contractTypes from "../contract-types/index.js";
+import Contract from "../contract.js";
 
 import reviver from "./reviver.js";
 
@@ -16,48 +16,32 @@ import reviver from "./reviver.js";
  * * TODO: should single values be rejected if more than one contract is
  *   found for a single expected value?
  */
-const contractReference: ContractReviver<keyof typeof contractTypes> =
-  function (input, manifest, key, value) {
-    const substitutionKey = value[constants.CONTRACT_SUBSTITUTION_SYMBOL];
+const contractReference: ContractReviver = function (
+  input,
+  manifest,
+  key,
+  value,
+) {
+  const substitutionKey = value[constants.CONTRACT_SUBSTITUTION_SYMBOL];
 
-    const [, contractKey, coercion, array] =
-      constants.REFERENCE_SUBSTITUTION_REGEX.exec(substitutionKey) || [];
+  const [, contractKey, coercion, array] =
+    constants.REFERENCE_SUBSTITUTION_REGEX.exec(substitutionKey) || [];
 
-    if (contractKey in manifest) {
-      const parsed = manifest[contractKey].map((subContract) => {
-        const subParsed = JSON.parse(
-          subContract.definition,
+  if (contractKey in manifest.contracts) {
+    const parsed = manifest.contracts[contractKey].map(
+      (subContract: Contract) => {
+        return subContract.execute(
           reviver.bind(null, input, manifest),
+          input,
+          coercion,
         );
+      },
+    );
 
-        const ContractType =
-          contractTypes[
-            subContract.type as Exclude<
-              keyof typeof contractTypes,
-              "ContractType" | "MutationType"
-            >
-          ] || contractTypes.identity;
+    return !array && parsed.length < 2 ? parsed[0] : parsed;
+  }
 
-        const contractInstance = new ContractType(subParsed, input);
-
-        if (coercion) {
-          contractInstance.coerce(coercion);
-        }
-
-        /* ============================== *
-         * A. If the contract instance is a MutationType, return it as-is
-         * for future processing
-         * B. Otherwise, execute the contract
-         * ============================== */
-        return contractInstance instanceof contractTypes.MutationType
-          ? contractInstance
-          : contractInstance.toJSON();
-      });
-
-      return !array && parsed.length < 2 ? parsed[0] : parsed;
-    }
-
-    return array ? [] : null;
-  };
+  return array ? [] : null;
+};
 
 export default contractReference;

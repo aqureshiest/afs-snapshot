@@ -1,7 +1,7 @@
 import type {
   Input as IContractInput,
   Manifest as IContractManifest,
-} from "contract/contract-executor.test.js";
+} from "contract/manifest.test.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 
 import "contract/contract-types/base-contract.js";

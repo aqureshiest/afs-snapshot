@@ -27,12 +27,7 @@ const embeddedContract: ContractReviver<keyof typeof contractTypes> = function (
   } = value;
 
   const ContractType =
-    contractTypes[
-      type as Exclude<
-        keyof typeof contractTypes,
-        "ContractType" | "MutationType"
-      >
-    ] || contractTypes.identity;
+    contractTypes[type as ContractType] || contractTypes.identity;
 
   const contractInstance = new ContractType(definition, input);
 

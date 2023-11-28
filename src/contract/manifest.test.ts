@@ -1,16 +1,17 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import contractExecutor from "./contract-executor.js";
+import Contract from "./contract.js";
+import Manifest from "./manifest.js";
 
-describe("[462fd166] contractExecutor", () => {
+describe("[462fd166] manifest.execute", () => {
   it("[be92134e] runs without error", async () => {
     const input = {} as Input;
-    const manifest: Manifest = {
-      "*": { type: "identity", definition: JSON.stringify({}) },
-    };
+    const manifest = new Manifest({
+      "*": new Contract("identity", JSON.stringify({})),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert(contract);
   });
 
@@ -18,12 +19,12 @@ describe("[462fd166] contractExecutor", () => {
     const TEST_STRING = "test";
 
     const input = {} as Input;
-    const manifest: Manifest = {
-      "*": { type: "identity", definition: JSON.stringify({ $: "mapped" }) },
-      mapped: [{ type: "string", definition: JSON.stringify(TEST_STRING) }],
-    };
+    const manifest = new Manifest({
+      "*": new Contract("identity", JSON.stringify({ $: "mapped" })),
+      mapped: [new Contract("string", JSON.stringify(TEST_STRING))],
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.equal(contract, TEST_STRING);
   });
 
@@ -31,15 +32,12 @@ describe("[462fd166] contractExecutor", () => {
     const TEST_STRING = "test";
 
     const input = {} as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({ $: "mapped::boolean" }),
-      },
-      mapped: [{ type: "string", definition: JSON.stringify(TEST_STRING) }],
-    };
+    const manifest = new Manifest({
+      "*": new Contract("identity", JSON.stringify({ $: "mapped::boolean" })),
+      mapped: [new Contract("string", JSON.stringify(TEST_STRING))],
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.equal(contract, true);
   });
 
@@ -47,14 +45,14 @@ describe("[462fd166] contractExecutor", () => {
     const TEST_STRINGS = ["this ", "is ", "a ", "test"];
 
     const input = {} as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({ "@": "identity", $: TEST_STRINGS }),
-      },
-    };
+    const manifest = new Manifest({
+      "*": new Contract(
+        "identity",
+        JSON.stringify({ "@": "identity", $: TEST_STRINGS }),
+      ),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.deepEqual(contract, TEST_STRINGS);
   });
 
@@ -67,14 +65,14 @@ describe("[462fd166] contractExecutor", () => {
         },
       },
     } as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({ "#": "request.body.foo" }),
-      },
-    };
+    const manifest = new Manifest({
+      "*": new Contract(
+        "identity",
+        JSON.stringify({ "#": "request.body.foo" }),
+      ),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.equal(contract, TEST_STRING);
   });
 
@@ -85,28 +83,25 @@ describe("[462fd166] contractExecutor", () => {
         body: TEST_BODY,
       },
     } as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({ "#": "request.body.*.foo" }),
-      },
-    };
+    const manifest = new Manifest({
+      "*": new Contract(
+        "identity",
+        JSON.stringify({ "#": "request.body.*.foo" }),
+      ),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.deepEqual(contract, ["test_1", "test_2", "test_3"]);
   });
 
   it("[40533382] concatenates strings", async () => {
     const TEST_STRINGS = ["this ", "is ", "a ", "test"];
     const input = {} as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({ "&": TEST_STRINGS }),
-      },
-    };
+    const manifest = new Manifest({
+      "*": new Contract("identity", JSON.stringify({ "&": TEST_STRINGS })),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.equal(contract, TEST_STRINGS.join(""));
   });
 
@@ -114,14 +109,14 @@ describe("[462fd166] contractExecutor", () => {
     const TEST_STRINGS = ["this ", "is ", "a "];
     const NESTED_STRINGS = ["nested ", "string ", "example "];
     const input = {} as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({ "&": [...TEST_STRINGS, NESTED_STRINGS] }),
-      },
-    };
+    const manifest = new Manifest({
+      "*": new Contract(
+        "identity",
+        JSON.stringify({ "&": [...TEST_STRINGS, NESTED_STRINGS] }),
+      ),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.deepEqual(contract, [...TEST_STRINGS, ...NESTED_STRINGS]);
   });
 
@@ -135,72 +130,72 @@ describe("[462fd166] contractExecutor", () => {
         },
       },
     } as Input;
-    const manifest: Manifest = {
-      "*": {
-        type: "identity",
-        definition: JSON.stringify({
+    const manifest = new Manifest({
+      "*": new Contract(
+        "identity",
+        JSON.stringify({
           "%": [PARAMETER, "+", { "#": "request.body.foo" }],
         }),
-      },
-    };
+      ),
+    });
 
-    const { contract } = contractExecutor(input, manifest);
+    const { contract } = manifest.execute(input);
     assert.equal(contract, PARAMETER + input.request.body.foo);
   });
 
   it("[a5701098] mutation contracts", async () => {
     const input = {} as Input;
-    const manifest: Manifest = {
+    const manifest = new Manifest({
       "*": [
-        {
-          type: "applicationEvent",
-          definition: JSON.stringify({
+        new Contract(
+          "applicationEvent",
+          JSON.stringify({
             event: "addDetails",
           }),
-        },
-        {
-          type: "applicationEvent",
-          definition: JSON.stringify({
+        ),
+        new Contract(
+          "applicationEvent",
+          JSON.stringify({
             event: "information",
           }),
-        },
+        ),
       ],
-    };
+    });
 
-    const { mutations } = contractExecutor(input, manifest);
+    const { mutations } = manifest.execute(input);
     assert.notEqual(mutations.length, 0);
   });
 
   describe("[2e57cb55] NotContract", () => {
     it("[d8240749] Negates the value as a string", async () => {
       const input = {} as Input;
-      const manifest: Manifest = {
-        "*": {
-          type: "identity",
-          definition: JSON.stringify({
+      const manifest = new Manifest({
+        "*": new Contract(
+          "identity",
+          JSON.stringify({
             coercion: "string",
             $NOT: 0,
           }),
-        },
-      };
+        ),
+      });
 
-      const { contract } = contractExecutor(input, manifest);
+      const { contract } = manifest.execute(input);
       assert.equal(contract, "yes");
     });
 
     it("[65f0ade7] Coerces to a number", async () => {
       const input = {} as Input;
-      const manifest: Manifest = {
-        "*": {
-          type: "identity",
-          definition: JSON.stringify({
+      const manifest = new Manifest({
+        "*": new Contract(
+          "identity",
+          JSON.stringify({
             coercion: "number",
             $NOT: true,
           }),
-        },
-      };
+        ),
+      });
 
-      const { contract } = contractExecutor(input, manifest);
+      const { contract } = manifest.execute(input);
       assert.equal(contract, 0);
     });
   });

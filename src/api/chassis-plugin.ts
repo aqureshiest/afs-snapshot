@@ -12,6 +12,7 @@ export const plugin: Plugin = {
 
     context.application.use(
       "/apply/:manifest/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?",
+      handlers.getManifest.bind(null, context),
       wrapAsyncHandler(context, handlers.getInputs),
       handlers.executeContract.bind(null, context),
     );
@@ -75,6 +76,6 @@ export const plugin: Plugin = {
       wrapAsyncHandler(context, handlers.post),
     );
 
-    context.application.use(handlers.error.bind(context));
+    context.application.use(handlers.error.bind(null, context));
   },
 };

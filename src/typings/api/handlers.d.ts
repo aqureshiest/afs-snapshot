@@ -20,6 +20,11 @@ declare module "api/handlers/execute-contract.js" {
   >["manifests"];
 }
 
+import "api/handlers/get-manifest.js";
+declare module "api/handlers/get-manifest.js" {
+  type Handler = BoundHandler;
+}
+
 import "api/handlers/get.js";
 declare module "api/handlers/get.js" {
   type Handler = BoundHandler;

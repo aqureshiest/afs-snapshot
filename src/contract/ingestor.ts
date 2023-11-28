@@ -2,6 +2,8 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import assert from "node:assert";
 
+import Manifest from "./manifest.js";
+import Contract from "./contract.js";
 import * as constants from "./constants.js";
 
 const MANIFESTS_PATH = path.join("flows", "manifests");
@@ -89,16 +91,19 @@ export const buildContracts: BuildContracts = async function buildContracts(
 
       const file = await fs.readFile(rootPath, "utf8");
 
-      JSON.parse(file); // Parse the contract definition to ensure executability
+      /* ============================== *
+       * I. Parse the contract definition to ensure executability
+       * II. Use revivers to record which substitutions are associated
+       *     with each contract module
+       * ============================== */
+
+      const contract = new Contract(contractType as ContractType, file);
 
       if (!(contractKey in contracts)) {
         contracts[contractKey] = {};
       }
 
-      contracts[contractKey][contractVersion] = {
-        type: contractType,
-        definition: file,
-      };
+      contracts[contractKey][contractVersion] = contract;
 
       return contracts;
     },
@@ -185,7 +190,9 @@ export const buildManifests: BuildManifests = async function buildManifests(
           : getContract(parsed[mappingKey]);
       }
 
-      cursor[fileKey] = parsed;
+      const manifest = new Manifest(parsed);
+
+      cursor[fileKey] = manifest;
 
       totalManifests++;
 
