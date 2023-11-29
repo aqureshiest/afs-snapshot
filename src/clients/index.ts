@@ -1,4 +1,4 @@
-import ApplicationServiceClient from "./application-service/application-service.js";
+import ApplicationServiceClient from "./application-service/index.js";
 
 export default {
   ApplicationServiceClient

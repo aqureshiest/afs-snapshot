@@ -1,14 +1,13 @@
 import { Client } from "@earnest/http";
-import * as gql from 'gql-query-builder'
+import * as gql from 'gql-query-builder';
 
 export default class ApplicationServiceClient extends Client {
   private accessKey: string;
-  private options: { baseUrl: string };
   private token: string;
   mutationSchema;
   
-  constructor(accessKey: string) {
-    const options = { baseUrl: "http://host.docker.internal:4500"}
+  constructor(accessKey: string, baseUrl: string) {
+    const options = { baseUrl };
     
     super(options);
     this.accessKey = accessKey;
@@ -78,6 +77,72 @@ export default class ApplicationServiceClient extends Client {
   }
 
   /**
+   * Leverages graphql introspection and fetches a schema given a graphql query string
+   */
+  async getSchema(query): Promise<Schema> {
+    try {
+      const jwt = await this.getToken();
+
+      const { results, response } = await this.post({
+        uri: "/graphql",
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${jwt}`
+        },
+        body: {
+          query
+        }
+      }) as SchemaReponse;
+
+      if (response.statusCode! >= 400) {
+        throw new Error(response.statusMessage);
+      }
+
+      return results.data;
+    } catch (error) {
+
+      throw error;
+    }
+  }
+
+  /**
+   * Reduces given schema fields down to an object representing a given graphql operation whose
+   * key / value pairs represent a given argument and its respective graphql type
+   */
+  processSchema(fields) {
+    try {
+      return fields.reduce((acc, field) => {
+        const { name: fieldName, args } = field;
+
+        const graphqlInputs = args.reduce((argAcc, arg) => {
+         const { name: argName, type: { kind, name: typeName, ofType } } = arg;
+
+         if (kind === "INPUT_OBJECT") {
+          argAcc[argName] = typeName
+         }
+
+         if (kind === "LIST") {
+          argAcc[argName] = `[${ofType.name}]`;
+         }
+
+         if (kind === "NON_NULL") {
+          argAcc[argName] = `${ofType.name}!`
+         }
+
+         return argAcc;
+        }, {});
+        
+        acc[fieldName] = graphqlInputs;
+
+        return acc;
+      }, {});
+    } catch (error) {
+
+      throw error;
+    }
+  }
+
+  /**
    * Generates graphql fields given a list of strings, where each string represents a detail on a given application,
    * and composite details are delineated by a "."
    */
@@ -107,6 +172,22 @@ export default class ApplicationServiceClient extends Client {
 
       return acc;
     }, "");
+  }
+
+  /**
+   * Given request data and argument types for a given operation, process
+   *  gql-query-builder varibales for a new graphql request
+   */
+  processVariables(data, types) {
+    const vars = {};
+
+    if (!data) return vars;
+
+    for (const [key, val] of Object.entries(data)) {
+      Object.assign(vars, {[key]: { value: val, type: types[key] } })
+    }
+
+    return vars;
   }
 
   /**
@@ -145,19 +226,10 @@ export default class ApplicationServiceClient extends Client {
     }
   }
 
-  processVariables(variables, types) {
-    const vars = {};
-
-    if (!variables) return vars;
-
-    for (const [key, val] of Object.entries(variables)) {
-      Object.assign(vars, {[key]: { value: val, type: types[key] } })
-    }
-
-    return vars;
-  }
-
-  async mutate(operation: string, fields: Array<string>, data) {
+  /**
+   * Perform a graphlql mutation
+   */
+  async mutate(operation: string, fields: Array<string>, data: { [key: string]: unknown} ) {
     const { applicationId, ...rest } = data;
 
     const mutationFields = this.generateFields(fields).split(",");
@@ -178,90 +250,20 @@ export default class ApplicationServiceClient extends Client {
     try {
       const jwt = await this.getToken();
 
-      const { results, response} = await this.post({
-        uri: "/graphql",
-        headers: {
-          ...this.headers,
-          Authorization: `Bearer ${jwt}`
-        },
-        body: mutation
-      });
-
-      //  return response.data;
-    } catch (error) {
-
-      throw error;
-    }
-  }
-
-  async getSchema() {
-    const query = `query shcema {
-      __type(name: "Mutation") {
-        name
-		    fields {
-					name
-					args {
-						name
-						type {
-							name
-							kind
-							ofType {
-								name
-							}
-						}
-					}
-				}
-      }
-    }`;
-
-    try {
-      const jwt = await this.getToken();
-
       const { results, response } = await this.post({
         uri: "/graphql",
         headers: {
           ...this.headers,
           Authorization: `Bearer ${jwt}`
         },
-        body: {
-          query
-        }
-      }) as SchemaReponse;
+        body: mutation
+      }) as Mutation; 
+
+      if (response.statusCode! >= 400) {
+        throw new Error(response.statusMessage);
+      }
 
       return results.data;
-    } catch (error) {
-
-      throw error;
-    }
-  }
-
-  processSchema(fields) {
-    try {
-      return fields.reduce((acc, field) => {
-        const { name: fieldName, args } = field;
-
-        const graphqlInputs = args.reduce((argAcc, arg) => {
-         const { name: argName, type: { kind, name: typeName, ofType } } = arg;
-
-         if (kind === "INPUT_OBJECT") {
-          argAcc[argName] = typeName
-         }
-
-         if (kind === "LIST") {
-          argAcc[argName] = `[${ofType.name}]`;
-         }
-
-         if (kind === "NON_NULL") {
-          argAcc[argName] = `${ofType.name}!`
-         }
-
-         return argAcc;
-        }, {});
-        
-        acc[fieldName] = graphqlInputs;
-
-        return acc;
-      }, {});
     } catch (error) {
 
       throw error;

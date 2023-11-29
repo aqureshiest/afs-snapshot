@@ -1,4 +1,14 @@
+import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
+import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import type { IncomingMessage } from "http";
+import ApplicationServiceClient from "../../../clients/application-service/index.js"
+
+import "../../../clients/application-service/chassis-plugin.js";
+declare module "../../clients/application-service/chassis-plugin.ts" {
+  type Plugin = ChassisPlugin
+  type Context = ChassisPluginContext;
+  type instance = ApplicationServiceClient;
+}
 
 interface IRequestTokenResponse {
   results: {
@@ -87,33 +97,46 @@ interface IQueryResponse {
   response: IncomingMessage
 }
 
+interface IMutationSchema {
+  __type: {
+    name: string,
+    fields: Array<{
+      name: string,
+      args: Array<{
+        name: string,
+        type: {
+          name: string,
+          kind: string,
+          ofType?: {
+            name: string
+          }
+        }
+      }>
+    }>
+  }
+}
+
 interface ISchemaResponse {
   results: {
-    data: {
-      __type: {
-        name: string,
-        fields: Array<{
-          name: string,
-          args: Array<{
-            name: string,
-            type: {
-              name: string,
-              kind: string,
-              ofType?: {
-                name: string
-              }
-            }
-          }>
-        }>
-      }
-    }
+    data: IMutationSchema 
   }
   response: IncomingMessage
 }
 
-declare module "../../clients/application-service/application-service.js" {
+interface IMutationResponse {
+  results: {
+    data: {
+      [key: string]: unknown
+    }
+  },
+  response: IncomingMessage
+}
+
+declare module "../../../clients/application-service/index.js" {
   type RequestTokenResponse = IRequestTokenResponse;
   type Application = IApplication;
   type QueryResponse = IQueryResponse;
   type SchemaReponse = ISchemaResponse; 
+  type Schema = IMutationSchema;
+  type Mutation = IMutationResponse;
 }
