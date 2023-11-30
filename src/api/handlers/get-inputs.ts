@@ -4,13 +4,13 @@
  * TODO: get authentication artifacts
  */
 const getInputs: Handler = async function (context, req, res, next) {
-  const application = req.body ? req.body : null;
-  // console.log('AJ DEBUG context', context);
+  const ApplicationServiceClient = context.loadedPlugins?.applicationServiceClient?.instance
   
-  // const ApplicationServiceClient = context.loadedPlugins.appli
-  // const queryResponse = ApplicationServiceClient.query(req, id)
-  // res.locals.inputs = { request: req, application: queryResponse};
-  res.locals.inputs = { request: req, application};
+  if (!ApplicationServiceClient) throw new Error('[1d348234] Unable to load Application Service Client')
+  const fieldKeys = ["id", "createdAt", "deletedAt", "name.first", "events.event", "events.id", "events.data"]
+  const queryResponse = await ApplicationServiceClient["query"](req.params.uuid, fieldKeys)
+  
+  res.locals.inputs = { request: req, application: queryResponse};
   return next();
 };
 

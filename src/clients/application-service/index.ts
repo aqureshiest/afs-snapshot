@@ -192,17 +192,24 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Query application-service 
+   * TODO: Pass in request object. 
+   * Request Object contains parameters like UUID of application
+   * Also contains the request headers that contain the traceIDs
    */
-  async query(applicationId: string): Promise<Application>{
+  async query(applicationId: string, fieldKeys: Array<string>): Promise<Application>{
     // for example ...
-    const fields = this.generateFields(["id", "createdAt", "deletedAt", "name.first", "income.type"]).split(",");
-
+    // const fields = this.generateFields(["id", "createdAt", "deletedAt"]).split(",");
+    const fields = this.generateFields(fieldKeys).split(",");
+    
+    /**
+     * TODO: Use request.params.uuid for applicationId
+     */
     const dynamicQuery = gql.query({
       operation: 'application',
       variables: { id: {value: applicationId, required: true}},
       fields: [...fields]
     });
-
+    
     try {
       const jwt = await this.getToken();
 
@@ -217,7 +224,7 @@ export default class ApplicationServiceClient extends Client {
 
       if (response.statusCode! >= 400) {
         throw new Error(response.statusMessage);
-      }
+      } 
 
       return results.data.application;
     } catch(error) {

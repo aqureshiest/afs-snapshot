@@ -26,6 +26,7 @@
     "@earnest-labs/ts-sensitivestring": "^0.1.26",
     "@earnest/http": "^2.0.0",
     "@earnest/microservice-chassis-secret-loader": "^0.1.19",
+    "@earnest/microservice-chassis-traceid-express-middleware": "^1.0.2",
     "ajv": "^8.12.0",
     "axios": "^1.6.0",
     "gql-query-builder": "^3.8.0",

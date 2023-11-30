@@ -26,9 +26,9 @@ describe("[f8395630] Application Service Client", () => {
 
     key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
     accessKey = Buffer.from(key).toString("base64");
-    baseUrl = context.env.APPLICATION_SERVICE_URL;
+    baseUrl = SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
 
-    client = new ApplicationServiceClient(accessKey, context.env.APPLICATION_SERVICE_URL);
+    client = new ApplicationServiceClient(accessKey, baseUrl);
   });
 
   after(async () => {
@@ -36,7 +36,7 @@ describe("[f8395630] Application Service Client", () => {
     if (knex) knex.destroy();
   });
 
-  it ("[099d3480] should throw an error when requesting a jwt and the response's status code is >= 400", async () => {
+  it("[099d3480] should throw an error when requesting a jwt and the response's status code is >= 400", async () => {
     mock.method(client, "post", async () => {
       return {
         response: {
@@ -286,4 +286,79 @@ describe("[f8395630] Application Service Client", () => {
       } 
     });
   });
+
+  it("[b4636504] perform a graphql query", async () => {
+    const expectedResult = {
+      "id": "1",
+      "createdAt": "2023-11-29T23:11:43.214Z", 
+      "deletedAt": null,
+      "events": [
+        {
+          "event": "addReferences",
+          "id": "2",
+          "data": {
+            "meta": {
+              "service": "apply-flow-service"
+            },
+            "references": [
+              {
+                "referenceId": "01da1d1c-af2b-4cc9-9dca-cc839337bf59",
+                "referenceType": "cognitoId"
+              },
+              {
+                "referenceId": "1cd0476c-940b-4e4a-9c2e-18b364fe29c0",
+                "referenceType": "product"
+              },
+              {
+                "referenceId": "c03edbe8-088e-4221-89ba-3c0b8b5c3d24",
+                "referenceType": "monolithUserId"
+              }
+            ]
+          }
+        }
+      ]
+    }
+    const fieldKeys = ["id", "createdAt", "deletedAt", "events.event", "events.id", "events.data"]
+
+    mock.method(client, "getToken", async () => {
+      return "token"
+    });
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          data: {
+            application: {
+              ...expectedResult
+            }
+          }
+        },
+        response: {
+          statusCode: 200,
+        }
+      }
+    });
+
+    const queryResponse = await client.query("1", fieldKeys);
+    // console.log('AJ DEBUG queryResponse', JSON.stringify(queryResponse, null, 2));
+    
+    assert.deepEqual(queryResponse, expectedResult);
+  })
+
+  it("[87a54c7d] should throw an error when performing a query", async () => {
+    mock.method(client, "post", async () => {
+      return {
+        response: {
+          statusCode: 400,
+          statusMessage: "Bad Request"
+        }
+      }
+    });
+
+    try {
+      await client.query("1", ["id", "createdAt", "deletedAt"])
+    } catch (error) {
+      assert(error.message, "Bad Request");
+    }
+  })
 });

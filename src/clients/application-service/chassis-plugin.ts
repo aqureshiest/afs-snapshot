@@ -11,7 +11,7 @@ export const plugin: Plugin<ApplicationServiceClient> = {
   register: async (context: PluginContext ) => {
     const key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
     const accessKey = Buffer.from(key).toString("base64")
-    const baseUrl = context.env.APPLICATION_SERVICE_URL as string;
+    const baseUrl = SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
 
     const client = new ApplicationServiceClient(accessKey, baseUrl);
 
