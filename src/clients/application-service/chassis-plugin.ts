@@ -9,6 +9,8 @@ export const plugin: Plugin<ApplicationServiceClient> = {
   version: "1.0.0",
   registerOrder: 0,
   register: async (context: PluginContext) => {
+    const { NODE_ENV } = context.env;
+
     const key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
     const accessKey = Buffer.from(key).toString("base64");
     const baseUrl =
@@ -16,11 +18,13 @@ export const plugin: Plugin<ApplicationServiceClient> = {
 
     const client = new ApplicationServiceClient(accessKey, baseUrl);
 
-    const schemaReponse = await client.getSchema(context, mutationSchema);
+    if (NODE_ENV !== "test") {
+      const schemaReponse = await client.getSchema(context, mutationSchema);
 
-    const processedSchema = client.processSchema(schemaReponse.__type.fields);
-
-    client.mutationSchema = processedSchema;
+      const processedSchema = client.processSchema(schemaReponse.__type.fields);
+  
+      client.mutationSchema = processedSchema; 
+    }
 
     plugin.instance = client;
   },
