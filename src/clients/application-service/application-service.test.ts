@@ -1,7 +1,6 @@
 import { describe, it, before, after, mock } from "node:test";
 import assert from "node:assert";
 
-import { plugin as knexPlugin } from "@earnest-labs/microservice-chassis-knex/knex.chassis-plugin.js";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
@@ -30,11 +29,6 @@ describe("[f8395630] Application Service Client", () => {
       SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
 
     client = new ApplicationServiceClient(accessKey, baseUrl);
-  });
-
-  after(async () => {
-    const knex = knexPlugin.connections.get("DEFAULT");
-    if (knex) knex.destroy();
   });
 
   it("[099d3480] should throw an error when requesting a jwt and the response's status code is >= 400", async () => {
