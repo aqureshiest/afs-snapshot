@@ -1,4 +1,7 @@
-import type { Input as IContractInput, Manifest as IContractManifest } from "contract/contract-executor.test.js";
+import type {
+  Input as IContractInput,
+  Manifest as IContractManifest,
+} from "contract/contract-executor.test.js";
 
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {

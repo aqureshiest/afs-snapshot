@@ -1,14 +1,16 @@
+import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Client } from "@earnest/http";
-import * as gql from 'gql-query-builder';
+import { Request } from "express";
+import * as gql from "gql-query-builder";
 
 export default class ApplicationServiceClient extends Client {
   private accessKey: string;
   private token: string;
   mutationSchema;
-  
+
   constructor(accessKey: string, baseUrl: string) {
     const options = { baseUrl };
-    
+
     super(options);
     this.accessKey = accessKey;
   }
@@ -17,53 +19,54 @@ export default class ApplicationServiceClient extends Client {
     return {
       ...super.headers,
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     };
   }
 
   /**
    * Requests a new JWT if one doesnt exist or if the current token is expired
    */
-   async getToken(): Promise<string> {
+  async getToken(context: PluginContext): Promise<string> {
     const { token } = this;
 
     if (token) {
       const split = token.split(".");
 
-      const payload = JSON.parse(
-        Buffer.from(split[1], "base64").toString("utf8")
+      const jwtPayload = JSON.parse(
+        Buffer.from(split[1], "base64").toString("utf8"),
       );
 
-      const { exp } = payload;
+      const { exp } = jwtPayload;
 
-      if (((Date.now() / 1000) - exp) > exp) {
-        this.token = await this.requestToken();
+      if (Date.now() / 1000 - exp > exp) {
+        this.token = await this.requestToken(context);
       }
-
     } else {
-      this.token = await this.requestToken();
+      this.token = await this.requestToken(context);
     }
 
     return this.token;
   }
 
-/**
- * Requests a new JWT from application-service
- */ 
-  async requestToken(): Promise<string> {
+  /**
+   * Requests a new JWT from application-service
+   */
+  async requestToken(context: PluginContext): Promise<string> {
+    const { logger } = context;
+
     try {
-      const { results, response } = await this.post({
+      const { results, response } = (await this.post({
         uri: "/auth",
         headers: {
           ...this.headers,
-          Authorization: `Bearer ${this.accessKey}`
+          Authorization: `Bearer ${this.accessKey}`,
         },
         body: {
           sub: "apply-flow-service",
           // TODO: where will we derive email from? request artifacts?
-          email: "todo@earnest.com"
-        }
-      }) as RequestTokenResponse;
+          email: "todo@earnest.com",
+        },
+      })) as RequestTokenResponse;
 
       if (response.statusCode! >= 400) {
         throw new Error(response.statusMessage);
@@ -71,28 +74,37 @@ export default class ApplicationServiceClient extends Client {
 
       return results.token;
     } catch (error) {
+      logger.error({
+        message: "Failed to request jwt from application-service",
+        error: {
+          message: error.message,
+          stack: error.stack,
+        },
+      });
 
       throw error;
     }
   }
 
   /**
-   * Leverages graphql introspection and fetches a schema given a graphql query string
+   * Fetches a schema by leveraging the graphql introspection system
    */
-  async getSchema(query): Promise<Schema> {
-    try {
-      const jwt = await this.getToken();
+  async getSchema(context: PluginContext, query: string): Promise<Schema> {
+    const { logger } = context;
 
-      const { results, response } = await this.post({
+    try {
+      const jwt = await this.getToken(context);
+
+      const { results, response } = (await this.post({
         uri: "/graphql",
         headers: {
           ...this.headers,
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${jwt}`,
         },
         body: {
-          query
-        }
-      }) as SchemaReponse;
+          query,
+        },
+      })) as SchemaReponse;
 
       if (response.statusCode! >= 400) {
         throw new Error(response.statusMessage);
@@ -100,51 +112,56 @@ export default class ApplicationServiceClient extends Client {
 
       return results.data;
     } catch (error) {
+      logger.error({
+        message: "Failed to get schema from application-service",
+        error: {
+          message: error.message,
+          stack: error.stack,
+        },
+      });
 
       throw error;
     }
   }
 
   /**
-   * Reduces given schema fields down to an object representing a given graphql operation whose
-   * key / value pairs represent a given argument and its respective graphql type
+   * Reduces schema fields down to an object whose key / value pairs represent
+   * an argument and its respective grahpql type for a given event
    */
   processSchema(fields) {
-    try {
-      return fields.reduce((acc, field) => {
-        const { name: fieldName, args } = field;
+    return fields.reduce((acc, field) => {
+      const { name: fieldName, args } = field;
 
-        const graphqlInputs = args.reduce((argAcc, arg) => {
-         const { name: argName, type: { kind, name: typeName, ofType } } = arg;
+      const graphqlInputs = args.reduce((argAcc, arg) => {
+        const {
+          name: argName,
+          type: { kind, name: typeName, ofType },
+        } = arg;
 
-         if (kind === "INPUT_OBJECT") {
-          argAcc[argName] = typeName
-         }
+        if (kind === "INPUT_OBJECT") {
+          argAcc[argName] = typeName;
+        }
 
-         if (kind === "LIST") {
+        if (kind === "LIST") {
           argAcc[argName] = `[${ofType.name}]`;
-         }
+        }
 
-         if (kind === "NON_NULL") {
-          argAcc[argName] = `${ofType.name}!`
-         }
+        if (kind === "NON_NULL") {
+          argAcc[argName] = `${ofType.name}!`;
+        }
 
-         return argAcc;
-        }, {});
-        
-        acc[fieldName] = graphqlInputs;
-
-        return acc;
+        return argAcc;
       }, {});
-    } catch (error) {
 
-      throw error;
-    }
+      acc[fieldName] = graphqlInputs;
+
+      return acc;
+    }, {});
   }
 
   /**
-   * Generates graphql fields given a list of strings, where each string represents a detail on a given application,
-   * and composite details are delineated by a "."
+   * Genereates graphql fields given a list of strings that represent details
+   * to be returned in a graphql query / mutation. Composite details are delineated by a "."
    */
   generateFields(fields: Array<string>): string {
     return fields.reduce((acc, fieldString) => {
@@ -165,7 +182,7 @@ export default class ApplicationServiceClient extends Client {
 
             return acc;
           } else {
-            query = query + `${field} { `
+            query = query + `${field} { `;
           }
         }
       }
@@ -175,8 +192,8 @@ export default class ApplicationServiceClient extends Client {
   }
 
   /**
-   * Given request data and argument types for a given operation, process
-   *  gql-query-builder varibales for a new graphql request
+   * Given application data and argument types, process gql-query-builder
+   * varibales for a new graphql request for a given operation
    */
   processVariables(data, types) {
     const vars = {};
@@ -184,50 +201,52 @@ export default class ApplicationServiceClient extends Client {
     if (!data) return vars;
 
     for (const [key, val] of Object.entries(data)) {
-      Object.assign(vars, {[key]: { value: val, type: types[key] } })
+      Object.assign(vars, { [key]: { value: val, type: types[key] } });
     }
 
     return vars;
   }
 
   /**
-   * Query application-service 
-   * TODO: Pass in request object. 
-   * Request Object contains parameters like UUID of application
-   * Also contains the request headers that contain the traceIDs
+   * Query application-service
    */
-  async query(applicationId: string, fieldKeys: Array<string>): Promise<Application>{
-    // for example ...
-    // const fields = this.generateFields(["id", "createdAt", "deletedAt"]).split(",");
-    const fields = this.generateFields(fieldKeys).split(",");
-    
-    /**
-     * TODO: Use request.params.uuid for applicationId
-     */
-    const dynamicQuery = gql.query({
-      operation: 'application',
-      variables: { id: {value: applicationId, required: true}},
-      fields: [...fields]
-    });
-    
-    try {
-      const jwt = await this.getToken();
+  async query(context: PluginContext, req: Request): Promise<Application> {
+    const { logger } = context;
 
-      const { results, response } = await this.post({
+    const { uuid: applicationId } = req.params;
+    const { fields } = req.body;
+
+    const gqlQuery = gql.query({
+      operation: "application",
+      variables: { id: { value: applicationId, required: true } },
+      fields: [...fields],
+    });
+
+    try {
+      const jwt = await this.getToken(context);
+
+      const { results, response } = (await this.post({
         uri: "/graphql",
         headers: {
           ...this.headers,
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${jwt}`,
         },
-        body: dynamicQuery
-      }) as QueryResponse;
+        body: gqlQuery,
+      })) as QueryResponse;
 
-      if (response.statusCode! >= 400) {
+      if (response.statusCode! !== 200) {
         throw new Error(response.statusMessage);
-      } 
+      }
 
       return results.data.application;
-    } catch(error) {
+    } catch (error) {
+      logger.error({
+        message: "Failed to query application-service",
+        error: {
+          message: error.message,
+          stack: error.stack,
+        },
+      });
 
       throw error;
     }
@@ -236,42 +255,54 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Perform a graphlql mutation
    */
-  async mutate(operation: string, fields: Array<string>, data: { [key: string]: unknown} ) {
-    const { applicationId, ...rest } = data;
+  async mutate(context: PluginContext, req: Request) {
+    const { logger } = context;
+
+    const { uuid: applicationId } = req.params;
+    const { event, fields, data } = req.body;
 
     const mutationFields = this.generateFields(fields).split(",");
 
-    const types = this.mutationSchema[operation];
+    const types = this.mutationSchema[event];
 
-    const vars = this.processVariables(rest, types);
+    const vars = this.processVariables(data, types);
 
-    const mutation = gql.mutation({
-      operation,
+    const gqlMutation = gql.mutation({
+      operation: event,
       variables: {
-        ...(applicationId ? { id: { value: applicationId, required: true } } : null),
-        ...(vars),
+        ...(applicationId
+          ? { id: { value: applicationId, required: true } }
+          : null),
+        ...vars,
       },
-      fields: [...mutationFields]
+      fields: [...mutationFields],
     });
 
     try {
-      const jwt = await this.getToken();
+      const jwt = await this.getToken(context);
 
-      const { results, response } = await this.post({
+      const { results, response } = (await this.post({
         uri: "/graphql",
         headers: {
           ...this.headers,
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${jwt}`,
         },
-        body: mutation
-      }) as Mutation; 
+        body: gqlMutation,
+      })) as Mutation;
 
-      if (response.statusCode! >= 400) {
+      if (response.statusCode! !== 200) {
         throw new Error(response.statusMessage);
       }
 
       return results.data;
     } catch (error) {
+      logger.error({
+        message: "Failed to apply mutation",
+        error: {
+          message: error.message,
+          stack: error.stack,
+        },
+      });
 
       throw error;
     }

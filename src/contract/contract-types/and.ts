@@ -9,7 +9,7 @@ class AndContract extends ContractType<Array<object>> {
     const { definition } = this;
 
     const lastTruthy = Array.isArray(definition)
-      ? definition.reduce<object|boolean>((a, b) => a && b, true)
+      ? definition.reduce<object | boolean>((a, b) => a && b, true)
       : definition;
 
     switch (hint) {
@@ -30,7 +30,7 @@ class AndContract extends ContractType<Array<object>> {
     const { definition } = this;
 
     const lastTruthy = Array.isArray(definition)
-      ? definition.reduce<object|boolean>((a, b) => a && b, true)
+      ? definition.reduce<object | boolean>((a, b) => a && b, true)
       : definition;
 
     return this.coercion ? this.coercion(lastTruthy) : lastTruthy;

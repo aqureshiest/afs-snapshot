@@ -8,22 +8,19 @@ export const plugin: Plugin<ApplicationServiceClient> = {
   name: "applicationServiceClient",
   version: "1.0.0",
   registerOrder: 0,
-  register: async (context: PluginContext ) => {
+  register: async (context: PluginContext) => {
     const key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
-    const accessKey = Buffer.from(key).toString("base64")
-    const baseUrl = SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
+    const accessKey = Buffer.from(key).toString("base64");
+    const baseUrl =
+      SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
 
     const client = new ApplicationServiceClient(accessKey, baseUrl);
 
-    const schemaReponse = await client.getSchema(mutationSchema);
+    const schemaReponse = await client.getSchema(context, mutationSchema);
 
     const processedSchema = client.processSchema(schemaReponse.__type.fields);
 
     client.mutationSchema = processedSchema;
-
-    console.log("4f4f2363 schema", processedSchema);
-
-    const mutationResponse = client.mutate("createApplication", ["id", "application.id"], { relationships: null, meta: { service: "test" } });
 
     plugin.instance = client;
   },
