@@ -1,5 +1,7 @@
 import ingestManifests from "./ingestor.js";
-import execute from "./contract-executor.js";
+
+import Manifest from "./manifest.js";
+import Contract from "./contract.js";
 
 export const plugin: Plugin = {
   name: "contractExecution",
@@ -8,6 +10,6 @@ export const plugin: Plugin = {
   register: async (context: Context) => {
     const { contracts, manifests } = await ingestManifests(context);
 
-    plugin.instance = { execute, contracts, manifests };
+    plugin.instance = { Contract, contracts, Manifest, manifests };
   },
 };

@@ -6,6 +6,7 @@ import operation from "./operation.js";
 import concatenate from "./concatenate.js";
 import contract from "./contract-reference.js";
 import reference from "./input-reference.js";
+import rememberReference from "./remember-reference.js";
 import embeddedContract from "./embedded-contract.js";
 
 /**
@@ -21,16 +22,18 @@ const reviver: ContractReviver = function (
   if (rawValue != null && typeof rawValue === "object") {
     const { [constants.COMMENT_SYMBOL]: comment, ...value } = rawValue;
 
-    if (constants.OPERATION_SYMBOL in value) {
+    if (input && constants.OPERATION_SYMBOL in value) {
       return operation.call(this, input, manifest, key, value);
     }
 
-    if (constants.CONCATENATION_SYMBOL in value) {
+    if (input && constants.CONCATENATION_SYMBOL in value) {
       return concatenate.call(this, input, manifest, key, value);
     }
 
     if (constants.REFERENCE_SUBSTITUTION_SYMBOL in value) {
-      return reference.call(this, input, manifest, key, value);
+      return input
+        ? reference.call(this, input, manifest, key, value)
+        : rememberReference.call(this, input, manifest, key, value);
     }
 
     if (constants.CONTRACT_SUBSTITUTION_SYMBOL in value) {
@@ -39,7 +42,7 @@ const reviver: ContractReviver = function (
         : embeddedContract.call(this, input, manifest, key, value);
     }
 
-    if (constants.AND_CONTRACT in value) {
+    if (input && constants.AND_CONTRACT in value) {
       const { coercion } = value;
       return embeddedContract.call(this, input, manifest, key, {
         "@": "and",
@@ -48,7 +51,7 @@ const reviver: ContractReviver = function (
       });
     }
 
-    if (constants.OR_CONTRACT in value) {
+    if (input && constants.OR_CONTRACT in value) {
       const { coercion } = value;
       return embeddedContract.call(this, input, manifest, key, {
         "@": "or",
@@ -57,7 +60,7 @@ const reviver: ContractReviver = function (
       });
     }
 
-    if (constants.NOT_CONTRACT in value) {
+    if (input && constants.NOT_CONTRACT in value) {
       const { coercion } = value;
       return embeddedContract.call(this, input, manifest, key, {
         "@": "not",

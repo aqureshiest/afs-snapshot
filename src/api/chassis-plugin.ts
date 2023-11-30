@@ -12,6 +12,7 @@ export const plugin: Plugin = {
 
     context.application.use(
       "/apply/:manifest/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?",
+      handlers.getManifest.bind(null, context),
       wrapAsyncHandler(context, handlers.getInputs),
       handlers.executeContract.bind(null, context),
     );
@@ -70,11 +71,11 @@ export const plugin: Plugin = {
      *               type: object
      *               properties:
      */
-    context.application.post(
+    context.application.use(
       "/apply/:manifest/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?",
       wrapAsyncHandler(context, handlers.post),
     );
 
-    context.application.use(handlers.error);
+    context.application.use(handlers.error.bind(null, context));
   },
 };

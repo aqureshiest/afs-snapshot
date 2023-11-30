@@ -2,7 +2,12 @@
 import createError, { HttpError } from "http-errors";
 import { ErrorRequestHandler } from "express";
 
-const errorHandler: ErrorRequestHandler = function (error, req, res, next) {
+const errorHandler: Handler = function (context, error, req, res, next) {
+  context.logger.error({
+    message: error.message,
+    stack: error.stack,
+  });
+
   const convertedError =
     error instanceof HttpError ? error : createError.InternalServerError(error);
 

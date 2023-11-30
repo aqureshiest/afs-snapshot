@@ -94,45 +94,6 @@ pipeline {
             }
           }
         }
-        stage("Build schema") {
-          agent {
-            label 'generic'
-          }
-          when {
-            expression {
-              return (isValidPBEEnvironment(env.SELECTED_PBE_ENVIRONMENT) || env.GIT_BRANCH == 'main');
-            }
-          }
-          steps {
-            prepareDockerEnv()
-            sh "docker-compose build --progress=plain --build-arg VERSION schema"
-            dockerPush("earnest/apply-flow-service-schema:${env.VERSION}")
-          }
-          post {
-            cleanup {
-              cleanAll()
-            }
-          }
-        }
-      }
-    }
-
-    stage("Migrate staging database") {
-      agent { label 'generic' }
-      when {
-        beforeAgent true
-        branch "main"
-      }
-      steps {
-        prepareDockerEnv()
-        accomplishment(env.SERVICE_NAME, 'staging_database_migration', Strength.Weakest) {
-          migrateSchema(DeployEnv.Staging, "${env.VERSION}", "apply-flow-service-schema")
-        }
-      }
-      post {
-        cleanup {
-          cleanAll()
-        }
       }
     }
 
@@ -212,64 +173,6 @@ pipeline {
               )
             }
           }
-        }
-        stage("Canonize schema") {
-          agent {
-            label 'generic'
-          }
-          when {
-            beforeAgent true
-            branch "main"
-          }
-          steps {
-            prepareDockerEnv()
-            prepareNpmEnv()
-            sh "docker pull earnest/apply-flow-service-schema:${env.VERSION}"
-            withEnv(["VERSION=latest"]) {
-              sh "docker-compose build --build-arg VERSION schema"
-              dockerPush("earnest/apply-flow-service-schema:${env.VERSION}")
-            }
-          }
-          post {
-            cleanup {
-              cleanAll()
-            }
-            failure {
-              slackSendOnBranch(
-                'main',
-                "#${env.SLACK_CHANNEL}",
-                'danger',
-                "[apply-flow-service]: pipeline stage 'Canonize schema' failed! (<${env.BUILD_URL}|Details>)"
-              )
-            }
-          }
-        }
-      }
-    }
-
-    stage("Migrate production database") {
-      agent { label 'generic' }
-      when {
-        beforeAgent true
-        branch "main"
-      }
-      steps {
-        prepareDockerEnv()
-        accomplishment(env.SERVICE_NAME, 'production_database_migration', Strength.Strong) {
-          migrateSchema(DeployEnv.Production, "${env.VERSION}", "apply-flow-service-schema")
-        }
-      }
-      post {
-        cleanup {
-          cleanAll()
-        }
-        failure {
-          slackSendOnBranch(
-            'main',
-            "#${env.SLACK_CHANNEL}",
-            'danger',
-            "[apply-flow-service]: pipeline stage 'Migrate Production database' failed! (<${env.BUILD_URL}|Details>)"
-          )
         }
       }
     }
