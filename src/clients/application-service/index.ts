@@ -106,7 +106,7 @@ export default class ApplicationServiceClient extends Client {
         },
       })) as SchemaReponse;
 
-      if (response.statusCode! >= 400) {
+      if (response.statusCode! !== 200) {
         throw new Error(response.statusMessage);
       }
 
