@@ -162,7 +162,7 @@ describe("[f8395630] Application Service Client", () => {
       },
     };
 
-    const processedSchema = client.processSchema(schema.__type.fields);
+    const processedSchema = client.processSchema(schema);
     assert.deepEqual(processedSchema, {
       addDetails: {
         details: "AddDetailInput",
