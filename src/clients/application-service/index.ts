@@ -1,16 +1,8 @@
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Client } from "@earnest/http";
 import * as gql from "gql-query-builder";
-import type { IncomingMessage } from "http";
 
 import { mutationSchema } from "./graphql.js";
-
-type IResponse<T> = {
-  results: {
-    data: T;
-  };
-  response: IncomingMessage;
-};
 
 export default class ApplicationServiceClient extends Client {
   private accessKey: string;
@@ -179,7 +171,7 @@ export default class ApplicationServiceClient extends Client {
           Authorization: `Bearer ${jwt}`,
         },
         body,
-      })) as IResponse<unknown>;
+      })) as GqlResponse;
 
       if (response.statusCode !== 200) {
         throw new Error(response.statusMessage);
