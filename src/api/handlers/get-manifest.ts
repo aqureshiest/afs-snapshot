@@ -1,6 +1,8 @@
 import assert from "node:assert";
 import createError from "http-errors";
 
+import * as constants from "../constants.js";
+
 /**
  * Gather inputs for contract execution
  * TODO: get application from application-service
@@ -11,9 +13,15 @@ const getManifest: Handler = function (context, req, res, next) {
 
   assert(contracts);
 
-  const pathParams = req.params.manifest.split("-");
+  const params = req.params[0].split("/");
 
-  const manifest = contracts.Manifest.getManifest(context, pathParams);
+  const id = constants.UUID_REGEX.test(params[params.length - 1])
+    ? params.pop()
+    : null;
+
+  res.locals.application = { id };
+
+  const manifest = contracts.Manifest.getManifest(context, params);
 
   if (!manifest) {
     throw createError.NotFound();

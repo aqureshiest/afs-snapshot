@@ -10,7 +10,11 @@ const getInputs: Handler = async function (context, req, res, next) {
   // const references = res.locals.manifest?.references || [];
 
   const inputs = req.body ? req.body : {};
-  res.locals.inputs = { ...inputs, request: req };
+  res.locals.inputs = {
+    ...inputs,
+    application: res.locals.application,
+    request: req,
+  };
   return next();
 };
 
