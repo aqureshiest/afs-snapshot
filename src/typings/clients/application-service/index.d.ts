@@ -1,9 +1,9 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import type { IncomingMessage } from "http";
-import ApplicationServiceClient from "../../../clients/application-service/index.js";
+import type { default as ApplicationServiceClient } from "clients/application-service/index.js";
 
-declare module "../../clients/application-service/chassis-plugin.ts" {
+declare module "clients/application-service/chassis-plugin.ts" {
   type Plugin = ChassisPlugin;
   type Context = ChassisPluginContext;
   type instance = ApplicationServiceClient;
@@ -90,7 +90,7 @@ interface IApplication {
 interface IQueryResponse {
   results: {
     data: {
-      application: IApplication;
+      [key: string]: unknown;
     };
   };
   response: IncomingMessage;
@@ -131,11 +131,30 @@ interface IMutationResponse {
   response: IncomingMessage;
 }
 
+interface IQueryOptions {
+  id?: string;
+  referenceId?: string;
+  fields?: Array<string>;
+  meta?: { service: string };
+}
+
+interface IMutationOptions {
+  id?: string;
+  fields?: Array<string>;
+  data?: {
+    [key: string]: unknown;
+  };
+  meta: {
+    service: string;
+  };
+}
+
 declare module "../../../clients/application-service/index.js" {
   type RequestTokenResponse = IRequestTokenResponse;
   type Application = IApplication;
   type QueryResponse = IQueryResponse;
   type SchemaReponse = ISchemaResponse;
-  type Schema = IMutationSchema;
   type Mutation = IMutationResponse;
+  type QueryOptions = IQueryOptions;
+  type MutationOptions = IMutationOptions;
 }

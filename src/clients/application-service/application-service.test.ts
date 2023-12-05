@@ -28,10 +28,10 @@ describe("[f8395630] Application Service Client", () => {
     baseUrl =
       SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
 
-    client = new ApplicationServiceClient(accessKey, baseUrl);
+    client = new ApplicationServiceClient(context, accessKey, baseUrl);
   });
 
-  it("[099d3480] should throw an error when requesting a jwt and the response's status code is >= 400", async () => {
+  it("[099d3480] should throw an error when requesting a jwt and the response's status code !== 200", async () => {
     mock.method(client, "post", async () => {
       return {
         response: {
@@ -44,7 +44,7 @@ describe("[f8395630] Application Service Client", () => {
     try {
       await client.requestToken();
     } catch (error) {
-      assert(error.message, "Bad Request");
+      assert.strictEqual(error.message, "Bad Request");
     }
   });
 
@@ -61,7 +61,7 @@ describe("[f8395630] Application Service Client", () => {
     });
 
     const token = await client.requestToken(context);
-    assert(token, "mock");
+    assert.strictEqual(token, "mock");
   });
 
   it("[84e933d3] should throw an error when requesting a schema and the response's status code !== 200", async () => {
@@ -77,7 +77,7 @@ describe("[f8395630] Application Service Client", () => {
     try {
       await client.getSchema();
     } catch (error) {
-      assert(error.message, "Bad Request");
+      assert.strictEqual(error.message, "Bad Request");
     }
   });
 
@@ -114,7 +114,7 @@ describe("[f8395630] Application Service Client", () => {
       };
     });
 
-    const schema = await client.getSchema(mutationSchema);
+    const schema = await client.getSchema(context, { query: mutationSchema });
     assert.deepEqual(schema, schemaResponse);
   });
 
@@ -179,9 +179,13 @@ describe("[f8395630] Application Service Client", () => {
       "deletedAt",
       "name.first",
       "income.type",
+      "application.cosigner.id",
     ]);
 
-    assert(fields, "id,createdAt,deletedAt,name { first }, income { type },");
+    assert.strictEqual(
+      fields,
+      "id,createdAt,deletedAt,name { first },income { type },application { cosigner { id } },",
+    );
   });
 
   it("[af5648c0] should process variables for graphql queries and mutations", async () => {
@@ -213,6 +217,44 @@ describe("[f8395630] Application Service Client", () => {
     });
   });
 
+  it("[5186a333] should throw an error when querying an application and the response's status code !== 200", async () => {
+    mock.method(client, "post", async () => {
+      return {
+        response: {
+          statusCode: 400,
+          statusMessage: "Bad Request",
+        },
+      };
+    });
+
+    try {
+      await client.getApplication(context, "1", ["id", "application.id"]);
+    } catch (error) {
+      assert.strictEqual(error.message, "Bad Request");
+    }
+  });
+
+  it("[02658f67] should get an application", async () => {
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          data: {
+            application: {
+              id: "1",
+            },
+          },
+        },
+        response: {
+          statusCode: 200,
+          statusMessage: "Bad Request",
+        },
+      };
+    });
+
+    const application = await client.getApplication(context, "1");
+    assert.deepEqual(application, { id: "1" });
+  });
+
   it("[eff7363c] should throw an error when performing a mutation and the response's status code !== 200", async () => {
     client.mutationSchema = {
       createApplication: {
@@ -231,12 +273,12 @@ describe("[f8395630] Application Service Client", () => {
     });
 
     try {
-      await client.mutate("createApplication", ["id", "application.id"], {
-        relationships: null,
+      await client.mutate(context, "createApplication", {
+        fields: ["id", "application.id"],
         meta: { service: "apply-flow-service" },
       });
     } catch (error) {
-      assert(error.message, "Bad Request");
+      assert.strictEqual(error.message, "Bad Request");
     }
   });
 
@@ -286,7 +328,10 @@ describe("[f8395630] Application Service Client", () => {
       };
     });
 
-    const mutation = await client.mutate(context, req);
+    const mutation = await client.mutate(context, "createApplication", {
+      fields: ["id", "application.id"],
+      meta: { service: "apply-flow-service" },
+    });
     assert.deepEqual(mutation, {
       createApplication: {
         id: "1",
@@ -297,7 +342,7 @@ describe("[f8395630] Application Service Client", () => {
     });
   });
 
-  it("[b4636504] perform a graphql query", async () => {
+  it("[b4636504] should perform a graphql query", async () => {
     const expectedResult = {
       id: "1",
       createdAt: "2023-11-29T23:11:43.214Z",
@@ -329,22 +374,6 @@ describe("[f8395630] Application Service Client", () => {
       ],
     };
 
-    const req = {
-      params: {
-        uuid: 1,
-      },
-      body: {
-        fields: [
-          "id",
-          "createdAt",
-          "deletedAt",
-          "events.event",
-          "events.id",
-          "events.data",
-        ],
-      },
-    };
-
     mock.method(client, "getToken", async () => {
       return "token";
     });
@@ -364,8 +393,18 @@ describe("[f8395630] Application Service Client", () => {
       };
     });
 
-    const queryResponse = await client.query(context, req);
-    assert.deepEqual(queryResponse, expectedResult);
+    const queryResponse = await client.query(context, "application", {
+      id: "1",
+      fields: [
+        "id",
+        "createdAt",
+        "deletedAt",
+        "events.event",
+        "events.id",
+        "events.data",
+      ],
+    });
+    assert.deepEqual(queryResponse, { application: expectedResult });
   });
 
   it("[87a54c7d] should throw an error when performing a query", async () => {
@@ -379,9 +418,9 @@ describe("[f8395630] Application Service Client", () => {
     });
 
     try {
-      await client.query("1", ["id", "createdAt", "deletedAt"]);
+      await client.query(context, "application", { id: "1" });
     } catch (error) {
-      assert(error.message, "Bad Request");
+      assert.strictEqual(error.message, "Bad Request");
     }
   });
 });

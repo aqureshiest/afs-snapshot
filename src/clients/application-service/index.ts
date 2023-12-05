@@ -1,18 +1,38 @@
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Client } from "@earnest/http";
-import { Request } from "express";
 import * as gql from "gql-query-builder";
+import type { IncomingMessage } from "http";
+
+import { mutationSchema } from "./graphql.js";
+
+type IResponse<T> = {
+  results: {
+    data: T;
+  };
+  response: IncomingMessage;
+};
 
 export default class ApplicationServiceClient extends Client {
   private accessKey: string;
   private token: string;
-  mutationSchema;
+  private mutationSchema;
+  private logger;
 
-  constructor(accessKey: string, baseUrl: string) {
+  constructor(context: PluginContext, accessKey: string, baseUrl: string) {
+    const {
+      logger,
+      env: { NODE_ENV },
+    } = context;
+
     const options = { baseUrl };
 
     super(options);
     this.accessKey = accessKey;
+    this.logger = logger;
+
+    if (NODE_ENV !== "test") {
+      this.mutationSchema = this.setSchema(context, mutationSchema);
+    }
   }
 
   get headers() {
@@ -23,10 +43,160 @@ export default class ApplicationServiceClient extends Client {
     };
   }
 
+  /* ============================== *
+   * I. Public Queries and Mutations
+   * ============================== */
+
   /**
-   * Requests a new JWT if one doesnt exist or if the current token is expired
+   * Fetches an application and any predefined fields
+   * @param context PluginContext
+   * @param options UnkownObject
+   * @returns Promise<Application>
    */
-  async getToken(context: PluginContext): Promise<string> {
+  async getApplication(
+    context: PluginContext,
+    applicationId: string,
+    fields: Array<string> = [],
+  ): Promise<Application> {
+    try {
+      if (!applicationId) throw new Error("missing application id");
+
+      const applicationFields = this.generateFields(fields).split(",");
+
+      const applicationQuery = gql.query({
+        operation: "application",
+        variables: { id: { value: applicationId, required: true } },
+        fields: ["id", ...applicationFields],
+      });
+
+      const { application } = await this.handleGraphqlRequest(
+        context,
+        applicationQuery,
+      );
+
+      return application;
+    } catch (error) {
+      this.logError(error, "Failed to get appliction");
+      throw error;
+    }
+  }
+
+  /**
+   * Query application-service for a given resource
+   * @param options unknowm
+   * @returns Promise<unknown>
+   */
+  async query(
+    context: PluginContext,
+    query: string,
+    options: QueryOptions,
+  ): Promise<Application | Array<Application>> {
+    try {
+      const { id, referenceId, fields = [], meta } = options;
+
+      if (!id && !referenceId)
+        throw new Error("unique id for identifying resource is undefined");
+
+      const queryFields = this.generateFields(fields).split(",");
+
+      const gqlQuery = gql.query({
+        operation: query,
+        variables: {
+          ...(id ? { id: { value: id, required: true } } : {}),
+          ...(referenceId
+            ? { referenceId: { value: referenceId, required: true } }
+            : {}),
+          ...(meta
+            ? { meta: { value: meta, required: true, type: "EventMeta" } }
+            : {}),
+        },
+        fields: ["id", ...queryFields],
+      });
+
+      return await this.handleGraphqlRequest(context, gqlQuery);
+    } catch (error) {
+      this.logError(error, "Failed to query application-service");
+      throw error;
+    }
+  }
+
+  /**
+   * Performs a graphql mutation
+   * @param context PluginContext
+   * @param event string
+   * @param options
+   */
+  async mutate(
+    context: PluginContext,
+    event: string,
+    options: MutationOptions,
+  ): Promise<Mutation> {
+    try {
+      const { id, fields = [], data = {}, meta } = options;
+
+      if (!event) throw new Error("mutation type not specified");
+
+      if (!this.mutationSchema) await this.mutationSchema;
+
+      const types = this.mutationSchema[event]; // graphql types for mutation
+      const vars = this.processVariables(data, types);
+      const mutationFields = this.generateFields(fields).split(",");
+
+      const gqlMutation = gql.mutation({
+        operation: event,
+        variables: {
+          ...(id ? { id: { value: id, required: true } } : {}),
+          ...(meta
+            ? { meta: { value: meta, required: true, type: "EventMeta" } }
+            : {}),
+          ...vars,
+        },
+        fields: ["id", ...mutationFields],
+      });
+
+      return await this.handleGraphqlRequest(context, gqlMutation);
+    } catch (error) {
+      this.logError(error, "Failed to apply mutation");
+      throw error;
+    }
+  }
+
+  /* ============================== *
+   * II. Private Methods
+   * ============================== */
+
+  /**
+   * Generic handler for performing graphql queries and mutations
+   */
+  private async handleGraphqlRequest(context: PluginContext, body) {
+    try {
+      const jwt = await this.getToken();
+
+      const { results, response } = (await this.post({
+        uri: "/graphql",
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${jwt}`,
+        },
+        body,
+      })) as IResponse<any>;
+
+      if (response.statusCode !== 200) {
+        throw new Error(response.statusMessage);
+      }
+
+      return results.data;
+    } catch (error) {
+      this.logError(error, "Graphql request handler failed");
+      throw error;
+    }
+  }
+
+  /**
+   * Requests a new JWT if the current token is expired or if one doesnt exist
+   * @returns Promise<string>
+   */
+  private async getToken(): Promise<string> {
     const { token } = this;
 
     if (token) {
@@ -39,10 +209,10 @@ export default class ApplicationServiceClient extends Client {
       const { exp } = jwtPayload;
 
       if (Date.now() / 1000 - exp > exp) {
-        this.token = await this.requestToken(context);
+        this.token = await this.requestToken();
       }
     } else {
-      this.token = await this.requestToken(context);
+      this.token = await this.requestToken();
     }
 
     return this.token;
@@ -50,10 +220,9 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Requests a new JWT from application-service
+   * @returns Promise<string>
    */
-  async requestToken(context: PluginContext): Promise<string> {
-    const { logger } = context;
-
+  private async requestToken(): Promise<string> {
     try {
       const { results, response } = (await this.post({
         uri: "/auth",
@@ -68,58 +237,36 @@ export default class ApplicationServiceClient extends Client {
         },
       })) as RequestTokenResponse;
 
-      if (response.statusCode! >= 400) {
+      if (response.statusCode !== 200) {
         throw new Error(response.statusMessage);
       }
 
       return results.token;
     } catch (error) {
-      logger.error({
-        message: "Failed to request jwt from application-service",
-        error: {
-          message: error.message,
-          stack: error.stack,
-        },
-      });
-
+      this.logError(error, "Failed to request jwt from application-service");
       throw error;
     }
   }
 
   /**
-   * Fetches a schema by leveraging the graphql introspection system
+   * Orchestrates setting a specified schema given a graphql introspection query
    */
-  async getSchema(context: PluginContext, query: string): Promise<Schema> {
-    const { logger } = context;
+  private async setSchema(context, query: string) {
+    return this.getSchema(context, { query }).then((schema) => {
+      return this.processSchema(schema.__type.fields);
+    });
+  }
 
+  /**
+   * Fetches a schema by leveraging the graphql introspection system
+   * @param query string
+   * @returns Promise<Schema>
+   */
+  private async getSchema(context, body: { query: string }) {
     try {
-      const jwt = await this.getToken(context);
-
-      const { results, response } = (await this.post({
-        uri: "/graphql",
-        headers: {
-          ...this.headers,
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: {
-          query,
-        },
-      })) as SchemaReponse;
-
-      if (response.statusCode! !== 200) {
-        throw new Error(response.statusMessage);
-      }
-
-      return results.data;
+      return await this.handleGraphqlRequest(context, body);
     } catch (error) {
-      logger.error({
-        message: "Failed to get schema from application-service",
-        error: {
-          message: error.message,
-          stack: error.stack,
-        },
-      });
-
+      this.logError(error, "Failed to get schema from application-service");
       throw error;
     }
   }
@@ -127,8 +274,10 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Reduces schema fields down to an object whose key / value pairs represent
    * an argument and its respective grahpql type for a given event
+   * @param fields Array<string>
+   * @returns { [key: string]: string }
    */
-  processSchema(fields) {
+  private processSchema(fields) {
     return fields.reduce((acc, field) => {
       const { name: fieldName, args } = field;
 
@@ -162,9 +311,13 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Genereates graphql fields given a list of strings that represent details
    * to be returned in a graphql query / mutation. Composite details are delineated by a "."
+   * @param fields Array<string>
+   * @returns string
    */
-  generateFields(fields: Array<string>): string {
-    return fields.reduce((acc, fieldString) => {
+  private generateFields(fieldStrs: Array<string>): string {
+    if (!fieldStrs.length) return "";
+
+    return fieldStrs.reduce((acc, fieldString) => {
       const fields = fieldString.split(".");
 
       if (fields.length === 1) {
@@ -173,12 +326,22 @@ export default class ApplicationServiceClient extends Client {
         return acc;
       } else {
         let query = "";
+        let depth = fields.length - 1;
 
         while (fields.length) {
           const field = fields.shift();
 
           if (!fields.length) {
-            acc = acc + query + `${field} }, `;
+            acc = acc + query + `${field}`;
+
+            while (depth) {
+              depth--;
+              acc = acc + " }";
+
+              if (!depth) {
+                acc = acc + ",";
+              }
+            }
 
             return acc;
           } else {
@@ -192,13 +355,13 @@ export default class ApplicationServiceClient extends Client {
   }
 
   /**
-   * Given application data and argument types, process gql-query-builder
-   * varibales for a new graphql request for a given operation
+   * Processes gql-query-builder varibales for a new
+   * graphql request for a given operation
    */
-  processVariables(data, types) {
+  private processVariables(data: { [key: string]: unknown }, types) {
     const vars = {};
 
-    if (!data) return vars;
+    if (!Object.keys(data).length) return vars;
 
     for (const [key, val] of Object.entries(data)) {
       Object.assign(vars, { [key]: { value: val, type: types[key] } });
@@ -207,104 +370,13 @@ export default class ApplicationServiceClient extends Client {
     return vars;
   }
 
-  /**
-   * Query application-service
-   */
-  async query(context: PluginContext, req: Request): Promise<Application> {
-    const { logger } = context;
-
-    const { uuid: applicationId } = req.params;
-    const { fields } = req.body;
-
-    const gqlQuery = gql.query({
-      operation: "application",
-      variables: { id: { value: applicationId, required: true } },
-      fields: [...fields],
-    });
-
-    try {
-      const jwt = await this.getToken(context);
-
-      const { results, response } = (await this.post({
-        uri: "/graphql",
-        headers: {
-          ...this.headers,
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: gqlQuery,
-      })) as QueryResponse;
-
-      if (response.statusCode! !== 200) {
-        throw new Error(response.statusMessage);
-      }
-
-      return results.data.application;
-    } catch (error) {
-      logger.error({
-        message: "Failed to query application-service",
-        error: {
-          message: error.message,
-          stack: error.stack,
-        },
-      });
-
-      throw error;
-    }
-  }
-
-  /**
-   * Perform a graphlql mutation
-   */
-  async mutate(context: PluginContext, req: Request) {
-    const { logger } = context;
-
-    const { uuid: applicationId } = req.params;
-    const { event, fields, data } = req.body;
-
-    const mutationFields = this.generateFields(fields).split(",");
-
-    const types = this.mutationSchema[event];
-
-    const vars = this.processVariables(data, types);
-
-    const gqlMutation = gql.mutation({
-      operation: event,
-      variables: {
-        ...(applicationId
-          ? { id: { value: applicationId, required: true } }
-          : null),
-        ...vars,
+  private logError(error: Error, message: string) {
+    this.logger.error({
+      message,
+      error: {
+        message: error.message,
+        stack: error.stack,
       },
-      fields: [...mutationFields],
     });
-
-    try {
-      const jwt = await this.getToken(context);
-
-      const { results, response } = (await this.post({
-        uri: "/graphql",
-        headers: {
-          ...this.headers,
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: gqlMutation,
-      })) as Mutation;
-
-      if (response.statusCode! !== 200) {
-        throw new Error(response.statusMessage);
-      }
-
-      return results.data;
-    } catch (error) {
-      logger.error({
-        message: "Failed to apply mutation",
-        error: {
-          message: error.message,
-          stack: error.stack,
-        },
-      });
-
-      throw error;
-    }
   }
 }
