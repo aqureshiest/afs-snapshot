@@ -42,7 +42,8 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Fetches an application and any predefined fields
    * @param context PluginContext
-   * @param options UnkownObject
+   * @param applicationId string
+   * @param fields Array<string>
    * @returns Promise<Application>
    */
   async getApplication(
@@ -126,9 +127,11 @@ export default class ApplicationServiceClient extends Client {
     try {
       const { id, fields = [], data = {}, meta } = options;
 
-      if (!event) throw new Error("mutation type not specified");
+      if (!event) throw new Error("mutation event not specified");
 
-      if (!this.mutationSchema) await this.mutationSchema;
+      if (this.mutationSchema instanceof Promise) { 
+        this.mutationSchema = await this.mutationSchema;
+      }
 
       const types = this.mutationSchema[event]; // graphql types for mutation
       const vars = this.processVariables(data, types);
@@ -251,7 +254,8 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Fetches a schema by leveraging the graphql introspection system
-   * @param query string
+   * @param context string
+   * @param body { query: string }
    * @returns Promise<Schema>
    */
   private async getSchema(context, body: { query: string }) {
@@ -266,7 +270,7 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Reduces schema fields down to an object whose key / value pairs represent
    * an argument and its respective grahpql type for a given event
-   * @param fields Array<string>
+   * @param schema ISchemaResponse
    * @returns { [key: string]: string }
    */
   private processSchema(schema) {
