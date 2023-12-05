@@ -34,6 +34,7 @@ interface IContracts {
 interface IContractSubstitution {
   "?": string | string[];
   $: { [key: string]: string };
+  "...": string | string[];
   "#": string;
   "@": string;
   coercion: string;

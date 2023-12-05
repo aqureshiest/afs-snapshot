@@ -25,7 +25,7 @@ const contractReference: ContractReviver = function (
   const substitutionKey = value[constants.CONTRACT_SUBSTITUTION_SYMBOL];
 
   const [, contractKey, coercion, array] =
-    constants.REFERENCE_SUBSTITUTION_REGEX.exec(substitutionKey) || [];
+    constants.CONTRACT_SUBSTITUTION_REGEX.exec(substitutionKey) || [];
 
   if (contractKey in manifest.contracts) {
     const parsed = manifest.contracts[contractKey].map(

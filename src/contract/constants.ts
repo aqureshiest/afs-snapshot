@@ -13,6 +13,7 @@ export const OPERATION_SYMBOL = "%";
 export const MAPPING_SYMBOL = "@";
 export const WILD_CARD_SYMBOL = "*";
 export const COMMENT_SYMBOL = "?";
+export const SPREAD_SYMBOL = "...";
 
 /* ============================== *
  * Regex
