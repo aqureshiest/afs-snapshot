@@ -87,6 +87,10 @@ interface IApplication {
   product?: string;
 }
 
+interface IApplicationResponse {
+  application: IApplication;
+}
+
 interface IQueryResponse {
   results: {
     data: {
@@ -157,4 +161,5 @@ declare module "../../../clients/application-service/index.js" {
   type Mutation = IMutationResponse;
   type QueryOptions = IQueryOptions;
   type MutationOptions = IMutationOptions;
+  type ApplicationResponse = IApplicationResponse;
 }

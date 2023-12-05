@@ -69,10 +69,10 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...applicationFields],
       });
 
-      const { application } = await this.handleGraphqlRequest(
+      const { application } = (await this.handleGraphqlRequest(
         context,
         applicationQuery,
-      );
+      )) as ApplicationResponse;
 
       return application;
     } catch (error) {
@@ -113,7 +113,7 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...queryFields],
       });
 
-      return await this.handleGraphqlRequest(context, gqlQuery);
+      return (await this.handleGraphqlRequest(context, gqlQuery)) as Application | Array<Application>;
     } catch (error) {
       this.logError(error, "Failed to query application-service");
       throw error;
@@ -154,7 +154,7 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...mutationFields],
       });
 
-      return await this.handleGraphqlRequest(context, gqlMutation);
+      return (await this.handleGraphqlRequest(context, gqlMutation)) as Mutation;
     } catch (error) {
       this.logError(error, "Failed to apply mutation");
       throw error;
@@ -179,7 +179,7 @@ export default class ApplicationServiceClient extends Client {
           Authorization: `Bearer ${jwt}`,
         },
         body,
-      })) as IResponse<any>;
+      })) as IResponse<unknown>;
 
       if (response.statusCode !== 200) {
         throw new Error(response.statusMessage);
@@ -253,7 +253,7 @@ export default class ApplicationServiceClient extends Client {
    */
   private async setSchema(context, query: string) {
     return this.getSchema(context, { query }).then((schema) => {
-      return this.processSchema(schema.__type.fields);
+      return this.processSchema(schema);
     });
   }
 
@@ -277,8 +277,8 @@ export default class ApplicationServiceClient extends Client {
    * @param fields Array<string>
    * @returns { [key: string]: string }
    */
-  private processSchema(fields) {
-    return fields.reduce((acc, field) => {
+  private processSchema(schema) {
+    return schema.__type.fields.reduce((acc, field) => {
       const { name: fieldName, args } = field;
 
       const graphqlInputs = args.reduce((argAcc, arg) => {

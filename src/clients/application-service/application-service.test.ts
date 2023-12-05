@@ -290,22 +290,6 @@ describe("[f8395630] Application Service Client", () => {
       },
     };
 
-    const req = {
-      params: {
-        uuid: 1,
-      },
-      body: {
-        event: "createApplication",
-        fields: ["id", "application.id"],
-        data: {
-          relationships: null,
-          meta: {
-            service: "apply-flow-service",
-          },
-        },
-      },
-    };
-
     mock.method(client, "getToken", async () => {
       return "token";
     });
