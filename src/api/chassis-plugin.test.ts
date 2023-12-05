@@ -22,10 +22,10 @@ describe("[41a1abef] chassis-plugins", () => {
   });
 
   it("[9c34ea12] Representative contracts", async () => {
-    await axios.get("http://localhost:3000/apply/nested-nested_manifest");
+    await axios.get("http://localhost:3000/apply/nested/nested_manifest");
   });
 
-  it("[9c34ea12] Representative contracts", async () => {
-    await axios.post("http://localhost:3000/apply/nested-nested_manifest");
+  it("[ac8836e7] Representative contracts", async () => {
+    await axios.post("http://localhost:3000/apply/nested/nested_manifest");
   });
 });

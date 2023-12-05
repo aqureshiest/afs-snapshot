@@ -11,7 +11,7 @@ export const plugin: Plugin = {
      * ============================== */
 
     context.application.use(
-      "/apply/:manifest/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?",
+      "/apply/*",
       handlers.getManifest.bind(null, context),
       wrapAsyncHandler(context, handlers.getInputs),
       handlers.executeContract.bind(null, context),
@@ -19,7 +19,7 @@ export const plugin: Plugin = {
 
     /**
      * @openapi
-     * /apply/{manifest}/*:
+     * /apply/*:
      *   servers: ["{{application}}"]
      *   get:
      *     description: Execute a representative contract
@@ -38,14 +38,11 @@ export const plugin: Plugin = {
      *             schema:
      *               type: object
      */
-    context.application.get(
-      "/apply/:manifest/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?",
-      handlers.get.bind(null, context),
-    );
+    context.application.get("/apply/*", handlers.get.bind(null, context));
 
     /**
      * @openapi
-     * /apply/{manifest}/*:
+     * /apply/*:
      *   servers: ["{{application}}"]
      *   post:
      *     description: Execute a mutative contract
@@ -72,7 +69,7 @@ export const plugin: Plugin = {
      *               properties:
      */
     context.application.use(
-      "/apply/:manifest/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?",
+      "/apply/*",
       wrapAsyncHandler(context, handlers.post),
     );
 

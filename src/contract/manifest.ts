@@ -49,11 +49,11 @@ export default class Manifest {
   traverse(
     boundReviver: Parameters<typeof JSON.parse>[1],
     input?: Input,
-    contract = this.contracts["*"]
+    contract = this.contracts["*"],
   ) {
     if (Array.isArray(contract)) {
       return contract.map((subContract) =>
-        this.traverse(boundReviver, input, subContract)
+        this.traverse(boundReviver, input, subContract),
       );
     }
 
