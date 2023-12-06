@@ -129,11 +129,9 @@ export default class ApplicationServiceClient extends Client {
 
       if (!event) throw new Error("mutation event not specified");
 
-      if (this.mutationSchema instanceof Promise) { 
-        this.mutationSchema = await this.mutationSchema;
-      }
+      const mutationSchema = await this.mutationSchema;
 
-      const types = this.mutationSchema[event]; // graphql types for mutation
+      const types = mutationSchema[event]; // graphql types for mutation
       const vars = this.processVariables(data, types);
       const mutationFields = this.generateFields(fields).split(",");
 
@@ -249,6 +247,9 @@ export default class ApplicationServiceClient extends Client {
   private async setSchema(context, query: string) {
     return this.getSchema(context, { query }).then((schema) => {
       return this.processSchema(schema);
+    }).catch((error) => {
+      this.logError(error, "Failed to set and process schema");
+      throw error;
     });
   }
 
