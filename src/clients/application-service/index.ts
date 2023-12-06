@@ -12,7 +12,6 @@ export default class ApplicationServiceClient extends Client {
 
   constructor(context: PluginContext, accessKey: string, baseUrl: string) {
     const { logger } = context;
-
     const options = { baseUrl };
 
     super(options);
@@ -69,7 +68,9 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Query application-service for a given resource
-   * @param options unknowm
+   * @param context PluginContext
+   * @param query string
+   * @param options Object
    * @returns {Promise<Application | Array<Application>>}
    */
   async query(
@@ -115,7 +116,7 @@ export default class ApplicationServiceClient extends Client {
    * Performs a graphql mutation
    * @param context PluginContext
    * @param event string
-   * @param options
+   * @param options Object
    * @returns {Promise<Mutation>}
    */
   async mutate(
@@ -166,6 +167,9 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Generic handler for performing graphql queries and mutations
+   * @param context PluginContext
+   * @param body Object
+   * @returns Object
    */
   private async handleGraphqlRequest(context: PluginContext, body) {
     try {
@@ -199,7 +203,7 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Requests a new JWT if the current token is expired or if one doesnt exist
-   * @returns Promise<string>
+   * @returns {Promise<string>}
    */
   private async getToken(): Promise<string> {
     const { token } = this;
@@ -225,7 +229,7 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Requests a new JWT from application-service
-   * @returns Promise<string>
+   * @returns {Promise<string>}
    */
   private async requestToken(): Promise<string> {
     try {
@@ -255,6 +259,9 @@ export default class ApplicationServiceClient extends Client {
 
   /**
    * Orchestrates setting a specified schema given a graphql introspection query
+   * @param context PluginContext
+   * @param query string
+   * @returns Object
    */
   private async getSchema(context, query: string) {
     return this.handleGraphqlRequest(context, { query }).then((rawSchema) => {
@@ -269,7 +276,7 @@ export default class ApplicationServiceClient extends Client {
    * Reduces schema fields down to an object whose key / value pairs represent
    * an argument and its respective grahpql type for a given event
    * @param schema ISchemaResponse
-   * @returns { [key: string]: string }
+   * @returns Object
    */
   private processSchema(schema) {
     return schema.__type.fields.reduce((acc, field) => {
@@ -303,15 +310,15 @@ export default class ApplicationServiceClient extends Client {
   }
 
   /**
-   * Genereates graphql fields given a list of strings that represent details
-   * to be returned in a graphql query / mutation. Composite details are delineated by a "."
+   * Generates graphql fields given a list of strings that represent details
+   * to return in a graphql query / mutation. Composite details are delineated by a "."
    * @param fields Array<string>
    * @returns string
    */
-  private generateFields(fieldStrs: Array<string>): string {
-    if (!fieldStrs.length) return "";
+  private generateFields(queryFields: Array<string>): string {
+    if (!queryFields.length) return "";
 
-    return fieldStrs.reduce((acc, fieldString) => {
+    return queryFields.reduce((acc, fieldString) => {
       const fields = fieldString.split(".");
 
       if (fields.length === 1) {
@@ -349,10 +356,12 @@ export default class ApplicationServiceClient extends Client {
   }
 
   /**
-   * Processes gql-query-builder varibales for a new
-   * graphql request for a given operation
+   * Processes gql-query-builder variables
+   * @param data Object
+   * @param types Object
+   * @returns Object
    */
-  private processVariables(data: { [key: string]: unknown }, types) {
+  private processVariables(data, types) {
     const vars = {};
 
     if (!Object.keys(data).length) return vars;
