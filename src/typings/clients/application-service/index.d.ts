@@ -126,11 +126,12 @@ interface ISchemaResponse {
   response: IncomingMessage;
 }
 
-interface IMutationResponse {
-  results: {
-    data: unknown;
-  };
-  response: IncomingMessage;
+interface IMutation {
+  [key: string]: {
+    [key:string]: {
+      [key: string]: unknown;
+    }
+  }
 }
 
 interface IQueryOptions {
@@ -163,7 +164,7 @@ declare module "../../../clients/application-service/index.js" {
   type Application = IApplication;
   type QueryResponse = IQueryResponse;
   type SchemaReponse = ISchemaResponse;
-  type Mutation = IMutationResponse;
+  type Mutation = IMutation;
   type QueryOptions = IQueryOptions;
   type MutationOptions = IMutationOptions;
   type ApplicationResponse = IApplicationResponse;

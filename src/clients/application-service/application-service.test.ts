@@ -7,7 +7,7 @@ import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 import ApplicationServiceClient from "./index.js";
-import { mutationSchema } from "./graphql.js";
+import { mutationSchemaQuery } from "./graphql.js";
 
 describe("[f8395630] Application Service Client", () => {
   let accessKey;
@@ -82,44 +82,7 @@ describe("[f8395630] Application Service Client", () => {
   });
 
   it("[21aefe81] should get a requested schema", async () => {
-    const schemaResponse = {
-      __type: {
-        name: "mock",
-        fields: [
-          {
-            name: "field",
-            args: [
-              {
-                name: "arg",
-                type: {
-                  name: "type",
-                  kind: "kind",
-                  ofType: null,
-                },
-              },
-            ],
-          },
-        ],
-      },
-    };
-
-    mock.method(client, "post", async () => {
-      return {
-        results: {
-          data: schemaResponse,
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-
-    const schema = await client.getSchema(context, { query: mutationSchema });
-    assert.deepEqual(schema, schemaResponse);
-  });
-
-  it("[9f04b0f0] should process a given schema", async () => {
-    const schema = {
+    const rawSchema = {
       __type: {
         name: "Mutation",
         fields: [
@@ -162,8 +125,19 @@ describe("[f8395630] Application Service Client", () => {
       },
     };
 
-    const processedSchema = client.processSchema(schema);
-    assert.deepEqual(processedSchema, {
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          data: rawSchema,
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const schema = await client.getSchema(context, mutationSchemaQuery);
+    assert.deepEqual(schema, {
       addDetails: {
         details: "AddDetailInput",
         meta: "EventMeta!",
@@ -171,6 +145,18 @@ describe("[f8395630] Application Service Client", () => {
       },
     });
   });
+
+  // it("[9f04b0f0] should process a given schema", async () => {
+
+  //   const processedSchema = client.processSchema(schema);
+  //   assert.deepEqual(processedSchema, {
+  //     addDetails: {
+  //       details: "AddDetailInput",
+  //       meta: "EventMeta!",
+  //       id: "UUID!",
+  //     },
+  //   });
+  // });
 
   it("[362464a8] should generate fields for graphql queries and mutations", () => {
     const fields = client.generateFields([

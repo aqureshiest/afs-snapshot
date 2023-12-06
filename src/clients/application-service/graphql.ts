@@ -1,4 +1,4 @@
-export const mutationSchema = `query shcema {
+export const mutationSchemaQuery = `query shcema {
   __type(name: "Mutation") {
     name
       fields {

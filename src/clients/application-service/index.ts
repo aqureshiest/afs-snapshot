@@ -2,7 +2,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Client } from "@earnest/http";
 import * as gql from "gql-query-builder";
 
-import { mutationSchema } from "./graphql.js";
+import { mutationSchemaQuery } from "./graphql.js";
 
 export default class ApplicationServiceClient extends Client {
   private accessKey: string;
@@ -11,20 +11,13 @@ export default class ApplicationServiceClient extends Client {
   private logger;
 
   constructor(context: PluginContext, accessKey: string, baseUrl: string) {
-    const {
-      logger,
-      env: { NODE_ENV },
-    } = context;
+    const { logger } = context;
 
     const options = { baseUrl };
 
     super(options);
     this.accessKey = accessKey;
     this.logger = logger;
-
-    if (NODE_ENV !== "test") {
-      this.mutationSchema = this.setSchema(context, mutationSchema);
-    }
   }
 
   get headers() {
@@ -40,11 +33,11 @@ export default class ApplicationServiceClient extends Client {
    * ============================== */
 
   /**
-   * Fetches an application and any predefined fields
+   * Fetches an application and any specified fields
    * @param context PluginContext
    * @param applicationId string
    * @param fields Array<string>
-   * @returns Promise<Application>
+   * @returns {Promise<Application>}
    */
   async getApplication(
     context: PluginContext,
@@ -62,10 +55,10 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...applicationFields],
       });
 
-      const { application } = (await this.handleGraphqlRequest(
+      const { application } = await this.handleGraphqlRequest(
         context,
         applicationQuery,
-      )) as ApplicationResponse;
+      ) as ApplicationResponse;
 
       return application;
     } catch (error) {
@@ -77,7 +70,7 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Query application-service for a given resource
    * @param options unknowm
-   * @returns Promise<unknown>
+   * @returns {Promise<Application | Array<Application>>}
    */
   async query(
     context: PluginContext,
@@ -106,7 +99,12 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...queryFields],
       });
 
-      return (await this.handleGraphqlRequest(context, gqlQuery)) as Application | Array<Application>;
+      const result = await this.handleGraphqlRequest(
+        context,
+        gqlQuery
+      ) as Application | Array<Application>;
+
+      return result;
     } catch (error) {
       this.logError(error, "Failed to query application-service");
       throw error;
@@ -118,6 +116,7 @@ export default class ApplicationServiceClient extends Client {
    * @param context PluginContext
    * @param event string
    * @param options
+   * @returns {Promise<Mutation>}
    */
   async mutate(
     context: PluginContext,
@@ -129,25 +128,32 @@ export default class ApplicationServiceClient extends Client {
 
       if (!event) throw new Error("mutation event not specified");
 
-      const mutationSchema = await this.mutationSchema;
+      if (!this.mutationSchema) {
+        this.mutationSchema = await this.getSchema(context, mutationSchemaQuery);
+      }
 
-      const types = mutationSchema[event]; // graphql types for mutation
+      const types = this.mutationSchema[event]; // graphql types for mutation
       const vars = this.processVariables(data, types);
       const mutationFields = this.generateFields(fields).split(",");
 
       const gqlMutation = gql.mutation({
         operation: event,
         variables: {
-          ...(id ? { id: { value: id, required: true } } : {}),
+          ...(id ? { id: { value: id, required: true, type: "UUID" } } : {}),
+          ...vars,
           ...(meta
             ? { meta: { value: meta, required: true, type: "EventMeta" } }
             : {}),
-          ...vars,
         },
         fields: ["id", ...mutationFields],
       });
 
-      return (await this.handleGraphqlRequest(context, gqlMutation)) as Mutation;
+      const result = await this.handleGraphqlRequest(
+       context,
+       gqlMutation
+      ) as Mutation;
+
+      return result;
     } catch (error) {
       this.logError(error, "Failed to apply mutation");
       throw error;
@@ -172,6 +178,12 @@ export default class ApplicationServiceClient extends Client {
           Authorization: `Bearer ${jwt}`,
         },
         body,
+        resiliency: {
+          attempts: 3,
+          delay: 100,
+          timeout: 10000,
+          test: ({ response }) => Boolean(response.statusCode && response.statusCode <= 500),
+        }
       })) as GqlResponse;
 
       if (response.statusCode !== 200) {
@@ -244,28 +256,13 @@ export default class ApplicationServiceClient extends Client {
   /**
    * Orchestrates setting a specified schema given a graphql introspection query
    */
-  private async setSchema(context, query: string) {
-    return this.getSchema(context, { query }).then((schema) => {
-      return this.processSchema(schema);
+  private async getSchema(context, query: string) {
+    return this.handleGraphqlRequest(context, { query }).then((rawSchema) => {
+      return this.processSchema(rawSchema); 
     }).catch((error) => {
-      this.logError(error, "Failed to set and process schema");
+      this.logError(error, "Failed to get and process schema");
       throw error;
     });
-  }
-
-  /**
-   * Fetches a schema by leveraging the graphql introspection system
-   * @param context string
-   * @param body { query: string }
-   * @returns Promise<Schema>
-   */
-  private async getSchema(context, body: { query: string }) {
-    try {
-      return await this.handleGraphqlRequest(context, body);
-    } catch (error) {
-      this.logError(error, "Failed to get schema from application-service");
-      throw error;
-    }
   }
 
   /**
