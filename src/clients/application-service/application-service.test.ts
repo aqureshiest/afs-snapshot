@@ -82,6 +82,13 @@ describe("[f8395630] Application Service Client", () => {
   it("[84e933d3] should throw an error when requesting a schema and the response's status code !== 200", async () => {
     mock.method(client, "post", async () => {
       return {
+        results: {
+          errors: [
+            {
+              message: "Invalid"
+            }
+          ]
+        },
         response: {
           statusCode: 400,
           statusMessage: "Bad Request",
@@ -209,6 +216,13 @@ describe("[f8395630] Application Service Client", () => {
   it("[5186a333] should throw an error when querying an application and the response's status code !== 200", async () => {
     mock.method(client, "post", async () => {
       return {
+        results: {
+          errors: [
+            {
+              message: "Invalid"
+            }
+          ]
+        },
         response: {
           statusCode: 400,
           statusMessage: "Bad Request",
@@ -235,7 +249,6 @@ describe("[f8395630] Application Service Client", () => {
         },
         response: {
           statusCode: 200,
-          statusMessage: "Bad Request",
         },
       };
     });
@@ -254,6 +267,13 @@ describe("[f8395630] Application Service Client", () => {
 
     mock.method(client, "post", async () => {
       return {
+        results: {
+          errors: [
+            {
+              message: "Invalid"
+            }
+          ]
+        },
         response: {
           statusCode: 400,
           statusMessage: "Bad Request",
@@ -383,6 +403,13 @@ describe("[f8395630] Application Service Client", () => {
   it("[87a54c7d] should throw an error when performing a query", async () => {
     mock.method(client, "post", async () => {
       return {
+        results: {
+          errors: [
+            {
+              message: "Invalid"
+            }
+          ]
+        },
         response: {
           statusCode: 400,
           statusMessage: "Bad Request",
