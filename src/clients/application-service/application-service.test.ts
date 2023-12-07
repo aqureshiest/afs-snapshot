@@ -31,6 +31,21 @@ describe("[f8395630] Application Service Client", () => {
     client = new ApplicationServiceClient(context, accessKey, baseUrl);
   });
 
+  it("[c1ca98f2] should set the mutation schema on start", async () => {
+    const schema =  {
+      addDetails: {
+      details: "AddDetailInput",
+      meta: "EventMeta!",
+      id: "UUID!",
+      },
+    };
+
+    mock.method(client, "getSchema", async () => schema);
+
+    await client.start(context, mutationSchemaQuery);
+    assert.deepEqual(client.mutationSchema, schema);
+  });
+
   it("[099d3480] should throw an error when requesting a jwt and the response's status code !== 200", async () => {
     mock.method(client, "post", async () => {
       return {
@@ -145,18 +160,6 @@ describe("[f8395630] Application Service Client", () => {
       },
     });
   });
-
-  // it("[9f04b0f0] should process a given schema", async () => {
-
-  //   const processedSchema = client.processSchema(schema);
-  //   assert.deepEqual(processedSchema, {
-  //     addDetails: {
-  //       details: "AddDetailInput",
-  //       meta: "EventMeta!",
-  //       id: "UUID!",
-  //     },
-  //   });
-  // });
 
   it("[362464a8] should generate fields for graphql queries and mutations", () => {
     const fields = client.generateFields([

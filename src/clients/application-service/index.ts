@@ -27,6 +27,19 @@ export default class ApplicationServiceClient extends Client {
     };
   }
 
+  async start(...injections): Promise<void> {
+    const context: PluginContext = injections[0];
+
+    this.getSchema(context, mutationSchemaQuery)
+      .then((schema) => {
+        this.mutationSchema = schema;
+      }).catch((error) => {
+        this.logError(error, "Failed to get schema on start");
+      });
+  
+    return await super.start();
+  }
+
   /* ============================== *
    * I. Public Queries and Mutations
    * ============================== */
@@ -54,7 +67,7 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...applicationFields],
       });
 
-      const { application } = await this.handleGraphqlRequest(
+      const { application } = await this.sendPostRequest(
         context,
         applicationQuery,
       ) as ApplicationResponse;
@@ -100,7 +113,7 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...queryFields],
       });
 
-      const result = await this.handleGraphqlRequest(
+      const result = await this.sendPostRequest(
         context,
         gqlQuery
       ) as Application | Array<Application>;
@@ -125,12 +138,27 @@ export default class ApplicationServiceClient extends Client {
     options: MutationOptions,
   ): Promise<Mutation> {
     try {
-      const { id, fields = [], data = {}, meta } = options;
+      const {
+        id,
+        fields = [],
+        data = {},
+        meta
+      } = options;
 
-      if (!event) throw new Error("mutation event not specified");
-
+      if (!event) {
+        throw new Error("missing mutation event");
+      }
+      /**
+       * Reattempt to get the mutation schema if the inital request failed on start
+       */
       if (!this.mutationSchema) {
-        this.mutationSchema = await this.getSchema(context, mutationSchemaQuery);
+        this.getSchema(context, mutationSchemaQuery)
+          .then((schema) => {
+            this.mutationSchema = schema;
+          }).catch((error) => {
+            this.logError(error, "Reattempt to get mutation schema failed. Unable to apply mutation");
+            throw error;
+          });
       }
 
       const types = this.mutationSchema[event]; // graphql types for mutation
@@ -149,7 +177,7 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...mutationFields],
       });
 
-      const result = await this.handleGraphqlRequest(
+      const result = await this.sendPostRequest(
        context,
        gqlMutation
       ) as Mutation;
@@ -171,7 +199,7 @@ export default class ApplicationServiceClient extends Client {
    * @param body Object
    * @returns Object
    */
-  private async handleGraphqlRequest(context: PluginContext, body) {
+  private async sendPostRequest(context: PluginContext, body) {
     try {
       const jwt = await this.getToken();
 
@@ -264,7 +292,7 @@ export default class ApplicationServiceClient extends Client {
    * @returns Object
    */
   private async getSchema(context, query: string) {
-    return this.handleGraphqlRequest(context, { query }).then((rawSchema) => {
+    return this.sendPostRequest(context, { query }).then((rawSchema) => {
       return this.processSchema(rawSchema); 
     }).catch((error) => {
       this.logError(error, "Failed to get and process schema");
