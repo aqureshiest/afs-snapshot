@@ -3,5 +3,6 @@
   "database_name": "applyflowservice",
   "database_password": "earnest",
   "database_username": "earnest",
-  "ACCESS_KEY": "accesskeyTEST-1"
+  "ACCESS_KEY": "accesskeyTEST-1",
+  "APPLICATION_SERVICE_URL": "http://host.docker.internal:4500"
 }
