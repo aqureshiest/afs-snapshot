@@ -30,7 +30,7 @@ export default class ApplicationServiceClient extends Client {
   async start(...injections): Promise<void> {
     const context: PluginContext = injections[0];
 
-    this.getSchema(context, mutationSchemaQuery)
+    await this.getSchema(context, mutationSchemaQuery)
       .then((schema) => {
         this.mutationSchema = schema;
       }).catch((error) => {
@@ -152,7 +152,7 @@ export default class ApplicationServiceClient extends Client {
        * Reattempt to get the mutation schema if the inital request failed on start
        */
       if (!this.mutationSchema) {
-        this.getSchema(context, mutationSchemaQuery)
+        await this.getSchema(context, mutationSchemaQuery)
           .then((schema) => {
             this.mutationSchema = schema;
           }).catch((error) => {
@@ -292,7 +292,7 @@ export default class ApplicationServiceClient extends Client {
    * @returns Object
    */
   private async getSchema(context, query: string) {
-    return this.sendPostRequest(context, { query }).then((rawSchema) => {
+    return await this.sendPostRequest(context, { query }).then((rawSchema) => {
       return this.processSchema(rawSchema); 
     }).catch((error) => {
       this.logError(error, "Failed to get and process schema");
