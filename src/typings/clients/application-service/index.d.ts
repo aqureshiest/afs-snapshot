@@ -155,6 +155,11 @@ interface IMutationOptions {
 type IGqlResponse = {
   results: {
     data: unknown;
+    errors: Array<{
+      message: string;
+      locations: Array<unknown>
+      extensions: Array<{[key: string]: unknown}>
+    }>
   };
   response: IncomingMessage;
 };

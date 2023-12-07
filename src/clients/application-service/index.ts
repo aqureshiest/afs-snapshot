@@ -57,7 +57,9 @@ export default class ApplicationServiceClient extends Client {
     fields: Array<string> = [],
   ): Promise<Application> {
     try {
-      if (!applicationId) throw new Error("missing application id");
+      if (!applicationId) {
+        throw new Error("missing application id");
+      }
 
       const applicationFields = this.generateFields(fields).split(",");
 
@@ -92,10 +94,16 @@ export default class ApplicationServiceClient extends Client {
     options: QueryOptions,
   ): Promise<Application | Array<Application>> {
     try {
-      const { id, referenceId, fields = [], meta } = options;
+      const {
+        id,
+        referenceId,
+        fields = [],
+        meta 
+      } = options;
 
-      if (!id && !referenceId)
+      if (!id && !referenceId) {
         throw new Error("unique id for identifying resource is undefined");
+      }
 
       const queryFields = this.generateFields(fields).split(",");
 
@@ -219,12 +227,19 @@ export default class ApplicationServiceClient extends Client {
       })) as GqlResponse;
 
       if (response.statusCode !== 200) {
-        throw new Error(response.statusMessage);
+        const error = new Error (response.statusMessage);
+        const message = results.errors.reduce((acc, e) => {
+          acc = acc + e.message + " "
+          return acc;
+        }, "");
+
+        this.logError(error, message);
+        throw error;
       }
 
       return results.data;
     } catch (error) {
-      this.logError(error, "Graphql request handler failed");
+      this.logError(error, "post request to application-service failed");
       throw error;
     }
   }
