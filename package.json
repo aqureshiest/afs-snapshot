@@ -29,6 +29,7 @@
     "@earnest/state-machine": "^2.2.0",
     "ajv": "^8.12.0",
     "axios": "^1.6.0",
+    "handlebars-a-la-json": "^1.5.8",
     "gql-query-builder": "^3.8.0",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.1",

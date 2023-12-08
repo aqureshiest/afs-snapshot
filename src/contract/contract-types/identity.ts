@@ -6,10 +6,6 @@ class IdentityContract<Identity> extends ContractType<Identity> {
   }
 
   toJSON() {
-    if (this.coercion) {
-      const coercion = this.coercion(this.definition);
-      return coercion;
-    }
     return this.definition;
   }
 }

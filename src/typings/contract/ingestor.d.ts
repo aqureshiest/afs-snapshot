@@ -10,6 +10,7 @@ declare module "contract/ingestor.js" {
     <A extends { [key: string]: unknown }>(
       context: PluginContext,
       rootPath: string,
+      extension: RegExp,
       fileTraverser: FileTraverser<A>,
       pathSegments?: string[],
       accumulator?: A,

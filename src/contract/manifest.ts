@@ -1,9 +1,6 @@
 import assert from "node:assert";
 import { MutationType } from "./contract-types/base-contract.js";
 
-import reviver from "./revivers/reviver.js";
-import Reference from "./reference.js";
-
 /**
  * Manifests link independent contract modules together to represent a
  * discrete unit of work for Apply Flow Service to complete, typically either:
@@ -26,9 +23,8 @@ export default class Manifest {
 
     while (path.length) {
       const param = path.shift();
-      assert(param);
 
-      if (!(param in manifest)) {
+      if (!param || !(param in manifest)) {
         return null;
       }
 
@@ -38,52 +34,28 @@ export default class Manifest {
     return manifest instanceof contracts.Manifest ? manifest : null;
   }
 
-  constructor(contracts) {
+  constructor(context: Context, contracts) {
     this.contracts = contracts;
-    this.references = this.getReferences();
   }
 
-  /**
-   * Recursively execute a contract on the manifest using a provided reviver
-   */
-  traverse(
-    boundReviver: Parameters<typeof JSON.parse>[1],
-    input?: Input,
-    contract = this.contracts["*"],
-  ) {
+  traverse(injections: Injections, contract = this.contracts["*"]) {
     if (Array.isArray(contract)) {
       return contract.map((subContract) =>
-        this.traverse(boundReviver, input, subContract),
+        this.traverse(injections, subContract),
       );
     }
 
-    return contract.execute(boundReviver, input);
-  }
-
-  getReferences(): string[] {
-    /* ============================== *
-     * Reviver is bound without inputs so it can gather meta-details about
-     * the contract such as the inputs that will be required
-     * ============================== */
-    const boundReviver = reviver.bind(null, null, this);
-    const executedContract = this.traverse(boundReviver);
-    const references: Set<string> = new Set();
-
-    JSON.stringify(executedContract, (key, value) => {
-      if (value instanceof Reference) {
-        references.add(value.key);
-      }
-      return value;
-    });
-
-    return Array.from(references);
+    return contract.execute(injections);
   }
 
   /**
    *
    * embedded mutations still pending
    */
-  execute(input: Input): {
+  execute(
+    context: Context,
+    input: Input,
+  ): {
     contract: unknown;
     mutations: MutationType<unknown, unknown>[];
   } {
@@ -91,8 +63,12 @@ export default class Manifest {
      * The execution reviver is bound to the input and the manifest, allowing
      * contracts to reference substitution keys in the same manifest
      * ============================== */
-    const boundReviver = reviver.bind(null, input, this);
-    const executedContract = this.traverse(boundReviver, input);
+    const executedContract = this.traverse({
+      manifest: this,
+      context,
+      input,
+      executions: [new Map()],
+    });
     const mutations: MutationType<unknown, unknown>[] = [];
 
     JSON.stringify(executedContract, (key, value) => {

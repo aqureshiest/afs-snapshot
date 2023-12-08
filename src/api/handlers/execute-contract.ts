@@ -9,7 +9,7 @@ const executeContract: Handler = function (context, req, res, next) {
 
   assert(manifest, "[764b89cd] manifest not instantiated in middleware");
 
-  const { contract, mutations } = manifest.execute(res.locals.inputs);
+  const { contract, mutations } = manifest.execute(context, res.locals.inputs);
 
   res.locals.contract = contract;
   res.locals.mutations = mutations;

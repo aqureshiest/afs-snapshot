@@ -2,10 +2,21 @@ import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import type { MutationType } from "contract/contract-types/base-contract.js";
 import type { Request } from "express";
+import { createJsonHandlebars } from "handlebars-a-la-json";
+// import type Reference from "contract/reference.js";
 
 import * as contractTypes from "contract/contract-types/index.js";
 import type Contract from "contract/contract.js";
 import type Manifest from "contract/manifest.js";
+
+type HandlebarsTemplate = ReturnType<
+  ReturnType<typeof createJsonHandlebars>["compile"]
+>;
+
+type IExecutions<M extends { [key: string]: Contract | Contract[] }> = Map<
+  keyof M,
+  unknown
+>;
 
 interface Application {
   [key: string]: unknown;
@@ -31,15 +42,6 @@ interface IContracts {
   };
 }
 
-interface IContractSubstitution {
-  "?": string | string[];
-  $: { [key: string]: string };
-  "...": string | string[];
-  "#": string;
-  "@": string;
-  coercion: string;
-}
-
 /**
  */
 type IContractManifest = Manifest;
@@ -50,115 +52,11 @@ type IContractManifests = {
   [key: string]: IContractManifests | IContractManifest;
 };
 
-interface IContractExecutor {
-  (
-    inputs: IContractInput,
-    manifest: IContractManifest,
-    contract?: Contract | Contract[],
-  ): (typeof manifest)["contracts"]["*"] extends Contract[]
-    ? IContractOutput[]
-    : IContractOutput;
-}
-
-interface IExecuteContract {
-  (
-    inputs: IContractInput,
-    manifest: IContractManifest,
-    contract?: Contract | Contract[],
-  ): (typeof manifest)["contracts"]["*"] extends Contract[]
-    ? {
-        contract: IContractOutput[];
-        mutations: MutationType<unknown, unknown>[];
-      }
-    : {
-        contract: IContractOutput;
-        mutations: MutationType<unknown, unknown>[];
-      };
-}
-
-interface IContractReviver<Value = object | string | number> {
-  (
-    input: IContractInput,
-    manifest: IContractManifest,
-    key: string,
-    value: Value,
-  ): unknown;
-}
-
-import "contract/revivers/reviver.js";
-declare module "contract/revivers/reviver.js" {
-  type ContractReviver = IContractReviver;
-  type ContractSubstitution = IContractSubstitution;
-}
-
-import "contract/revivers/concatenate.js";
-declare module "contract/revivers/concatenate.js" {
-  type ContractReviver = IContractReviver;
-}
-
-import "contract/revivers/contract-reference.js";
-declare module "contract/revivers/contract-reference.js" {
-  interface ContractReference {
-    $: string;
-    coercion: string;
-  }
-
-  type ContractType = Exclude<
-    keyof typeof contractTypes,
-    "ContractType" | "MutationType"
-  >;
-
-  interface ContractReviver {
-    (
-      input: IContractInput,
-      manifest: IContractManifest,
-      key: string,
-      value: ContractReference,
-    ): ReturnType<Contract["execute"]>;
-  }
-}
-
-import "contract/revivers/embedded-contract.js";
-declare module "contract/revivers/embedded-contract.js" {
-  interface EmbeddedContract<
-    K extends keyof typeof contractTypes = keyof typeof contractTypes,
-  > {
-    "@": K;
-    $: unknown;
-    $NOT: unknown;
-    $OR: unknown;
-    $AND: unknown;
-    coercion: string;
-  }
-
-  type ContractType = Exclude<
-    keyof typeof contractTypes,
-    "ContractType" | "MutationType"
-  >;
-
-  interface ContractReviver<K extends keyof typeof contractTypes> {
-    (
-      input: IContractInput,
-      manifest: IContractManifest,
-      key: string,
-      value: EmbeddedContract<K>,
-    ): ReturnType<InstanceType<(typeof contractTypes)[K]>["toJSON"]>;
-  }
-}
-
-import "contract/revivers/input-reference.js";
-declare module "contract/revivers/input-reference.js" {
-  type ContractReviver = IContractReviver<IContractSubstitution>;
-}
-
-import "contract/revivers/remember-reference.js";
-declare module "contract/revivers/remember-reference.js" {
-  type ContractReviver = IContractReviver<IContractSubstitution>;
-}
-
-import "contract/revivers/operation.js";
-declare module "contract/revivers/operation.js" {
-  type ContractReviver = IContractReviver<IContractSubstitution>;
+interface IExecutionInjections {
+  context: ChassisPluginContext;
+  manifest: Manifest;
+  executions: IExecutions<{ [key: string]: Contract | Contract[] }>[];
+  input?: IContractInput;
 }
 
 import "contract/manifest.test.js";
@@ -209,23 +107,25 @@ declare module "contract/contract-types/base-contract.js" {
 
 declare module "contract/contract.js" {
   type Context = ChassisPluginContext;
+  type Injections = IExecutionInjections;
 
-  type ContractReviver = IContractReviver;
-  type ContractSubstitution = IContractSubstitution;
   type Input = IContractInput;
 
   type ContractType = Exclude<
     keyof typeof contractTypes,
     "ContractType" | "MutationType"
   >;
+
+  type Template = HandlebarsTemplate;
+  type ContextualManifest = Manifest;
+  type Executions = IExecutions<{ [key: string]: Contract | Contract[] }>;
 }
 
 import "contract/manifest.js";
 declare module "contract/manifest.js" {
+  type Injections = IExecutionInjections;
   type Context = ChassisPluginContext;
 
-  type ContractReviver = IContractReviver;
-  type ContractSubstitution = IContractSubstitution;
   type Input = IContractInput;
 
   type ManifestFile = Record<string, string | string[]>;
@@ -237,6 +137,8 @@ declare module "contract/manifest.js" {
     | {
         [key: string]: Contract[];
       };
+
+  type Executions = IExecutions<{ [key: string]: Contract | Contract[] }>;
 }
 
 type ContractPlugin = ChassisPlugin<{

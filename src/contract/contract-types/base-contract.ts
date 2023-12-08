@@ -7,39 +7,10 @@ export default abstract class ContractType<Definition> {
     return "Contract";
   }
 
-  static coercions = Object.freeze({
-    string(this: ContractType<unknown>) {
-      return this[Symbol.toPrimitive]("string");
-    },
-    number(this: ContractType<unknown>) {
-      return this[Symbol.toPrimitive]("number");
-    },
-    boolean(this: ContractType<unknown>, input): boolean {
-      return Boolean(input);
-    },
-  });
-
-  [Symbol.toPrimitive](hint) {
-    switch (hint) {
-      case "number":
-        if (typeof this.definition === "number") {
-          return this.definition;
-        }
-        return this.definition ? 1 : 0;
-      case "string":
-        if (typeof this.definition === "string") {
-          return this.definition;
-        }
-        return JSON.stringify(this.definition);
-    }
-  }
-
   definition: Definition;
-  input: Input;
+  input?: Input;
 
-  coercion?: Coercion<unknown, unknown>;
-
-  constructor(definition: unknown, input: Input) {
+  constructor(definition: unknown, input?: Input) {
     Object.defineProperty(this, "definition", {
       value: definition,
       enumerable: true,
@@ -50,32 +21,6 @@ export default abstract class ContractType<Definition> {
       enumerable: false,
       writable: false,
     });
-  }
-
-  coerce(coercion?: string) {
-    if (!coercion) {
-      Object.defineProperty(this, "coercion", {
-        value: undefined,
-        enumerable: false,
-        writable: true,
-      });
-      return;
-    }
-
-    // const coercionFn = Object.getPrototypeOf(this).coercions[coercion];
-    const coercionFn =
-      Object.getPrototypeOf(this).constructor.coercions[coercion];
-
-    if (!coercionFn) {
-      throw new Error(`Cannot coerce '${this.contractName}' into coercion`);
-    }
-
-    Object.defineProperty(this, "coercion", {
-      value: coercionFn.bind(this),
-      enumerable: false,
-      writable: true,
-    });
-    return this;
   }
 
   /**

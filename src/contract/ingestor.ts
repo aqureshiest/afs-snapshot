@@ -20,6 +20,7 @@ const recursiveDo: DirectoryTraverser = async function recursiveDo<
 >(
   context,
   rootPath: string,
+  extension: RegExp,
   fn: FileTraverser<A>,
   pathSegments: string[] = [],
   accumulator = {} as A,
@@ -36,11 +37,12 @@ const recursiveDo: DirectoryTraverser = async function recursiveDo<
           await recursiveDo(
             context,
             currentPath,
+            extension,
             fn,
             [...pathSegments, subPath],
             accumulator,
           );
-        } else if (stat.isFile() && constants.JSON_FILE_REGEX.test(subPath)) {
+        } else if (stat.isFile() && extension.test(subPath)) {
           await fn(currentPath, [...pathSegments, subPath], accumulator);
         }
       } catch (error) {
@@ -69,6 +71,7 @@ export const buildContracts: BuildContracts = async function buildContracts(
   return recursiveDo<Contracts>(
     context,
     path,
+    constants.HANDLEBARS_FILE_REGEX,
     async function (rootPath, pathSegments, contracts) {
       assert(contracts);
       assert(pathSegments);
@@ -79,7 +82,7 @@ export const buildContracts: BuildContracts = async function buildContracts(
 
       const fileName = pathSegments.pop();
       assert(fileName);
-      const fileKey = fileName.replace(constants.JSON_FILE_REGEX, "");
+      const fileKey = fileName.replace(constants.HANDLEBARS_FILE_REGEX, "");
 
       pathSegments.splice(1, 0, fileKey);
 
@@ -90,12 +93,6 @@ export const buildContracts: BuildContracts = async function buildContracts(
       assert(contractKey);
 
       const file = await fs.readFile(rootPath, "utf8");
-
-      /* ============================== *
-       * I. Parse the contract definition to ensure executability
-       * II. Use revivers to record which substitutions are associated
-       *     with each contract module
-       * ============================== */
 
       const contract = new Contract(contractType as ContractType, file);
 
@@ -123,6 +120,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
   const manifests = await recursiveDo<Manifests>(
     context,
     path,
+    constants.JSON_FILE_REGEX,
     async function (rootPath, pathSegments, manifests) {
       assert(manifests);
       assert(pathSegments);
@@ -133,7 +131,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
 
       const fileName = pathSegments.pop();
       assert(fileName);
-      const fileKey = fileName.replace(/\.json$/, "");
+      const fileKey = fileName.replace(constants.JSON_FILE_REGEX, "");
 
       let cursor: Manifest | Manifests = manifests;
 
@@ -190,7 +188,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
           : getContract(parsed[mappingKey]);
       }
 
-      const manifest = new Manifest(parsed);
+      const manifest = new Manifest(context, parsed);
 
       cursor[fileKey] = manifest;
 

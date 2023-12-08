@@ -19,6 +19,7 @@ export const SPREAD_SYMBOL = "...";
  * Regex
  * ============================== */
 export const JSON_FILE_REGEX = /\.json$/;
+export const HANDLEBARS_FILE_REGEX = /\.json(.handlebars)?$/;
 
 export const SUBSTITUTION_SPLIT_REGEX =
   /(,?\s*{\s*"[$#@][^"]+"\s*:\s*"[^"]+"\s*}\s*)/;
