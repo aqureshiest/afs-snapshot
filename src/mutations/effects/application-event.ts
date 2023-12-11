@@ -7,37 +7,55 @@ function createApplicationEventEffect(event: string): SideEffect<Assertions> {
     predicate(assertions) {
       const { mutations } = assertions;
 
-      const filteredEvents = mutations.filter(
-        (mutation) =>
+      const filteredMutations = Object.keys(mutations).filter((mutationKey) => {
+        const mutation = mutations[mutationKey];
+        return (
           mutation instanceof ApplicationEvent &&
-          mutation.definition.event === event,
-      ) as ApplicationEvent[];
+          !mutation.mutated &&
+          mutation.definition.event === event
+        );
+      });
 
-      if (filteredEvents.length) {
-        return filteredEvents;
+      if (filteredMutations.length) {
+        return filteredMutations;
       }
     },
-    async effect(assertions, predicate: ApplicationEvent[]) {
+    async effect(assertions, eventKeys: string[]) {
+      /* ============================== *
+       * Either an application must be present in the assertions
+       * XOR the event must be "createApplication"
+       * ============================== */
+      const application = assertions.input.application;
+      if (!application !== (event === "createApplication")) return;
+
+      const { context, mutations, input } = assertions;
+
+      const mutationEvents = eventKeys.map((eventKey) => mutations[eventKey]);
+
       /* ============================== *
        * Plugin ApplicationService client requests here
        * ============================== */
-      await Promise.all(
-        predicate.map((event) => event.run(assertions.context)),
-      );
+      const applicationEvents = (await Promise.all(
+        mutationEvents.map((event) => event.run(context, input)),
+      )) as ApplicationEvent["result"][];
 
       return (assertions) => {
-        const remainingMutations = assertions.mutations.filter(
-          (mutation) =>
-            !(
-              mutation instanceof ApplicationEvent &&
-              mutation.definition.event === event
-            ),
+        const applicationFromResponse = applicationEvents.reduce(
+          (accumulator, event) => {
+            const { application } = event;
+            return { ...accumulator, ...application };
+          },
+          assertions.input.application || {},
         );
 
         return {
           ...assertions,
-          mutations: remainingMutations,
-        };
+          input: {
+            ...assertions.input,
+            application: applicationFromResponse,
+          },
+          asOf: new Date(),
+        } as Assertions;
       };
     },
   });

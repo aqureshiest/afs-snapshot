@@ -1,8 +1,6 @@
-import type {
-  IContractInput,
-  IContractManifest,
-} from "contract/index.js";
+import type { Input as IContractInput } from "contract/manifest.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
+import type { Application as IApplication } from "clients/application-service/index.js";
 
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {
@@ -18,28 +16,24 @@ declare module "contract/contract-types/base-contract.js" {
 
 import "contract/contract-types/application-event.js";
 declare module "contract/contract-types/application-event.js" {
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     event: string;
+    id?: string;
     [key: string]: unknown;
   };
-  type Output = unknown;
-}
 
-import "contract/contract-types/or.test.js";
-declare module "contract/contract-types/or.test.js" {
-  type Input = IContractInput;
-  type Manifest = IContractManifest;
-}
+  type MinimalApplication = {
+    id: string;
+  };
 
-import "contract/contract-types/and.test.js";
-declare module "contract/contract-types/and.test.js" {
-  type Input = IContractInput;
-  type Manifest = IContractManifest;
-}
+  /* ============================== *
+   * TODO: remove MinimalApplication when ApplicationServiceClient has been fully integrated
+   * ============================== */
 
-import "contract/contract-types/not.test.js";
-declare module "contract/contract-types/not.test.js" {
-  type Input = IContractInput;
-  type Manifest = IContractManifest;
+  type Output = {
+    id: string;
+    application: IApplication | MinimalApplication;
+  };
 }

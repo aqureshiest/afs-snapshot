@@ -5,15 +5,19 @@ import { createJsonHandlebars } from "handlebars-a-la-json";
 const handlebars = createJsonHandlebars();
 
 export default class Contract {
+  id: string;
+  name: string;
+  version: string;
   type: (typeof contractTypes)[ContractType];
   raw: string;
   parsed: unknown;
   template: Template;
 
-  constructor(type: string, rawContract: string) {
+  constructor({ key, version, type, raw }: ContstructorArguments) {
+    this.id = key && version ? `${key}.${version}` : this.raw;
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
-    this.raw = rawContract;
-    this.template = handlebars.compile(rawContract);
+    this.raw = raw;
+    this.template = handlebars.compile(raw);
   }
 
   /**
@@ -26,6 +30,19 @@ export default class Contract {
       executions: [...injections.executions, new Map()],
     };
 
+    const { mutations } = injections;
+
+    /* ============================== *
+     * If this this is a re-execution after mutations have been run, prefer
+     * any already completed mutations
+     * ============================== */
+
+    const previousMutation = mutations[this.id];
+
+    if (previousMutation && previousMutation.mutated) {
+      return previousMutation;
+    }
+
     const options = {
       helpers: {
         list: templateHelpers.list(contractInjections),
@@ -37,7 +54,7 @@ export default class Contract {
 
     const raw = this.template(input, options);
 
-    const contractInstance = new this.type(raw, input);
+    const contractInstance = new this.type(this.id, raw);
 
     return contractInstance instanceof contractTypes.MutationType
       ? contractInstance

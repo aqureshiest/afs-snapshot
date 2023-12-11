@@ -1,4 +1,5 @@
 import { MutationType } from "./base-contract.js";
+import { v4 as uuid } from "uuid";
 
 class ApplicationEvent extends MutationType<Definition, Output> {
   get contractName(): string {
@@ -11,11 +12,13 @@ class ApplicationEvent extends MutationType<Definition, Output> {
    *
    * This function should probably return some information about the event that was created
    */
-  async mutate(context: Context) {
+  async mutate(context: Context, input: Input) {
     context.logger.warn({
       message: "ApplicationEvent has not been implemented",
       event: this.definition.event,
     });
+
+    return { id: uuid(), application: input.application || { id: uuid() } };
   }
 }
 

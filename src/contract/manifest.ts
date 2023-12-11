@@ -55,9 +55,10 @@ export default class Manifest {
   execute(
     context: Context,
     input: Input,
+    mutations: Record<string, MutationType<unknown, unknown>> = {},
   ): {
     contract: unknown;
-    mutations: MutationType<unknown, unknown>[];
+    mutations: Record<string, MutationType<unknown, unknown>>;
   } {
     /* ============================== *
      * The execution reviver is bound to the input and the manifest, allowing
@@ -68,12 +69,21 @@ export default class Manifest {
       context,
       input,
       executions: [new Map()],
+      mutations,
     });
-    const mutations: MutationType<unknown, unknown>[] = [];
+
+    /* ============================== *
+     * Use a JSON replacer to find all instances of MutationType contracts
+     * ============================== */
 
     JSON.stringify(executedContract, (key, value) => {
       if (value instanceof MutationType) {
-        mutations.push(value);
+        const existingMutation = mutations[value.id];
+
+        mutations[value.id] =
+          existingMutation && existingMutation.mutated
+            ? mutations[value.id]
+            : value;
       }
       return value;
     });

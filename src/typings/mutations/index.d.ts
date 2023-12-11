@@ -1,14 +1,24 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import { SideEffectLayer } from "@earnest/state-machine";
 import type { MutationType } from "contract/contract-types/base-contract.js";
+import type { default as Machine } from "mutations/machine.js";
+import type { Input } from "contract/contract.js";
+import type { default as Manifest } from "contract/manifest.js";
 
 type IAssertions = {
   context: ChassisPluginContext;
-  mutations: MutationType<unknown, unknown>[];
+  mutations: Record<string, MutationType<unknown, unknown>>;
+  manifest: Manifest;
+  contract: unknown;
+  input: Input;
+  asOf?: Date;
 };
 
-type MutationsPlugin = ChassisPlugin<SideEffectLayer<IAssertions>>;
+type IState = {
+  asOf?: Date;
+};
+
+type MutationsPlugin = ChassisPlugin<typeof Machine>;
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
@@ -25,6 +35,14 @@ declare module "mutations/chassis-plugin.js" {
 import "mutations/machine.js";
 declare module "mutations/machine.js" {
   type Assertions = IAssertions;
+  type State = IState;
+}
+
+import "mutations/effects/execute.js";
+declare module "mutations/effects/execute.js" {
+  type Assertions = IAssertions;
+  type State = IState;
+  type Mutation = MutationType<unknown, unknown>;
 }
 
 import "mutations/effects/application-event.js";

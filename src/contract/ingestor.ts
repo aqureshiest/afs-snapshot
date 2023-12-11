@@ -94,7 +94,18 @@ export const buildContracts: BuildContracts = async function buildContracts(
 
       const file = await fs.readFile(rootPath, "utf8");
 
-      const contract = new Contract(contractType as ContractType, file);
+      /* ============================== *
+       * I. Parse the contract definition to ensure executability
+       * II. Use revivers to record which substitutions are associated
+       *     with each contract module
+       * ============================== */
+
+      const contract = new Contract({
+        key: contractKey,
+        version: contractVersion,
+        type: contractType as ContractType,
+        raw: file,
+      });
 
       if (!(contractKey in contracts)) {
         contracts[contractKey] = {};

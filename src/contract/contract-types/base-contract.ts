@@ -3,22 +3,23 @@
  * Each ContractType class describes a different type of contract that can be executed
  */
 export default abstract class ContractType<Definition> {
+  id: string;
+
   get contractName(): string {
     return "Contract";
   }
 
   definition: Definition;
-  input?: Input;
 
-  constructor(definition: unknown, input?: Input) {
+  constructor(id: string, definition: unknown) {
+    Object.defineProperty(this, "id", {
+      value: id,
+      enumerable: false,
+      writable: false,
+    });
     Object.defineProperty(this, "definition", {
       value: definition,
       enumerable: true,
-      writable: false,
-    });
-    Object.defineProperty(this, "input", {
-      value: input,
-      enumerable: false,
       writable: false,
     });
   }
@@ -44,11 +45,12 @@ export abstract class MutationType<
   Output,
 > extends ContractType<Definition> {
   result: Output;
+  mutated: boolean = false;
 
   /**
    *
    */
-  async mutate(context: Context): Promise<Output> {
+  async mutate(context: Context, input: Input): Promise<Output> {
     throw new Error(
       `MutationType '${this.contractName}' does not have a mutation method`,
     );
@@ -57,11 +59,12 @@ export abstract class MutationType<
   /**
    * Run this mutation and record the result for serialization
    */
-  async run(context: Context): Promise<Output> {
+  async run(context: Context, input: Input): Promise<Output> {
     const start = Date.now();
 
-    const result = await this.mutate(context);
+    const result = await this.mutate(context, input);
     this.result = result;
+    this.mutated = true;
 
     context.logger.info({
       message: "Mutation executed",

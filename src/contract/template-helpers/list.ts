@@ -13,7 +13,7 @@ const list = (bound: Injections) =>
      * ============================== */
     if (merge) {
       const mergedList = splitList
-        .map((json) => JSON.parse(json))
+        .map((json) => json !== "" && JSON.parse(json))
         .reduce(
           (array, element) => [
             ...array,

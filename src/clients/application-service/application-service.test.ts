@@ -32,11 +32,11 @@ describe("[f8395630] Application Service Client", () => {
   });
 
   it("[c1ca98f2] should set the mutation schema on start", async () => {
-    const schema =  {
+    const schema = {
       addDetails: {
-      details: "AddDetailInput",
-      meta: "EventMeta!",
-      id: "UUID!",
+        details: "AddDetailInput",
+        meta: "EventMeta!",
+        id: "UUID!",
       },
     };
 
@@ -85,9 +85,9 @@ describe("[f8395630] Application Service Client", () => {
         results: {
           errors: [
             {
-              message: "Invalid"
-            }
-          ]
+              message: "Invalid",
+            },
+          ],
         },
         response: {
           statusCode: 400,
@@ -219,9 +219,9 @@ describe("[f8395630] Application Service Client", () => {
         results: {
           errors: [
             {
-              message: "Invalid"
-            }
-          ]
+              message: "Invalid",
+            },
+          ],
         },
         response: {
           statusCode: 400,
@@ -270,9 +270,9 @@ describe("[f8395630] Application Service Client", () => {
         results: {
           errors: [
             {
-              message: "Invalid"
-            }
-          ]
+              message: "Invalid",
+            },
+          ],
         },
         response: {
           statusCode: 400,
@@ -406,9 +406,9 @@ describe("[f8395630] Application Service Client", () => {
         results: {
           errors: [
             {
-              message: "Invalid"
-            }
-          ]
+              message: "Invalid",
+            },
+          ],
         },
         response: {
           statusCode: 400,

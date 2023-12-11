@@ -128,10 +128,10 @@ interface ISchemaResponse {
 
 interface IMutation {
   [key: string]: {
-    [key:string]: {
+    [key: string]: {
       [key: string]: unknown;
-    }
-  }
+    };
+  };
 }
 
 interface IQueryOptions {
@@ -157,9 +157,9 @@ type IGqlResponse = {
     data: unknown;
     errors: Array<{
       message: string;
-      locations: Array<unknown>
-      extensions: Array<{[key: string]: unknown}>
-    }>
+      locations: Array<unknown>;
+      extensions: Array<{ [key: string]: unknown }>;
+    }>;
   };
   response: IncomingMessage;
 };

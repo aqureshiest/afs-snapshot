@@ -33,10 +33,11 @@ export default class ApplicationServiceClient extends Client {
     await this.getSchema(context, mutationSchemaQuery)
       .then((schema) => {
         this.mutationSchema = schema;
-      }).catch((error) => {
+      })
+      .catch((error) => {
         this.logError(error, "Failed to get schema on start");
       });
-  
+
     return await super.start();
   }
 
@@ -69,10 +70,10 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...applicationFields],
       });
 
-      const { application } = await this.sendPostRequest(
+      const { application } = (await this.sendPostRequest(
         context,
         applicationQuery,
-      ) as ApplicationResponse;
+      )) as ApplicationResponse;
 
       return application;
     } catch (error) {
@@ -94,12 +95,7 @@ export default class ApplicationServiceClient extends Client {
     options: QueryOptions,
   ): Promise<Application | Array<Application>> {
     try {
-      const {
-        id,
-        referenceId,
-        fields = [],
-        meta 
-      } = options;
+      const { id, referenceId, fields = [], meta } = options;
 
       if (!id && !referenceId) {
         throw new Error("unique id for identifying resource is undefined");
@@ -121,10 +117,9 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...queryFields],
       });
 
-      const result = await this.sendPostRequest(
-        context,
-        gqlQuery
-      ) as Application | Array<Application>;
+      const result = (await this.sendPostRequest(context, gqlQuery)) as
+        | Application
+        | Array<Application>;
 
       return result;
     } catch (error) {
@@ -146,12 +141,7 @@ export default class ApplicationServiceClient extends Client {
     options: MutationOptions,
   ): Promise<Mutation> {
     try {
-      const {
-        id,
-        fields = [],
-        data = {},
-        meta
-      } = options;
+      const { id, fields = [], data = {}, meta } = options;
 
       if (!event) {
         throw new Error("missing mutation event");
@@ -163,8 +153,12 @@ export default class ApplicationServiceClient extends Client {
         await this.getSchema(context, mutationSchemaQuery)
           .then((schema) => {
             this.mutationSchema = schema;
-          }).catch((error) => {
-            this.logError(error, "Reattempt to get mutation schema failed. Unable to apply mutation");
+          })
+          .catch((error) => {
+            this.logError(
+              error,
+              "Reattempt to get mutation schema failed. Unable to apply mutation",
+            );
             throw error;
           });
       }
@@ -185,10 +179,10 @@ export default class ApplicationServiceClient extends Client {
         fields: ["id", ...mutationFields],
       });
 
-      const result = await this.sendPostRequest(
-       context,
-       gqlMutation
-      ) as Mutation;
+      const result = (await this.sendPostRequest(
+        context,
+        gqlMutation,
+      )) as Mutation;
 
       return result;
     } catch (error) {
@@ -222,14 +216,15 @@ export default class ApplicationServiceClient extends Client {
           attempts: 3,
           delay: 100,
           timeout: 10000,
-          test: ({ response }) => Boolean(response.statusCode && response.statusCode <= 500),
-        }
+          test: ({ response }) =>
+            Boolean(response.statusCode && response.statusCode <= 500),
+        },
       })) as GqlResponse;
 
       if (response.statusCode !== 200) {
-        const error = new Error (response.statusMessage);
+        const error = new Error(response.statusMessage);
         const message = results.errors.reduce((acc, e) => {
-          acc = acc + e.message + " "
+          acc = acc + e.message + " ";
           return acc;
         }, "");
 
@@ -307,12 +302,14 @@ export default class ApplicationServiceClient extends Client {
    * @returns Object
    */
   private async getSchema(context, query: string) {
-    return await this.sendPostRequest(context, { query }).then((rawSchema) => {
-      return this.processSchema(rawSchema); 
-    }).catch((error) => {
-      this.logError(error, "Failed to get and process schema");
-      throw error;
-    });
+    return await this.sendPostRequest(context, { query })
+      .then((rawSchema) => {
+        return this.processSchema(rawSchema);
+      })
+      .catch((error) => {
+        this.logError(error, "Failed to get and process schema");
+        throw error;
+      });
   }
 
   /**

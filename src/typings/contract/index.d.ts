@@ -3,7 +3,7 @@ import type { PluginContext as ChassisPluginContext } from "@earnest-labs/micros
 import type { MutationType } from "contract/contract-types/base-contract.js";
 import type { Request } from "express";
 import { createJsonHandlebars } from "handlebars-a-la-json";
-// import type Reference from "contract/reference.js";
+import type { Application as IApplication } from "clients/application-service/index.js";
 
 import * as contractTypes from "contract/contract-types/index.js";
 import type Contract from "contract/contract.js";
@@ -18,17 +18,13 @@ type IExecutions<M extends { [key: string]: Contract | Contract[] }> = Map<
   unknown
 >;
 
-interface Application {
-  [key: string]: unknown;
-}
-
 /**
  * TODO: fully define this shape
  */
 interface IContractInput {
   [key: string]: unknown;
   request: Request;
-  application: Application | null;
+  application: IApplication | null;
 }
 
 /**
@@ -56,6 +52,7 @@ interface IExecutionInjections {
   context: ChassisPluginContext;
   manifest: Manifest;
   executions: IExecutions<{ [key: string]: Contract | Contract[] }>[];
+  mutations: Record<string, MutationType<unknown, unknown>>;
   input?: IContractInput;
 }
 
@@ -99,17 +96,19 @@ declare module "contract/ingestor.js" {
 
 declare module "contract/contract-types/base-contract.js" {
   type Input = IContractInput;
-
-  interface Coercion<Input, Coerced> {
-    <This>(this: This, input: Input): Coerced;
-  }
 }
 
 declare module "contract/contract.js" {
   type Context = ChassisPluginContext;
   type Injections = IExecutionInjections;
-
   type Input = IContractInput;
+
+  type ContstructorArguments = {
+    key?: string;
+    version?: string;
+    type?: string;
+    raw: string;
+  };
 
   type ContractType = Exclude<
     keyof typeof contractTypes,
@@ -167,6 +166,6 @@ declare module "express-serve-static-core" {
     manifest: Manifest;
     inputs: IContractInput;
     contract: IContractOutput;
-    mutations: MutationType<unknown, unknown>[];
+    mutations: Record<string, MutationType<unknown, unknown>>;
   }
 }

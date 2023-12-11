@@ -18,7 +18,7 @@ describe("[462fd166] manifest.execute", () => {
   it("[be92134e] runs without error", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, {
-      "*": new Contract("identity", JSON.stringify({})),
+      "*": new Contract({ raw: JSON.stringify({}) }),
     });
 
     const { contract } = manifest.execute(context, input);

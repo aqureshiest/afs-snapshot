@@ -2,24 +2,36 @@ import assert from "node:assert";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const postHandler: Handler = async function (context, req, res, next) {
+  const manifest = res.locals.manifest;
+  const input = res.locals.inputs;
   const contract = res.locals.contract;
   const mutations = res.locals.mutations;
 
-  if (mutations.length === 0) {
+  if (Object.keys(mutations).length === 0) {
     return res.send(contract);
   }
 
-  const effects = context.loadedPlugins.mutations.instance;
-  assert(effects, "[182902b4] side-effect machine not present");
+  const machine = context.loadedPlugins.mutations.instance;
+
+  assert(machine, "[182902b4] state machine not present");
 
   /* ============================== *
    * TODO: complex mutations may need to go through an entirely separate
    * side-effect orchestration layer
    * ============================== */
+  const { value: a1 } = await machine.next({
+    contract,
+    context,
+    mutations,
+    manifest,
+    input,
+  });
 
-  const results = await effects.run({ context, mutations });
+  const { value: assertions } = await machine.next({ ...a1, asOf: new Date() });
 
-  return res.send(contract);
+  const { contract: response } = assertions;
+
+  return res.send(response);
 };
 
 export default postHandler;

@@ -19,7 +19,7 @@ const getManifest: Handler = function (context, req, res, next) {
     ? params.pop()
     : null;
 
-  res.locals.application = { id };
+  res.locals.application = id ? { id } : null;
 
   const manifest = contracts.Manifest.getManifest(context, params);
 
