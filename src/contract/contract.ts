@@ -13,8 +13,8 @@ export default class Contract {
   parsed: unknown;
   template: Template;
 
-  constructor({ key, version, type, raw }: ContstructorArguments) {
-    this.id = key && version ? `${key}.${version}` : this.raw;
+  constructor({ key, version = "default", type, raw }: ContstructorArguments) {
+    this.id = key ? `${key}.${version}` : this.raw;
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
     this.template = handlebars.compile(raw);
@@ -56,8 +56,23 @@ export default class Contract {
 
     const contractInstance = new this.type(this.id, raw);
 
-    return contractInstance instanceof contractTypes.MutationType
-      ? contractInstance
-      : contractInstance.toJSON();
+    /* ============================== *
+     * Each unique mutation will be recorded in the mutations object. If a
+     * contract needs to be re-executed after mutations, previously run
+     * mutations will be used preferentially
+     * ============================== */
+
+    if (contractInstance instanceof contractTypes.MutationType) {
+      const existingMutation = mutations[contractInstance.id];
+
+      mutations[contractInstance.id] =
+        existingMutation && existingMutation.mutated
+          ? mutations[contractInstance.id]
+          : contractInstance;
+
+      return contractInstance;
+    }
+
+    return contractInstance.toJSON();
   }
 }

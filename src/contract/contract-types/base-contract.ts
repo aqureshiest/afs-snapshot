@@ -45,7 +45,16 @@ export abstract class MutationType<
   Output,
 > extends ContractType<Definition> {
   result: Output;
-  mutated: boolean = false;
+  mutated: boolean;
+
+  constructor(id: string, definition: unknown) {
+    super(id, definition);
+    Object.defineProperty(this, "mutated", {
+      value: false,
+      enumerable: false,
+      writable: true,
+    });
+  }
 
   /**
    *
@@ -64,7 +73,11 @@ export abstract class MutationType<
 
     const result = await this.mutate(context, input);
     this.result = result;
-    this.mutated = true;
+    Object.defineProperty(this, "mutated", {
+      value: true,
+      enumerable: false,
+      writable: true,
+    });
 
     context.logger.info({
       message: "Mutation executed",

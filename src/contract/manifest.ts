@@ -76,18 +76,6 @@ export default class Manifest {
      * Use a JSON replacer to find all instances of MutationType contracts
      * ============================== */
 
-    JSON.stringify(executedContract, (key, value) => {
-      if (value instanceof MutationType) {
-        const existingMutation = mutations[value.id];
-
-        mutations[value.id] =
-          existingMutation && existingMutation.mutated
-            ? mutations[value.id]
-            : value;
-      }
-      return value;
-    });
-
     return { contract: executedContract, mutations };
   }
 }
