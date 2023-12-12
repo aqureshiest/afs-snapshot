@@ -1,5 +1,5 @@
+import assert from "node:assert";
 import { MutationType } from "./base-contract.js";
-import { v4 as uuid } from "uuid";
 
 class ApplicationEvent extends MutationType<Definition, Output> {
   get contractName(): string {
@@ -12,13 +12,37 @@ class ApplicationEvent extends MutationType<Definition, Output> {
    *
    * This function should probably return some information about the event that was created
    */
-  async mutate(context: Context, input: Input) {
-    context.logger.warn({
-      message: "ApplicationEvent has not been implemented",
-      event: this.definition.event,
-    });
+  async mutate(context: Context) {
+    const applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient.instance;
+    assert(
+      applicationServiceClient,
+      "[7d3b096f] ApplicationServiceClient not instantiated",
+    );
 
-    return { id: uuid(), application: input.application || { id: uuid() } };
+    const { event, fields = [], payload } = this.definition;
+
+    const { [event]: eventResult } = await applicationServiceClient.mutate(
+      context,
+      event,
+      {
+        fields: [...fields, "createdAt"],
+        data: payload,
+        meta: {
+          service: "apply-flow-service",
+        },
+      },
+    );
+
+    return eventResult as Output;
+  }
+
+  toJSON() {
+    return {
+      event: this.definition?.event,
+      id: this.result?.id,
+      createdAt: this.result?.createdAt,
+    };
   }
 }
 

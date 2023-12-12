@@ -91,7 +91,7 @@ export abstract class MutationType<
   /**
    * Ensure that mutation contracts do not serialize automatically
    */
-  toJSON() {
+  toJSON(): unknown {
     return this.definition && (this.result || this);
   }
 }

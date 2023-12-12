@@ -13,8 +13,8 @@ export default class Contract {
   parsed: unknown;
   template: Template;
 
-  constructor({ key, version = "default", type, raw }: ContstructorArguments) {
-    this.id = key ? `${key}.${version}` : this.raw;
+  constructor({ key, version, type, raw }: ContstructorArguments) {
+    this.id = version ? `${key}.${version}` : key || this.raw;
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
     this.template = handlebars.compile(raw);
@@ -47,6 +47,16 @@ export default class Contract {
       helpers: {
         list: templateHelpers.list(contractInjections),
         contract: templateHelpers.contract(contractInjections),
+        json: templateHelpers.json,
+        eq: templateHelpers.eq,
+        ne: templateHelpers.ne,
+        lt: templateHelpers.lt,
+        gt: templateHelpers.gt,
+        gte: templateHelpers.gte,
+        lte: templateHelpers.lte,
+        and: templateHelpers.and,
+        or: templateHelpers.or,
+        not: templateHelpers.not,
       },
     };
 

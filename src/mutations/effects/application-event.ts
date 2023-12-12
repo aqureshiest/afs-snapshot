@@ -63,6 +63,6 @@ function createApplicationEventEffect(event: string): SideEffect<Assertions> {
 
 const createApplication = createApplicationEventEffect("createApplication");
 const addDetails = createApplicationEventEffect("addDetails");
-const addReference = createApplicationEventEffect("addReference");
+const addReferences = createApplicationEventEffect("addReferences");
 
-export { createApplication, addDetails, addReference };
+export { createApplication, addDetails, addReferences };

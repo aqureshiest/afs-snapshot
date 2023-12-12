@@ -11,6 +11,7 @@ const contract = (bound: Injections) =>
       context: chassisContext,
       manifest,
       executions: [executions, newExecutions],
+      mutations,
     } = bound;
 
     if (executions.has(context)) {
@@ -36,16 +37,21 @@ const contract = (bound: Injections) =>
       throw error;
     }
 
+    const deriveContractValue = (contract) => {
+      if (contract.id in mutations) {
+        return mutations[contract.id];
+      }
+      return contract.execute(injections);
+    };
+
     const injections = {
       ...bound,
       executions: [new Map([...executions, ...newExecutions])],
     };
 
     const contractValue = Array.isArray(referencedContract)
-      ? referencedContract.map((parallelContract) =>
-          parallelContract.execute(injections),
-        )
-      : referencedContract.execute(injections);
+      ? referencedContract.map(deriveContractValue)
+      : deriveContractValue(referencedContract);
 
     const contractRaw = JSON.stringify(contractValue);
 
