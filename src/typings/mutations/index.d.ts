@@ -11,11 +11,11 @@ type IAssertions = {
   manifest: Manifest;
   contract: unknown;
   input: Input;
-  asOf?: Date;
+  asOf: Date;
 };
 
 type IState = {
-  asOf?: Date;
+  mutations: Set<string>;
 };
 
 type MutationsPlugin = ChassisPlugin<typeof Machine>;

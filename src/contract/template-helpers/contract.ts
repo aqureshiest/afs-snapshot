@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import embedded from "./embedded.js";
+import { Status } from "../contract-types/base-contract.js";
 
 const contract = (bound: Injections) =>
   function (context) {
@@ -38,7 +39,10 @@ const contract = (bound: Injections) =>
     }
 
     const deriveContractValue = (contract) => {
-      if (contract.id in mutations) {
+      if (
+        contract.id in mutations &&
+        [Status.Executing, Status.Done].includes(mutations[contract.id].status)
+      ) {
         return mutations[contract.id];
       }
       return contract.execute(injections);

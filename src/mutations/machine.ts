@@ -1,35 +1,55 @@
 import { SideEffectMachine } from "@earnest/state-machine";
+import { Status } from "../contract/contract-types/base-contract.js";
 
 import effects from "./effects/index.js";
 
+const TIME_LIMIT_MS = 1000 * 15;
+
 /**
- * Assertions are refreshed every evaluation. State contains the previous set of assertions. If the timestamp has advanced, we return true, to indicate that this is a new run.
- * @return {boolean} returns true if the assertions have changed
+ * Detect if mutations in assertions have completed by comparing it to the recorded
+ * mutation completions in state
  */
-function assertionsChanged(assertions: Assertions, state: State): boolean {
-  if (assertions.asOf && state.asOf) {
-    return assertions.asOf.getTime() > state.asOf.getTime();
+function mutationCompleted(assertions: Assertions, state: State): boolean {
+  for (const mutationKey in assertions.mutations) {
+    const mutation = assertions.mutations[mutationKey];
+    if ([Status.Pending, Status.Executing].includes(mutation.status))
+      return true;
+    if (mutation.status === Status.Done && !state.mutations.has(mutationKey))
+      return true;
   }
 
-  return Boolean(assertions.asOf && !state.asOf);
+  // The machine halts if all mutations are either Dormant or Done and recorded
+
+  return false;
+}
+
+function exceededTimeLimit(assertions: Assertions): boolean {
+  const { asOf: start } = assertions;
+  const now = Date.now();
+  return now - start.getTime() > TIME_LIMIT_MS;
 }
 
 /**
- * Update current evaluation's State with the newly provided Assertions, which are unique to this run.
- * @return {State} state with new assertions mapped to it
+ * Create a set of all completed mutations and record it in state
  */
-function copyAssertionsToState(assertions: Assertions): State {
-  return { asOf: assertions.asOf };
+function recordMutations(assertions: Assertions): State {
+  const mutatedMutationKeys = Object.keys(assertions.mutations).filter(
+    (mutationKey) => assertions.mutations[mutationKey].status === Status.Done,
+  );
+  const mutations = new Set(mutatedMutationKeys);
+  return { mutations };
+}
+
+function timeLimitException(): never {
+  throw new Error("Mutations failed to resolve within the time limit");
 }
 
 export default new SideEffectMachine<State, Assertions>(
-  // Initializing the State given a new run's Assertions.
-  copyAssertionsToState,
-  // TreeBuilder.
+  recordMutations,
   (tree, signals) =>
     tree
-      .fork(copyAssertionsToState, assertionsChanged)
-      // If the above condition returns false, then HALT.
+      .fork(timeLimitException, exceededTimeLimit)
+      .fork(recordMutations, mutationCompleted)
       .fork(signals.HALT),
   effects,
 );

@@ -11,31 +11,45 @@ export default abstract class ContractType<Definition> {
 
   definition: Definition;
 
-  constructor(id: string, definition: unknown) {
+  constructor(args: ContractArguments) {
+    const { id, definition: rawDefinition, input, context } = args;
+
     Object.defineProperty(this, "id", {
       value: id,
       enumerable: false,
       writable: false,
     });
+
+    const definition = this.execute(args);
+
     Object.defineProperty(this, "definition", {
       value: definition,
-      enumerable: true,
+      enumerable: false,
       writable: false,
     });
   }
 
   /**
-   * An instance of a  ContractType
+   * Default behavior: return the definition as-is
    */
-  toJSON() {
-    throw new Error(
-      `ContractType '${this.contractName}' has not implemented a toJSON method`,
-    );
+  execute({ definition }: ContractArguments): unknown {
+    return definition;
+  }
+
+  toJSON(): unknown {
+    return this.definition;
   }
 
   [Symbol.toStringTag]() {
     return this.contractName;
   }
+}
+
+export enum Status {
+  Dormant,
+  Pending,
+  Executing,
+  Done,
 }
 
 /**
@@ -45,15 +59,15 @@ export abstract class MutationType<
   Output,
 > extends ContractType<Definition> {
   result: Output;
-  mutated: boolean;
+  resultPromise?: Promise<Output>;
 
-  constructor(id: string, definition: unknown) {
-    super(id, definition);
-    Object.defineProperty(this, "mutated", {
-      value: false,
-      enumerable: false,
-      writable: true,
-    });
+  static Status = Status;
+
+  get status(): Status {
+    if (this.result) return Status.Done;
+    if (this.resultPromise) return Status.Executing;
+    if (this.definition) return Status.Pending;
+    return Status.Dormant;
   }
 
   /**
@@ -69,21 +83,27 @@ export abstract class MutationType<
    * Run this mutation and record the result for serialization
    */
   async run(context: Context, input: Input): Promise<Output> {
+    if (this.resultPromise) return this.resultPromise;
+
     const start = Date.now();
 
-    const result = await this.mutate(context, input);
-    this.result = result;
-    Object.defineProperty(this, "mutated", {
-      value: true,
-      enumerable: false,
-      writable: true,
-    });
+    try {
+      this.resultPromise = this.mutate(context, input);
+      this.result = await this.resultPromise;
 
-    context.logger.info({
-      message: "Mutation executed",
-      contract: this.contractName,
-      elapsed: Date.now() - start,
-    });
+      context.logger.info({
+        message: "Mutation executed",
+        contract: this.contractName,
+        elapsed: Date.now() - start,
+      });
+    } catch (error) {
+      context.logger.error({
+        message: "Mutation failed",
+        contract: this.contractName,
+        elapsed: Date.now() - start,
+      });
+      throw error;
+    }
 
     return this.result;
   }

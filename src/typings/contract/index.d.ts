@@ -53,7 +53,7 @@ interface IExecutionInjections {
   manifest: Manifest;
   executions: IExecutions<{ [key: string]: Contract | Contract[] }>[];
   mutations: Record<string, MutationType<unknown, unknown>>;
-  input?: IContractInput;
+  input: IContractInput;
 }
 
 import "contract/manifest.test.js";

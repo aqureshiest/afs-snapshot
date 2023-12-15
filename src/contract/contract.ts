@@ -1,6 +1,8 @@
 import * as contractTypes from "./contract-types/index.js";
 import * as templateHelpers from "./template-helpers/index.js";
 
+const { Status } = contractTypes.MutationType;
+
 import { createJsonHandlebars } from "handlebars-a-la-json";
 const handlebars = createJsonHandlebars();
 
@@ -39,7 +41,10 @@ export default class Contract {
 
     const previousMutation = mutations[this.id];
 
-    if (previousMutation && previousMutation.mutated) {
+    if (
+      previousMutation &&
+      [Status.Executing, Status.Done].includes(previousMutation.status)
+    ) {
       return previousMutation;
     }
 
@@ -62,9 +67,14 @@ export default class Contract {
 
     const { input } = contractInjections;
 
-    const raw = this.template(input, options);
+    const raw = this.template(input, options) as unknown;
 
-    const contractInstance = new this.type(this.id, raw);
+    const contractInstance = new this.type({
+      id: this.id,
+      definition: raw,
+      input,
+      context: injections.context,
+    });
 
     /* ============================== *
      * Each unique mutation will be recorded in the mutations object. If a
@@ -76,13 +86,14 @@ export default class Contract {
       const existingMutation = mutations[contractInstance.id];
 
       mutations[contractInstance.id] =
-        existingMutation && existingMutation.mutated
+        existingMutation &&
+        [Status.Executing, Status.Done].includes(existingMutation.status)
           ? mutations[contractInstance.id]
           : contractInstance;
 
       return contractInstance;
     }
 
-    return contractInstance.toJSON();
+    return contractInstance;
   }
 }

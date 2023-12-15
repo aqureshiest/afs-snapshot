@@ -1,68 +1,58 @@
 import { SideEffect } from "@earnest/state-machine";
 import ApplicationEvent from "../../contract/contract-types/application-event.js";
 
-function createApplicationEventEffect(event: string): SideEffect<Assertions> {
-  return new SideEffect({
-    name: `ApplicationEvent:${event}`,
-    predicate(assertions) {
-      const { mutations } = assertions;
+/**
+ * All Application events
+ */
+export default new SideEffect<Assertions>({
+  name: `ApplicationEvent`,
+  predicate(assertions) {
+    const applicationEventMutations = Object.values(
+      assertions.mutations,
+    ).filter(
+      (mutation) =>
+        mutation instanceof ApplicationEvent &&
+        mutation.status === ApplicationEvent.Status.Pending &&
+        mutation.definition,
+    ) as ApplicationEvent[];
 
-      const filteredMutations = Object.keys(mutations).filter((mutationKey) => {
-        const mutation = mutations[mutationKey];
-        return (
-          mutation instanceof ApplicationEvent &&
-          !mutation.mutated &&
-          mutation.definition.event === event
-        );
-      });
+    if (!assertions.input.application) {
+      const createApplicationMutations = applicationEventMutations.filter(
+        (mutation) => mutation.definition?.event === "createApplication",
+      );
 
-      if (filteredMutations.length) {
-        return filteredMutations;
+      if (createApplicationMutations.length) {
+        return createApplicationMutations;
       }
-    },
-    async effect(assertions, eventKeys: string[]) {
-      /* ============================== *
-       * Either an application must be present in the assertions
-       * XOR the event must be "createApplication"
-       * ============================== */
-      const application = assertions.input.application;
-      if (!application !== (event === "createApplication")) return;
+    }
 
-      const { context, mutations, input } = assertions;
+    if (applicationEventMutations.length) {
+      return applicationEventMutations;
+    }
+  },
+  async effect(assertions, eventMutations: ApplicationEvent[]) {
+    const { context, input } = assertions;
 
-      const mutationEvents = eventKeys.map((eventKey) => mutations[eventKey]);
+    const applicationEvents = (await Promise.all(
+      eventMutations.map((event) => event.run(context, input)),
+    )) as ApplicationEvent["result"][];
 
-      /* ============================== *
-       * Plugin ApplicationService client requests here
-       * ============================== */
-      const applicationEvents = (await Promise.all(
-        mutationEvents.map((event) => event.run(context, input)),
-      )) as ApplicationEvent["result"][];
+    return (assertions) => {
+      const applicationFromResponse = applicationEvents.reduce(
+        (accumulator, event) => {
+          const { application } = event;
+          return { ...accumulator, ...application };
+        },
+        assertions.input.application || {},
+      );
 
-      return (assertions) => {
-        const applicationFromResponse = applicationEvents.reduce(
-          (accumulator, event) => {
-            const { application } = event;
-            return { ...accumulator, ...application };
-          },
-          assertions.input.application || {},
-        );
-
-        return {
-          ...assertions,
-          input: {
-            ...assertions.input,
-            application: applicationFromResponse,
-          },
-          asOf: new Date(),
-        } as Assertions;
-      };
-    },
-  });
-}
-
-const createApplication = createApplicationEventEffect("createApplication");
-const addDetails = createApplicationEventEffect("addDetails");
-const addReferences = createApplicationEventEffect("addReferences");
-
-export { createApplication, addDetails, addReferences };
+      return {
+        ...assertions,
+        input: {
+          ...assertions.input,
+          application: applicationFromResponse,
+        },
+      } as Assertions;
+    };
+  },
+});

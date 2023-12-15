@@ -25,9 +25,10 @@ const postHandler: Handler = async function (context, req, res, next) {
     mutations,
     manifest,
     input,
+    asOf: new Date(),
   });
 
-  const { value: assertions } = await machine.next({ ...a1, asOf: new Date() });
+  const { value: assertions } = await machine.next(a1);
 
   const { contract: response } = assertions;
 

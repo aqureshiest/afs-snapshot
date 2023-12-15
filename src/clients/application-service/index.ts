@@ -221,6 +221,15 @@ export default class ApplicationServiceClient extends Client {
         },
       })) as GqlResponse;
 
+      const { data, errors } = results;
+
+      if (errors && errors.length > 0) {
+        this.logger.error({
+          message: "GraphQL error in response",
+          errors: errors,
+        });
+      }
+
       if (response.statusCode !== 200) {
         const error = new Error(response.statusMessage);
         const message = results.errors.reduce((acc, e) => {
@@ -232,7 +241,7 @@ export default class ApplicationServiceClient extends Client {
         throw error;
       }
 
-      return results.data;
+      return data;
     } catch (error) {
       this.logError(error, "post request to application-service failed");
       throw error;

@@ -26,7 +26,7 @@ class ApplicationEvent extends MutationType<Definition, Output> {
       context,
       event,
       {
-        fields: [...fields, "createdAt"],
+        fields: [...fields, "createdAt", "error"],
         data: payload,
         meta: {
           service: "apply-flow-service",
@@ -34,10 +34,17 @@ class ApplicationEvent extends MutationType<Definition, Output> {
       },
     );
 
+    const { error } = eventResult;
+
+    if (error && typeof error === "string") {
+      throw new Error(error);
+    }
+
     return eventResult as Output;
   }
 
   toJSON() {
+    if (!this.definition) return null;
     return {
       event: this.definition?.event,
       id: this.result?.id,

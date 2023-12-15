@@ -1,13 +1,28 @@
-import { describe, it, before, after } from "node:test";
+import { describe, it, before, beforeEach, after, mock } from "node:test";
 
 import axios from "axios";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
+import ApplicationServiceClient from "../clients/application-service/index.js";
 
 describe("[41a1abef] chassis-plugins", () => {
   let context: Context;
+
+  beforeEach(() => {
+    mock.method(ApplicationServiceClient.prototype, "post", async () => {
+      return {
+        response: {
+          statusCode: 200,
+        },
+        results: {
+          data: { createApplication: { id: "08594f80" } },
+          errors: [],
+        },
+      };
+    });
+  });
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -25,7 +40,7 @@ describe("[41a1abef] chassis-plugins", () => {
     await axios.get("http://localhost:3000/apply/nested/nested_manifest");
   });
 
-  it("[ac8836e7] Representative contracts", async () => {
+  it("[ac8836e7] Mutative contracts", async () => {
     await axios.post("http://localhost:3000/apply/nested/nested_manifest");
   });
 });

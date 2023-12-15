@@ -1,20 +1,26 @@
 import { SideEffect } from "@earnest/state-machine";
 
 /**
- * Whenever a side-effect replaces the input, assertions
+ * If any new mutations have been resolved, reexecute the manifest to replace
+ * the mutation results in the contract
  */
 export default new SideEffect({
   name: "execute",
   predicate(assertions: Assertions, prev: State, next: State) {
-    if (prev.asOf && next.asOf) {
-      return next.asOf.getTime() > prev.asOf.getTime() || null;
+    if (prev.mutations && next.mutations) {
+      const shouldReexecute = next.mutations.size > prev.mutations.size;
+      return shouldReexecute;
     }
 
-    return Boolean(next.asOf && !prev.asOf) || null;
+    const shouldReexecuteDefault =
+      Boolean(next.mutations && !prev.mutations) || null;
+
+    return shouldReexecuteDefault;
   },
   async effect() {
     return (assertions) => {
       const { context, manifest, input, mutations } = assertions;
+
       const { contract, mutations: newMutations } = manifest.execute(
         context,
         input,
