@@ -9,7 +9,7 @@ const errorHandler: Handler = function (context, error: Error, req: Request, res
   });
 
   const convertedError =
-    error instanceof HttpError ? error : createError.InternalServerError(error);
+    error instanceof HttpError ? error : createError.InternalServerError(error.message);
 
   res.status(convertedError.statusCode).set(convertedError.headers);
 
