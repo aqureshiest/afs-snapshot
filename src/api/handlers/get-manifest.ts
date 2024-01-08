@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import createError from "http-errors";
-
+import { Request, Response, NextFunction } from 'express';
 import * as constants from "../constants.js";
 
 /**
@@ -8,7 +8,7 @@ import * as constants from "../constants.js";
  * TODO: get application from application-service
  * TODO: get authentication artifacts
  */
-const getManifest: Handler = function (context, req, res, next) {
+const getManifest: Handler = function (context, req: Request, res: Response, next: NextFunction) {
   const contracts = context.loadedPlugins.contractExecution.instance;
 
   assert(contracts);

@@ -1,7 +1,8 @@
 import assert from "node:assert";
+import { Request, Response, NextFunction } from 'express';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-const postHandler: Handler = async function (context, req, res, next) {
+const postHandler: Handler = async function (context, req: Request, res: Response, next: NextFunction) {
   const manifest = res.locals.manifest;
   const input = res.locals.inputs;
   const contract = res.locals.contract;

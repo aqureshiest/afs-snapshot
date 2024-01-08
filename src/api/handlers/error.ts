@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import createError, { HttpError } from "http-errors";
-import { ErrorRequestHandler } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-const errorHandler: Handler = function (context, error, req, res, next) {
+const errorHandler: Handler = function (context, error: Error, req: Request, res: Response, next: NextFunction) {
   context.logger.error({
     message: error.message,
     stack: error.stack,
