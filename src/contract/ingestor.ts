@@ -174,7 +174,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
 
           if (!contract) {
             const error = new Error(
-              "Manifest referenced a non-existent or invalid contract",
+              `[32ed6135] Manifest referenced a non-existent or invalid contract, while processing file ${fileName}`,
             );
             context?.logger.error({
               message: error.message,

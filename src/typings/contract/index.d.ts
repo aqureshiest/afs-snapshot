@@ -25,6 +25,7 @@ interface IContractInput {
   [key: string]: unknown;
   request: Request;
   application: IApplication | null;
+  manifestName: string;
 }
 
 /**
