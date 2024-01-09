@@ -1,5 +1,4 @@
 import { IApplication } from '../../typings/clients/application-service/index.js';
-import * as constants from '../constants.js';
 import { Request, Response, NextFunction } from 'express';
 
 // temporally hardcoding fields from ApplicationService
