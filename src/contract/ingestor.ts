@@ -83,15 +83,11 @@ export const buildContracts: BuildContracts = async function buildContracts(
       const fileName = pathSegments.pop();
       assert(fileName);
       const fileKey = fileName.replace(constants.HANDLEBARS_FILE_REGEX, "");
-
       pathSegments.splice(1, 0, fileKey);
-
       const contractKey = pathSegments.pop();
       const contractType = pathSegments.shift() || DEFAULT_TYPE;
       const contractVersion = pathSegments.shift() || DEFAULT_VERSION;
-
       assert(contractKey);
-
       const file = await fs.readFile(rootPath, "utf8");
 
       /* ============================== *
@@ -102,6 +98,7 @@ export const buildContracts: BuildContracts = async function buildContracts(
 
       const contract = new Contract({
         key: contractKey,
+        folders: pathSegments,
         version: contractVersion,
         type: contractType as ContractType,
         raw: file,
@@ -143,7 +140,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
       const fileName = pathSegments.pop();
       assert(fileName);
       const fileKey = fileName.replace(constants.JSON_FILE_REGEX, "");
-
+      const manifestName = `${pathSegments.join('/')}/${fileKey}`
       let cursor: Manifest | Manifests = manifests;
 
       while (pathSegments.length) {
@@ -198,8 +195,8 @@ export const buildManifests: BuildManifests = async function buildManifests(
           ? parsed[mappingKey].map((subKey) => getContract(subKey))
           : getContract(parsed[mappingKey]);
       }
-
-      const manifest = new Manifest(context, parsed);
+      console.log('path', path)
+      const manifest = new Manifest(context, manifestName, parsed);
 
       cursor[fileKey] = manifest;
 

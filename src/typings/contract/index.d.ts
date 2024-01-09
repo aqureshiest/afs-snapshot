@@ -107,6 +107,7 @@ declare module "contract/contract.js" {
   type ContstructorArguments = {
     key?: string;
     version?: string;
+    folders?: string[];
     type?: string;
     raw: string;
   };

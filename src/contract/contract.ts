@@ -15,7 +15,10 @@ export default class Contract {
   parsed: unknown;
   template: Template;
 
-  constructor({ key, version, type, raw }: ContstructorArguments) {
+  constructor({ key, version, folders, type, raw }: ContstructorArguments) {
+    if (folders && folders.length > 0) {
+      key = `${folders.join('/')}/${key}`
+    }
     this.id = version ? `${key}.${version}` : key || this.raw;
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
