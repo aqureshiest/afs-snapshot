@@ -10,6 +10,7 @@ import { MutationType } from "./contract-types/base-contract.js";
 export default class Manifest {
   contracts: Contracts;
   references: string[];
+  name: string;
 
   /**
    * Get a manifest from the application context, or return null if that manifest

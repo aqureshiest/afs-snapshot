@@ -19,10 +19,8 @@ const fields = [
 const getInputs: Handler = async function (context, req: Request, res: Response, next: NextFunction) {
   const inputs = req.body ? req.body : {};
   const params = req.params[0].split("/");
-  const id = constants.UUID_REGEX.test(params[params.length - 1])
-  ? params.pop()
-  : null;
-  const manifestName = params.join('/').replace(`/${id}`, '')
+  const id = res.locals.application
+  const manifestName = res.locals.manifest.name
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
   if (!ASclient) throw new Error('[67c30fe0] Application Service client instante not found')
   let application: IApplication | null = null
