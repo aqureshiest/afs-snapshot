@@ -17,7 +17,7 @@ describe("[462fd166] manifest.execute", () => {
 
   it("[be92134e] runs without error", async () => {
     const input = {} as Input;
-    const manifest = new Manifest(context, {
+    const manifest = new Manifest(context, 'manifestTest', {
       "*": new Contract({ raw: JSON.stringify({}) }),
     });
 
@@ -27,7 +27,7 @@ describe("[462fd166] manifest.execute", () => {
 
   it("[ef16134b] contract references", async () => {
     const input = {} as Input;
-    const manifest = new Manifest(context, {
+    const manifest = new Manifest(context, 'manifestTest', {
       "*": new Contract({ raw: "{{{ contract 'reference'}}}" }),
       reference: new Contract({ raw: "42" }),
     });
@@ -41,7 +41,7 @@ describe("[462fd166] manifest.execute", () => {
 
   it("[ef16134b] embedded contracts", async () => {
     const input = {} as Input;
-    const manifest = new Manifest(context, {
+    const manifest = new Manifest(context, 'manifestTest',{
       "*": new Contract({
         raw: "{{#contract type='identity' key='embedded'}}42{{/contract}}",
       }),
@@ -56,7 +56,7 @@ describe("[462fd166] manifest.execute", () => {
 
   it("[c98ac5ae] list helper", async () => {
     const input = {} as Input;
-    const manifest = new Manifest(context, {
+    const manifest = new Manifest(context, 'manifestTest',{
       "*": new Contract({
         raw: `
       {{#list}}
@@ -77,7 +77,7 @@ describe("[462fd166] manifest.execute", () => {
 
   it("[6b6d7ced] list helper (merged)", async () => {
     const input = {} as Input;
-    const manifest = new Manifest(context, {
+    const manifest = new Manifest(context, 'manifestTest',{
       "*": new Contract({
         raw: `
       {{#list merge=true}}

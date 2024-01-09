@@ -25,6 +25,7 @@ interface IContractInput {
   [key: string]: unknown;
   request: Request;
   application: IApplication | null;
+  manifestName: string;
 }
 
 /**
@@ -106,6 +107,7 @@ declare module "contract/contract.js" {
   type ContstructorArguments = {
     key?: string;
     version?: string;
+    folders?: string[];
     type?: string;
     raw: string;
   };

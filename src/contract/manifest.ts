@@ -10,6 +10,7 @@ import { MutationType } from "./contract-types/base-contract.js";
 export default class Manifest {
   contracts: Contracts;
   references: string[];
+  name: string;
 
   /**
    * Get a manifest from the application context, or return null if that manifest
@@ -34,7 +35,8 @@ export default class Manifest {
     return manifest instanceof contracts.Manifest ? manifest : null;
   }
 
-  constructor(context: Context, contracts) {
+  constructor(context: Context, manifestName: string, contracts) {
+    this.name = manifestName;
     this.contracts = contracts;
   }
 

@@ -1,5 +1,5 @@
 import { describe, it, before, beforeEach, after, mock } from "node:test";
-
+import assert from "node:assert";
 import axios from "axios";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
@@ -34,6 +34,10 @@ describe("[41a1abef] chassis-plugins", () => {
 
   after(async () => {
     context.applicationServer.close();
+  });
+  it("[a1647ec6] Non existing manifest, for error testing", async () => {
+    const request = axios.get("http://localhost:3000/apply/NON-EXISTING-MANIFEST");
+    assert.rejects(request)
   });
 
   it("[9c34ea12] Representative contracts", async () => {
