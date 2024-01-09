@@ -17,7 +17,6 @@ const fields = [
  */
 const getInputs: Handler = async function (context, req: Request, res: Response, next: NextFunction) {
   const inputs = req.body ? req.body : {};
-  const params = req.params[0].split("/");
   const id = res.locals.application
   const manifestName = res.locals.manifest.name
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
