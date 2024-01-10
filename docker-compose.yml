@@ -28,6 +28,7 @@ services:
       - gateway
       - vault
       - redis
+      - mountebank
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
@@ -36,8 +37,22 @@ services:
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
     ports:
-      - '9229:9229'
+      - '9227:9229'
 
+  mountebank:
+    build:
+      context: ./mountebank
+      dockerfile: docker/dev/Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 128M
+    volumes:
+      - ./mountebank:/usr/src/app
+    environment:
+      - AWS_ACCESS_KEY_ID=access-key
+      - AWS_SECRET_ACCESS_KEY=secret-key
   ci:
     build:
       context: .
@@ -54,6 +69,7 @@ services:
       - ./package-lock.json:/usr/src/app/package-lock.json
     depends_on:
       - vault
+      - mountebank
     env_file:
       - ./test.env
 
