@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -euo pipefail
-
-supervisor --watch imposters,src -e js,ejs,json --no-restart-on error -x mb \
-  -- start --mock --configfile imposters/index.ejs --allowInjection

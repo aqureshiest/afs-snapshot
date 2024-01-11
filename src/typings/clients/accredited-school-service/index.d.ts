@@ -1,7 +1,7 @@
 
 
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
-import AccreditedSchoolServiceClient from "../../../clients/accredited-school-service/index.js";
+import AccreditedSchoolServiceClient from "clients/accredited-school-service/index.js";
 type AccreditedSchoolServicePlugin = ChassisPlugin<AccreditedSchoolServiceClient>;
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
@@ -9,7 +9,7 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
     accreditedSchoolServiceClient: AccreditedSchoolServicePlugin;
   }
 }
-declare module "../../../clients/accredited-school-service/index.js" {
+declare module "clients/accredited-school-service/index.js" {
   type LoanType = "slo" | "slr";
 
   type School = {

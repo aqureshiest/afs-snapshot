@@ -40,19 +40,14 @@ services:
       - '9227:9229'
 
   mountebank:
-    build:
-      context: ./mountebank
-      dockerfile: docker/dev/Dockerfile
-    deploy:
-      resources:
-        limits:
-          cpus: '0.10'
-          memory: 128M
+    image: bbyars/mountebank:2.6.0
+    command: ['mb', '--configfile', 'imposters/index.ejs', '--allowInjection']
+    ports:
+      - "2525:2525"
     volumes:
-      - ./mountebank:/usr/src/app
-    environment:
-      - AWS_ACCESS_KEY_ID=access-key
-      - AWS_SECRET_ACCESS_KEY=secret-key
+      - ./docker/data/mountebank/imposters:/app/imposters
+      - ./config:/app/config
+      - ./fixtures:/app/fixtures
   ci:
     build:
       context: .
