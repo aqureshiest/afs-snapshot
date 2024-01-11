@@ -1,0 +1,141 @@
+{
+  "id": 1526,
+  "opeid8": "00130500",
+  "name": "Stanford University",
+  "address": "1 Stanford University",
+  "forProfit": false,
+  "accreditations": [
+    {
+      "window": {
+        "begins": "19230101",
+        "ends": "99991231"
+      },
+      "agency": "American Bar Association, Council of the Section of Legal Education and Admissions to the Bar"
+    },
+    {
+      "window": {
+        "begins": "19420701",
+        "ends": "99991231"
+      },
+      "agency": "Liaison Committee on Medical Education"
+    },
+    {
+      "window": {
+        "begins": "19490228",
+        "ends": "99991231"
+      },
+      "agency": "Western Association of Schools and Colleges, Senior College and University Commission"
+    },
+    {
+      "window": {
+        "begins": "19850419",
+        "ends": "20080831"
+      },
+      "agency": "American Psychological Association, Commission on Accreditation"
+    },
+    {
+      "window": {
+        "begins": "20021020",
+        "ends": "20150923"
+      },
+      "agency": "National Council for Accreditation of Teacher Education"
+    },
+    {
+      "window": {
+        "begins": "20021020",
+        "ends": "99991231"
+      },
+      "agency": "National Council for Accreditation of Teacher Education"
+    },
+    {
+      "window": {
+        "begins": "20080612",
+        "ends": "99991231"
+      },
+      "agency": "American Psychological Association, Commission on Accreditation"
+    },
+    {
+      "window": {
+        "begins": "20130319",
+        "ends": "99991231"
+      },
+      "agency": "American Psychological Association, Commission on Accreditation"
+    },
+    {
+      "window": {
+        "begins": null,
+        "ends": null
+      },
+      "agency": "American Assembly of Collegiate Schools of Business"
+    },
+    {
+      "window": {
+        "begins": null,
+        "ends": null
+      },
+      "agency": "American Bar Association"
+    },
+    {
+      "window": {
+        "begins": null,
+        "ends": null
+      },
+      "agency": "Liaison Committee on Medical Education of the AMA"
+    },
+    {
+      "window": {
+        "begins": null,
+        "ends": null
+      },
+      "agency": "Western Association of Schools and Colleges - Sr. Colleges & Universities"
+    }
+  ],
+  "cdrs": [
+    {
+      "rate": 0.01,
+      "year": 2016,
+      "inDefault": 10,
+      "inRepayment": 941,
+      "method": "P"
+    },
+    {
+      "rate": 0.005,
+      "year": 2017,
+      "inDefault": 5,
+      "inRepayment": 838,
+      "method": "P"
+    },
+    {
+      "rate": 0.005,
+      "year": 2018,
+      "inDefault": 5,
+      "inRepayment": 896,
+      "method": "P"
+    }
+  ],
+  "rankings": [
+    {
+      "rank": 4,
+      "source": "Earnest_2",
+      "year": 2014,
+      "type": "postsecondary"
+    }
+  ],
+  "legacy": true,
+  "state": "CA",
+  "city": "Stanford",
+  "zipCode": "943051926",
+  "programLength": 8,
+  "schoolType": 2,
+  "ipedsId": null,
+  "country": "USA",
+  "costOfAttendance": {
+    "inState": 7516600,
+    "outOfState": 7516600
+  },
+  "loanTypes": [
+    "slr",
+    "slo"
+  ],
+  "duplicateOf": null
+}

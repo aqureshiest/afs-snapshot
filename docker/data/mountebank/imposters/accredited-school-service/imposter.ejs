@@ -1,0 +1,107 @@
+{
+  "port": 3014,
+  "protocol": "http",
+  "name": "accredited-school-service",
+  "defaultResponse": {
+    "statusCode": 500
+  },
+  "stubs": [
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/ping"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'accredited-school-service/uc-berkeley.json') %>",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/schools/2470"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'accredited-school-service/stanford.json') %>",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/schools/1526"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "inject": "<%- stringify(filename, 'accredited-school-service/getSchoolById.js') %>"
+        }
+      ],
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET"
+          }
+        },
+        {
+          "matches": {
+            "path": "/schools/\\d+"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "inject": "<%- stringify(filename, 'accredited-school-service/getSchoolByName.js') %>"
+        }
+      ],
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET"
+          }
+        },
+        {
+          "matches": {
+            "path": "/schools"
+          }
+        }
+      ]
+    }
+  ]
+}

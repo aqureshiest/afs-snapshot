@@ -1,0 +1,177 @@
+
+{
+  "id": 2470,
+  "opeid8": "00131200",
+  "name": "University of California, Berkeley",
+  "address": "200 California Hall",
+  "forProfit": false,
+  "accreditations": [
+    {
+      "window": {
+        "begins": "19230101",
+        "ends": "99991231"
+      },
+      "agency": "American Bar Association, Council of the Section of Legal Education and Admissions to the Bar"
+    },
+    {
+      "window": {
+        "begins": "19331201",
+        "ends": "20071231"
+      },
+      "agency": "Academy of Nutrition and Dietetics, Accreditation Council for Education in Nutrition and Dietetics"
+    },
+    {
+      "window": {
+        "begins": "19331201",
+        "ends": "99991231"
+      },
+      "agency": "Academy of Nutrition and Dietetics, Accreditation Council for Education in Nutrition and Dietetics"
+    },
+    {
+      "window": {
+        "begins": "19331201",
+        "ends": "20071231"
+      },
+      "agency": "American Dietetic Association, Commission on Accreditation for Dietetics Education"
+    },
+    {
+      "window": {
+        "begins": "19331201",
+        "ends": "99991231"
+      },
+      "agency": "American Dietetic Association, Commission on Accreditation for Dietetics Education"
+    },
+    {
+      "window": {
+        "begins": "19410630",
+        "ends": "99991231"
+      },
+      "agency": "American Optometric Association, Accreditation Council on Optometric Education"
+    },
+    {
+      "window": {
+        "begins": "19461101",
+        "ends": "99991231"
+      },
+      "agency": "Council on Education for Public Health"
+    },
+    {
+      "window": {
+        "begins": "19480201",
+        "ends": "99991231"
+      },
+      "agency": "American Psychological Association, Commission on Accreditation"
+    },
+    {
+      "window": {
+        "begins": "19490101",
+        "ends": "99991231"
+      },
+      "agency": "Western Association of Schools and Colleges, Accrediting Commission for Senior Colleges and Universities"
+    },
+    {
+      "window": {
+        "begins": "19490101",
+        "ends": "99991231"
+      },
+      "agency": "Western Association of Schools and Colleges, Senior College and University Commission"
+    },
+    {
+      "window": {
+        "begins": "19711101",
+        "ends": "99991231"
+      },
+      "agency": "Academy of Nutrition and Dietetics, Accreditation Council for Education in Nutrition and Dietetics"
+    },
+    {
+      "window": {
+        "begins": "19711101",
+        "ends": "99991231"
+      },
+      "agency": "American Dietetic Association, Commission on Accreditation for Dietetics Education"
+    },
+    {
+      "window": {
+        "begins": "19801125",
+        "ends": "99991231"
+      },
+      "agency": "American Psychological Association, Commission on Accreditation"
+    },
+    {
+      "window": {
+        "begins": "19850513",
+        "ends": "99991231"
+      },
+      "agency": "American Optometric Association, Accreditation Council on Optometric Education"
+    },
+    {
+      "window": {
+        "begins": "19860516",
+        "ends": "99991231"
+      },
+      "agency": "American Psychological Association, Commission on Accreditation"
+    },
+    {
+      "window": {
+        "begins": "20010701",
+        "ends": "20090826"
+      },
+      "agency": "Commission on Accreditation of Healthcare Management Education"
+    },
+    {
+      "window": {
+        "begins": null,
+        "ends": null
+      },
+      "agency": "Western Association of Schools and Colleges - Sr. Colleges & Universities"
+    }
+  ],
+  "cdrs": [
+    {
+      "rate": 0.02,
+      "year": 2016,
+      "inDefault": 91,
+      "inRepayment": 4542,
+      "method": "P"
+    },
+    {
+      "rate": 0.017,
+      "year": 2017,
+      "inDefault": 79,
+      "inRepayment": 4428,
+      "method": "P"
+    },
+    {
+      "rate": 0.018000000000000002,
+      "year": 2018,
+      "inDefault": 81,
+      "inRepayment": 4347,
+      "method": "P"
+    }
+  ],
+  "rankings": [
+    {
+      "rank": 20,
+      "source": "Earnest_2",
+      "year": 2014,
+      "type": "postsecondary"
+    }
+  ],
+  "legacy": true,
+  "state": "CA",
+  "city": "Berkeley",
+  "zipCode": "947201520",
+  "programLength": 8,
+  "schoolType": 1,
+  "ipedsId": null,
+  "country": "USA",
+  "costOfAttendance": {
+    "inState": 3996900,
+    "outOfState": 7041100
+  },
+  "loanTypes": [
+    "slr",
+    "slo"
+  ],
+  "duplicateOf": null
+}

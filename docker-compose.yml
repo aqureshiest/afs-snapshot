@@ -28,6 +28,7 @@ services:
       - gateway
       - vault
       - redis
+      - mountebank
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
@@ -36,8 +37,17 @@ services:
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
     ports:
-      - '9229:9229'
+      - '9227:9229'
 
+  mountebank:
+    image: bbyars/mountebank:2.6.0
+    command: ['mb', '--configfile', 'imposters/index.ejs', '--allowInjection']
+    ports:
+      - "2525:2525"
+    volumes:
+      - ./docker/data/mountebank/imposters:/app/imposters
+      - ./config:/app/config
+      - ./fixtures:/app/fixtures
   ci:
     build:
       context: .
@@ -54,6 +64,7 @@ services:
       - ./package-lock.json:/usr/src/app/package-lock.json
     depends_on:
       - vault
+      - mountebank
     env_file:
       - ./test.env
 
