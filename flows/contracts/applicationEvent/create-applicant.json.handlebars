@@ -1,0 +1,14 @@
+{{#if application.id}}
+  {
+    "event": "createApplication",
+    "payload": {
+      "relationships": [{
+        "as": "applicant",
+        "to": "{{ application.id }}"
+      }]
+    },
+    "fields": ["application.id", "application.root.id"]
+  }
+{{else}}
+  null
+{{/if}}

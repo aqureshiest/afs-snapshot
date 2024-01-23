@@ -63,7 +63,6 @@ export default class ApplicationServiceClient extends Client {
       }
 
       const applicationFields = this.generateFields(fields).split(",");
-
       const applicationQuery = gql.query({
         operation: "application",
         variables: { id: { value: applicationId, required: true } },
@@ -142,7 +141,6 @@ export default class ApplicationServiceClient extends Client {
   ): Promise<Mutation> {
     try {
       const { id, fields = [], data = {}, meta } = options;
-
       if (!event) {
         throw new Error("missing mutation event");
       }
@@ -204,7 +202,6 @@ export default class ApplicationServiceClient extends Client {
   private async sendPostRequest(context: PluginContext, body) {
     try {
       const jwt = await this.getToken();
-
       const { results, response } = (await this.post({
         uri: "/graphql",
         headers: {

@@ -1,0 +1,87 @@
+{
+    "key": "basic",
+    "label": "Student Basic Info",
+    "submit": {
+        "copy": "Continue",
+        "action": {
+            "key": "",
+            "type": "request",
+            "properties": {
+                "manifest": "save-details",
+                "method": "POST"
+            }
+        }
+    },
+    "rows": [
+        {
+            "type": "info",
+            "definition": {
+                "key": "header",
+                "type": "infoHeader",
+                "header": {
+                    "copy": "Student Basic Info"
+                }
+            }
+        },
+        {{{contract 'name_input'}}},
+        {
+            "type": "input",
+            "definition": {
+                "key": "dob",
+                "type": "inputDate",
+                "status": "incomplete",
+                "value": {
+                    "day": "",
+                    "month": "",
+                    "year": ""
+                },
+                "label": {
+                    "copy": "Date of birth"
+                },
+                "hint": ""
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "phone",
+                "type": "inputPhone",
+                "status": "incomplete",
+                "value": {
+                    "areaCode": "",
+                    "exchangeCode": "",
+                    "lineNumber": ""
+                },
+                "label": {
+                    "copy": "Phone number"
+                },
+                "hint": "We'll only use your phone number for updates on your loan application. Learn more about our policy."
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "email",
+                "type": "inputEmail",
+                "status": "incomplete",
+                "value": "",
+                "label": {
+                    "copy": "Email"
+                }
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "disclosure",
+                "type": "inputDisclosure",
+                "status": "incomplete",
+                "value": false,
+                "label": {
+                    "copy": ""
+                },
+                "disclosure": "By clicking “Continue” I acknowledge I have read and agree to the Privacy Policy, Privacy Notices and Consent to Electronic Communications."
+            }
+        }
+    ]
+}

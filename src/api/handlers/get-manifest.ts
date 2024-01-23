@@ -22,7 +22,7 @@ const getManifest: Handler = function (context, req, res, next) {
   res.locals.application = id ? { id } : null;
 
   const manifest = contracts.Manifest.getManifest(context, params);
-
+  console.log('params', {id, params})
   if (!manifest) {
     throw createError.NotFound(`[58d1ca55] manifest not found ${params.join('/')}`);
   }

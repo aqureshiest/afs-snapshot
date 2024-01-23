@@ -1,0 +1,5 @@
+{
+  "*": "redirect",
+  "actions": ["create-applicant", "create-cosigner"],
+  "redirect": "application-sillabus"
+}

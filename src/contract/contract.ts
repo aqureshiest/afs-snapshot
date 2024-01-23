@@ -19,7 +19,8 @@ export default class Contract {
     if (folders && folders.length > 0) {
       key = `${folders.join('/')}/${key}`
     }
-    this.id = version ? `${key}.${version}` : key || this.raw;
+    this.id = key ? key : this.raw
+    this.version = version ? version : 'default'
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
     this.template = handlebars.compile(raw);

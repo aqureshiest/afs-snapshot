@@ -9,6 +9,7 @@ export const gt = (v1, v2) => v1 > v2;
 export const lte = (v1, v2) => v1 <= v2;
 export const gte = (v1, v2) => v1 >= v2;
 export const not = (v1) => !v1;
+export const notNull = (v1) => v1 !== null;
 export function and(...args) {
   return Array.prototype.every.call(args, Boolean);
 }

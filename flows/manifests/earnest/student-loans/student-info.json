@@ -1,0 +1,13 @@
+{
+  "*": "student-info",
+  "stage": "student-info",
+  "steps": [
+    "student-info/education",
+    "student-info/basic",
+    "student-info/address",
+    "loan-info"
+  ],
+  "name_input": "questions/name.default",
+  "name_input_status": "questions/name.status",
+  "name_input_schema": "questions/name.schema"
+}

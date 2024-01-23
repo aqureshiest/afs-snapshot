@@ -1,0 +1,92 @@
+{
+    "key": "education",
+    "label": "Student Education",
+    "submit": {
+        "copy": "Continue",
+        "action": {
+            "key": "",
+            "type": "request",
+            "properties": {
+                "manifest": "save-details/{{application.id}}",
+                "method": "POST"
+            }
+        }
+    },
+    "rows": [
+        {
+            "type": "info",
+            "definition": {
+                "key": "header",
+                "type": "infoHeader",
+                "header": {
+                    "copy": "Student Education Info"
+                }
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "school",
+                "type": "inputSchool",
+                "status": "incomplete",
+                "value": "",
+                "label": {
+                    "copy": "School to be attended"
+                }
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "degree",
+                "type": "inputRadio",
+                "layout": "bubble",
+                "direction": "row",
+                "items": [
+                    {
+                        "id": "undergraduate",
+                        "value": "undergraduate",
+                        "label": "Undergraduate"
+                    },
+                    {
+                        "id": "graduate",
+                        "value": "graduate",
+                        "label": "Graduate"
+                    }
+                ],
+                "status": "incomplete",
+                "value": "{{application.education.degree}}",
+                "label": {
+                    "copy": "Degree type"
+                }
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "enrollment",
+                "type": "inputRadio",
+                "layout": "bubble",
+                "direction": "row",
+                "items": [
+                    {
+                        "id": "yes",
+                        "value": "yes",
+                        "label": "Yes"
+                    },
+                    {
+                        "id": "no",
+                        "value": "no",
+                        "label": "No"
+                    }
+                ],
+                "status": "incomplete",
+                "value": "{{application.education.enrollment}}",
+                "label": {
+                    "copy": "Enrollment Status",
+                    "subCopy": "Is the student enrolled at-least half-time (6-8 credits per semester)?"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,121 @@
+{
+  "key": "4f3f35ad",
+  "type": "form",
+  "label": "Loan Type",
+  "status": "notStarted",
+  "steps": [
+      {
+          "key": "type",
+          "label": "Loan Type",
+          "submit": {
+              "copy": "Continue",
+              "action": {
+                  "type": "request",
+                  "properties": {
+                      "manifest": "set-loan-type/{{application.id}}",
+                      "method": "POST"
+                  }
+              }
+          },
+          "rows": [
+              {
+                  "type": "info",
+                  "definition": {
+                      "key": "header",
+                      "type": "infoHeader",
+                      "header": {
+                          "copy": "What type of loan are you applying for?"
+                      }
+                  }
+              },
+              {
+                  "type": "input",
+                  "definition": {
+                      "key": "loanType",
+                      "type": "inputRadio",
+                      "layout": "copyWithIcon",
+                      "direction": "column",
+                      "items": [
+                          {
+                              "id": "cosigned",
+                              "label": "Cosigned Loan",
+                              "copy": "I’m sharing responsibility for this loan with another person",
+                              "icon": "icons.duo",
+                              "value": "cosigned"
+                          },
+                          {
+                              "id": "solo",
+                              "label": "Solo",
+                              "copy": "I’m a student/parent taking a loan out only in my name",
+                              "icon": "icons.solo",
+                              "value": "solo"
+                          }
+                      ],
+                      "status": "incomplete",
+                      "value": "",
+                      "label": {
+                          "copy": "Select a loan type"
+                      },
+                      "hint": "This is some hint text"
+                  }
+              },
+              {
+                  "type": "info",
+                  "definition": {
+                      "key": "cosigned-hint",
+                      "type": "infoCopy",
+                      "copy": "Cosigner selected hint",
+                      "conditional": [
+                          [
+                              {
+                                  "field": "type.loanType",
+                                  "op": "valueEquals",
+                                  "value": "cosigned"
+                              }
+                          ]
+                      ]
+                  }
+              },
+              {
+                  "type": "info",
+                  "definition": {
+                      "key": "solo-hint",
+                      "type": "infoCopy",
+                      "copy": "Solo selected hint",
+                      "conditional": [
+                          [
+                              {
+                                  "field": "type.loanType",
+                                  "op": "valueEquals",
+                                  "value": "solo"
+                              }
+                          ]
+                      ]
+                  }
+              }
+          ]
+      }
+  ],
+  "validation": {
+      "type": "object",
+      "properties": {
+          "type": {
+              "type": "object",
+              "properties": {
+                  "loanType": {
+                      "type": "string",
+                      "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
+                      "minLength": 1,
+                      "errorMessage": {
+                          "minLength": "Option must be longer than 1 character",
+                          "pattern": "Invalid option",
+                          "type": "Invalid option"
+                      }
+                  }
+              }
+          }
+      },
+      "required": [],
+      "additionalProperties": true
+  }
+}
