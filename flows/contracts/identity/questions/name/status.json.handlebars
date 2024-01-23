@@ -1,7 +1,7 @@
 {{#with application}}
-  {{#if details.name }}
-     "Completed"
+  {{#if (ajv 'questions/name.schema' details.name) }}
+     "completed"
   {{else}} 
-     "NotCompleted"
+     "notCompleted"
   {{/if}}
 {{/with}}

@@ -1,6 +1,6 @@
 export { default as list } from "./list.js";
 export { default as contract } from "./contract.js";
-
+export { default as ajv } from './ajv.js'
 export const json = (v1) => JSON.stringify(v1);
 export const eq = (v1, v2) => v1 === v2;
 export const ne = (v1, v2) => v1 !== v2;

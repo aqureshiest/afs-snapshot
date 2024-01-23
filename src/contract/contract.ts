@@ -56,6 +56,7 @@ export default class Contract {
       helpers: {
         list: templateHelpers.list(contractInjections),
         contract: templateHelpers.contract(contractInjections),
+        ajv: templateHelpers.ajv(contractInjections),
         json: templateHelpers.json,
         eq: templateHelpers.eq,
         ne: templateHelpers.ne,
