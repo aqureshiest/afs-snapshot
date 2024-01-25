@@ -1,8 +1,8 @@
 {
   "*": "solo-students",
   "solo_stage": "solo",
-  "student-info-section-status": "student-info-section-status",
+  "student-info-section-status": "sections/student-info.status",
   "sections": [
-    "student-info-section"
+    "sections/student-info.default"
   ]
 }

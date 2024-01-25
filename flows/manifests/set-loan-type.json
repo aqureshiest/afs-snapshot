@@ -1,5 +1,5 @@
 {
-  "*": "redirect",
-  "actions": ["create-applicant", "create-cosigner"],
-  "redirect": "application-sillabus"
+  "*": "redirect.default",
+  "actions": ["create.applicant", "create.cosigner"],
+  "redirect": "redirect.syllabus"
 }

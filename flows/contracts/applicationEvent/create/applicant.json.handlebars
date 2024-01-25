@@ -1,0 +1,19 @@
+{{log "applicant.json" application}}
+{{#with application}}
+  {{#if (and id (eq applicants.length 0)) }}
+    {{log " =====  hola ======  "}}
+    {
+      "event": "createApplication",
+      "fields": ["application.id", "application.root.id"],
+      "payload": {
+        "relationships": [{
+          "as": "applicant",
+          "to": "{{ id }}"
+        }]
+      }
+    }
+  {{else}}
+  {{log " =====  null ======  "}}
+    null
+  {{/if}}
+{{/with}}
