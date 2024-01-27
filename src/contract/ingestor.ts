@@ -225,7 +225,12 @@ const ingestManifests: IngestManifest = async function ingestManifests(
   const t2 = Date.now();
 
   const totalContracts = Object.keys(contracts).length;
-
+  console.log(" =================  Manifest Build  ============================")
+  Object.keys(manifests).forEach(key => {
+    console.log(`${key}`)  
+  })
+  
+  console.log(" =================  ***************  ============================")
   context?.logger.info({
     message: "Contracts loaded successfully",
     manifests: {

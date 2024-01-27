@@ -6,8 +6,12 @@ import { Request, Response, NextFunction } from 'express';
 const fields = [
   "id",
   "applicants.id",
+  "applicants.primary.id",
+  "applicants.cosigner.id",
   "details.name.first",
   "details.name.last",
+  "details.dateOfBirth",
+  "tags",
   "root.id",
   "primary.id",
   "cosigner.id"

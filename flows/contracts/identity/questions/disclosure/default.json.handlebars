@@ -1,0 +1,14 @@
+{
+  "type": "input",
+  "definition": {
+      "key": "disclosure",
+      "type": "inputDisclosure",
+      "status": {{{contract 'disclosure_input_status'}}},
+      "value": "{{application.details.consent.disclosure}}",
+      "label": {
+          "copy": ""
+      },
+      "disclosure": "By clicking “Continue” I acknowledge I have read and agree to the Privacy Policy, Privacy Notices and Consent to Electronic Communications.",
+      "errors": "{{{ajv 'errors' (contract 'disclosure_input_schema') application.details.consent.disclosure}}}"
+  }
+}

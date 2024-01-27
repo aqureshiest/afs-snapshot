@@ -1,0 +1,13 @@
+{
+    "type": "input",
+    "definition": {
+        "key": "email",
+        "type": "inputEmail",
+        "status": {{{contract 'email_input_status'}}},
+        "value": "{{application.details.email}}",
+        "label": {
+            "copy": "Email"
+        },
+        "errors": "{{{ajv 'errors' (contract 'email_input_schema') application.details.email}}}"
+    }
+}

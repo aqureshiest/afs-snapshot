@@ -1,29 +1,28 @@
-import Ajv from "ajv/dist/2020.js";
+import Ajv from "ajv";
 import addFormats from "ajv-formats";
-
+import ajvErrors from 'ajv-errors';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 const ajvHelper = (bound: Injections) =>
-  function (schemaName, data) {
+  function (action, schema, data) {
     const {
       context: chassisContext,
       manifest,
       executions: [executions, newExecutions],
       mutations,
     } = bound;
-    console.log('chassisContext', Object.keys(chassisContext))
-    console.log('schema', schemaName)
-    const contracts = bound.context.loadedPlugins?.contractExecution.instance
-    console.log('contracts', contracts)
-    if (contracts) {
-      const schema = contracts[schemaName]
-      if (schema) {
-        console.log('schema', schema)
-        const ajv = new Ajv.default();
-        const validate = ajv.compile(schema)
-      }
+    const ajv = new Ajv.default({allErrors: true, $data: true});
+    addFormats.default(ajv);
+    ajvErrors.default(ajv);
+    const validate = ajv.compile(JSON.parse(schema));
+    const validation = validate(data);
+    if (action === 'validate') {
+      return validation;
+    } else if (action === 'errors') {
+      console.log(`errors ${ajv.errorsText(validate.errors)}`, )
+      return ajv.errorsText(validate.errors)
     }
-    return false;
+    
   };
 
 export default ajvHelper;

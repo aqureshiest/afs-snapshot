@@ -67,13 +67,14 @@ export default class Contract {
         and: templateHelpers.and,
         or: templateHelpers.or,
         not: templateHelpers.not,
+        includes: templateHelpers.includes,
       },
     };
 
     const { input } = contractInjections;
 
     const raw = this.template(input, options) as unknown;
-
+    console.log('rwa', raw)
     const contractInstance = new this.type({
       id: this.id,
       definition: raw,

@@ -1,0 +1,14 @@
+{
+    "type": "input",
+    "definition": {
+        "key": "dateOfBirth",
+        "type": "inputDate",
+        "status": {{{contract 'dob_input_status'}}},
+        "value": "{{application.details.dateOfBirth}}",
+        "label": {
+            "copy": "Date of birth"
+        },
+        "hint": "",
+        "errors": "{{{ ajv 'errors' (contract 'dob_input_schema') application.details.dateOfBirth }}}"
+    }
+}

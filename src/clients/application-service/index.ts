@@ -140,7 +140,9 @@ export default class ApplicationServiceClient extends Client {
     options: MutationOptions,
   ): Promise<Mutation> {
     try {
+      console.log(" ================  mutation starts  =======================  ")
       const { id, fields = [], data = {}, meta } = options;
+
       if (!event) {
         throw new Error("missing mutation event");
       }
@@ -163,6 +165,8 @@ export default class ApplicationServiceClient extends Client {
 
       const types = this.mutationSchema[event]; // graphql types for mutation
       const vars = this.processVariables(data, types);
+      console.log('event triggered', event)
+      console.log('mutation variables', JSON.stringify(vars))
       const mutationFields = this.generateFields(fields).split(",");
 
       const gqlMutation = gql.mutation({

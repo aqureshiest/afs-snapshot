@@ -1,7 +1,7 @@
 {{log "applicant.json" application}}
 {{#with application}}
   {{#if (and id (eq applicants.length 0)) }}
-    {{log " =====  hola ======  "}}
+    {{log " =====  hola ======  " id}}
     {
       "event": "createApplication",
       "fields": ["application.id", "application.root.id"],

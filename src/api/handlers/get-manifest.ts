@@ -14,7 +14,6 @@ const getManifest: Handler = function (context, req, res, next) {
   assert(contracts);
 
   const params = req.params[0].split("/");
-
   const id = constants.UUID_REGEX.test(params[params.length - 1])
     ? params.pop()
     : null;
@@ -22,7 +21,7 @@ const getManifest: Handler = function (context, req, res, next) {
   res.locals.application = id ? { id } : null;
 
   const manifest = contracts.Manifest.getManifest(context, params);
-  console.log('params', {id, params})
+
   if (!manifest) {
     throw createError.NotFound(`[58d1ca55] manifest not found ${params.join('/')}`);
   }
