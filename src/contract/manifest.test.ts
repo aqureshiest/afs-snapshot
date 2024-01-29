@@ -95,38 +95,37 @@ describe("[462fd166] manifest.execute", () => {
 
     assert.deepEqual(parsed, [42, 404, 9001]);
   });
-
+  const schema = `{
+    "type": "object",
+    "properties": {
+        "first": {
+            "type": "string",
+            "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
+            "errorMessage": "First name is required."
+        },
+        "last": {
+            "type": "string",
+            "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
+        },
+        "middle": {
+            "type": "string",
+            "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
+        },
+        "title": {
+            "type": "string",
+            "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
+        }
+    },
+    "required": [
+        "first",
+        "last"
+    ]
+}`;
   it("[670555db] ajv helper validate", async () => {
     const input = {} as Input;
-    const schema = `{
-      "type": "object",
-      "properties": {
-          "first": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-              "errorMessage": "First name is required."
-          },
-          "last": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
-          },
-          "middle": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
-          },
-          "title": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
-          }
-      },
-      "required": [
-          "first",
-          "last"
-      ]
-  }`;
-  const name = {
-    first: 'test'
-  }
+    const name = {
+      first: 'test'
+    }
     const manifest = new Manifest(context, 'manifestAJV',{
       "*": new Contract({
         raw: `{{{ajv 'validate' (contract 'schema') (contract 'name') }}}`,
@@ -143,35 +142,10 @@ describe("[462fd166] manifest.execute", () => {
   });
   it("[5eb35b03] ajv helper errors", async () => {
     const input = {} as Input;
-    const schema = `{
-      "type": "object",
-      "properties": {
-          "first": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-              "errorMessage": "First name is required."
-          },
-          "last": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
-          },
-          "middle": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
-          },
-          "title": {
-              "type": "string",
-              "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
-          }
-      },
-      "required": [
-          "first",
-          "last"
-      ]
-  }`;
-  const name = {
-    first: 'test'
-  }
+    
+    const name = {
+      first: 'test'
+    }
     const manifest = new Manifest(context, 'manifestAJV',{
       "*": new Contract({
         raw: `"{{{ajv 'errors' (contract 'schema') (contract 'name') }}}"`,
