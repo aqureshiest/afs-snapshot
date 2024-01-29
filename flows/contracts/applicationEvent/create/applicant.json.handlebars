@@ -1,7 +1,5 @@
-{{log "applicant.json" application}}
 {{#with application}}
   {{#if (and id (eq applicants.length 0)) }}
-    {{log " =====  hola ======  " id}}
     {
       "event": "createApplication",
       "fields": ["application.id", "application.root.id"],
@@ -13,7 +11,9 @@
       }
     }
   {{else}}
-  {{log " =====  null ======  "}}
+   {{! we need to find a way to retrieve the primary application}}
+   {{! maybe with the external contract.}}
+   {{! primary application needs to be on inputs in order to create.cosigner contract to work propertly}}
     null
   {{/if}}
 {{/with}}

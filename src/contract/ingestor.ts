@@ -109,12 +109,6 @@ export const buildContracts: BuildContracts = async function buildContracts(
       }
 
       contracts[contract.id][contractVersion] = contract;
-      console.log(" =================  Contracts Build  ============================")
-      Object.keys(contracts).forEach(key => {
-        console.log(`${key}`, Object.keys(contracts[key]) )  
-      })
-      
-      console.log(" =================  ***************  ============================")
       return contracts;
     },
   );
@@ -143,8 +137,9 @@ export const buildManifests: BuildManifests = async function buildManifests(
 
       const fileName = pathSegments.pop();
       assert(fileName);
+
       const fileKey = fileName.replace(constants.JSON_FILE_REGEX, "");
-      const manifestName = `${pathSegments.join('/')}/${fileKey}`
+      const manifestName = `${pathSegments.join('/')}${pathSegments.length>0 ? '/' : ''}${fileKey}`
       let cursor: Manifest | Manifests = manifests;
 
       while (pathSegments.length) {
@@ -225,12 +220,7 @@ const ingestManifests: IngestManifest = async function ingestManifests(
   const t2 = Date.now();
 
   const totalContracts = Object.keys(contracts).length;
-  console.log(" =================  Manifest Build  ============================")
-  Object.keys(manifests).forEach(key => {
-    console.log(`${key}`)  
-  })
-  
-  console.log(" =================  ***************  ============================")
+
   context?.logger.info({
     message: "Contracts loaded successfully",
     manifests: {

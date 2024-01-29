@@ -19,16 +19,13 @@ export default class Manifest {
   static getManifest(context: Context, path: string[]): Manifest | null {
     const contracts = context.loadedPlugins.contractExecution.instance;
     assert(contracts);
-    console.log('getManifest called', {
-      path
-    })
+
     let manifest: Manifests = contracts.manifests;
 
     while (path.length) {
       const param = path.shift();
-      console.log('lookinf for', param)
+
       if (!param || !(param in manifest)) {
-        console.log(' nada ', param)
         return null;
       }
 
@@ -39,15 +36,14 @@ export default class Manifest {
   }
 
   constructor(context: Context, manifestName: string, contracts) {
-    console.log('manifest.constructor called', manifestName)
     this.name = manifestName;
     this.contracts = contracts;
   }
 
   traverse(injections: Injections, contract = this.contracts["*"]) {
     if (Array.isArray(contract)) {
-      return contract.map((subContract) =>
-        this.traverse(injections, subContract),
+      return contract.map((subContract) => 
+        this.traverse(injections, subContract)
       );
     }
 
@@ -70,7 +66,6 @@ export default class Manifest {
      * The execution reviver is bound to the input and the manifest, allowing
      * contracts to reference substitution keys in the same manifest
      * ============================== */
-    debugger
     const executedContract = this.traverse({
       manifest: this,
       context,

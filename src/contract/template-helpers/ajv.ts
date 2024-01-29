@@ -19,10 +19,9 @@ const ajvHelper = (bound: Injections) =>
     if (action === 'validate') {
       return validation;
     } else if (action === 'errors') {
-      console.log(`errors ${ajv.errorsText(validate.errors)}`, )
       return ajv.errorsText(validate.errors)
     }
-    
+    return false;
   };
 
 export default ajvHelper;

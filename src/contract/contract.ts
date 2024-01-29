@@ -74,7 +74,6 @@ export default class Contract {
     const { input } = contractInjections;
 
     const raw = this.template(input, options) as unknown;
-    console.log('rwa', raw)
     const contractInstance = new this.type({
       id: this.id,
       definition: raw,

@@ -45,7 +45,6 @@ const getInputs: Handler = async function (context, req: Request, res: Response,
     application: application,
     request: req,
   };
-  console.log('application', application)
   return next();
 };
 

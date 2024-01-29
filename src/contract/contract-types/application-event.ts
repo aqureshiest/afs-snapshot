@@ -21,7 +21,6 @@ class ApplicationEvent extends MutationType<Definition, Output> {
     );
 
     const { event, fields = [], payload } = this.definition;
-      console.log("=============== Application Event Mutate ==================")
     const { [event]: eventResult } = await applicationServiceClient.mutate(
       context,
       event,
@@ -48,7 +47,7 @@ class ApplicationEvent extends MutationType<Definition, Output> {
     return {
       event: this.definition?.event,
       id: this.result?.id,
-      createdAt: this.result?.createdAt,
+      createdAt: this.result?.createdAt
     };
   }
 }
