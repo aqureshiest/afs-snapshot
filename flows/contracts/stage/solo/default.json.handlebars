@@ -1,0 +1,23 @@
+{
+    "key": "earnest/student-loan/syllabus",
+    "type": "view",
+    "label": "Syllabus",
+    "status": "notStarted",
+    "mutation": "mutation",
+    "definition": {
+        "type": "syllabusView",
+        "definition": {
+            "key": "syllabus",
+            "header": "Complete these sections to apply for your loan",
+            "sections": {{{ contract 'sections' }}},
+            "submit": {
+                "copy": "Review application",
+                "action": {
+                    "key": "syllabusViewed",
+                    "type": "navigate",
+                    "properties": {}
+                }
+            }
+        }
+    }
+}

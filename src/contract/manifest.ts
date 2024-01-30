@@ -42,8 +42,8 @@ export default class Manifest {
 
   traverse(injections: Injections, contract = this.contracts["*"]) {
     if (Array.isArray(contract)) {
-      return contract.map((subContract) =>
-        this.traverse(injections, subContract),
+      return contract.map((subContract) => 
+        this.traverse(injections, subContract)
       );
     }
 

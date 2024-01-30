@@ -36,7 +36,6 @@ describe("[f8395630] Application Service Client", () => {
   });
   it("[0743446b] should get error when >=400", async () => {
     mock.method(client, "get", async () => {
-      console.log('mock get')
       return {
         response: {
           statusCode: 400,
@@ -51,7 +50,6 @@ describe("[f8395630] Application Service Client", () => {
   });
   it("[8208a473] should get 404 when id not found", async () => {
     mock.method(client, "get", async () => {
-      console.log('mock get')
       return {
         response: {
           statusCode: 404,
@@ -64,7 +62,6 @@ describe("[f8395630] Application Service Client", () => {
   });
   it("[8a10561b] should get error when >=400", async () => {
     mock.method(client, "get", async () => {
-      console.log('mock get')
       return {
         response: {
           statusCode: 400,

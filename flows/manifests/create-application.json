@@ -1,0 +1,5 @@
+{
+  "*": "redirect.default",
+  "actions": ["create.root"],
+  "redirect": "redirect.landing"
+}

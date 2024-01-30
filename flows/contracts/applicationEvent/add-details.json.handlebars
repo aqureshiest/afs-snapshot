@@ -1,0 +1,12 @@
+{{#if application.id}}
+  {
+    "event": "addDetails",
+    "payload": {
+      "id": "{{application.id}}",
+      "details": {{{json request.body.values}}}
+    },
+    "fields": ["application.id"]
+  }
+{{else}}
+  null
+{{/if}}

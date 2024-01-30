@@ -1,0 +1,98 @@
+{
+    "key": "loan-details",
+    "label": "Student Loan Details",
+    "submit": {
+        "copy": "Continue",
+        "action": {
+            "key": "",
+            "type": "request",
+            "properties": {
+                "manifest": "save-details-syllabus",
+                "method": "POST"
+            }
+        }
+    },
+    "rows": [
+        {
+            "type": "info",
+            "definition": {
+                "key": "header",
+                "type": "infoHeader",
+                "header": {
+                    "copy": "Student Loan Details"
+                }
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "loan-period",
+                "type": "inputDate",
+                "status": "incomplete",
+                "value": {
+                    "day": "",
+                    "month": "",
+                    "year": ""
+                },
+                "label": {
+                    "copy": "Academic Loan Period"
+                },
+                "hint": "Indicate the academic term or semester for which you require a loan.",
+                "omitDay": true
+            }
+        },
+        {
+            "type": "info",
+            "definition": {
+                "key": "block1",
+                "type": "infoBlock",
+                "copy": {
+                    "header": "Unsure about the exact month?",
+                    "body": "Don’t worry, provide your best estimate and we'll assist you in confirming the academic loan period with your school."
+                },
+                "style": "primary",
+                "cta": {
+                    "label": "Learn more",
+                    "action": {
+                        "key": "",
+                        "type": "",
+                        "properties": {}
+                    }
+                }
+            }
+        },
+        {
+            "type": "input",
+            "definition": {
+                "key": "money",
+                "type": "inputMoney",
+                "status": "incomplete",
+                "value": "",
+                "label": {
+                    "copy": "Loan Amount"
+                },
+                "hint": "Enter the loan amount required for the academic period you specified."
+            }
+        },
+        {
+            "type": "info",
+            "definition": {
+                "key": "block2",
+                "type": "infoBlock",
+                "copy": {
+                    "header": "Borrow responsibly within your means",
+                    "body": "This amount shouldn't exceed the total cost of attendance minus anticipated financial aid."
+                },
+                "style": "primary",
+                "cta": {
+                    "label": "Learn more",
+                    "action": {
+                        "key": "",
+                        "type": "",
+                        "properties": {}
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -19,7 +19,8 @@ export default class Contract {
     if (folders && folders.length > 0) {
       key = `${folders.join('/')}/${key}`
     }
-    this.id = version ? `${key}.${version}` : key || this.raw;
+    this.id = key ? key : this.raw
+    this.version = version ? version : 'default'
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
     this.template = handlebars.compile(raw);
@@ -55,6 +56,7 @@ export default class Contract {
       helpers: {
         list: templateHelpers.list(contractInjections),
         contract: templateHelpers.contract(contractInjections),
+        ajv: templateHelpers.ajv(contractInjections),
         json: templateHelpers.json,
         eq: templateHelpers.eq,
         ne: templateHelpers.ne,
@@ -65,13 +67,13 @@ export default class Contract {
         and: templateHelpers.and,
         or: templateHelpers.or,
         not: templateHelpers.not,
+        includes: templateHelpers.includes,
       },
     };
 
     const { input } = contractInjections;
 
     const raw = this.template(input, options) as unknown;
-
     const contractInstance = new this.type({
       id: this.id,
       definition: raw,

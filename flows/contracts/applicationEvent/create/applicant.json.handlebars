@@ -1,0 +1,19 @@
+{{#with application}}
+  {{#if (and id (eq applicants.length 0)) }}
+    {
+      "event": "createApplication",
+      "fields": ["application.id", "application.root.id"],
+      "payload": {
+        "relationships": [{
+          "as": "applicant",
+          "to": "{{ id }}"
+        }]
+      }
+    }
+  {{else}}
+   {{! we need to find a way to retrieve the primary application}}
+   {{! maybe with the external contract.}}
+   {{! primary application needs to be on inputs in order to create.cosigner contract to work propertly}}
+    null
+  {{/if}}
+{{/with}}

@@ -1,0 +1,7 @@
+{{#with application}}
+  {{#if (ajv 'validate' (contract 'name_input_schema') details.name) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}

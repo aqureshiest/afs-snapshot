@@ -1,0 +1,13 @@
+{
+    "type": "input",
+    "definition": {
+        "key": "name",
+        "type": "inputName",
+        "status": {{{contract 'name_input_status'}}},
+        "value": {{{json application.details.name}}},
+        "label": {
+            "copy": "Full legal name asdasd"
+        },
+        "errors": "{{{ ajv 'errors' (contract 'name_input_schema') application.details.name }}}"
+    }
+}

@@ -6,6 +6,13 @@ import { Request, Response, NextFunction } from 'express';
 const fields = [
   "id",
   "applicants.id",
+  "applicants.primary.id",
+  "applicants.cosigner.id",
+  "details.name.first",
+  "details.name.last",
+  "details.dateOfBirth",
+  "tags",
+  "root.id",
   "primary.id",
   "cosigner.id"
 ]
@@ -17,7 +24,7 @@ const fields = [
  */
 const getInputs: Handler = async function (context, req: Request, res: Response, next: NextFunction) {
   const inputs = req.body ? req.body : {};
-  const id = res.locals.application
+  const id = res.locals.application?.id;
   const manifestName = res.locals.manifest.name
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
   if (!ASclient) throw new Error('[67c30fe0] Application Service client instante not found')
@@ -38,7 +45,6 @@ const getInputs: Handler = async function (context, req: Request, res: Response,
     application: application,
     request: req,
   };
-
   return next();
 };
 

@@ -104,12 +104,11 @@ export const buildContracts: BuildContracts = async function buildContracts(
         raw: file,
       });
 
-      if (!(contractKey in contracts)) {
-        contracts[contractKey] = {};
+      if (!(contract.id in contracts)) {
+        contracts[contract.id] = {};
       }
 
-      contracts[contractKey][contractVersion] = contract;
-
+      contracts[contract.id][contractVersion] = contract;
       return contracts;
     },
   );
@@ -132,15 +131,15 @@ export const buildManifests: BuildManifests = async function buildManifests(
     async function (rootPath, pathSegments, manifests) {
       assert(manifests);
       assert(pathSegments);
-
       /* ============================== *
        * TODO (2/?): file validation / error handling
        * ============================== */
 
       const fileName = pathSegments.pop();
       assert(fileName);
+
       const fileKey = fileName.replace(constants.JSON_FILE_REGEX, "");
-      const manifestName = `${pathSegments.join('/')}/${fileKey}`
+      const manifestName = `${pathSegments.join('/')}${pathSegments.length>0 ? '/' : ''}${fileKey}`
       let cursor: Manifest | Manifests = manifests;
 
       while (pathSegments.length) {
@@ -171,7 +170,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
 
           if (!contract) {
             const error = new Error(
-              `[32ed6135] Manifest referenced a non-existent or invalid contract, while processing file ${fileName}`,
+              `[32ed6135] Manifest referenced a non-existent or invalid contract (${key}.${version}), while processing file ${fileName}`,
             );
             context?.logger.error({
               message: error.message,
@@ -195,13 +194,10 @@ export const buildManifests: BuildManifests = async function buildManifests(
           ? parsed[mappingKey].map((subKey) => getContract(subKey))
           : getContract(parsed[mappingKey]);
       }
-      console.log('path', path)
       const manifest = new Manifest(context, manifestName, parsed);
-
       cursor[fileKey] = manifest;
 
       totalManifests++;
-
       return manifests;
     },
   );
@@ -214,6 +210,7 @@ const ingestManifests: IngestManifest = async function ingestManifests(
 ) {
   const t0 = Date.now();
   const contracts = await buildContracts(context, CONTRACTS_PATH);
+
   const t1 = Date.now();
   const { manifests, totalManifests } = await buildManifests(
     context,
