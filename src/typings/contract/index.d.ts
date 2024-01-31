@@ -1,7 +1,7 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import type { MutationType } from "contract/contract-types/base-contract.js";
-import type { Request } from "express";
+import type ContractType from "contract/contract-types/base-contract.js";
+import { create } from "handlebars";
 import { createJsonHandlebars } from "handlebars-a-la-json";
 import type { Application as IApplication } from "clients/application-service/index.js";
 import Ajv from "ajv/dist/2020.js";
@@ -13,20 +13,32 @@ type HandlebarsTemplate = ReturnType<
   ReturnType<typeof createJsonHandlebars>["compile"]
 >;
 
+declare module "handlebars-a-la-json" {
+  // NOTE: the typing in "handlebars-a-la-json" is incomplete, so we substitute it with the type from "handlebars"
+  export function createJsonHandlebars(
+    options?: IOptions,
+  ): ReturnType<typeof create>;
+}
+
 type IExecutions<M extends { [key: string]: Contract | Contract[] }> = Map<
   keyof M,
   unknown
 >;
 
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
 /**
  * TODO: fully define this shape
  */
-interface IContractInput {
-  [key: string]: unknown;
-  request: Request;
+type IContractInput = {
   application: IApplication | null;
-  manifestName: string;
-}
+  request?: {
+    method?: string;
+    body?: { [key: string]: unknown };
+    query?: { [key: string]: unknown };
+    headers?: { [key: string]: unknown };
+  };
+};
 
 /**
  * TODO: fully define this shape
@@ -52,12 +64,22 @@ type IContractManifests = {
   [key: string]: IContractManifests | IContractManifest;
 };
 
-interface IExecutionInjections {
+interface IEvaluations {
+  [key: string]:
+    | ContractType<unknown, unknown, unknown>
+    | ContractType<unknown, unknown, unknown>[];
+}
+
+interface IDependencies {
+  [key: string]: ContractType<unknown, unknown, unknown>;
+}
+
+interface IExecutionInjections extends IContractInput {
   context: ChassisPluginContext;
   manifest: Manifest;
-  executions: IExecutions<{ [key: string]: Contract | Contract[] }>[];
-  mutations: Record<string, MutationType<unknown, unknown>>;
-  input: IContractInput;
+  // All known contract instances by key
+  evaluations: IEvaluations;
+  dependents: IDependencies;
 }
 
 import "contract/manifest.test.js";
@@ -72,7 +94,7 @@ declare module "contract/ingestor.js" {
 
   type ContractType = Exclude<
     keyof typeof contractTypes,
-    "ContractType" | "MutationType"
+    "ContractType" | "AsyncContractType"
   >;
 
   type ManifestFile = Record<string, string | string[]>;
@@ -123,7 +145,7 @@ declare module "contract/contract.js" {
 
   type ContractType = Exclude<
     keyof typeof contractTypes,
-    "ContractType" | "MutationType"
+    "ContractType" | "AsyncContractType"
   >;
 
   type Template = HandlebarsTemplate;
@@ -175,8 +197,8 @@ import "express-serve-static-core";
 declare module "express-serve-static-core" {
   interface Locals {
     manifest: Manifest;
-    inputs: IContractInput;
+    input: IContractInput;
     contract: IContractOutput;
-    mutations: Record<string, MutationType<unknown, unknown>>;
+    evaluations: Record<string, ContractType<unknown, unknown>>;
   }
 }

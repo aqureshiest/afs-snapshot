@@ -1,5 +1,4 @@
 import assert from "node:assert";
-import { MutationType } from "./contract-types/base-contract.js";
 
 /**
  * Manifests link independent contract modules together to represent a
@@ -40,44 +39,57 @@ export default class Manifest {
     this.contracts = contracts;
   }
 
-  traverse(injections: Injections, contract = this.contracts["*"]) {
+  async traverse(
+    injections: Omit<Injections, "dependents">,
+    contractKey = "*",
+    index?: number,
+  ) {
+    const contract =
+      index != null && Array.isArray(this.contracts[contractKey])
+        ? this.contracts[contractKey as keyof typeof this.contracts][index]
+        : this.contracts[contractKey as keyof typeof this.contracts];
+
     if (Array.isArray(contract)) {
-      return contract.map((subContract) => 
-        this.traverse(injections, subContract)
+      return Promise.all(
+        contract.map((subContract, i) =>
+          this.traverse(injections, contractKey, i),
+        ),
       );
     }
 
-    return contract.execute(injections);
+    const contractInstance = contract.execute(injections, contractKey);
+
+    await contractInstance.execute({ ...injections, dependents: {} });
+
+    return contractInstance;
   }
 
   /**
    *
    * embedded mutations still pending
    */
-  execute(
-    context: Context,
-    input: Input,
-    mutations: Record<string, MutationType<unknown, unknown>> = {},
-  ): {
+  async execute({
+    context,
+    evaluations = {},
+    ...assertions
+  }: Omit<Injections, "manifest" | "evaluations" | "dependents"> & {
+    evaluations?: Injections["evaluations"];
+  }): Promise<{
     contract: unknown;
-    mutations: Record<string, MutationType<unknown, unknown>>;
-  } {
+    evaluations: Injections["evaluations"];
+  }> {
     /* ============================== *
-     * The execution reviver is bound to the input and the manifest, allowing
+     * Manifest execution includes
      * contracts to reference substitution keys in the same manifest
      * ============================== */
-    const executedContract = this.traverse({
+
+    const contract = await this.traverse({
       manifest: this,
       context,
-      input,
-      executions: [new Map()],
-      mutations,
+      evaluations,
+      ...assertions,
     });
 
-    /* ============================== *
-     * Use a JSON replacer to find all instances of MutationType contracts
-     * ============================== */
-
-    return { contract: executedContract, mutations };
+    return { contract, evaluations };
   }
 }

@@ -4,7 +4,7 @@ import createPluginContext from "@earnest-labs/microservice-chassis/createPlugin
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 
-describe("[41a1abef] chassis-plugins", () => {
+describe("[63d13174] chassis-plugins", () => {
   it("[88090fb9] registers without error", async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };

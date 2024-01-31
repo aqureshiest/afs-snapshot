@@ -2,7 +2,10 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Client } from "@earnest/http";
 import * as gql from "gql-query-builder";
 
-import { mutationSchemaQuery } from "./graphql.js";
+import {
+  mutationSchemaQuery,
+  TEMP_DEFAULT_APPLICATION_QUERY,
+} from "./graphql.js";
 
 export default class ApplicationServiceClient extends Client {
   private accessKey: string;
@@ -55,24 +58,16 @@ export default class ApplicationServiceClient extends Client {
   async getApplication(
     context: PluginContext,
     applicationId: string,
-    fields: Array<string> = [],
   ): Promise<Application> {
     try {
       if (!applicationId) {
         throw new Error("missing application id");
       }
 
-      const applicationFields = this.generateFields(fields).split(",");
-      const applicationQuery = gql.query({
-        operation: "application",
-        variables: { id: { value: applicationId, required: true } },
-        fields: ["id", ...applicationFields],
-      });
-
-      const { application } = (await this.sendPostRequest(
-        context,
-        applicationQuery,
-      )) as ApplicationResponse;
+      const { application } = (await this.sendPostRequest(context, {
+        query: TEMP_DEFAULT_APPLICATION_QUERY,
+        variables: { id: applicationId },
+      })) as ApplicationResponse;
 
       return application;
     } catch (error) {

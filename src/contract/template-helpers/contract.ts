@@ -2,65 +2,84 @@
 import embedded from "./embedded.js";
 import { Status } from "../contract-types/base-contract.js";
 
-const contract = (bound: Injections) =>
-  function (context) {
-    if (typeof context !== "string") {
-      return embedded.call(this, bound, context);
-    }
-
-    const {
-      context: chassisContext,
-      manifest,
-      executions: [executions, newExecutions],
-      mutations,
-    } = bound;
-
-    if (executions.has(context)) {
-      return executions.get(context);
-    }
-
+const contract: TemplateHelper = function (context, ...args: unknown[]) {
+  if (typeof context !== "string") {
     /* ============================== *
-     * If the referenced contract has not yet been executed, recursively execute
-     * it and any dependencies before replacing it in the current render.
+     * Block Contracts
+     * ------------------------------ *
+     * If the 'contract' helper is invoked as a block helper, instead of
+     * with a single reference argument, it will interpret the contents
+     * of the block as an inline definition for a contract, apply any rules
+     * for the provided 'type' hash, and assign it the provided 'key' hash
      * ============================== */
+    return embedded.call(this, context);
+  }
 
-    const referencedContract =
-      manifest.contracts[context as keyof typeof manifest.contracts];
+  const path = args.filter((arg) => typeof arg === "string") as string[];
 
-    if (!referencedContract) {
-      const error = new Error("Invalid contract reference");
-      chassisContext.logger.error({
-        message: error.message,
-        reference: context,
-        contract: this,
-      });
+  const { manifest, evaluations, dependents } = this;
 
-      throw error;
+  /* ============================== *
+   * If the referenced contract has not yet been executed, recursively execute
+   * it and any dependencies before replacing it in the current render.
+   * ============================== */
+
+  const referencedContract =
+    manifest.contracts[context as keyof typeof manifest.contracts];
+
+  /* ============================== *
+   * If there is no contract by the context key in the manifest, attempt to
+   * grab an evaluation from the evaluations
+   * ============================== */
+
+  if (!referencedContract) {
+    if (context in evaluations) {
+      const evaluation = evaluations[context];
+      return Array.isArray(evaluation)
+        ? evaluation.map((e, i) => JSON.stringify(e.get(String(i), ...path)))
+        : JSON.stringify(evaluation.get(...path));
+    }
+    return "";
+  }
+
+  /**
+   */
+  const deriveContractValue = (
+    contract: Contract,
+    index?: number,
+  ): ContractType => {
+    const evaluation =
+      index != null ? evaluations[context]?.[index] : evaluations[context];
+
+    if (evaluation && evaluation.isLocked) {
+      dependents[contract.id] = evaluation;
     }
 
-    const deriveContractValue = (contract) => {
-      if (
-        contract.id in mutations &&
-        [Status.Executing, Status.Done].includes(mutations[contract.id].status)
-      ) {
-        return mutations[contract.id];
-      }
-      return contract.execute(injections);
-    };
+    if (evaluation) {
+      return evaluation;
+    }
 
-    const injections = {
-      ...bound,
-      executions: [new Map([...executions, ...newExecutions])],
-    };
+    const contractType = contract.execute(this, context, index);
 
-    const contractValue = Array.isArray(referencedContract)
-      ? referencedContract.map(deriveContractValue)
-      : deriveContractValue(referencedContract);
+    if (!(contract.id in dependents)) {
+      dependents[contract.id] = contractType;
+    }
 
-    const contractRaw = JSON.stringify(contractValue);
-
-    newExecutions.set(context, contractRaw);
-    return contractRaw;
+    return contractType;
   };
+
+  const contractValue = Array.isArray(referencedContract)
+    ? referencedContract.map((c, i) => deriveContractValue(c, i))
+    : deriveContractValue(referencedContract);
+
+  evaluations[context] = contractValue;
+
+  const contractRaw =
+    JSON.stringify(
+      Array.isArray(contractValue) ? contractValue : contractValue.get(...path),
+    ) || "null";
+
+  return contractRaw;
+};
 
 export default contract;
