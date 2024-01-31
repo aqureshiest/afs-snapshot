@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-const ajvHelper = (bound: Injections) =>
-  function (action, schema, data) {
-    const {
-      context: chassisContext,
-      manifest,
-      executions: [executions, newExecutions],
-      mutations,
-    } = bound;
+function ajvHelper(action, schema, data) {
     const ajv = chassisContext.loadedPlugins.schema.instance;
     if (!ajv) {
       throw new Error('[162d0439] schema dictionary not instantiated')
