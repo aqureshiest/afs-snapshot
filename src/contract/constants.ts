@@ -41,14 +41,3 @@ export enum SUBSTITUTION_STRATEGY {
   ARRAY = "$",
   VARIADIC = "@",
 }
-
-export const FORBIDDEN_GLOBALS = [
-  "process",
-  "crypto",
-  "readline",
-  "tty",
-  "require",
-  "console",
-  "setTimeout",
-  "setInterval",
-];

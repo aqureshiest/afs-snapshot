@@ -36,15 +36,23 @@ describe("[41a1abef] chassis-plugins", () => {
     context.applicationServer.close();
   });
   it("[a1647ec6] Non existing manifest, for error testing", async () => {
-    const request = axios.get("http://localhost:3000/apply/NON-EXISTING-MANIFEST");
-    assert.rejects(request)
+    const request = axios.get(
+      "http://localhost:3000/apply/NON-EXISTING-MANIFEST",
+    );
+    return assert.rejects(request);
   });
 
   it("[9c34ea12] Representative contracts", async () => {
-    await axios.get("http://localhost:3000/apply/nested/nested_manifest");
+    const request = axios.get(
+      "http://localhost:3000/apply/nested/nested_manifest",
+    );
+    return assert.doesNotReject(request);
   });
 
   it("[ac8836e7] Mutative contracts", async () => {
-    await axios.post("http://localhost:3000/apply/nested/nested_manifest");
+    const request = axios.post(
+      "http://localhost:3000/apply/nested/nested_manifest",
+    );
+    return assert.doesNotReject(request);
   });
 });

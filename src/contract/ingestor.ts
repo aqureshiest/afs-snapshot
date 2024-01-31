@@ -104,11 +104,11 @@ export const buildContracts: BuildContracts = async function buildContracts(
         raw: file,
       });
 
-      if (!(contract.id in contracts)) {
-        contracts[contract.id] = {};
+      if (!(contractKey in contracts)) {
+        contracts[contractKey] = {};
       }
 
-      contracts[contract.id][contractVersion] = contract;
+      contracts[contractKey][contractVersion] = contract;
       return contracts;
     },
   );
@@ -139,7 +139,9 @@ export const buildManifests: BuildManifests = async function buildManifests(
       assert(fileName);
 
       const fileKey = fileName.replace(constants.JSON_FILE_REGEX, "");
-      const manifestName = `${pathSegments.join('/')}${pathSegments.length>0 ? '/' : ''}${fileKey}`
+      const manifestName = `${pathSegments.join("/")}${
+        pathSegments.length > 0 ? "/" : ""
+      }${fileKey}`;
       let cursor: Manifest | Manifests = manifests;
 
       while (pathSegments.length) {
@@ -194,6 +196,7 @@ export const buildManifests: BuildManifests = async function buildManifests(
           ? parsed[mappingKey].map((subKey) => getContract(subKey))
           : getContract(parsed[mappingKey]);
       }
+
       const manifest = new Manifest(context, manifestName, parsed);
       cursor[fileKey] = manifest;
 

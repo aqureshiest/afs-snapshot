@@ -1,10 +1,51 @@
 import assert from "node:assert";
-import { MutationType } from "./base-contract.js";
+import ContractType from "./base-contract.js";
 
-class ApplicationEvent extends MutationType<Definition, Output> {
+const MUTATIVE_EVENTS = Object.freeze([
+  "addDetails",
+  "addInformation",
+  "addReferences",
+  "createApplication",
+  "createRelationship",
+  "setStatus",
+]);
+
+const DESTRUCTIVE_EVENTS = Object.freeze([
+  "deleteRelationship",
+  "removeDetails",
+  "removeReferences",
+]);
+
+class ApplicationEvent extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
     return "ApplicationEvent";
   }
+
+  /**
+   */
+  condition = (input: Injections, definition: Definition) => {
+    const method = input.request?.method;
+
+    const { event, payload } = definition;
+
+    // 1. Any event that destroys data cannot be done with a request if it
+    // isn't a DELETE request
+    if (method && method !== "DELETE" && DESTRUCTIVE_EVENTS.includes(event)) {
+      return false;
+    }
+
+    // 2. Any event that can change data cannot run during a GET request
+    if (method === "GET" && MUTATIVE_EVENTS.includes(event)) {
+      return false;
+    }
+
+    // 3. Any event other than "createApplication" requires an id
+    if (event !== "createApplication" && !payload?.id) {
+      return false;
+    }
+
+    return true;
+  };
 
   /**
    * TODO: use the contracts definition to determine which ApplicationService mutation
@@ -12,7 +53,8 @@ class ApplicationEvent extends MutationType<Definition, Output> {
    *
    * This function should probably return some information about the event that was created
    */
-  async mutate(context: Context) {
+  evaluate = async (input: Injections, definition: Definition) => {
+    const { context } = input;
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
     assert(
@@ -20,7 +62,8 @@ class ApplicationEvent extends MutationType<Definition, Output> {
       "[7d3b096f] ApplicationServiceClient not instantiated",
     );
 
-    const { event, fields = [], payload } = this.definition;
+    const { event, fields = [], payload } = definition;
+
     const { [event]: eventResult } = await applicationServiceClient.mutate(
       context,
       event,
@@ -39,15 +82,38 @@ class ApplicationEvent extends MutationType<Definition, Output> {
       throw new Error(error);
     }
 
+    /* ============================== *
+     * Rehydration: when application-event evaluates, it should re-hydrate the
+     * input parameters for re-evaluation
+     * ============================== */
+    const rehydrationId = eventResult?.application?.id;
+
+    if (rehydrationId) {
+      try {
+        const application = await applicationServiceClient.getApplication(
+          context,
+          eventResult.application.id as string,
+        );
+
+        Object.defineProperty(input, "application", { value: application });
+      } catch (error) {
+        context.logger.warn({
+          message: "failed to rehydrate application",
+          contract: this.id,
+        });
+        // TODO: report errors;
+      }
+    }
+
     return eventResult as Output;
-  }
+  };
 
   toJSON() {
-    if (!this.definition) return null;
+    if (!this.result) return null;
     return {
-      event: this.definition?.event,
+      event: this.result?.event,
       id: this.result?.id,
-      createdAt: this.result?.createdAt
+      createdAt: this.result?.createdAt,
     };
   }
 }

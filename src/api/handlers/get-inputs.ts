@@ -1,49 +1,40 @@
-import { IApplication } from '../../typings/clients/application-service/index.js';
-import { Request, Response, NextFunction } from 'express';
-
-// temporally hardcoding fields from ApplicationService
-// TODO: find a dynamic way to get the fields from a configuration file.
-const fields = [
-  "id",
-  "applicants.id",
-  "applicants.primary.id",
-  "applicants.cosigner.id",
-  "details.name.first",
-  "details.name.last",
-  "details.dateOfBirth",
-  "tags",
-  "root.id",
-  "primary.id",
-  "cosigner.id"
-]
+import { IApplication } from "../../typings/clients/application-service/index.js";
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Gather inputs for contract execution
- * TODO: get application from application-service
  * TODO: get authentication artifacts
  */
-const getInputs: Handler = async function (context, req: Request, res: Response, next: NextFunction) {
-  const inputs = req.body ? req.body : {};
-  const id = res.locals.application?.id;
-  const manifestName = res.locals.manifest.name
+const getInputs: Handler = async function (
+  context,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const id = res.locals.application;
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
-  if (!ASclient) throw new Error('[67c30fe0] Application Service client instante not found')
-  let application: IApplication | null = null
+  if (!ASclient)
+    throw new Error("[67c30fe0] Application Service client instante not found");
+  let application: IApplication | null = null;
   if (id) {
     try {
-      application = await ASclient.getApplication(context, id, fields)
+      application = await ASclient.getApplication(context, id);
     } catch (ex) {
       context.logger.error({
         message: `[89af3057] error while retrieving application`,
-        stack: ex.stack
-      })
+        stack: ex.stack,
+      });
     }
   }
-  res.locals.inputs = {
-    manifestName,
-    ...inputs,
+
+  res.locals.input = {
     application: application,
-    request: req,
+    request: {
+      method: req.method,
+      body: req.body,
+      query: req.query,
+      headers: req.headers,
+    },
   };
   return next();
 };

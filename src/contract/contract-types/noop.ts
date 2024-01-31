@@ -1,18 +1,22 @@
-import { MutationType } from "./base-contract.js";
+import ContractType from "./base-contract.js";
 
-class Noop extends MutationType<void, void> {
+class Noop extends ContractType<void, symbol, symbol> {
   get contractName(): string {
     return "Noop";
   }
+
+  static DEFINITION = Symbol("definition");
+  static MUTATION = Symbol("mutation");
+
+  evaluate = async () => {
+    return Noop.DEFINITION;
+  };
 
   async mutate(context: Context) {
     context.logger.warn({
       message: "Noop contract mutated",
     });
-  }
-
-  toJSON() {
-    return this.definition;
+    return Noop.MUTATION;
   }
 }
 

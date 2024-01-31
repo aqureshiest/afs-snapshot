@@ -1,18 +1,31 @@
 import type { Input as IContractInput } from "contract/manifest.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import type { Mutation } from "clients/application-service/index.js";
+import IContract, {
+  Injections as IExecutionInjections,
+} from "contract/contract.js";
 
-interface IContractArguments {
+interface IContractArguments<D> {
   id: string;
-  definition: unknown;
+  definition: D;
   input: IContractInput;
   context: ChassisPluginContext;
 }
 
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {
+  /**
+   * ContractType constructor
+   */
+  interface ConstructorArguments {
+    id: string;
+    contract: IContract;
+  }
+
+  type Injections = IExecutionInjections;
+
+  type ContractArguments<D> = IContractArguments<D>;
   type Context = ChassisPluginContext;
-  type ContractArguments = IContractArguments;
 }
 
 import "contract/contract-types/application-event.js";
@@ -26,6 +39,8 @@ declare module "contract/contract-types/application-event.js" {
     payload: { [key: string]: unknown };
     [key: string]: unknown;
   };
+
+  type Injections = IExecutionInjections;
 
   type MinimalApplication = {
     id: string;

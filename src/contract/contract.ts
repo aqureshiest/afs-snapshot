@@ -1,10 +1,7 @@
 import * as contractTypes from "./contract-types/index.js";
-import * as templateHelpers from "./template-helpers/index.js";
+import { createHash } from "crypto";
 
-const { Status } = contractTypes.MutationType;
-
-import { createJsonHandlebars } from "handlebars-a-la-json";
-const handlebars = createJsonHandlebars();
+import handlebars from "./handlebars.js";
 
 export default class Contract {
   id: string;
@@ -17,10 +14,12 @@ export default class Contract {
 
   constructor({ key, version, folders, type, raw }: ContstructorArguments) {
     if (folders && folders.length > 0) {
-      key = `${folders.join('/')}/${key}`
+      key = `${folders.join("/")}/${key}`;
     }
-    this.id = key ? key : this.raw
-    this.version = version ? version : 'default'
+    this.id = version
+      ? `${key}.${version}`
+      : key || createHash("sha1").update(raw).digest().toString("hex");
+    this.version = version ? version : "default";
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
     this.template = handlebars.compile(raw);
@@ -30,73 +29,29 @@ export default class Contract {
    * @param {Function} reviver - contract execution reviver that has the
    * full manifest bound as a parameter to allow full referencing
    */
-  execute(injections: Injections) {
-    const contractInjections = {
-      ...injections,
-      executions: [...injections.executions, new Map()],
-    };
+  execute(
+    injections: Omit<Injections, "dependents">,
+    key: string,
+    index?: number,
+  ) {
+    const { evaluations } = injections;
 
-    const { mutations } = injections;
-
-    /* ============================== *
-     * If this this is a re-execution after mutations have been run, prefer
-     * any already completed mutations
-     * ============================== */
-
-    const previousMutation = mutations[this.id];
-
-    if (
-      previousMutation &&
-      [Status.Executing, Status.Done].includes(previousMutation.status)
-    ) {
-      return previousMutation;
-    }
-
-    const options = {
-      helpers: {
-        list: templateHelpers.list(contractInjections),
-        contract: templateHelpers.contract(contractInjections),
-        ajv: templateHelpers.ajv(contractInjections),
-        json: templateHelpers.json,
-        eq: templateHelpers.eq,
-        ne: templateHelpers.ne,
-        lt: templateHelpers.lt,
-        gt: templateHelpers.gt,
-        gte: templateHelpers.gte,
-        lte: templateHelpers.lte,
-        and: templateHelpers.and,
-        or: templateHelpers.or,
-        not: templateHelpers.not,
-        includes: templateHelpers.includes,
-      },
-    };
-
-    const { input } = contractInjections;
-
-    const raw = this.template(input, options) as unknown;
     const contractInstance = new this.type({
+      contract: this,
       id: this.id,
-      definition: raw,
-      input,
-      context: injections.context,
     });
 
     /* ============================== *
      * Each unique mutation will be recorded in the mutations object. If a
      * contract needs to be re-executed after mutations, previously run
-     * mutations will be used preferentially
+     * mutations will be used preferentially;
      * ============================== */
 
-    if (contractInstance instanceof contractTypes.MutationType) {
-      const existingMutation = mutations[contractInstance.id];
+    const existingContract =
+      index != null ? evaluations[key]?.[index] : evaluations[key];
 
-      mutations[contractInstance.id] =
-        existingMutation &&
-        [Status.Executing, Status.Done].includes(existingMutation.status)
-          ? mutations[contractInstance.id]
-          : contractInstance;
-
-      return contractInstance;
+    if (existingContract && existingContract.isLocked) {
+      return existingContract;
     }
 
     return contractInstance;

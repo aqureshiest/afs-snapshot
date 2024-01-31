@@ -9,7 +9,9 @@ export const plugin: Plugin<AccreditedSchoolServiceClient> = {
   registerOrder: 0,
   register: async (context: PluginContext) => {
     const baseUrl =
-      SensitiveString.ExtractValue(context.env.ACCREDITED_SCHOOL_SERVICE_BASEURL) || "";
+      SensitiveString.ExtractValue(
+        context.env.ACCREDITED_SCHOOL_SERVICE_BASEURL,
+      ) || "";
 
     const client = new AccreditedSchoolServiceClient(context, baseUrl);
 

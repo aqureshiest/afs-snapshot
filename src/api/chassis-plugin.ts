@@ -10,13 +10,6 @@ export const plugin: Plugin = {
      * I. All contracts gather inputs and execte contracts
      * ============================== */
 
-    context.application.use(
-      "/apply/*",
-      handlers.getManifest.bind(null, context),
-      wrapAsyncHandler(context, handlers.getInputs),
-      handlers.executeContract.bind(null, context),
-    );
-
     /**
      * @openapi
      * /apply/*:
@@ -37,13 +30,6 @@ export const plugin: Plugin = {
      *           application/json:
      *             schema:
      *               type: object
-     */
-    context.application.get("/apply/*", handlers.get.bind(null, context));
-
-    /**
-     * @openapi
-     * /apply/*:
-     *   servers: ["{{application}}"]
      *   post:
      *     description: Execute a mutative contract
      *     parameters:
@@ -70,7 +56,9 @@ export const plugin: Plugin = {
      */
     context.application.use(
       "/apply/*",
-      wrapAsyncHandler(context, handlers.post),
+      handlers.getManifest.bind(null, context),
+      wrapAsyncHandler(context, handlers.getInputs),
+      wrapAsyncHandler(context, handlers.execute),
     );
 
     context.application.use(handlers.error.bind(null, context));

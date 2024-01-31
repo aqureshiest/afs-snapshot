@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import createError from "http-errors";
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 import * as constants from "../constants.js";
 
 /**
@@ -8,7 +8,12 @@ import * as constants from "../constants.js";
  * TODO: get application from application-service
  * TODO: get authentication artifacts
  */
-const getManifest: Handler = function (context, req: Request, res: Response, next: NextFunction) {
+const getManifest: Handler = function (
+  context,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const contracts = context.loadedPlugins.contractExecution.instance;
 
   assert(contracts);
@@ -23,7 +28,9 @@ const getManifest: Handler = function (context, req: Request, res: Response, nex
   const manifest = contracts.Manifest.getManifest(context, params);
 
   if (!manifest) {
-    throw createError.NotFound(`[58d1ca55] manifest not found ${params.join('/')}`);
+    throw createError.NotFound(
+      `[58d1ca55] manifest not found ${params.join("/")}`,
+    );
   }
 
   res.locals.manifest = manifest;

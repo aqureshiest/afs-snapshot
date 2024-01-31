@@ -1,18 +1,106 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { SideEffect } from "@earnest/state-machine";
+
+enum Phase {
+  Definition, // Raw Template, Pre-Transformation
+  Transformed, // Post-Transformation, Pre-Evaluation
+  Evaluating, // Evaluation started, LOCKED
+  Evaluated, // Evaluation finished, LOCKED
+}
+
 /**
  * Each ContractType class describes a different type of contract that can be executed
  */
-export default abstract class ContractType<Definition> {
+export default abstract class ContractType<
+  Definition,
+  Transformation = Definition,
+  Evaluation = void,
+> {
   id: string;
 
   get contractName(): string {
     return "Contract";
   }
 
-  definition: Definition;
+  static Phase = Phase;
 
-  constructor(args: ContractArguments) {
-    const { id, definition: rawDefinition, input, context } = args;
+  contract: ConstructorArguments["contract"];
+
+  __results: [Definition?, Transformation?, Promise<Evaluation>?, Evaluation?];
+
+  get phase(): Phase {
+    if (this.results[3]) {
+      return Phase.Evaluated;
+    }
+
+    if (this.results[2]) {
+      return Phase.Evaluating;
+    }
+
+    if (this.results[1]) {
+      return Phase.Transformed;
+    }
+
+    return Phase.Definition;
+  }
+
+  get isLocked() {
+    return this.phase >= Phase.Evaluating;
+  }
+
+  /**
+   * Return true if a contract instance is finished executing
+   */
+  isIncomplete(context: Injections): boolean {
+    if (
+      this.phase === Phase.Transformed &&
+      this.results[1] &&
+      this.condition &&
+      this.condition(context, this.results[1])
+    ) {
+      return true;
+    }
+
+    if (this.phase === Phase.Evaluating) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   */
+  get(...args: string[]) {
+    return args.reduce((cursor, key) => cursor?.[key], this.result);
+  }
+
+  /**
+   * With a fully qualified
+   * By default, no transformation is performed, and the definition is used as-is
+   */
+  transform(context: Injections, definition: Definition): Transformation {
+    return definition as unknown as Transformation;
+  }
+
+  /**
+   * Optional conditional to control when a transformed contract may be evaluated
+   */
+  condition(context: Injections, transformation: Transformation): boolean {
+    return false;
+  }
+
+  /**
+   * An optional evaluation step
+   */
+  evaluate?: (
+    context: Injections,
+    transformation: Transformation,
+  ) => Promise<Evaluation>;
+
+  dependencies: Injections["dependents"] = {};
+
+  constructor(args: ConstructorArguments) {
+    const { id, contract } = args;
 
     Object.defineProperty(this, "id", {
       value: id,
@@ -20,24 +108,103 @@ export default abstract class ContractType<Definition> {
       writable: false,
     });
 
-    const definition = this.execute(args);
-
-    Object.defineProperty(this, "definition", {
-      value: definition,
+    Object.defineProperty(this, "contract", {
+      value: contract,
       enumerable: false,
       writable: false,
+    });
+
+    this.results = [];
+  }
+
+  get results() {
+    return this.__results;
+  }
+
+  get result(): Definition | Transformation | Evaluation {
+    const nonPromiseResults = this.results.filter(
+      (result) => !(result instanceof Promise),
+    ) as Array<Definition | Transformation | Evaluation>;
+    return nonPromiseResults[nonPromiseResults.length - 1];
+  }
+
+  set results(value) {
+    Object.defineProperty(this, "__results", {
+      value,
+      enumerable: false,
+      writable: true,
     });
   }
 
   /**
-   * Default behavior: return the definition as-is
+   * Use the execution context to
    */
-  execute({ definition }: ContractArguments): unknown {
-    return definition;
+  async execute(context: Injections) {
+    // If the contract is already locked down, return it as-is;
+    if (this.phase >= Phase.Evaluating) {
+      return this;
+    }
+
+    // if this contract has never executed, it should evaluate the template to
+    // find direct dependencies for the first time. This first render is ignored
+    // so that the dependencies can be executed first
+    if (!this.results[0]) {
+      this.contract.template({
+        ...context,
+        dependents: this.dependencies,
+      });
+    }
+
+    do {
+      // dependencies are executed first so that the render method can
+      // sufficiently replace the most up-to-date
+      await Promise.all(
+        Object.values(this.dependencies).map(async (dependency) => {
+          await dependency.execute(context);
+        }),
+      );
+
+      // once dependencies have been evaluated fully, the definition for this
+      // contract is rendered. This JSON shape will be the input for the
+      // transformation step
+      const definition = this.contract.template({
+        ...context,
+        dependents: this.dependencies,
+      });
+
+      this.results[0] = definition as unknown as Definition;
+
+      // The transformation step produces the final JSON for normal contracts,
+      // or the input for async contracts
+      const transformation = this.transform(context, this.results[0]);
+      this.results[1] = transformation;
+
+      // Contracts with an async component only run once when their conditions
+      // are met. As soon as a contract has its condition met, it will begin
+      // async evaluation and will no longer be triggered or re-evaluated
+      if (
+        this.results[1] &&
+        this.evaluate &&
+        this.condition(context, this.results[1])
+      ) {
+        const promise = this.evaluate(context, this.results[1]);
+        this.results[2] = promise;
+        this.results[3] = await promise;
+      }
+    } while (
+      Object.values(this.dependencies).some((dependency) =>
+        dependency.isIncomplete(context),
+      )
+    );
+
+    return this;
   }
 
+  /**
+   * Serialize the contracts by returning the most accomplished evaluation
+   */
   toJSON(): unknown {
-    return this.definition;
+    return this.result;
   }
 
   [Symbol.toStringTag]() {
@@ -50,68 +217,5 @@ export enum Status {
   Pending,
   Executing,
   Done,
-}
-
-/**
- */
-export abstract class MutationType<
-  Definition,
-  Output,
-> extends ContractType<Definition> {
-  result: Output;
-  resultPromise?: Promise<Output>;
-
-  static Status = Status;
-
-  get status(): Status {
-    if (this.result) return Status.Done;
-    if (this.resultPromise) return Status.Executing;
-    if (this.definition) return Status.Pending;
-    return Status.Dormant;
-  }
-
-  /**
-   *
-   */
-  async mutate(context: Context, input: Input): Promise<Output> {
-    throw new Error(
-      `MutationType '${this.contractName}' does not have a mutation method`,
-    );
-  }
-
-  /**
-   * Run this mutation and record the result for serialization
-   */
-  async run(context: Context, input: Input): Promise<Output> {
-    if (this.resultPromise) return this.resultPromise;
-
-    const start = Date.now();
-
-    try {
-      this.resultPromise = this.mutate(context, input);
-      this.result = await this.resultPromise;
-
-      context.logger.info({
-        message: "Mutation executed",
-        contract: this.contractName,
-        elapsed: Date.now() - start,
-      });
-    } catch (error) {
-      context.logger.error({
-        message: "Mutation failed",
-        contract: this.contractName,
-        elapsed: Date.now() - start,
-      });
-      throw error;
-    }
-
-    return this.result;
-  }
-
-  /**
-   * Ensure that mutation contracts do not serialize automatically
-   */
-  toJSON(): unknown {
-    return this.definition && (this.result || this);
-  }
+  Skipped,
 }

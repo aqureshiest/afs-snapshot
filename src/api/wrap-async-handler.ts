@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 /**
  * Wraps async handlers with a try/catch block and bound context
  */

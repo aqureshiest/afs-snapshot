@@ -1,41 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Contract from "../contract.js";
-import { MutationType } from "../contract-types/base-contract.js";
+import ContractType from "../contract-types/base-contract.js";
 
-export default function (bound: Injections, context) {
+const embedded: TemplateHelper = function (context) {
   const { type, key } = context.hash;
 
-  const {
-    context: PluginContext,
-    input,
-    executions: [executions],
-    mutations,
-  } = bound;
+  const { evaluations, dependents } = this;
 
-  if (key in mutations) {
-    const previousMutation = mutations[key];
+  if (key in evaluations) {
+    const evaluation = evaluations[key];
 
-    if (
-      previousMutation &&
-      previousMutation instanceof MutationType &&
-      previousMutation.status === MutationType.Status.Done
-    ) {
-      const mutationRaw = JSON.stringify(previousMutation);
-      executions.set(key, mutationRaw);
-      return mutationRaw;
+    if (evaluation) {
+      return JSON.stringify(evaluation);
     }
-  }
-
-  if (executions.has(key)) {
-    return executions.get(key);
   }
 
   const raw = context.fn(this);
 
-  const contract = new Contract({ key, type, raw });
-  const contractRaw = JSON.stringify(contract.execute(bound));
+  const contract = new Contract({ key, type, raw }).execute(this, key);
 
-  executions.set(key, contractRaw);
+  dependents[key] = contract;
+  evaluations[key] = contract;
+
+  const contractRaw = JSON.stringify(contract) || "null";
 
   return contractRaw;
-}
+};
+
+export default embedded;
