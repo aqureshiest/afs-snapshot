@@ -1,7 +1,10 @@
 {
-  "type": "boolean",
-  "minLength": 1,
-  "const": true,
+  "type": "object",
+  "properties": {
+    "dateOfBirth": {
+      "type": "boolean"
+    }
+  },
   "errorMessage": {
       "minLength": "To continue you must agree",
       "const": "To continue you must agree",

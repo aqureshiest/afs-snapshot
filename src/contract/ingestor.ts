@@ -205,6 +205,48 @@ export const buildManifests: BuildManifests = async function buildManifests(
   return { totalManifests, manifests };
 };
 
+/**
+ * Recursively scan through the manifests directories and produce a nested
+ * hierarchy of manifests with parsed contracts
+ */
+export const buildSchemas: BuildSchemas = async function buildSchemas(
+  context,
+  path
+) {
+  let totalSchemas = 0;
+  const schemas = await recursiveDo<Schemas>(
+    context,
+    path,
+    constants.SCHEMA_FILE_REGEX,
+    async function (rootPath, pathSegments, schemas) {
+      assert(schemas);
+      assert(pathSegments);
+      /* ============================== *
+       * TODO (2/?): file validation / error handling
+       * ============================== */
+
+      const fileName = pathSegments.pop();
+      assert(fileName);
+      const schemaPathName = pathSegments.shift()
+      const fileKey = fileName.replace(constants.SCHEMA_FILE_REGEX, "");
+      const schemaName = `${pathSegments.join('/')}`
+      let cursor: Schemas = schemas;
+
+
+      const file = await fs.readFile(rootPath, "utf8");
+
+      const parsed = JSON.parse(file);
+      parsed['$id'] = schemaName
+      cursor[schemaName] = parsed;
+
+      totalSchemas++;
+      return schemas;
+    },
+  );
+
+  return { totalSchemas, schemas };
+};
+
 const ingestManifests: IngestManifest = async function ingestManifests(
   context,
 ) {

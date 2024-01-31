@@ -1,5 +1,4 @@
 {
-  "type": "object",
-  "format": "date",
-  "required": ["dateOfBirth"]
+  "type": "string",
+  "format": "date"
 }
