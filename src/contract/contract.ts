@@ -12,15 +12,18 @@ export default class Contract {
   parsed: unknown;
   template: Template;
 
-  constructor({ key, version, folders, type, raw }: ContstructorArguments) {
-    if (!key) throw new Error("[daf5283e] key is required for contract");
+  constructor({
+    version,
+    folders,
+    type,
+    raw,
+    key = createHash("sha1").update(raw).digest().toString("hex"),
+  }: ContstructorArguments) {
     const contractKey =
       folders && folders.length > 0 ? `${folders.join("/")}/${key}` : key;
 
     this.name = contractKey;
-    this.id = version
-      ? `${contractKey}.${version}`
-      : contractKey || createHash("sha1").update(raw).digest().toString("hex");
+    this.id = version ? `${contractKey}.${version}` : contractKey;
     this.version = version ? version : "default";
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;

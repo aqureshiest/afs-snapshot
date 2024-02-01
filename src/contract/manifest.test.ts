@@ -20,7 +20,7 @@ describe("[462fd166] manifest.execute", () => {
   it("[be92134e] runs without error", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
-      "*": new Contract({ key: "testContract", raw: JSON.stringify({}) }),
+      "*": new Contract({ raw: JSON.stringify({}) }),
     });
 
     const { contract } = await manifest.execute({ context, ...input });
@@ -31,7 +31,6 @@ describe("[462fd166] manifest.execute", () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
-        key: "testContract",
         raw: "{{{ contract 'reference'}}}",
       }),
       reference: new Contract({ key: "reference", raw: "42" }),
@@ -48,7 +47,6 @@ describe("[462fd166] manifest.execute", () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
-        key: "testContract",
         raw: "{{#contract type='identity' key='embedded'}}42{{/contract}}",
       }),
     });
@@ -64,7 +62,6 @@ describe("[462fd166] manifest.execute", () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
-        key: "testContract",
         raw: `
       {{#list}}
         42
@@ -86,7 +83,6 @@ describe("[462fd166] manifest.execute", () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
-        key: "testContract",
         raw: `
       {{#list merge=true}}
         42
