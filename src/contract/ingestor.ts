@@ -104,11 +104,11 @@ export const buildContracts: BuildContracts = async function buildContracts(
         raw: file,
       });
 
-      if (!(contractKey in contracts)) {
-        contracts[contractKey] = {};
+      if (!(contract.name in contracts)) {
+        contracts[contract.name] = {};
       }
 
-      contracts[contractKey][contractVersion] = contract;
+      contracts[contract.name][contractVersion] = contract;
       return contracts;
     },
   );
@@ -214,10 +214,10 @@ export const buildManifests: BuildManifests = async function buildManifests(
  */
 export const buildSchemas: BuildSchemas = async function buildSchemas(
   context,
-  path
+  path,
 ) {
   let totalSchemas = 0;
-  const schemas = await recursiveDo<Schemas>(
+  const schemasBuild = await recursiveDo<Schemas>(
     context,
     path,
     constants.SCHEMA_FILE_REGEX,
@@ -230,16 +230,14 @@ export const buildSchemas: BuildSchemas = async function buildSchemas(
 
       const fileName = pathSegments.pop();
       assert(fileName);
-      const schemaPathName = pathSegments.shift()
-      const fileKey = fileName.replace(constants.SCHEMA_FILE_REGEX, "");
-      const schemaName = `${pathSegments.join('/')}`
-      let cursor: Schemas = schemas;
-
+      pathSegments.shift();
+      const schemaName = `${pathSegments.join("/")}`;
+      const cursor: Schemas = schemas;
 
       const file = await fs.readFile(rootPath, "utf8");
 
       const parsed = JSON.parse(file);
-      parsed['$id'] = schemaName
+      parsed["$id"] = schemaName;
       cursor[schemaName] = parsed;
 
       totalSchemas++;
@@ -247,7 +245,7 @@ export const buildSchemas: BuildSchemas = async function buildSchemas(
     },
   );
 
-  return { totalSchemas, schemas };
+  return { totalSchemas, schemas: schemasBuild };
 };
 
 const ingestManifests: IngestManifest = async function ingestManifests(

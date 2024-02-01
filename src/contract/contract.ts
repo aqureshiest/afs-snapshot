@@ -13,9 +13,11 @@ export default class Contract {
   template: Template;
 
   constructor({ key, version, folders, type, raw }: ContstructorArguments) {
+    if (!key) throw new Error("[daf5283e] key is required for contract");
     if (folders && folders.length > 0) {
       key = `${folders.join("/")}/${key}`;
     }
+    this.name = key;
     this.id = version
       ? `${key}.${version}`
       : key || createHash("sha1").update(raw).digest().toString("hex");

@@ -13,14 +13,10 @@
   ],
   "name_input": "questions/name.default",
   "name_input_status": "questions/name.status",
-  "name_input_schema": "questions/name.schema",
   "dob_input": "questions/dateOfBirth.default",
   "dob_input_status": "questions/dateOfBirth.status",
-  "dob_input_schema": "questions/dateOfBirth.schema",
   "email_input": "questions/email.default",
   "email_input_status": "questions/email.status",
-  "email_input_schema": "questions/email.schema",
   "disclosure_input": "questions/disclosure.default",
-  "disclosure_input_status": "questions/disclosure.status",
-  "disclosure_input_schema": "questions/disclosure.schema"
+  "disclosure_input_status": "questions/disclosure.status"
 }

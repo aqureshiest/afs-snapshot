@@ -1,5 +1,5 @@
 {{#with application}}
-  {{#if (ajv 'validate' (contract 'disclosure_input_schema') details.consent.disclosure) }}
+  {{#if (ajv 'validate' 'questions/disclosure' details.consent.disclosure) }}
      "completed"
   {{else}} 
      "incomplete"
