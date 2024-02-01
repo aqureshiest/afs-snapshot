@@ -4,5 +4,7 @@
   "database_password": "earnest",
   "database_username": "earnest",
   "ACCESS_KEY": "accesskeyTEST-1",
-  "APPLICATION_SERVICE_URL": "http://host.docker.internal:4500"
+  "APPLICATION_SERVICE_URL": "http://host.docker.internal:4500",
+  "PII_TOKEN_SERVICE_BASEURL": "http://mountebank:3006",
+  "PII_TOKEN_SERVICE_KEY": "PII_TOKEN_SERVICE_KEY"
 }

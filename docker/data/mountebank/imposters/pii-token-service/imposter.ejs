@@ -1,0 +1,75 @@
+{
+  "port": 3006,
+  "protocol": "http",
+  "name": "pii-token-service",
+  "allowCors": true,
+  "defaultResponse": {
+    "statusCode": 404
+  },
+  "stubs": [
+    {
+      "predicates": [{
+        "equals": { "method": "OPTIONS" }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "http://localhost:4000",
+            "Access-Control-Allow-Methods": "PUT, GET, POST",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+          }
+        }
+      }]
+    },
+    {
+      "responses": [
+          {
+            "is": {
+              "statusCode": 200,
+              "headers": {
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Origin": "http://localhost:4000"
+              },
+              "body": {"value": "999999999"}
+            }
+        }
+      ],
+      "predicates": [
+        {
+          "startsWith": {
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer"
+            },
+            "path": "/tokens"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+          {
+            "is": {
+              "statusCode": 201,
+              "headers": {
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Origin": "http://localhost:4000",
+                "Content-Type": "application/json"
+              },
+              "body": {"uri":"pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3"}
+            }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/tokens"
+          }
+        }
+      ]
+    }
+  ]
+}
