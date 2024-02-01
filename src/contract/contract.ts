@@ -14,13 +14,13 @@ export default class Contract {
 
   constructor({ key, version, folders, type, raw }: ContstructorArguments) {
     if (!key) throw new Error("[daf5283e] key is required for contract");
-    if (folders && folders.length > 0) {
-      key = `${folders.join("/")}/${key}`;
-    }
-    this.name = key;
+    const contractKey =
+      folders && folders.length > 0 ? `${folders.join("/")}/${key}` : key;
+
+    this.name = contractKey;
     this.id = version
-      ? `${key}.${version}`
-      : key || createHash("sha1").update(raw).digest().toString("hex");
+      ? `${contractKey}.${version}`
+      : contractKey || createHash("sha1").update(raw).digest().toString("hex");
     this.version = version ? version : "default";
     this.type = contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
