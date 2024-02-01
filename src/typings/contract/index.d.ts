@@ -4,7 +4,6 @@ import type ContractType from "contract/contract-types/base-contract.js";
 import { create } from "handlebars";
 import { createJsonHandlebars } from "handlebars-a-la-json";
 import type { Application as IApplication } from "clients/application-service/index.js";
-
 import * as contractTypes from "contract/contract-types/index.js";
 import type Contract from "contract/contract.js";
 import type Manifest from "contract/manifest.js";
@@ -50,7 +49,10 @@ interface IContracts {
     [version: string]: Contract;
   };
 }
-
+type ISchema = { [key: string]: unknown };
+type ISchemas = {
+  [key: string]: ISchema;
+};
 /**
  */
 type IContractManifest = Manifest;
@@ -97,7 +99,8 @@ declare module "contract/ingestor.js" {
   type ManifestFile = Record<string, string | string[]>;
   type Manifest = IContractManifest;
   type Manifests = IContractManifests;
-
+  type Schema = ISchema;
+  type Schemas = ISchemas;
   interface BuildContracts {
     (context: ChassisPluginContext, path: string): Promise<Contracts>;
   }
@@ -109,7 +112,12 @@ declare module "contract/ingestor.js" {
       contracts: Contracts,
     ): Promise<{ totalManifests: number; manifests: Manifests }>;
   }
-
+  interface BuildSchemas {
+    (
+      context: ChassisPluginContext,
+      path: string,
+    ): Promise<{ totalSchemas: number; schemas: Schemas }>;
+  }
   interface IngestManifest {
     (
       context: ChassisPluginContext,

@@ -1,13 +1,13 @@
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
-import ajvErrors from "ajv-errors";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 const ajvHelper = function (action, schema, data) {
-  const ajv = new Ajv.default({ allErrors: true, $data: true });
-  addFormats.default(ajv);
-  ajvErrors.default(ajv);
-  const validate = ajv.compile(JSON.parse(schema));
+  const { context: chassisContext } = this;
+  const ajv = chassisContext.loadedPlugins.schema.instance;
+  if (!ajv) {
+    throw new Error("[162d0439] schema dictionary not instantiated");
+  }
+  const validate = ajv.getSchema(schema);
+  if (!validate) throw new Error("[dd8f1051] unable to load validation schema");
   const validation = validate(data);
   if (action === "validate") {
     return validation;

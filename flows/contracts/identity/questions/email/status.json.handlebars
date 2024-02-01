@@ -1,5 +1,5 @@
 {{#with application}}
-  {{#if (ajv 'validate' (contract 'email_input_schema') details.email) }}
+  {{#if (ajv 'validate' 'questions/email' details.email) }}
      "completed"
   {{else}} 
      "incomplete"

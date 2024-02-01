@@ -1,7 +1,7 @@
 export { default as list } from "./list.js";
 export { default as contract } from "./contract.js";
 export { default as ajv } from "./ajv.js";
-
+export { default as schema } from "./schema.js";
 export const noop = function (v1) {
   v1.fn(this);
   return "";
