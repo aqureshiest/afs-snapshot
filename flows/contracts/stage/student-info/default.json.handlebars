@@ -46,8 +46,8 @@
             "basic": {
                 "type": "object",
                 "properties": {
-                    "name": {{{schema 'questions/name'}}},
-                    "dateOfBirth": {{{schema 'questions/dateOfBirth'}}},
+                    "name": {{{json (schema 'questions/name')}}},
+                    "dateOfBirth": {{{json (schema 'questions/dateOfBirth')}}},
                     "phone": {
                         "type": "object",
                         "properties": {
@@ -94,8 +94,8 @@
                             "lineNumber"
                         ]
                     },
-                    "email": {{{schema 'questions/email'}}},
-                    "disclosure": {{{schema 'questions/disclosure'}}}
+                    "email": {{{json (schema 'questions/email')}}},
+                    "disclosure": {{{json (schema 'questions/disclosure')}}}
                 }
             },
             "address": {
