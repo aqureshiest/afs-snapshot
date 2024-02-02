@@ -51,11 +51,8 @@ const contract: TemplateHelper = function (context, ...args: unknown[]) {
     const evaluation =
       index != null ? evaluations[context]?.[index] : evaluations[context];
 
-    if (evaluation && evaluation.isLocked) {
-      dependents[contract.id] = evaluation;
-    }
-
     if (evaluation) {
+      dependents[contract.id] = evaluation;
       return evaluation;
     }
 

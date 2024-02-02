@@ -1,5 +1,3 @@
-import assert from "node:assert";
-
 /**
  * Manifests link independent contract modules together to represent a
  * discrete unit of work for Apply Flow Service to complete, typically either:
@@ -10,29 +8,6 @@ export default class Manifest {
   contracts: Contracts;
   references: string[];
   name: string;
-
-  /**
-   * Get a manifest from the application context, or return null if that manifest
-   * does not exist
-   */
-  static getManifest(context: Context, path: string[]): Manifest | null {
-    const contracts = context.loadedPlugins.contractExecution.instance;
-    assert(contracts);
-
-    let manifest: Manifests = contracts.manifests;
-
-    while (path.length) {
-      const param = path.shift();
-
-      if (!param || !(param in manifest)) {
-        return null;
-      }
-
-      manifest = manifest[param];
-    }
-
-    return manifest instanceof contracts.Manifest ? manifest : null;
-  }
 
   constructor(context: Context, manifestName: string, contracts) {
     this.name = manifestName;

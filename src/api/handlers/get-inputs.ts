@@ -11,7 +11,7 @@ const getInputs: Handler = async function (
   res: Response,
   next: NextFunction,
 ) {
-  const id = res.locals.application;
+  const id = res.locals.application?.id;
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
   if (!ASclient)
     throw new Error("[67c30fe0] Application Service client instante not found");

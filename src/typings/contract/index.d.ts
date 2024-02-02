@@ -60,7 +60,7 @@ type IContractManifest = Manifest;
 type IContractManifests = {
   "*": never;
 } & {
-  [key: string]: IContractManifests | IContractManifest;
+  [key: string]: IContractManifest;
 };
 
 interface IEvaluations {

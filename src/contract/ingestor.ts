@@ -142,22 +142,6 @@ export const buildManifests: BuildManifests = async function buildManifests(
       const manifestName = `${pathSegments.join("/")}${
         pathSegments.length > 0 ? "/" : ""
       }${fileKey}`;
-      let cursor: Manifest | Manifests = manifests;
-
-      while (pathSegments.length) {
-        const segment = pathSegments.shift();
-        assert(segment);
-
-        if (!(segment in cursor)) {
-          cursor[segment] = {};
-        }
-
-        const cursorSegment = cursor[segment];
-
-        if (cursorSegment && typeof cursorSegment === "object") {
-          cursor = cursorSegment;
-        }
-      }
 
       const file = await fs.readFile(rootPath, "utf8");
 
@@ -198,7 +182,8 @@ export const buildManifests: BuildManifests = async function buildManifests(
       }
 
       const manifest = new Manifest(context, manifestName, parsed);
-      cursor[fileKey] = manifest;
+
+      manifests[manifestName] = manifest;
 
       totalManifests++;
       return manifests;

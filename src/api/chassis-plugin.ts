@@ -1,5 +1,6 @@
 import * as handlers from "./handlers/index.js";
 import wrapAsyncHandler from "./wrap-async-handler.js";
+import * as constants from "./constants.js";
 
 export const plugin: Plugin = {
   name: "api",
@@ -9,6 +10,13 @@ export const plugin: Plugin = {
     /* ============================== *
      * I. All contracts gather inputs and execte contracts
      * ============================== */
+
+    context.application.use(
+      `/apply/*/:id(${constants.UUID_REGEX.source})`,
+      handlers.getManifest.bind(null, context),
+      wrapAsyncHandler(context, handlers.getInputs),
+      wrapAsyncHandler(context, handlers.execute),
+    );
 
     /**
      * @openapi

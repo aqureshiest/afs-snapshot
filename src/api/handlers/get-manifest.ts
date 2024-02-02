@@ -1,7 +1,6 @@
 import assert from "node:assert";
 import createError from "http-errors";
 import { Request, Response, NextFunction } from "express";
-import * as constants from "../constants.js";
 
 /**
  * Gather inputs for contract execution
@@ -14,22 +13,19 @@ const getManifest: Handler = function (
   res: Response,
   next: NextFunction,
 ) {
-  const contracts = context.loadedPlugins.contractExecution.instance;
+  const manifests = context.loadedPlugins.contractExecution.instance?.manifests;
 
-  assert(contracts);
+  assert(manifests);
 
-  const params = req.params[0].split("/");
-  const id = constants.UUID_REGEX.test(params[params.length - 1])
-    ? params.pop()
-    : null;
+  const { 0: manifestName, id } = req.params;
 
   res.locals.application = id ? { id } : null;
 
-  const manifest = contracts.Manifest.getManifest(context, params);
+  const manifest = manifests[manifestName];
 
   if (!manifest) {
     throw createError.NotFound(
-      `[58d1ca55] manifest not found ${params.join("/")}`,
+      `[58d1ca55] manifest "${manifestName}" not found`,
     );
   }
 
