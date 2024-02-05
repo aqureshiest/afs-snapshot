@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import assert from "node:assert";
 import Contract from "../contract.js";
 import ContractType from "../contract-types/base-contract.js";
 
 const embedded: TemplateHelper = function (context) {
   const { type, key } = context.hash;
 
-  const { evaluations, dependents } = this;
+  const { evaluations, dependents } = context.data;
 
   if (key in evaluations) {
     const evaluation = evaluations[key];
@@ -17,7 +18,7 @@ const embedded: TemplateHelper = function (context) {
 
   const raw = context.fn(this);
 
-  const contract = new Contract({ key, type, raw }).execute(this, key);
+  const contract = new Contract({ key, type, raw }).execute(context.data, key);
 
   dependents[key] = contract;
   evaluations[key] = contract;

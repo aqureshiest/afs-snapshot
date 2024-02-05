@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import assert from "node:assert";
 
 const list: TemplateHelper = function (context) {
   const { merge } = context.hash;

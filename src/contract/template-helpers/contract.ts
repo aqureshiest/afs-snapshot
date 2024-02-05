@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import assert from "node:assert";
 import embedded from "./embedded.js";
 import { Status } from "../contract-types/base-contract.js";
 
-const contract: TemplateHelper = function (context, ...args: unknown[]) {
+const contract: TemplateHelper = function (context, ...args) {
   if (typeof context !== "string") {
     /* ============================== *
      * Block Contracts
@@ -12,12 +13,16 @@ const contract: TemplateHelper = function (context, ...args: unknown[]) {
      * of the block as an inline definition for a contract, apply any rules
      * for the provided 'type' hash, and assign it the provided 'key' hash
      * ============================== */
-    return embedded.call(this, context);
+    return embedded.call(this, context, ...args);
   }
+
+  const options = args[args.length - 1];
+
+  assert(typeof options !== "string", "[40685178] Invalid template options");
 
   const path = args.filter((arg) => typeof arg === "string") as string[];
 
-  const { manifest, evaluations, dependents } = this;
+  const { manifest, evaluations, dependents } = options.data;
 
   /* ============================== *
    * If the referenced contract has not yet been executed, recursively execute
@@ -56,7 +61,7 @@ const contract: TemplateHelper = function (context, ...args: unknown[]) {
       return evaluation;
     }
 
-    const contractType = contract.execute(this, context, index);
+    const contractType = contract.execute(options.data, context, index);
 
     if (!(contract.id in dependents)) {
       dependents[contract.id] = contractType;

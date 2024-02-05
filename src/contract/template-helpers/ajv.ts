@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import assert from "node:assert";
 
-const ajvHelper = function (action, schema, data) {
-  const { context: chassisContext } = this;
+const ajvHelper: TemplateHelper = function (action, schema, data, ...args) {
+  assert(typeof action === "string");
+
+  const options = args[args.length - 1];
+
+  assert(typeof options !== "string", "[170caf61] Invalid template options");
+
+  const { context: chassisContext } = options.data;
   const ajv = chassisContext.loadedPlugins.schema.instance;
   if (!ajv) {
     throw new Error("[162d0439] schema dictionary not instantiated");
