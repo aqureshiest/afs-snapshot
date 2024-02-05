@@ -1,0 +1,26 @@
+{
+
+  "type": "view",
+  "id": "{{application.id}}",
+  "definition": {
+    "type": "approved",
+    "definition": {
+      "key": "approved",
+      "label": "Approved view",
+      "image": "illustrations.lp",
+      "header": {
+        "copy": "Approval success"
+      },
+      "submit": {
+        "copy": "Apply now",
+        "action": {
+          "type": "request",
+          "properties": {
+            "method": "POST",
+            "manifest": "create-application"
+          }
+        }
+      } 
+    }
+  }
+}
