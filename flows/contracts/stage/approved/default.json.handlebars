@@ -1,29 +1,35 @@
-{
-
-  "type": "view",
-  "id": "{{application.id}}",
-  "definition": {
-    "type": "approved",
+{{#with application}}
+  {{#if (eq approved true) }}
+  {
+    "type": "view",
+    "id": "{{id}}",
     "definition": {
-      "key": "approved",
-      "label": "Approved view",
-      "icon": "icons.check",
-      "header": {
-        "copy": "Congratulations, your loan is approved!"
-      },
-      "label": {
-          "copy": "You have been approved for {{application.details.amount}}."
-      },
-      "submit": {
-        "copy": "Customize your loan",
-        "action": {
-          "type": "request",
-          "properties": {
-            "method": "POST",
-            "manifest": "customize-loan"
+      "type": "approved",
+      "definition": {
+        "key": "approved",
+        "label": "Approved view",
+        "icon": "icons.check",
+        "header": {
+          "copy": "Congratulations, your loan is approved!"
+        },
+        "label": {
+            "copy": "You have been approved for {{details.amount}}."
+        },
+        "submit": {
+          "copy": "Customize your loan",
+          "action": {
+            "type": "request",
+            "properties": {
+              "method": "POST",
+              "manifest": "customize-loan"
+            }
           }
-        }
-      } 
+        } 
+      }
     }
   }
-}
+  {{else}}
+   {{! shall we redirect or return null}}
+    null
+  {{/if}}
+{{/with}}
