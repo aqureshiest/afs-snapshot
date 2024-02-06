@@ -139,20 +139,22 @@ export default abstract class ContractType<
   /**
    * Use the execution context to
    */
-  async execute(context: Injections) {
+  async execute(injections: Injections) {
     // If the contract is already locked down, return it as-is;
     if (this.phase >= Phase.Evaluating) {
       return this;
     }
 
+    const { application, request } = injections;
+
     // if this contract has never executed, it should evaluate the template to
     // find direct dependencies for the first time. This first render is ignored
     // so that the dependencies can be executed first
     if (!this.results[0]) {
-      this.contract.template({
-        ...context,
-        dependents: this.dependencies,
-      });
+      this.contract.template(
+        { application, request },
+        { data: { ...injections, dependents: this.dependencies } },
+      );
     }
 
     do {
@@ -160,23 +162,23 @@ export default abstract class ContractType<
       // sufficiently replace the most up-to-date
       await Promise.all(
         Object.values(this.dependencies).map(async (dependency) => {
-          await dependency.execute(context);
+          await dependency.execute(injections);
         }),
       );
 
       // once dependencies have been evaluated fully, the definition for this
       // contract is rendered. This JSON shape will be the input for the
       // transformation step
-      const definition = this.contract.template({
-        ...context,
-        dependents: this.dependencies,
-      });
+      const definition = this.contract.template(
+        { application, request },
+        { data: { ...injections, dependents: this.dependencies } },
+      );
 
       this.results[0] = definition as unknown as Definition;
 
       // The transformation step produces the final JSON for normal contracts,
       // or the input for async contracts
-      const transformation = this.transform(context, this.results[0]);
+      const transformation = this.transform(injections, this.results[0]);
       this.results[1] = transformation;
 
       // Contracts with an async component only run once when their conditions
@@ -185,15 +187,15 @@ export default abstract class ContractType<
       if (
         this.results[1] &&
         this.evaluate &&
-        this.condition(context, this.results[1])
+        this.condition(injections, this.results[1])
       ) {
-        const promise = this.evaluate(context, this.results[1]);
+        const promise = this.evaluate(injections, this.results[1]);
         this.results[2] = promise;
         this.results[3] = await promise;
       }
     } while (
       Object.values(this.dependencies).some((dependency) =>
-        dependency.isIncomplete(context),
+        dependency.isIncomplete(injections),
       )
     );
 
