@@ -22,13 +22,22 @@
         {"header": "$18.7B", "copy": "Total student loans processed", "width": "48%"},
         {"header": "236,000", "copy": "Happy clients earned", "width": "48%"}
       ],
-      "submit": {
+      "primaryAction": {
         "copy": "Apply now",
         "action": {
           "type": "request",
           "properties": {
             "method": "POST",
             "manifest": "create-application"
+          }
+        }
+      },
+      "secondaryAction": {
+        "copy": "Resume existing application",
+        "action": {
+          "type": "navigate",
+          "properties": {
+            "goTo": ""
           }
         }
       } 

@@ -3,46 +3,7 @@
     "label": "Student Basic Info",
     "submit": {
         "copy": "Continue",
-        "action": {
-            "key": "",
-            "type": "request",
-            "properties": {
-                "manifest": "save-details",
-                "method": "POST"
-            }
-        }
+        "action": {{{contract 'save_details_action'}}}
     },
-    "rows": [
-        {
-            "type": "info",
-            "definition": {
-                "key": "header",
-                "type": "infoHeader",
-                "header": {
-                    "copy": "Student Basic Info"
-                }
-            }
-        },
-        {{{contract 'name_input'}}},
-        {{{contract 'dob_input'}}},
-        {
-            "type": "input",
-            "definition": {
-                "key": "phone",
-                "type": "inputPhone",
-                "status": "incomplete",
-                "value": {
-                    "areaCode": "",
-                    "exchangeCode": "",
-                    "lineNumber": ""
-                },
-                "label": {
-                    "copy": "Phone number"
-                },
-                "hint": "We'll only use your phone number for updates on your loan application. Learn more about our policy."
-            }
-        },
-        {{{contract 'email_input'}}},
-        {{{contract 'disclosure_input'}}}
-    ]
+    "rows": {{{contract 'student-info-questions'}}}
 }

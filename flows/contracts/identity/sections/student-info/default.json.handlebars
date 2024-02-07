@@ -6,7 +6,10 @@
         "key": "",
         "type": "navigate",
         "properties": {
-            "goTo": "student-loans/student-info/{{application.primary.id}}"
+            {{!TODO: need to find a way to get the primary out of applicants      }}
+            {{!    for now, it assumes the root application only has 1 applicant  }}
+            {{!    since its trying to load the solo syllabus                     }}
+            "goTo": "student-loans/student-info/{{application.applicants.0.id}}"
         }
     }
 }
