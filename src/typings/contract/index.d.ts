@@ -76,9 +76,9 @@ interface IDependencies {
 interface IExecutionInjections extends IContractInput {
   context: ChassisPluginContext;
   manifest: Manifest;
+  contract: ContractType<unknown, unknown, unknown>;
   // All known contract instances by key
   evaluations: IEvaluations;
-  dependents: IDependencies;
 }
 
 import "contract/manifest.test.js";
@@ -91,10 +91,7 @@ import "contract/ingestor.js";
 declare module "contract/ingestor.js" {
   type Contracts = IContracts;
 
-  type ContractType = Exclude<
-    keyof typeof contractTypes,
-    "ContractType" | "AsyncContractType"
-  >;
+  type ContractType = Exclude<keyof typeof contractTypes, "ContractType">;
 
   type ManifestFile = Record<string, string | string[]>;
   type Manifest = IContractManifest;
@@ -127,6 +124,7 @@ declare module "contract/ingestor.js" {
 
 declare module "contract/contract-types/base-contract.js" {
   type Input = IContractInput;
+  type Dependencies = IDependencies;
 }
 
 declare module "contract/contract.js" {
@@ -142,10 +140,7 @@ declare module "contract/contract.js" {
     raw: string;
   };
 
-  type ContractType = Exclude<
-    keyof typeof contractTypes,
-    "ContractType" | "AsyncContractType"
-  >;
+  type ContractType = Exclude<keyof typeof contractTypes, "ContractType">;
 
   type Template = HandlebarsTemplate;
   type ContextualManifest = Manifest;

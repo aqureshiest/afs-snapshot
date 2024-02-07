@@ -1,6 +1,10 @@
 import type { Input as IContractInput } from "contract/manifest.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import type { Mutation } from "clients/application-service/index.js";
+import type {
+  Mutation,
+  Application,
+  Criteria,
+} from "clients/application-service/index.js";
 import IContract, {
   Injections as IExecutionInjections,
 } from "contract/contract.js";
@@ -28,6 +32,15 @@ declare module "contract/contract-types/base-contract.js" {
   type Context = ChassisPluginContext;
 }
 
+import "contract/contract-types/noop.js";
+declare module "contract/contract-types/noop.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = boolean;
+
+  type Output = Mutation;
+}
+
 import "contract/contract-types/application-event.js";
 declare module "contract/contract-types/application-event.js" {
   type Input = IContractInput;
@@ -49,11 +62,24 @@ declare module "contract/contract-types/application-event.js" {
   type Output = Mutation;
 }
 
-import "contract/contract-types/noop.js";
-declare module "contract/contract-types/noop.js" {
+import "contract/contract-types/application-data.js";
+declare module "contract/contract-types/application-data.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
-  type Definition = boolean;
 
-  type Output = Mutation;
+  type LookupDefinition =
+    | { id: string }
+    | {
+        criteria: Criteria[];
+      };
+
+  type Definition = LookupDefinition;
+
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+
+  type Output = Application | Application[];
 }

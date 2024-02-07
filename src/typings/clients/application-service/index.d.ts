@@ -172,6 +172,11 @@ type IGqlResponse = {
   response: IncomingMessage;
 };
 
+interface ICriteria {
+  search: string[];
+  [key: string]: string | string[];
+}
+
 declare module "../../../clients/application-service/index.js" {
   type RequestTokenResponse = IRequestTokenResponse;
   type Application = IApplication;
@@ -182,4 +187,5 @@ declare module "../../../clients/application-service/index.js" {
   type MutationOptions = IMutationOptions;
   type ApplicationResponse = IApplicationResponse;
   type GqlResponse = IGqlResponse;
+  type Criteria = ICriteria;
 }

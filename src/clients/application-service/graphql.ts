@@ -17,11 +17,7 @@ export const mutationSchemaQuery = `query shcema {
     }
   }`;
 
-/**
- * TODO: use introspection or generate this query using the known properties
- * required by the manifest
- */
-export const TEMP_DEFAULT_APPLICATION_QUERY = `
+export const META_FRAGMENT = `
 fragment ApplicantFragment on Application {
   id
   createdAt
@@ -77,27 +73,47 @@ fragment ApplicationFragment on Application {
   product
 }
 
+fragment MetaFragment on Application {
+  ...ApplicationFragment
+  ...ApplicantFragment
+  tags
+  status {
+    name
+    asOf
+  }
+  root {
+    ...ApplicantFragment
+  }
+  cosigner {
+    ...ApplicantFragment
+  }
+  primary {
+    ...ApplicantFragment
+  }
+  applicants {
+    ...ApplicantFragment
+  }
+}
+`;
+
+/**
+ * TODO: use introspection or generate this query using the known properties
+ * required by the manifest
+ */
+export const TEMP_DEFAULT_APPLICATION_QUERY = `
+${META_FRAGMENT}
 query Application($id: String!) {
   application(id: $id) {
-    ...ApplicationFragment
-    ...ApplicantFragment
-    tags
-    status {
-      name
-      asOf
-    }
-    root {
-      ...ApplicantFragment
-    }
-    cosigner {
-      ...ApplicantFragment
-    }
-    primary {
-      ...ApplicantFragment
-    }
-    applicants {
-      ...ApplicantFragment
-    }
+    ...MetaFragment
+  }
+}
+`;
+
+export const TEMP_DEFAULT_APPLICATIONS_QUERY = `
+${META_FRAGMENT}
+query Applications($criteria: [ApplicationSearchCriteria]!) {
+  applications(criteria: $criteria) {
+    ...MetaFragment
   }
 }
 `;

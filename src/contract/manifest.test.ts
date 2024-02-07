@@ -23,7 +23,7 @@ describe("[462fd166] manifest.execute", () => {
       "*": new Contract({ raw: JSON.stringify({}) }),
     });
 
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
     assert(contract);
   });
 
@@ -31,27 +31,12 @@ describe("[462fd166] manifest.execute", () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
-        raw: "{{{ contract 'reference'}}}",
+        raw: "{{{ json (contract 'reference')}}}",
       }),
       reference: new Contract({ key: "reference", raw: "42" }),
     });
 
-    const { contract } = await manifest.execute({ context, ...input });
-
-    const parsed = JSON.parse(JSON.stringify(contract));
-
-    assert.strictEqual(parsed, 42);
-  });
-
-  it("[26d20207] embedded contracts", async () => {
-    const input = {} as Input;
-    const manifest = new Manifest(context, "manifestTest", {
-      "*": new Contract({
-        raw: "{{#contract type='identity' key='embedded'}}42{{/contract}}",
-      }),
-    });
-
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -72,7 +57,7 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -86,7 +71,7 @@ describe("[462fd166] manifest.execute", () => {
         raw: `
       {{#list merge=true}}
         42
-        {{{ contract 'numbers' }}}
+        {{{ json (contract 'numbers' )}}}
       {{/list}}
       `,
       }),
@@ -96,7 +81,7 @@ describe("[462fd166] manifest.execute", () => {
       ],
     });
 
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -134,13 +119,13 @@ describe("[462fd166] manifest.execute", () => {
     const manifest = new Manifest(context, "manifestAJV", {
       "*": new Contract({
         key: "testContract",
-        raw: `{{{ajv 'validate' 'nameSchema' (contract 'name') }}}`,
+        raw: `{{{ajv 'validate' 'nameSchema' (json (contract 'name')) }}}`,
       }),
       name: new Contract({ key: "name", raw: JSON.stringify(name) }),
     });
     const ajv = context.loadedPlugins.schema.instance;
     ajv.compile(schema);
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -157,12 +142,12 @@ describe("[462fd166] manifest.execute", () => {
       key: "testContract",
       "*": new Contract({
         key: "testContract",
-        raw: `"{{{ajv 'errors' 'nameSchema' (contract 'name') }}}"`,
+        raw: `"{{{ajv 'errors' 'nameSchema' (json (contract 'name')) }}}"`,
       }),
       name: new Contract({ key: "name", raw: JSON.stringify(name) }),
     });
 
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
     const parsed = JSON.parse(JSON.stringify(contract));
 
     assert.deepEqual(parsed, "data must be object");
@@ -178,7 +163,7 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute({ context, ...input });
+    const { contract } = await manifest.execute(input, { context, ...input });
     const parsed = JSON.parse(JSON.stringify(contract));
 
     assert.deepEqual(parsed, schema);

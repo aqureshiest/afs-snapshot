@@ -1,8 +1,8 @@
 {
   "type": "navigate",
   "properties": {
-    "goTo": {{{ contract 'redirect' }}}
+    "goTo": {{{ json (contract 'redirect') }}}
   },
   {{! returning actions is not needed, but left for debugin }}
-  "actions": {{{ contract 'actions' }}}
+  "actions": {{{ json (contract 'actions') }}}
 }

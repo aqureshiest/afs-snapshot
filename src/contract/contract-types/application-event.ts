@@ -23,7 +23,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
   /**
    */
-  condition = (input: Injections, definition: Definition) => {
+  condition = (input: Input, context: Injections, definition: Definition) => {
     const method = input.request?.method;
 
     const { event, payload } = definition;
@@ -53,8 +53,12 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
    *
    * This function should probably return some information about the event that was created
    */
-  evaluate = async (input: Injections, definition: Definition) => {
-    const { context } = input;
+  evaluate = async (
+    input: Input,
+    injections: Injections,
+    definition: Definition,
+  ) => {
+    const { context } = injections;
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
     assert(
@@ -101,7 +105,6 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
           message: "failed to rehydrate application",
           contract: this.id,
         });
-        // TODO: report errors;
       }
     }
 
