@@ -1,0 +1,35 @@
+{{#with application}}
+  {{#if (and status (eq status.name "approved")) }}
+  {
+    "type": "view",
+    "id": "{{id}}",
+    "definition": {
+      "type": "approved",
+      "definition": {
+        "key": "approved",
+        "label": "Approved view",
+        "icon": "icons.check",
+        "header": {
+          "copy": "Congratulations, your loan is approved!"
+        },
+        "label": {
+            "copy": "You have been approved for {{details.amount.approved}}."
+        },
+        "submit": {
+          "copy": "Customize your loan",
+          "action": {
+            "type": "request",
+            "properties": {
+              "method": "POST",
+              "manifest": "customize-loan/{{id}}"
+            }
+          }
+        } 
+      }
+    }
+  }
+  {{else}}
+   {{! shall we redirect or return null}}
+    null
+  {{/if}}
+{{/with}}

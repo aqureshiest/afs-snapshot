@@ -82,7 +82,10 @@ query Application($id: String!) {
     ...ApplicationFragment
     ...ApplicantFragment
     tags
-    status
+    status {
+      name
+      asOf
+    }
     root {
       ...ApplicantFragment
     }
