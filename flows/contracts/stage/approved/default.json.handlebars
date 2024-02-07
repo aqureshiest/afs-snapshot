@@ -1,5 +1,5 @@
 {{#with application}}
-  {{#if (eq status "approved") }}
+  {{#if (and status (eq status.name "approved")) }}
   {
     "type": "view",
     "id": "{{id}}",
