@@ -1,13 +1,13 @@
 {
     "id": "{{application.id}}",
-    "manifest": "{{manifestName}}",
+    "manifest": "earnest/student-loans/student-info",
     "stage": {
         "key": "student-info",
         "type": "form",
         "label": "Student Info",
         "status": "notStarted",
         "showProgress": true,
-        "steps": {{{contract 'steps'}}},
+        "steps": {{{json (contract 'steps')}}},
         "validation": {
             "type": "object",
             "properties": {
@@ -56,7 +56,7 @@
                         "disclosure": {{{json (schema 'questions/disclosure')}}}
                     }
                 },
-                "address": "",
+                "address": {{{json (schema 'questions/address')}}},
                 "loan-details": {
                     "type": "object",
                     "properties": {

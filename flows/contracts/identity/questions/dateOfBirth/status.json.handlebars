@@ -1,5 +1,5 @@
 {{#with application}}
-  {{#if (ajv 'validate' (contract 'dob_input_schema') details.dateOfBirth) }}
+  {{#if (ajv 'validate' 'questions/dateOfBirth' details.dateOfBirth) }}
      "completed"
   {{else}} 
      "incomplete"

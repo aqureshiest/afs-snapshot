@@ -18,7 +18,7 @@ declare module "contract/template-helpers/contract.js" {
   type Injections = IExecutionInjections;
   type Contract = IContract;
   type ContractType = IContractType<unknown, unknown, unknown>;
-  type TemplateHelper = ITemplateHelper<[string, ...string[]]>;
+  type TemplateHelper = ITemplateHelper;
 }
 
 import "contract/template-helpers/embedded.js";

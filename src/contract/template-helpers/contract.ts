@@ -1,28 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import assert from "node:assert";
-import embedded from "./embedded.js";
 import { Status } from "../contract-types/base-contract.js";
 
-const contract: TemplateHelper = function (context, ...args) {
-  if (typeof context !== "string") {
-    /* ============================== *
-     * Block Contracts
-     * ------------------------------ *
-     * If the 'contract' helper is invoked as a block helper, instead of
-     * with a single reference argument, it will interpret the contents
-     * of the block as an inline definition for a contract, apply any rules
-     * for the provided 'type' hash, and assign it the provided 'key' hash
-     * ============================== */
-    return embedded.call(this, context, ...args);
-  }
+const contractHelper: TemplateHelper = function (...args) {
+  const key: string = typeof args[0] === "string" ? args[0] : args[0].hash.key;
 
   const options = args[args.length - 1];
 
-  assert(typeof options !== "string", "[40685178] Invalid template options");
-
-  const path = args.filter((arg) => typeof arg === "string") as string[];
-
-  const { manifest, evaluations, dependents } = options.data;
+  const { manifest, evaluations, contract: self } = options.data;
 
   /* ============================== *
    * If the referenced contract has not yet been executed, recursively execute
@@ -30,7 +15,7 @@ const contract: TemplateHelper = function (context, ...args) {
    * ============================== */
 
   const referencedContract =
-    manifest.contracts[context as keyof typeof manifest.contracts];
+    manifest.contracts[key as keyof typeof manifest.contracts];
 
   /* ============================== *
    * If there is no contract by the context key in the manifest, attempt to
@@ -38,11 +23,11 @@ const contract: TemplateHelper = function (context, ...args) {
    * ============================== */
 
   if (!referencedContract) {
-    if (context in evaluations) {
-      const evaluation = evaluations[context];
+    if (key in evaluations) {
+      const evaluation = evaluations[key];
       return Array.isArray(evaluation)
-        ? evaluation.map((e, i) => JSON.stringify(e.get(String(i), ...path)))
-        : JSON.stringify(evaluation.get(...path));
+        ? evaluation.map((e, i) => JSON.stringify(e.result))
+        : JSON.stringify(evaluation.result);
     }
     return "";
   }
@@ -54,17 +39,19 @@ const contract: TemplateHelper = function (context, ...args) {
     index?: number,
   ): ContractType => {
     const evaluation =
-      index != null ? evaluations[context]?.[index] : evaluations[context];
+      index != null ? evaluations[key]?.[index] : evaluations[key];
 
     if (evaluation) {
-      dependents[contract.id] = evaluation;
+      self.dependencies[contract.id] = evaluation;
+      evaluation.dependents[self.contract.id] = self;
       return evaluation;
     }
 
-    const contractType = contract.execute(options.data, context, index);
+    const contractType = contract.execute(options.data, key, index);
+    contractType.dependents[self.contract.id] = self;
 
-    if (!(contract.id in dependents)) {
-      dependents[contract.id] = contractType;
+    if (!(contract.id in self.dependents)) {
+      self.dependencies[contract.id] = contractType;
     }
 
     return contractType;
@@ -74,14 +61,17 @@ const contract: TemplateHelper = function (context, ...args) {
     ? referencedContract.map((c, i) => deriveContractValue(c, i))
     : deriveContractValue(referencedContract);
 
-  evaluations[context] = contractValue;
+  evaluations[key] = contractValue;
 
-  const contractRaw =
-    JSON.stringify(
-      Array.isArray(contractValue) ? contractValue : contractValue.get(...path),
-    ) || "null";
+  const contractResult = Array.isArray(contractValue)
+    ? contractValue.map((cv) => cv.result)
+    : contractValue.result;
 
-  return contractRaw;
+  if ("fn" in options) {
+    return options.fn(contractResult || null);
+  }
+
+  return contractResult;
 };
 
-export default contract;
+export default contractHelper;

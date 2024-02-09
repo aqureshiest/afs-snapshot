@@ -1,8 +1,14 @@
 {
   "*": "solo-students",
   "solo_stage": "solo",
-  "student-info-section-status": "sections/student-info.status",
+  "primary-id": "applicant-id-from-root/primary.default",
   "sections": [
-    "sections/student-info.default"
+    "student-info.default"
+  ],
+  "student-info-section-questions": [
+    "questions/name.default",
+    "questions/dateOfBirth.default",
+    "questions/phone.default",
+    "questions/email.default"
   ]
 }

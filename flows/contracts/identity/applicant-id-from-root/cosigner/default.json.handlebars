@@ -1,0 +1,13 @@
+{{#if (eq application.root null)}}
+  {{#if (gt application.applicants.length 0)}}
+    {{#each application.applicants}}
+      {{#if (ajv 'validate' 'applicant-id-from-root/cosigner' this)}}
+        "{{this.id}}"
+        {{break}}
+      {{/if}}
+      {{else}}
+    {{/each}}
+  {{/if}}
+  {{else}}
+    "{{application.id}}"
+{{/if}}

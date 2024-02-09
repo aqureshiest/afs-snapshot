@@ -1,6 +1,6 @@
 {
   {{!-- Loan Type view for Studen Loans --}}
-  "manifest": "{{ manifestName }}",
+  "manifest": "earnest/student-loans/loan-type",
   "id": "{{application.id}}",
-  "stage": {{{ contract 'loantype_stage'}}}
+  "stage": {{{ json (contract 'loantype_stage')}}}
 }

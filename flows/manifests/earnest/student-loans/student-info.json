@@ -1,13 +1,14 @@
 {
   "*": "student-info",
-  "stage": "student-info",
+  "stage": "student-info-stage",
+  "primary-id": "applicant-id-from-root/primary.default",
   "steps": [
-    "student-info/education",
-    "student-info/basic",
-    "student-info/address",
+    "student-info-form/education",
+    "student-info-form/basic",
+    "student-info-form/address",
     "loan-info"
   ],
-  "student-info-questions": [
+  "student-info-basic-questions": [
     "info/student-info.default",
     "questions/name.default",
     "questions/dateOfBirth.default",
@@ -15,7 +16,7 @@
     "questions/email.default",
     "questions/disclosure.default"
   ],
-  "save_details_action": "actions/save-details.default",
+  "save_primary_details_action": "actions/save-details.primary",
   "name_input": "questions/name.default",
   "name_input_status": "questions/name.status",
   "dob_input": "questions/dateOfBirth.default",

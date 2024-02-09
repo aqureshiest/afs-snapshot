@@ -5,6 +5,7 @@ import * as gql from "gql-query-builder";
 import {
   mutationSchemaQuery,
   TEMP_DEFAULT_APPLICATION_QUERY,
+  TEMP_DEFAULT_APPLICATIONS_QUERY,
 } from "./graphql.js";
 
 export default class ApplicationServiceClient extends Client {
@@ -71,7 +72,31 @@ export default class ApplicationServiceClient extends Client {
 
       return application;
     } catch (error) {
-      this.logError(error, "Failed to get appliction");
+      this.logError(error, "[8fe3e3a2] Failed to get application");
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches an application and any specified fields
+   * @param context PluginContext
+   * @param applicationId string
+   * @param fields Array<string>
+   * @returns {Promise<Application>}
+   */
+  async getApplications(
+    context: PluginContext,
+    criteria: Criteria[],
+  ): Promise<Application[]> {
+    try {
+      const { applications } = (await this.sendPostRequest(context, {
+        query: TEMP_DEFAULT_APPLICATIONS_QUERY,
+        variables: { criteria },
+      })) as { applications: Application[] };
+
+      return applications;
+    } catch (error) {
+      this.logError(error, "[05bd942e] Failed to get application");
       throw error;
     }
   }

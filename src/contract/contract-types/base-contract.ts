@@ -51,12 +51,12 @@ export default abstract class ContractType<
   /**
    * Return true if a contract instance is finished executing
    */
-  isIncomplete(context: Injections): boolean {
+  isIncomplete(input: Input, context: Injections): boolean {
     if (
       this.phase === Phase.Transformed &&
       this.results[1] &&
       this.condition &&
-      this.condition(context, this.results[1])
+      this.condition(input, context, this.results[1])
     ) {
       return true;
     }
@@ -85,7 +85,11 @@ export default abstract class ContractType<
   /**
    * Optional conditional to control when a transformed contract may be evaluated
    */
-  condition(context: Injections, transformation: Transformation): boolean {
+  condition(
+    input: Input,
+    context: Injections,
+    transformation: Transformation,
+  ): boolean {
     return false;
   }
 
@@ -93,11 +97,20 @@ export default abstract class ContractType<
    * An optional evaluation step
    */
   evaluate?: (
+    input: Input,
     context: Injections,
     transformation: Transformation,
   ) => Promise<Evaluation>;
 
-  dependencies: Injections["dependents"] = {};
+  /**
+   * Contracts that appear in this contract's output
+   */
+  dependencies: Dependencies = {};
+
+  /**
+   * Contracts that contain this contract in their output
+   */
+  dependents: Dependencies = {};
 
   constructor(args: ConstructorArguments) {
     const { id, contract } = args;
@@ -139,22 +152,19 @@ export default abstract class ContractType<
   /**
    * Use the execution context to
    */
-  async execute(injections: Injections) {
+  async execute(input: Input, injections: Injections) {
     // If the contract is already locked down, return it as-is;
     if (this.phase >= Phase.Evaluating) {
       return this;
     }
 
-    const { application, request } = injections;
-
     // if this contract has never executed, it should evaluate the template to
     // find direct dependencies for the first time. This first render is ignored
     // so that the dependencies can be executed first
     if (!this.results[0]) {
-      this.contract.template(
-        { application, request },
-        { data: { ...injections, dependents: this.dependencies } },
-      );
+      this.contract.template(input, {
+        data: { ...injections, contract: this },
+      });
     }
 
     do {
@@ -162,17 +172,16 @@ export default abstract class ContractType<
       // sufficiently replace the most up-to-date
       await Promise.all(
         Object.values(this.dependencies).map(async (dependency) => {
-          await dependency.execute(injections);
+          await dependency.execute(input, injections);
         }),
       );
 
       // once dependencies have been evaluated fully, the definition for this
       // contract is rendered. This JSON shape will be the input for the
       // transformation step
-      const definition = this.contract.template(
-        { application, request },
-        { data: { ...injections, dependents: this.dependencies } },
-      );
+      const definition = this.contract.template(input, {
+        data: { ...injections, contract: this },
+      });
 
       this.results[0] = definition as unknown as Definition;
 
@@ -187,15 +196,26 @@ export default abstract class ContractType<
       if (
         this.results[1] &&
         this.evaluate &&
-        this.condition(injections, this.results[1])
+        this.condition(input, injections, this.results[1])
       ) {
-        const promise = this.evaluate(injections, this.results[1]);
+        const promise =
+          this.results[2] || this.evaluate(input, injections, this.results[1]);
         this.results[2] = promise;
         this.results[3] = await promise;
+
+        this.contract.template(input, {
+          data: { ...injections, contract: this },
+        });
+
+        await Promise.all(
+          Object.values(this.dependents).map(async (dependent) => {
+            await dependent.execute(input, injections);
+          }),
+        );
       }
     } while (
       Object.values(this.dependencies).some((dependency) =>
-        dependency.isIncomplete(injections),
+        dependency.isIncomplete(input, injections),
       )
     );
 

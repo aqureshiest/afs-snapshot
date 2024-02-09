@@ -15,7 +15,8 @@ export default class Manifest {
   }
 
   async traverse(
-    injections: Omit<Injections, "dependents">,
+    input: Input,
+    injections: Omit<Injections, "contract">,
     contractKey = "*",
     index?: number,
   ) {
@@ -27,14 +28,14 @@ export default class Manifest {
     if (Array.isArray(contract)) {
       return Promise.all(
         contract.map((subContract, i) =>
-          this.traverse(injections, contractKey, i),
+          this.traverse(input, injections, contractKey, i),
         ),
       );
     }
 
     const contractInstance = contract.execute(injections, contractKey);
 
-    await contractInstance.execute({ ...injections, dependents: {} });
+    await contractInstance.execute(input, { ...injections, dependents: {} });
 
     return contractInstance;
   }
@@ -43,13 +44,16 @@ export default class Manifest {
    *
    * embedded mutations still pending
    */
-  async execute({
-    context,
-    evaluations = {},
-    ...assertions
-  }: Omit<Injections, "manifest" | "evaluations" | "dependents"> & {
-    evaluations?: Injections["evaluations"];
-  }): Promise<{
+  async execute(
+    input: Input,
+    {
+      context,
+      evaluations = {},
+      ...assertions
+    }: Omit<Injections, "manifest" | "contract" | "evaluations"> & {
+      evaluations?: Injections["evaluations"];
+    },
+  ): Promise<{
     contract: unknown;
     evaluations: Injections["evaluations"];
   }> {
@@ -58,7 +62,7 @@ export default class Manifest {
      * contracts to reference substitution keys in the same manifest
      * ============================== */
 
-    const contract = await this.traverse({
+    const contract = await this.traverse(input, {
       manifest: this,
       context,
       evaluations,

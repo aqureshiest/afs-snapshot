@@ -7,7 +7,7 @@ export const noop = function (v1) {
   return "";
 };
 export const json = function (v1) {
-  return JSON.stringify(v1);
+  return JSON.stringify(v1 || null);
 };
 export const eq = (v1, v2) => v1 === v2;
 export const ne = (v1, v2) => v1 !== v2;

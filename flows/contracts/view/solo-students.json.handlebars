@@ -1,6 +1,6 @@
 {
   {{!-- Loan Type view for Studen Loans --}}
-  "manifest": "{{ manifestName }}",
+  "manifest": "{{manifest.name}}",
   "id": "{{application.id}}",
-  "stage": {{{ contract 'solo_stage'}}}
+  "stage": {{{ json (contract 'solo_stage')}}}
 }
