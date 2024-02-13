@@ -49,14 +49,14 @@
                 "basic": {
                     "type": "object",
                     "properties": {
-                        "name": {{{json (schema 'questions/name')}}},
-                        "dateOfBirth": {{{json (schema 'questions/dateOfBirth')}}},
-                        "phone": {{{json (schema 'questions/phone')}}},
-                        "email": {{{json (schema 'questions/email')}}},
-                        "disclosure": {{{json (schema 'questions/disclosure')}}}
+                        "name": {{{json (schema 'questions/primary/name')}}},
+                        "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
+                        "phone": {{{json (schema 'questions/primary/phone')}}},
+                        "email": {{{json (schema 'questions/primary/email')}}},
+                        "disclosure": {{{json (schema 'questions/primary/disclosure')}}}
                     }
                 },
-                "address": {{{json (schema 'questions/address')}}},
+                "address": {{{json (schema 'questions/primary/address')}}},
                 "loan-details": {
                     "type": "object",
                     "properties": {

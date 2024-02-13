@@ -1,5 +1,5 @@
 {{#with application}}
-  {{#if (ajv 'validate' 'questions/dateOfBirth' details.dateOfBirth) }}
+  {{#if (ajv 'validate' 'questions/primary/dateOfBirth' details.dateOfBirth) }}
      "completed"
   {{else}} 
      "incomplete"

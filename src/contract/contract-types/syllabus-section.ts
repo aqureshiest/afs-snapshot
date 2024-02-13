@@ -16,7 +16,7 @@ class Section extends ContractType<Definition, Transformation> {
     });
     definition.status =
       stats.completed === stats.total ? "completed" : "incomplete";
-    definition.progress = (stats.completed / stats.total) * 100;
+    definition.progress = Math.round((stats.completed / stats.total) * 100);
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { statuses, ...result } = definition;
     return result as unknown as Transformation;

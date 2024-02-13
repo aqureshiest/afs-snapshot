@@ -1,8 +1,8 @@
-{{#if application.id}}
+{{#if request.params.id}}
   {
     "event": "addDetails",
     "payload": {
-      "id": "{{application.id}}",
+      "id": "{{request.params.id}}",
       "details": {{{json request.body.values}}}
     },
     "fields": ["application.id"]

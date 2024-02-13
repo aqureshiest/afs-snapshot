@@ -1,7 +1,6 @@
 {
   "*": "student-info",
   "stage": "student-info-stage",
-  "primary-id": "applicant-id-from-root/primary.default",
   "steps": [
     "student-info-form/education",
     "student-info-form/basic",
@@ -10,21 +9,16 @@
   ],
   "student-info-basic-questions": [
     "info/student-info.default",
-    "questions/name.default",
-    "questions/dateOfBirth.default",
-    "questions/phone.default",
-    "questions/email.default",
-    "questions/disclosure.default"
+    "questions/primary/name.default",
+    "questions/primary/dateOfBirth.default",
+    "questions/primary/email.default"
+    
   ],
   "save_primary_details_action": "actions/save-details.primary",
-  "name_input": "questions/name.default",
-  "name_input_status": "questions/name.status",
-  "dob_input": "questions/dateOfBirth.default",
-  "dob_input_status": "questions/dateOfBirth.status",
-  "email_input": "questions/email.default",
-  "email_input_status": "questions/email.status",
-  "disclosure_input": "questions/disclosure.default",
-  "disclosure_input_status": "questions/disclosure.status",
-  "phone_input": "questions/phone.default",
-  "phone_input_status": "questions/phone.status"
+  "primary_name_input_status": "questions/primary/name.status",
+  "primary_dob_input_status": "questions/primary/dateOfBirth.status",
+  "primary_email_input_status": "questions/primary/email.status",
+  "primary_disclosure_input_status": "questions/primary/disclosure.status",
+  "primary_phone_input_status": "questions/primary/phone.status"
+
 }

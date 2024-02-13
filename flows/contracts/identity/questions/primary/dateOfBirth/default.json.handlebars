@@ -4,11 +4,11 @@
         "key": "dateOfBirth",
         "type": "inputDate",
         "status": {{{json (contract 'dob_input_status')}}},
-        "value": "{{application.details.dateOfBirth}}",
+        "value": "{{application.primary.details.dateOfBirth}}",
         "label": {
             "copy": "Date of birth"
         },
         "hint": "",
-        "error": "{{{ ajv 'errors' 'questions/dateOfBirth' application.details.dateOfBirth }}}"
+        "error": "{{{ ajv 'errors' 'questions/primary/dateOfBirth' application.primary.details.dateOfBirth }}}"
     }
 }

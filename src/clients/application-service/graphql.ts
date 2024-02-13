@@ -21,6 +21,11 @@ export const META_FRAGMENT = `
 fragment ApplicantFragment on Application {
   id
   createdAt
+  relationship
+  relationships {
+    id
+    relationship
+  }
   details {
     name {
       first
