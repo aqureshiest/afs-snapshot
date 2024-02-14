@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+      "opeid": {
+          "type": "string",
+          "errorMessage": "Please select a school from dropbox"
+      }
+  },
+  "required": [
+      "opeid"
+  ]
+}

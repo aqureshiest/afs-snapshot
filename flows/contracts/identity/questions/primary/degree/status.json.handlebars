@@ -1,5 +1,5 @@
 {{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/address' details.location) }}
+  {{#if (ajv 'validate' 'questions/primary/degree' details.education) }}
      "completed"
   {{else}} 
      "incomplete"

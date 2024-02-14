@@ -1,57 +1,62 @@
-{
-  "type": "string",
-  "properties": {
-      "address": {
-          "type": "object",
-          "properties": {
-              "street1": {
-                  "minLength": 1,
-                  "type": "string",
-                  "pattern": "^[\u0000-]*$",
-                  "errorMessage": {
-                      "minLength": "Street is required",
-                      "pattern": "Invalid street"
-                  }
-              },
-              "street2": {
-                "type": "string"
-              },
-              "city": {
-                  "minLength": 1,
-                  "type": "string",
-                  "pattern": "^[\u0000-]*$",
-                  "errorMessage": {
-                      "minLength": "City is required",
-                      "pattern": "Invalid city"
-                  }
-              },
-              "state": {
-                  "minLength": 2,
-                  "maxLength": 2,
-                  "type": "string",
-                  "pattern": "^[\u0000-]*$",
-                  "errorMessage": {
-                      "minLength": "State is required",
-                      "pattern": "Invalid state"
-                  }
-              },
-              "zip": {
-                  "minLength": 5,
-                  "maxLength": 10,
-                  "pattern": "(([0-9]{5}-[0-9]{4})|[0-9]{5})",
-                  "type": "string",
-                  "errorMessage": {
-                      "minLength": "Zipcode is required",
-                      "pattern": "Invalid zipcode"
-                  }
-              }
-          },
-          "required": [
-              "street",
-              "city",
-              "state",
-              "zip"
-          ]
+{ 
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "address": {
+                "type": "object",
+                "properties": {
+                    "street1": {
+                        "minLength": 1,
+                        "type": "string",
+                        "pattern": "^[\u0000-]*$",
+                        "errorMessage": {
+                            "minLength": "Street is required",
+                            "pattern": "Invalid street"
+                        }
+                    },
+                    "street2": {
+                      "type": "string"
+                    },
+                    "city": {
+                        "minLength": 1,
+                        "type": "string",
+                        "pattern": "^[\u0000-]*$",
+                        "errorMessage": {
+                            "minLength": "City is required",
+                            "pattern": "Invalid city"
+                        }
+                    },
+                    "state": {
+                        "minLength": 2,
+                        "maxLength": 2,
+                        "type": "string",
+                        "pattern": "^[\u0000-]*$",
+                        "errorMessage": {
+                            "minLength": "State is required",
+                            "pattern": "Invalid state"
+                        }
+                    },
+                    "zip": {
+                        "minLength": 5,
+                        "maxLength": 10,
+                        "pattern": "(([0-9]{5}-[0-9]{4})|[0-9]{5})",
+                        "type": "string",
+                        "errorMessage": {
+                            "minLength": "Zipcode is required",
+                            "pattern": "Invalid zipcode"
+                        }
+                    }
+                },
+                "anyOf": [{
+                    "required": [
+                        "street1",
+                        "city",
+                        "state",
+                        "zip"
+                    ]
+                }]
+            }
+        }
       }
-  }
 }

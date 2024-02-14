@@ -1,5 +1,5 @@
-{{#with application}}
-  {{#if (ajv 'validate' 'questions/phone' details.phone) }}
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/primary/phone' details.phone) }}
      "completed"
   {{else}} 
      "incomplete"

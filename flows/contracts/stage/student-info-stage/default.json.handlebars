@@ -14,36 +14,9 @@
                 "education": {
                     "type": "object",
                     "properties": {
-                        "school": {
-                            "type": "string",
-                            "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-                            "minLength": 1,
-                            "errorMessage": {
-                                "minLength": "School must be longer than 1 character",
-                                "pattern": "Invalid school name",
-                                "type": "Invalid school name"
-                            }
-                        },
-                        "degree": {
-                            "type": "string",
-                            "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-                            "minLength": 1,
-                            "errorMessage": {
-                                "minLength": "Degree must be longer than 1 character",
-                                "pattern": "Invalid degree",
-                                "type": "Invalid degree"
-                            }
-                        },
-                        "enrollment": {
-                            "type": "string",
-                            "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-                            "minLength": 1,
-                            "errorMessage": {
-                                "minLength": "Enrollment must be longer than 1 character",
-                                "pattern": "Invalid degree",
-                                "type": "Invalid degree"
-                            }
-                        }
+                        "school": {{{json (schema 'questions/primary/school')}}},
+                        "degree": {{{json (schema 'questions/primary/degree')}}},
+                        "enrollment": {{{json (schema 'questions/primary/enrollment')}}}
                     }
                 },
                 "basic": {

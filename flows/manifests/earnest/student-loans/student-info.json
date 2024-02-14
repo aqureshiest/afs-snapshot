@@ -5,20 +5,43 @@
     "student-info-form/education",
     "student-info-form/basic",
     "student-info-form/address",
+    "student-info-form/citizenship",
     "loan-info"
   ],
-  "student-info-basic-questions": [
+  "student-info-basic-rows": [
     "info/student-info.default",
     "questions/primary/name.default",
     "questions/primary/dateOfBirth.default",
-    "questions/primary/email.default"
-    
+    "questions/primary/phone.default",
+    "questions/primary/email.default",
+    "info/student-disclaimer.default"
   ],
+  "student-info-education-rows": [
+    "info/student-education.default",
+    "questions/primary/school.default",
+    "questions/primary/degree.default"
+  ],
+  "student-info-address-rows": [
+    "info/student-address.default",
+    "questions/primary/address.default"
+  ],
+  "student-info-citizenship-rows": [
+    "info/student-citizenship.default",
+    "questions/primary/citizenship"
+  ],
+
   "save_primary_details_action": "actions/save-details.primary",
+
+  "primary_school_input_status": "questions/primary/school.status",
+  "primary_degree_input_status": "questions/primary/degree.status",
+
   "primary_name_input_status": "questions/primary/name.status",
   "primary_dob_input_status": "questions/primary/dateOfBirth.status",
   "primary_email_input_status": "questions/primary/email.status",
-  "primary_disclosure_input_status": "questions/primary/disclosure.status",
-  "primary_phone_input_status": "questions/primary/phone.status"
+  "primary_phone_input_status": "questions/primary/phone.status",
 
+  "primary_address_input_status": "questions/primary/address.status",
+  "primary_citizenship_input_status": "questions/primary/citizenship.status"
+
+  
 }

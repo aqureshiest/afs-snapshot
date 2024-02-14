@@ -1,23 +1,20 @@
+{{#with application.primary}}
+{{{log details.location }}}
 {
   "type": "input",
   "definition": {
       "key": "address",
       "type": "inputAddress",
       "value": {
-          "citizenship": "",
-          "street1": "",
-          "street2": "",
-          "apt": "",
-          "country": "",
-          "city": "",
-          "state": "",
-          "zip": ""
+          "street1": "{{details.location.0.street1}}",
+          "street2": "{{details.location.0.street2}}",
+          "country": "{{details.location.0.country}}",
+          "city": "{{details.location.0.city}}",
+          "state": "{{details.location.0.state}}",
+          "zip": "{{details.location.0.zip}}"
       },
-      "status": "incomplete",
+      "status": {{{json (contract 'primary_address_input_status')}}},
       "label": {
-          "citizenship": {
-            "copy": "citizenship"
-          },
           "street1": {
               "copy": "Street address"
           },
@@ -36,6 +33,8 @@
           "zip": {
               "copy": "Zipcode"
           }
-      }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/address' details.location }}}"
   }
 }
+{{/with}}
