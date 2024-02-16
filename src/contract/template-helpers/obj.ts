@@ -8,7 +8,7 @@ const obj: TemplateHelper = function (context) {
     const parsedItem = JSON.parse(item);
 
     Object.keys(parsedItem).forEach((parsedItemKey) => {
-      if (!obj[parsedItemKey]) {
+      if (obj[parsedItemKey] === undefined) {
         obj[parsedItemKey] = parsedItem[parsedItemKey];
       } else {
         if (Array.isArray(obj[parsedItemKey])) {
