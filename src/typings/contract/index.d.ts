@@ -33,6 +33,7 @@ type IContractInput = {
   application: IApplication | null;
   request?: {
     method?: string;
+    params?: { [key: string]: unknown };
     body?: { [key: string]: unknown };
     query?: { [key: string]: unknown };
     headers?: { [key: string]: unknown };

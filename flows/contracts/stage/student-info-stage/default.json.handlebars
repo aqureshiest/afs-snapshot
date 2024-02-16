@@ -1,0 +1,87 @@
+{
+    "id": "{{application.id}}",
+    "manifest": "earnest/student-loans/student-info",
+    "stage": {
+        "key": "student-info",
+        "type": "form",
+        "label": "Student Info",
+        "status": "notStarted",
+        "showProgress": true,
+        "steps": {{{json (contract 'steps')}}},
+        "validation": {
+            "type": "object",
+            "properties": {
+                "education": {
+                    "type": "object",
+                    "properties": {
+                        "school": {{{json (schema 'questions/primary/school')}}},
+                        "degree": {{{json (schema 'questions/primary/degree')}}},
+                        "enrollment": {{{json (schema 'questions/primary/enrollment')}}}
+                    }
+                },
+                "basic": {
+                    "type": "object",
+                    "properties": {
+                        "name": {{{json (schema 'questions/primary/name')}}},
+                        "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
+                        "phone": {{{json (schema 'questions/primary/phone')}}},
+                        "email": {{{json (schema 'questions/primary/email')}}},
+                        "disclosure": {{{json (schema 'questions/primary/disclosure')}}}
+                    }
+                },
+                "address": {{{json (schema 'questions/primary/address')}}},
+                "loan-details": {
+                    "type": "object",
+                    "properties": {
+                        "loan-period": {
+                            "type": "object",
+                            "properties": {
+                                "month": {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 2,
+                                    "pattern": "^[0-9]+$",
+                                    "errorMessage": {
+                                        "minLength": "Month is required",
+                                        "maxLength": "Invalid month",
+                                        "pattern": "Invalid date",
+                                        "type": "Date is required"
+                                    }
+                                },
+                                "day": {
+                                    "type": "string"
+                                },
+                                "year": {
+                                    "type": "string",
+                                    "minLength": 4,
+                                    "maxLength": 4,
+                                    "pattern": "^[0-9]+$",
+                                    "errorMessage": {
+                                        "minLength": "Year is required",
+                                        "maxLength": "Invalid year",
+                                        "pattern": "Invalid date",
+                                        "type": "Date is required"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "month",
+                                "year"
+                            ]
+                        },
+                        "money": {
+                            "type": "string",
+                            "minLength": 1,
+                            "errorMessage": {
+                                "minLength": "Amount is required",
+                                "type": "Enter a valid number"
+                            }
+                        }
+                    }
+                }
+            },
+            "required": [],
+            "additionalProperties": true
+        }
+    }
+}

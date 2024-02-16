@@ -1,0 +1,39 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "address",
+      "type": "inputAddress",
+      "value": {
+          "street1": "{{{json details.location.0.street1}}}",
+          "street2": "{{{json details.location.0.street2}}}",
+          "country": "{{{json details.location.0.country}}}",
+          "city": "{{{json details.location.0.city}}}",
+          "state": "{{{json details.location.0.state}}}",
+          "zip": "{{{json details.location.0.zip}}}"
+      },
+      "status": {{{json (contract 'primary_address_input_status')}}},
+      "label": {
+          "street1": {
+              "copy": "Street address"
+          },
+          "street2": {
+              "copy": "Apt/Suite number (optional)"
+          },
+          "country": {
+            "copy": "country"
+          },
+          "city": {
+              "copy": "City"
+          },
+          "state": {
+              "copy": "State"
+          },
+          "zip": {
+              "copy": "Zipcode"
+          }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/address' details.location }}}"
+  }
+}
+{{/with}}

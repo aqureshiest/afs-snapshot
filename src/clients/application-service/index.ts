@@ -72,7 +72,7 @@ export default class ApplicationServiceClient extends Client {
 
       return application;
     } catch (error) {
-      this.logError(error, "Failed to get appliction");
+      this.logError(error, "[8fe3e3a2] Failed to get application");
       throw error;
     }
   }
@@ -96,7 +96,7 @@ export default class ApplicationServiceClient extends Client {
 
       return applications;
     } catch (error) {
-      this.logError(error, "Failed to get appliction");
+      this.logError(error, "[05bd942e] Failed to get application");
       throw error;
     }
   }

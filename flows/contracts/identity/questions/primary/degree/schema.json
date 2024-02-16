@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
+  "minLength": 1,
+  "errorMessage": {
+      "minLength": "Degree must be longer than 1 character",
+      "pattern": "Invalid degree",
+      "type": "Invalid degree"
+  }
+}

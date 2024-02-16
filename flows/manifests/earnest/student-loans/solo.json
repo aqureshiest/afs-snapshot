@@ -1,8 +1,16 @@
 {
   "*": "solo-students",
   "solo_stage": "solo",
-  "student-info-section-status": "sections/student-info.status",
   "sections": [
-    "sections/student-info.default"
+    "student-info-section.default"
+  ],
+  "student-info-section-question-statuses": [
+    "questions/primary/school.status",
+    "questions/primary/name.status",
+    "questions/primary/dateOfBirth.status",
+    "questions/primary/email.status",
+    "questions/primary/phone.status",
+    "questions/primary/address.status",
+    "questions/primary/citizenship.status"
   ]
 }

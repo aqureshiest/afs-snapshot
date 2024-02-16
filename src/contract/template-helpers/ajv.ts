@@ -19,7 +19,7 @@ const ajvHelper: TemplateHelper = function (action, schema, data, ...args) {
   if (action === "validate") {
     return validation;
   } else if (action === "errors") {
-    return ajv.errorsText(validate.errors);
+    return ajv.errorsText(validate.errors).replaceAll('"', `'`);
   }
   return false;
 };
