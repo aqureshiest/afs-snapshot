@@ -15,7 +15,8 @@ export default class BaseClient<Injections extends unknown[]> extends Client<Inj
   log(data: unknown, level?: string) {
     if (level && this.logger[level]) {
       this.logger[level](data);
+    } else {
+      this.logger.info(data);
     }
-    // TODO: add default logging method
   }
 }
