@@ -3,7 +3,7 @@
 {{#with request.body}}
   {{#if (eq values.loanType "cosigned")}}
   {{! cosigner creation requested }}
-    {{#if (not (includes applicantion.tags "cosigned"))}}
+    {{#if (not (includes application.tags "cosigned"))}}
       {{! returns createApplication with cosigner relationship}}
       {
         "event": "createApplication",
@@ -25,7 +25,7 @@
   {{else}}
     {{#if (eq values.loanType "solo")}}
       {{! user requested solo loanType}}
-      {{#if (includes applicantion.tags "cosigned")}}
+      {{#if (includes application.tags "cosigned")}}
         {{! app contains a cosigner applicant}}
         {{! should return deleteRelationship for cosigner applicant}}
         {
