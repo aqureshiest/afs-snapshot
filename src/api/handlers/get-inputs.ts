@@ -1,7 +1,6 @@
 import { Application } from "../../typings/clients/application-service/index.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 import { Request, Response, NextFunction } from "express";
-import assert from "node:assert";
 /**
  * Gather inputs for contract execution
  * TODO: get authentication artifacts
