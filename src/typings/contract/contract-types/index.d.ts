@@ -90,6 +90,30 @@ declare module "contract/contract-types/application-event.js" {
   type Output = Event;
 }
 
+import "contract/contract-types/syllabus-section.js";
+declare module "contract/contract-types/syllabus-section.js" {
+  type Context = ChassisPluginContext;
+  type Definition = {
+    status: string;
+    statuses: string[];
+    progress: number;
+    [key: string]: unknown;
+  };
+  type Transformation = {
+    status: string;
+    progress: number;
+    [key: string]: unknown;
+  };
+
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+
+  type Output = Mutation;
+}
+
 import "contract/contract-types/application-data.js";
 declare module "contract/contract-types/application-data.js" {
   type Input = IContractInput;

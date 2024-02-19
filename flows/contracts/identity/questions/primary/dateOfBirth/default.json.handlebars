@@ -1,0 +1,16 @@
+{{#with application.primary}}
+{
+    "type": "input",
+    "definition": {
+        "key": "dateOfBirth",
+        "type": "inputDate",
+        "status": {{{json (contract 'primary_dob_input_status')}}},
+        "value": "{{details.dateOfBirth}}",
+        "label": {
+            "copy": "Date of birth"
+        },
+        "hint": "",
+        "error": "{{{ ajv 'errors' 'questions/primary/dateOfBirth' details.dateOfBirth }}}"
+    }
+}
+{{/with}}

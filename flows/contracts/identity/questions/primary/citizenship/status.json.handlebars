@@ -1,0 +1,7 @@
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/primary/citizenship' details.location.0.citizenship) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}

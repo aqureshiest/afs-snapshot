@@ -1,10 +1,35 @@
-{{#if application.id}}
+
+{{#if request.params.id}}
   {
     "event": "addDetails",
     "payload": {
-      "id": "{{application.id}}",
-      "details": {{{json request.body.values}}}
+      "id": "{{request.params.id}}",
+      {{#with request.body.values}}
+      "details": 
+        {{#obj}} {{! make sure to flatten each element into a single line}}
+          {{#if name}}
+            {"name": {{{json name}}} }
+          {{/if}}
+          {{#if dateOfBirth}}
+          {{! is date of birth gonna be an object {day, month, year}, or is it gonna be a qualified date? }}
+          {{! per figma design, it needs to be an object, but we have it as date on application-service }}
+            {"dateOfBirth": "{{dateOfBirth}}"}
+          {{/if}}
+          {{#if email}}
+            {"email": "{{email}}"}
+          {{/if}}
+          {{#if phone}}
+            {"phone": [{"number": "{{phone}}", "type": "mobile"}]}
+          {{/if}}
+          {{#if location}}
+            {"location": [{"index": 0, "street1": "{{location.street1}}", "street2": "{{location.street2}}", "city": "{{location.city}}", "state": "{{location.state}}", "zip": "{{location.zip}}" }]}
+          {{/if}}
+          {{#if citizenship}}
+            {"location": [{ "index": 0,"citizenship": "{{citizenship}}" }] }
+          {{/if}}
+        {{/obj}}
     },
+    {{/with}}
     "fields": "application { id }"
   }
 {{else}}

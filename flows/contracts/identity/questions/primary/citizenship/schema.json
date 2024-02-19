@@ -1,0 +1,14 @@
+{
+  "type": "string",
+  "properties": {      
+    "citizenship": {
+        "enum": [
+          "citizen",
+          "permanent_resident",
+          "asylee",
+          "daca",
+          "non-resident"
+        ]
+    }
+  }
+}

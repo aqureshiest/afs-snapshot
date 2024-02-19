@@ -1,0 +1,17 @@
+{
+    "label": "Student info",
+    "status": "",
+    "statuses": {{{ json (contract 'student-info-section-question-statuses') }}},
+{{! data key would have a list of question/status contracts}}
+    "progress": 0,
+    "action": {
+        "key": "",
+        "type": "navigate",
+        "properties": {
+            {{!TODO: need to find a way to get the primary out of applicants      }}
+            {{!    for now, it assumes the root application only has 1 applicant  }}
+            {{!    since its trying to load the solo syllabus                     }}
+            "goTo": "student-loans/student-info/{{{application.primary.id}}}"
+        }
+    }
+}

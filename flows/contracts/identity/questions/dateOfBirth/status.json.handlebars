@@ -1,7 +1,0 @@
-{{#with application}}
-  {{#if (ajv 'validate' (json (contract 'dob_input_schema')) details.dateOfBirth) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

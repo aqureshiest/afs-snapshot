@@ -1,0 +1,7 @@
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/primary/phone' details.phone) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}

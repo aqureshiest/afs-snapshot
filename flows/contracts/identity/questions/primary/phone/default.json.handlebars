@@ -1,0 +1,20 @@
+{{#with application.primary}}
+{{{log details.phone}}}
+{
+    "type": "input",
+    "definition": {
+        "key": "phone",
+        "type": "inputPhone",
+        "status": {{{json (contract 'primary_phone_input_status')}}},
+        "value": {
+            "number": "{{{json details.phone.0.number}}}",
+            "type": "{{{json details.phone.0.type}}}"
+        },
+        "label": {
+            "copy": "Phone number"
+        },
+        "error": "{{{ ajv 'errors' 'questions/primary/phone' details.phone }}}",
+        "hint": "We'll only use your phone number for updates on your loan application. Learn more about our policy."
+    }
+}
+{{/with}}

@@ -11,9 +11,11 @@
       }
     }
   {{else}}
+   {
+    "message": "Theres at least one applicant on this application"
+   }
    {{! we need to find a way to retrieve the primary application}}
    {{! maybe with the external contract.}}
    {{! primary application needs to be on inputs in order to create.cosigner contract to work propertly}}
-    null
   {{/if}}
 {{/with}}

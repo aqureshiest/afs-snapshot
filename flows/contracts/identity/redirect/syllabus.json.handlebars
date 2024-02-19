@@ -1,4 +1,4 @@
-{{#if application.root.id}}
+{{#if application.root}}
   "student-loans/{{request.body.values.loanType}}/{{application.root.id}}"
 {{else}}
   "student-loans/{{request.body.values.loanType}}/{{application.id}}"

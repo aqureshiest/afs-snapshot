@@ -1,0 +1,13 @@
+{
+    "type": "input",
+    "definition": {
+        "key": "email",
+        "type": "inputEmail",
+        "status": {{{json (contract 'primary_email_input_status')}}},
+        "value": "{{{ json application.primary.details.email }}}",
+        "label": {
+            "copy": "Email"
+        },
+        "error": "{{{ajv 'errors' 'questions/primary/email' application.primary.details.email}}}"
+    }
+}
