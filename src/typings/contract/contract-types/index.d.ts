@@ -110,8 +110,6 @@ declare module "contract/contract-types/syllabus-section.js" {
   type MinimalApplication = {
     id: string;
   };
-
-  type Output = Mutation;
 }
 
 import "contract/contract-types/application-data.js";
