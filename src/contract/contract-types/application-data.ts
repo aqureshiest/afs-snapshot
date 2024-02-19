@@ -1,5 +1,7 @@
 import assert from "node:assert";
+import { Application } from "@earnest/application-service-client/typings/codegen.js";
 import ContractType from "./base-contract.js";
+import { TEMP_DEFAULT_APPLICATION_QUERY, TEMP_DEFAULT_APPLICATIONS_QUERY } from "../../clients/application-service/graphql.js";
 
 class ApplicationData extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
@@ -24,14 +26,16 @@ class ApplicationData extends ContractType<Definition, Definition, Output> {
       applicationServiceClient,
       "[52fb1e44] ApplicationServiceClient not instantiated",
     );
-
     if ("id" in definition) {
-      return applicationServiceClient.getApplication(context, definition.id);
+      return applicationServiceClient.sendRequest({
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id: definition.id },
+        }, context) as Application;
     } else {
-      return applicationServiceClient.getApplications(
-        context,
-        definition.criteria,
-      );
+      return applicationServiceClient.sendRequest({
+        query: TEMP_DEFAULT_APPLICATIONS_QUERY,
+        variables: { search: definition.criteria },
+      }, context) as [Application];
     }
   };
 }

@@ -1,5 +1,9 @@
 import assert from "node:assert";
 import ContractType from "./base-contract.js";
+import { GqlRequestBody } from "@earnest/application-service-client";
+import * as types from "@earnest/application-service-client/typings/codegen.js";
+import { TEMP_DEFAULT_APPLICATION_QUERY, mutationSchemaQuery } from "../../clients/application-service/graphql.js";
+
 
 const MUTATIVE_EVENTS = Object.freeze([
   "addDetails",
@@ -17,8 +21,67 @@ const DESTRUCTIVE_EVENTS = Object.freeze([
 ]);
 
 class ApplicationEvent extends ContractType<Definition, Definition, Output> {
+  private eventInputTypes;
+
   get contractName(): string {
     return "ApplicationEvent";
+  }
+
+  buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
+    const { event, fields = "", payload = {} }  = definition;
+    return {
+      query: `mutation (${Object.values(inputTypes).join(",")}) {
+        ${event} {
+          ${fields}
+          createdAt
+          error
+        }
+      }`,
+      variables: { ...payload, meta: { service: "apply-flow-service" } }
+    }
+  }
+
+  getInputTypes = async(injections: Injections) => {
+    const { context } = injections;
+
+    const applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance;
+    assert(
+      applicationServiceClient,
+      "[c89c0f75] ApplicationServiceClient not initialized",
+    );
+
+    const schema = await applicationServiceClient.sendRequest({
+      query: mutationSchemaQuery
+    }) as MutationSchema;
+
+    this.eventInputTypes = schema.__type.fields.reduce((acc, field) => {
+      const { name: fieldName, args } = field;
+
+      const inputs = args.reduce((argAcc, arg) => {
+        const {
+          name: argName,
+          type: { kind, name: typeName, ofType },
+        } = arg;
+
+        if (kind === "INPUT_OBJECT") {
+          argAcc[argName] = typeName;
+        }
+
+        if (kind === "LIST" && ofType != null) {
+          argAcc[argName] = `[${ofType.name}]`;
+        }
+
+        if (kind === "NON_NULL" && ofType != null) {
+          argAcc[argName] = `${ofType.name}!`;
+        }
+
+        return argAcc;
+      }, {});
+
+      acc[fieldName] = inputs;
+
+      return acc;
+    }, {});
   }
 
   /**
@@ -65,20 +128,30 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       applicationServiceClient,
       "[7d3b096f] ApplicationServiceClient not instantiated",
     );
+    /* ============================== *
+     * Fetch input types to dynamically
+     * build mutation request
+     * ============================== */
+    try {
+      if (!this.eventInputTypes) {
+        await this.getInputTypes(injections)
+      }
+    } catch(error) {
+      context.logger.error({
+        error,
+        message: "[dc77e2d9] Failed to get event types"
+      });
+      throw error;
+    }
 
-    const { event, fields = [], payload } = definition;
+    if (!this.eventInputTypes[definition.event]) {
+      throw new Error("[694d632f] Event is not defined on event types");
+    }
 
-    const { [event]: eventResult } = await applicationServiceClient.mutate(
-      context,
-      event,
-      {
-        fields: [...fields, "createdAt", "error"],
-        data: payload,
-        meta: {
-          service: "apply-flow-service",
-        },
-      },
-    );
+    const eventResult = (await applicationServiceClient.sendRequest(
+      this.buildRequestBody(definition, this.eventInputTypes[definition.event]),
+      context
+    )) as types.Event;
 
     const { error } = eventResult;
 
@@ -94,10 +167,10 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
     if (rehydrationId) {
       try {
-        const application = await applicationServiceClient.getApplication(
-          context,
-          eventResult.application.id as string,
-        );
+        const application = await applicationServiceClient.sendRequest({
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id: rehydrationId },
+        }, context);
 
         Object.defineProperty(input, "application", { value: application });
       } catch (error) {
@@ -108,7 +181,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       }
     }
 
-    return eventResult as Output;
+    return eventResult;
   };
 
   toJSON() {

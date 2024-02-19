@@ -7,7 +7,7 @@
       {{! returns createApplication with cosigner relationship}}
       {
         "event": "createApplication",
-        "fields": ["application.id", "application.root.id"],
+        "fields": "application { id root { id } }",
         "payload": {
           "relationships": [{
             "as": "cosigner",
@@ -30,7 +30,7 @@
         {{! should return deleteRelationship for cosigner applicant}}
         {
           "event": "deleteRelationship",
-          "fields": ["application.id", "application.root.id"],
+          "fields": "application { id root { id } }",
           "payload": {
             "relationships": [{
               "as": "cosigner",

@@ -1,4 +1,5 @@
-import { IApplication } from "../../typings/clients/application-service/index.js";
+import { Application } from "../../typings/clients/application-service/index.js";
+import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 import { Request, Response, NextFunction } from "express";
 
 /**
@@ -14,11 +15,14 @@ const getInputs: Handler = async function (
   const id = res.locals.application?.id;
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
   if (!ASclient)
-    throw new Error("[67c30fe0] Application Service client instante not found");
-  let application: IApplication | null = null;
+    throw new Error("[67c30fe0] Application Service client instance not found");
+  let application: Application | null = null;
   if (id) {
     try {
-      application = await ASclient.getApplication(context, id);
+      application = ASclient.sendRequest({
+        query: TEMP_DEFAULT_APPLICATION_QUERY,
+        variables: { id }
+      }, context) as Application;
     } catch (ex) {
       context.logger.error({
         message: `[89af3057] error while retrieving application`,

@@ -2,7 +2,7 @@
   {{#if (and id (eq applicants.length 0)) }}
     {
       "event": "createApplication",
-      "fields": ["application.id", "application.root.id"],
+      "fields": "application { id root { id } }",
       "payload": {
         "relationships": [{
           "as": "applicant",

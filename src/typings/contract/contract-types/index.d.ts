@@ -1,10 +1,11 @@
 import type { Input as IContractInput } from "contract/manifest.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import type {
-  Mutation,
+import {
   Application,
-  Criteria,
-} from "clients/application-service/index.js";
+  Event,
+  EventName,
+  ApplicationSearchCriteria
+} from "@earnest/application-service-client/typings/codegen.js";
 import IContract, {
   Injections as IExecutionInjections,
 } from "contract/contract.js";
@@ -38,7 +39,32 @@ declare module "contract/contract-types/noop.js" {
   type Context = ChassisPluginContext;
   type Definition = boolean;
 
-  type Output = Mutation;
+  type Output = {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: unknown;
+      };
+    };
+  };
+}
+
+interface IMutationSchema {
+  __type: {
+    name: string;
+    fields: Array<{
+      name: string;
+      args: Array<{
+        name: string;
+        type: {
+          name: string;
+          kind: string;
+          ofType?: {
+            name: string;
+          };
+        };
+      }>;
+    }>;
+  };
 }
 
 import "contract/contract-types/application-event.js";
@@ -46,9 +72,9 @@ declare module "contract/contract-types/application-event.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
-    event: string;
+    event: EventName;
     id?: string;
-    fields: string[];
+    fields: string;
     payload: { [key: string]: unknown };
     [key: string]: unknown;
   };
@@ -59,7 +85,9 @@ declare module "contract/contract-types/application-event.js" {
     id: string;
   };
 
-  type Output = Mutation;
+  type MutationSchema = IMutationSchema;
+
+  type Output = Event;
 }
 
 import "contract/contract-types/application-data.js";
@@ -70,7 +98,7 @@ declare module "contract/contract-types/application-data.js" {
   type LookupDefinition =
     | { id: string }
     | {
-        criteria: Criteria[];
+        criteria: ApplicationSearchCriteria[];
       };
 
   type Definition = LookupDefinition;
