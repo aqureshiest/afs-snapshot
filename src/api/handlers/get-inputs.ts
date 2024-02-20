@@ -22,7 +22,7 @@ const getInputs: Handler = async function (
       application = ASclient.sendRequest({
         query: TEMP_DEFAULT_APPLICATION_QUERY,
         variables: { id }
-      }, context) as Application;
+      }, context) as unknown as Application;
 
       // we are gonna try the approach of always getting the Root Application in a flatten shape
       // by processing the relationships array, and putting them into their corresponding
@@ -31,7 +31,7 @@ const getInputs: Handler = async function (
         application = ASclient.sendRequest({
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: { id: application.root.id }
-        }, context) as Application;
+        }, context) as unknown as Application;
       }
 
       if (application !== null && application.applicants) {

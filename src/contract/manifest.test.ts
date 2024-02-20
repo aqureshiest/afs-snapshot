@@ -1,4 +1,4 @@
-import { before, describe, it } from "node:test";
+import { before, describe, it, mock } from "node:test";
 import assert from "node:assert";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
@@ -10,11 +10,13 @@ import Manifest from "./manifest.js";
 
 describe("[462fd166] manifest.execute", () => {
   let context;
+  let applicationServiceClient;
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
+    applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance;
   });
 
   it("[be92134e] runs without error", async () => {
@@ -167,5 +169,48 @@ describe("[462fd166] manifest.execute", () => {
     const parsed = JSON.parse(JSON.stringify(contract));
 
     assert.deepEqual(parsed, schema);
+  });
+  it("[1b2bbdaa] it should execute an ApplicationEvent contract-type", async() => {
+    const input = {} as Input;
+
+    mock.method(applicationServiceClient, "getEventInputTypes", () => {
+      return {
+        createApplication: {
+          meta: "EventMeta",
+          relationships: "[RelationshipInput]"
+        }
+      }
+    });
+
+    mock.method(applicationServiceClient, "sendRequest", () => {
+      return {
+        createApplication: {
+          id: 1,
+          error: null,
+          application: {
+            id: 2
+          }
+        }
+      }
+    });
+
+    const manifest = new Manifest(context, "manifestApplicationEvent", {
+      key: "testContract",
+      "*":  new Contract({
+        key: "testContract",
+        raw: `{
+          "event": "createApplication",
+          "payload": {
+            "relationships": []
+          },
+          "fields": "application { id }"
+        }`,
+        type: "applicationEvent"
+      })
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
   });
 });

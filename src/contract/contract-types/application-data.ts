@@ -3,7 +3,7 @@ import { Application } from "@earnest/application-service-client/typings/codegen
 import ContractType from "./base-contract.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY, TEMP_DEFAULT_APPLICATIONS_QUERY } from "../../clients/application-service/graphql.js";
 
-class ApplicationData extends ContractType<Definition, Definition, Output> {
+class ApplicationData extends ContractType<Definition, Definition, Application | [Application]> {
   get contractName(): string {
     return "ApplicationData";
   }
@@ -30,12 +30,12 @@ class ApplicationData extends ContractType<Definition, Definition, Output> {
       return applicationServiceClient.sendRequest({
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: { id: definition.id },
-        }, context) as Application;
+        }, context) as unknown as Application;
     } else {
       return applicationServiceClient.sendRequest({
         query: TEMP_DEFAULT_APPLICATIONS_QUERY,
         variables: { search: definition.criteria },
-      }, context) as [Application];
+      }, context) as unknown as [Application];
     }
   };
 }

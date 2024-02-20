@@ -19,6 +19,8 @@ export const plugin:  Plugin<typings.ApplicationServiceClient> = {
     
     const client = new ApplicationServiceClientClass({ baseUrl, accessKey}, context);
 
+    await client.start(context);
+
     plugin.instance = client;
   },
 };

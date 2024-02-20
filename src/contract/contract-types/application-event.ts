@@ -2,7 +2,7 @@ import assert from "node:assert";
 import ContractType from "./base-contract.js";
 import { GqlRequestBody } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
-import { TEMP_DEFAULT_APPLICATION_QUERY, mutationSchemaQuery } from "../../clients/application-service/graphql.js";
+import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 
 
 const MUTATIVE_EVENTS = Object.freeze([
@@ -21,8 +21,6 @@ const DESTRUCTIVE_EVENTS = Object.freeze([
 ]);
 
 class ApplicationEvent extends ContractType<Definition, Definition, Output> {
-  private eventInputTypes;
-
   get contractName(): string {
     return "ApplicationEvent";
   }
@@ -39,49 +37,6 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       }`,
       variables: { ...payload, meta: { service: "apply-flow-service" } }
     }
-  }
-
-  getInputTypes = async(injections: Injections) => {
-    const { context } = injections;
-
-    const applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance;
-    assert(
-      applicationServiceClient,
-      "[c89c0f75] ApplicationServiceClient not initialized",
-    );
-
-    const schema = await applicationServiceClient.sendRequest({
-      query: mutationSchemaQuery
-    }) as MutationSchema;
-
-    this.eventInputTypes = schema.__type.fields.reduce((acc, field) => {
-      const { name: fieldName, args } = field;
-
-      const inputs = args.reduce((argAcc, arg) => {
-        const {
-          name: argName,
-          type: { kind, name: typeName, ofType },
-        } = arg;
-
-        if (kind === "INPUT_OBJECT") {
-          argAcc[argName] = typeName;
-        }
-
-        if (kind === "LIST" && ofType != null) {
-          argAcc[argName] = `[${ofType.name}]`;
-        }
-
-        if (kind === "NON_NULL" && ofType != null) {
-          argAcc[argName] = `${ofType.name}!`;
-        }
-
-        return argAcc;
-      }, {});
-
-      acc[fieldName] = inputs;
-
-      return acc;
-    }, {});
   }
 
   /**
@@ -133,23 +88,26 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
      * build mutation request
      * ============================== */
     try {
-      if (!this.eventInputTypes) {
-        await this.getInputTypes(injections)
+      if (!applicationServiceClient.eventInputTypes) {
+        await applicationServiceClient.getEventInputTypes(injections);
       }
     } catch(error) {
       context.logger.error({
         error,
-        message: "[dc77e2d9] Failed to get event types"
+        message: "[dc77e2d9] Failed to get event types and will be unable to perform request"
       });
       throw error;
     }
 
-    if (!this.eventInputTypes[definition.event]) {
+    if (!applicationServiceClient.eventInputTypes[definition.event]) {
       throw new Error("[694d632f] Event is not defined on event types");
     }
 
     const eventResult = (await applicationServiceClient.sendRequest(
-      this.buildRequestBody(definition, this.eventInputTypes[definition.event]),
+      this.buildRequestBody(
+        definition,
+        applicationServiceClient.eventInputTypes[definition.event]
+      ),
       context
     )) as types.Event;
 
