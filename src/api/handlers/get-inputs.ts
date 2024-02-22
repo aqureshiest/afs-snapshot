@@ -19,33 +19,42 @@ const getInputs: Handler = async function (
 
   if (id) {
     try {
-      application = ASclient.sendRequest({
+      const { application: app } = await ASclient.sendRequest({
         query: TEMP_DEFAULT_APPLICATION_QUERY,
         variables: { id }
-      }, context) as unknown as Application;
+      }, context) as unknown as { application: Application };
 
+      application = app;
       // we are gonna try the approach of always getting the Root Application in a flatten shape
       // by processing the relationships array, and putting them into their corresponding
       // keys on root Application
       if (application?.root?.id) {
-        application = ASclient.sendRequest({
+        const { application: rootApplication } = await ASclient.sendRequest({
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: { id: application.root.id }
-        }, context) as unknown as Application;
+        }, context) as unknown as { application: Application };
+
+        application = rootApplication;
       }
 
-      if (application !== null && application.applicants) {
+      if (application !== null && application?.applicants?.length) {
         // flatten application
         if (application.applicants.length == 1) {
           application.primary = application.applicants[0];
         } else {
           application.applicants.forEach((applicant) => {
-            applicant?.relationships?.filter((app) => app?.relationship !== "root").forEach((nonRootApp) => {
-              if (application && nonRootApp && nonRootApp.relationship) {
-                application[nonRootApp["relationship"]] = applicant;
-              }
-            });
-          });
+            const relationshipNotRoot = applicant?.relationships?.filter((r) => r?.relationship !== "root") || [];
+
+            if (relationshipNotRoot.length) {
+              relationshipNotRoot.forEach((relationship) => {
+                const app = application?.applicants?.find((a) => a?.id === relationship?.id);
+
+                if (app && application && relationship && relationship.relationship) {
+                  application[relationship.relationship] = app;
+                }
+              });
+            }
+          })
         }
       }
     } catch (ex) {
@@ -66,6 +75,7 @@ const getInputs: Handler = async function (
       headers: req.headers,
     },
   };
+
   return next();
 };
 

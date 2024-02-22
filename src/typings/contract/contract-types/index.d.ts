@@ -87,7 +87,7 @@ declare module "contract/contract-types/application-event.js" {
 
   type MutationSchema = IMutationSchema;
 
-  type Output = Event;
+  type Output = { [key: string]: Event };
 }
 
 import "contract/contract-types/syllabus-section.js";

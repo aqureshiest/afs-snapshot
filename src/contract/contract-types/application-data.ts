@@ -3,7 +3,7 @@ import { Application } from "@earnest/application-service-client/typings/codegen
 import ContractType from "./base-contract.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY, TEMP_DEFAULT_APPLICATIONS_QUERY } from "../../clients/application-service/graphql.js";
 
-class ApplicationData extends ContractType<Definition, Definition, Application | [Application]> {
+class ApplicationData extends ContractType<Definition, Definition,  Application |  [Application]> {
   get contractName(): string {
     return "ApplicationData";
   }
@@ -27,15 +27,19 @@ class ApplicationData extends ContractType<Definition, Definition, Application |
       "[52fb1e44] ApplicationServiceClient not instantiated",
     );
     if ("id" in definition) {
-      return applicationServiceClient.sendRequest({
+      const { application } = applicationServiceClient.sendRequest({
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: { id: definition.id },
-        }, context) as unknown as Application;
+        }, context) as unknown as { application: Application };
+
+      return application;
     } else {
-      return applicationServiceClient.sendRequest({
+      const { applications } = applicationServiceClient.sendRequest({
         query: TEMP_DEFAULT_APPLICATIONS_QUERY,
         variables: { search: definition.criteria },
-      }, context) as unknown as [Application];
+      }, context) as unknown as { applications: [Application]};
+
+      return applications;
     }
   };
 }

@@ -94,7 +94,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     } catch(error) {
       context.logger.error({
         error,
-        message: "[dc77e2d9] Failed to get event types and will be unable to perform request"
+        message: "[dc77e2d9] Failed to get event types and unable to perform request"
       });
       throw error;
     }
@@ -109,9 +109,9 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
         applicationServiceClient.eventInputTypes[definition.event]
       ),
       context
-    )) as types.Event;
+    )) as { [key: string]: types.Event };
 
-    const { error } = eventResult;
+    const { error } = eventResult[definition.event];
 
     if (error && typeof error === "string") {
       throw new Error(error);
@@ -121,14 +121,14 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
      * Rehydration: when application-event evaluates, it should re-hydrate the
      * input parameters for re-evaluation
      * ============================== */
-    const rehydrationId = eventResult?.application?.id;
+    const rehydrationId = eventResult[definition.event]?.application?.id;
 
     if (rehydrationId) {
       try {
-        const application = await applicationServiceClient.sendRequest({
+        const  { application } = await applicationServiceClient.sendRequest({
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: { id: rehydrationId },
-        }, context);
+        }, context) as unknown as { application: types.Application };
 
         Object.defineProperty(input, "application", { value: application });
       } catch (error) {
