@@ -1,4 +1,4 @@
-import { before, describe, it, mock } from "node:test";
+import { before, describe, it } from "node:test";
 import assert from "node:assert";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";

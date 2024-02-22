@@ -33,7 +33,7 @@ describe("[d7c20b00] get-inputs handler", () => {
   });
 
   it("should set res.locals.input to the queried application when a root application does not exist", async () => {
-    let res = {
+    const res = {
       locals: {
         application: {
           id: 1
@@ -66,7 +66,7 @@ describe("[d7c20b00] get-inputs handler", () => {
   });
 
   it("should set the flattened root application on the response object with just a primary", async () => {
-    let res = {
+    const res = {
       locals: {
         application: {
           id: 1
@@ -124,7 +124,7 @@ describe("[d7c20b00] get-inputs handler", () => {
   });
 
   it("should set the flattened root application on the response object with both a primary and cosigner", async () => {
-    let res = {
+    const res = {
       locals: {
         application: {
           id: 1
