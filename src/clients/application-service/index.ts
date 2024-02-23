@@ -250,10 +250,10 @@ export default class ApplicationServiceClient extends Client {
 
       if (response.statusCode !== 200) {
         const error = new Error(response.statusMessage);
-        const message = results.errors.reduce((acc, e) => {
+        const message = Array.isArray(results?.errors) ? results.errors.reduce((acc, e) => {
           acc = acc + e.message + " ";
           return acc;
-        }, "");
+        }, "") : "[caec4268] Failed to send request";
 
         this.logError(error, message);
         throw error;
@@ -282,7 +282,7 @@ export default class ApplicationServiceClient extends Client {
 
       const { exp } = jwtPayload;
 
-      if (Date.now() / 1000 - exp > exp) {
+      if (Date.now() / 1000 > exp) {
         this.token = await this.requestToken();
       }
     } else {
