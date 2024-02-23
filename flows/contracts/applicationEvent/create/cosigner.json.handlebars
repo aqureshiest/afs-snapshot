@@ -3,11 +3,11 @@
 {{#with request.body}}
   {{#if (eq values.loanType "cosigned")}}
   {{! cosigner creation requested }}
-    {{#if (not (includes applicantion.tags "cosigned"))}}
+    {{#if (not (includes application.tags "cosigned"))}}
       {{! returns createApplication with cosigner relationship}}
       {
         "event": "createApplication",
-        "fields": ["application.id", "application.root.id"],
+        "fields": "application { id root { id } }",
         "payload": {
           "relationships": [{
             "as": "cosigner",
@@ -25,12 +25,12 @@
   {{else}}
     {{#if (eq values.loanType "solo")}}
       {{! user requested solo loanType}}
-      {{#if (includes applicantion.tags "cosigned")}}
+      {{#if (includes application.tags "cosigned")}}
         {{! app contains a cosigner applicant}}
         {{! should return deleteRelationship for cosigner applicant}}
         {
           "event": "deleteRelationship",
-          "fields": ["application.id", "application.root.id"],
+          "fields": "application { id root { id } }",
           "payload": {
             "relationships": [{
               "as": "cosigner",

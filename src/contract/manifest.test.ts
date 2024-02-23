@@ -1,4 +1,4 @@
-import { before, describe, it } from "node:test";
+import { before, describe, it, mock } from "node:test";
 import assert from "node:assert";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
@@ -10,11 +10,13 @@ import Manifest from "./manifest.js";
 
 describe("[462fd166] manifest.execute", () => {
   let context;
+  let applicationServiceClient;
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
+    applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance;
   });
 
   it("[be92134e] runs without error", async () => {
@@ -111,6 +113,7 @@ describe("[462fd166] manifest.execute", () => {
     },
     required: ["first", "last"],
   };
+
   it("[670555db] ajv helper validate", async () => {
     const input = {} as Input;
     const name = {
@@ -152,6 +155,7 @@ describe("[462fd166] manifest.execute", () => {
 
     assert.deepEqual(parsed, "data must be object");
   });
+
   it("[05166b70] schema helper", async () => {
     const input = {} as Input;
 
@@ -167,5 +171,167 @@ describe("[462fd166] manifest.execute", () => {
     const parsed = JSON.parse(JSON.stringify(contract));
 
     assert.deepEqual(parsed, schema);
+  });
+
+  it("[2eeb43a0] it should throw when executing an ApplicationEvent contract-type if a request to getEventInputTypes fails", async() => {
+    const input = {} as Input;
+
+    mock.method(applicationServiceClient, "getEventInputTypes", () =>  {
+      throw new Error("failed to get event inputs")
+    });
+
+    const manifest = new Manifest(context, "manifestApplicationEvent", {
+      key: "testContract",
+      "*":  new Contract({
+        key: "testContract",
+        raw: `{
+          "event": "createApplication",
+          "payload": {
+            "relationships": []
+          },
+          "fields": "application { id }"
+        }`,
+        type: "applicationEvent"
+      })
+    });
+
+    try {
+      await manifest.execute(input, { context, ...input }); 
+    } catch(error) {
+      assert(error);
+    }
+  });
+
+  it("[5995320f] it should throw when executing an ApplicationEvent contract-type if an event doesn't exist on eventInputTypes", async() => {
+    const input = {} as Input;
+
+    mock.method(applicationServiceClient, "getEventInputTypes", () =>  {
+      applicationServiceClient.eventInputTypes = {
+        eventDoesNotExist: {
+          args: "String!"
+        } 
+      }
+    });
+
+    const manifest = new Manifest(context, "manifestApplicationEvent", {
+      key: "testContract",
+      "*":  new Contract({
+        key: "testContract",
+        raw: `{
+          "event": "createApplication",
+          "payload": {
+            "relationships": []
+          },
+          "fields": "application { id }"
+        }`,
+        type: "applicationEvent"
+      })
+    });
+
+    try {
+      await manifest.execute(input, { context, ...input }); 
+    } catch(error) {
+      assert.equal(error.message, "[694d632f] Event is not defined on event types");
+    }
+
+    mock.reset();
+  });
+
+  it("[1b2bbdaa] it should execute an ApplicationEvent contract-type", async() => {
+    const input = {} as Input;
+
+    applicationServiceClient.eventInputTypes = {
+      createApplication: {
+        meta: "EventMeta",
+        relationships: "[RelationshipInput]"
+      } 
+    }
+
+    mock.method(applicationServiceClient, "sendRequest", () => {
+      return {
+        createApplication: {
+          id: 1,
+          error: null,
+          application: {
+            id: 2
+          }
+        }
+      }
+    });
+
+    const manifest = new Manifest(context, "manifestApplicationEvent", {
+      key: "testContract",
+      "*":  new Contract({
+        key: "testContract",
+        raw: `{
+          "event": "createApplication",
+          "payload": {
+            "relationships": []
+          },
+          "fields": "application { id }"
+        }`,
+        type: "applicationEvent"
+      })
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+
+  it("[9edd8cee] it should execute an ApplicationData contract-type when an id exists in the definition", async() => {
+    const input = {} as Input;
+
+    mock.method(applicationServiceClient, "sendRequest", () => {
+      return {
+        application: {
+          id: 1
+        }
+      }
+    });
+
+    const manifest = new Manifest(context, "manifestApplicationData", {
+      key: "testContract",
+      "*":  new Contract({
+        key: "testContract",
+        raw: `{
+          "id": 1
+        }`,
+        type: "applicationData"
+      })
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+
+
+  it("[411017c5] it should execute an ApplicationData contract-type when criteria exists in the definition", async() => {
+    const input = {} as Input;
+
+    mock.method(applicationServiceClient, "sendRequest", () => {
+      return {
+        applications: [
+          { id: 1},
+          { id: 2 }
+        ]
+      }
+    });
+
+    const manifest = new Manifest(context, "manifestApplicationData", {
+      key: "testContract",
+      "*":  new Contract({
+        key: "testContract",
+        raw: `{
+          "criteria": [{ "search": "test@earnest.com" }]
+        }`,
+        type: "applicationData"
+      })
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
   });
 });

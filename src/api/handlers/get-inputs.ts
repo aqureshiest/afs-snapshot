@@ -1,6 +1,6 @@
-import { IApplication } from "../../typings/clients/application-service/index.js";
+import { Application } from "../../typings/clients/application-service/index.js";
+import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 import { Request, Response, NextFunction } from "express";
-import assert from "node:assert";
 /**
  * Gather inputs for contract execution
  * TODO: get authentication artifacts
@@ -14,37 +14,47 @@ const getInputs: Handler = async function (
   const id = res.locals.application?.id;
   const ASclient = context.loadedPlugins.applicationServiceClient.instance;
   if (!ASclient)
-    throw new Error("[67c30fe0] Application Service client instante not found");
-  let application: IApplication | null = null;
+    throw new Error("[67c30fe0] Application Service client instance not found");
+  let application: Application | null = null;
 
   if (id) {
     try {
-      application = await ASclient.getApplication(context, id);
+      const { application: app } = await ASclient.sendRequest({
+        query: TEMP_DEFAULT_APPLICATION_QUERY,
+        variables: { id }
+      }, context) as unknown as { application: Application };
+
+      application = app;
       // we are gonna try the approach of always getting the Root Application in a flatten shape
       // by processing the relationships array, and putting them into their corresponding
       // keys on root Application
-
       if (application?.root?.id) {
-        application = await ASclient.getApplication(
-          context,
-          application.root.id,
-        );
+        const { application: rootApplication } = await ASclient.sendRequest({
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id: application.root.id }
+        }, context) as unknown as { application: Application };
+
+        application = rootApplication;
       }
-      if (application !== null) {
+
+      if (application !== null && application?.applicants?.length) {
         // flatten application
         if (application.applicants.length == 1) {
           application.primary = application.applicants[0];
         } else {
           application.applicants.forEach((applicant) => {
-            const relationshipsNotRoot = applicant["relationships"].filter(
-              (relationship) => relationship.relationship !== "root",
-            );
-            relationshipsNotRoot.forEach((relationship) => {
-              // typescript keeps complaining that application is possibly null, even tho it will never reach this line if it was
-              assert(application);
-              application[relationship.relationship] = applicant;
-            });
-          });
+            const relationshipNotRoot = applicant?.relationships?.filter((r) => r?.relationship !== "root") || [];
+
+            if (relationshipNotRoot.length) {
+              relationshipNotRoot.forEach((relationship) => {
+                const app = application?.applicants?.find((a) => a?.id === relationship?.id);
+
+                if (app && application && relationship && relationship.relationship) {
+                  application[relationship.relationship] = app;
+                }
+              });
+            }
+          })
         }
       }
     } catch (ex) {
@@ -65,6 +75,7 @@ const getInputs: Handler = async function (
       headers: req.headers,
     },
   };
+
   return next();
 };
 

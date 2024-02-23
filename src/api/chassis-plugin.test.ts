@@ -5,13 +5,22 @@ import axios from "axios";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
-import ApplicationServiceClient from "../clients/application-service/index.js";
 
 describe("[41a1abef] chassis-plugins", () => {
   let context: Context;
+  let applicationServiceClient;
+
+  before(async () => {
+    const pkg = await readJsonFile("./package.json");
+    pkg.logging = { level: "error" };
+    context = await createPluginContext(pkg);
+    await registerChassisPlugins(context);
+    await context.applicationServer.listen(3000);
+    applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance
+  });
 
   beforeEach(() => {
-    mock.method(ApplicationServiceClient.prototype, "post", async () => {
+    mock.method(applicationServiceClient, "sendRequest", async () => {
       return {
         response: {
           statusCode: 200,
@@ -22,14 +31,6 @@ describe("[41a1abef] chassis-plugins", () => {
         },
       };
     });
-  });
-
-  before(async () => {
-    const pkg = await readJsonFile("./package.json");
-    pkg.logging = { level: "error" };
-    context = await createPluginContext(pkg);
-    await registerChassisPlugins(context);
-    await context.applicationServer.listen(3000);
   });
 
   after(async () => {

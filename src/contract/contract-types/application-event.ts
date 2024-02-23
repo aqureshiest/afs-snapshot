@@ -1,5 +1,9 @@
 import assert from "node:assert";
 import ContractType from "./base-contract.js";
+import { GqlRequestBody } from "@earnest/application-service-client";
+import * as types from "@earnest/application-service-client/typings/codegen.js";
+import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
+
 
 const MUTATIVE_EVENTS = Object.freeze([
   "addDetails",
@@ -19,6 +23,28 @@ const DESTRUCTIVE_EVENTS = Object.freeze([
 class ApplicationEvent extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
     return "ApplicationEvent";
+  }
+
+  buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
+    const { event, fields = "", payload = {} }  = definition;
+    let vars = "";
+    let types = "";
+
+    for (const [key, value] of Object.entries(inputTypes)) {
+      vars += `${key}: $${key}, `;
+      types += `${key}: ${value}, `;
+    }
+
+    return {
+      query: `mutation(${types}) {
+        ${event}(${vars}){
+          ${fields}
+          createdAt
+          error
+        }
+      }`,
+      variables: { ...payload, meta: { service: "apply-flow-service" } }
+    }
   }
 
   /**
@@ -65,22 +91,35 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       applicationServiceClient,
       "[7d3b096f] ApplicationServiceClient not instantiated",
     );
+    /* ============================== *
+     * Fetch input types to dynamically
+     * build mutation request
+     * ============================== */
+    try {
+      if (!applicationServiceClient.eventInputTypes) {
+        await applicationServiceClient.getEventInputTypes(injections);
+      }
+    } catch(error) {
+      context.logger.error({
+        error,
+        message: "[dc77e2d9] Failed to get event types and unable to perform request"
+      });
+      throw error;
+    }
 
-    const { event, fields = [], payload } = definition;
+    if (!applicationServiceClient.eventInputTypes[definition.event]) {
+      throw new Error("[694d632f] Event is not defined on event types");
+    }
 
-    const { [event]: eventResult } = await applicationServiceClient.mutate(
-      context,
-      event,
-      {
-        fields: [...fields, "createdAt", "error"],
-        data: payload,
-        meta: {
-          service: "apply-flow-service",
-        },
-      },
-    );
+    const eventResult = (await applicationServiceClient.sendRequest(
+      this.buildRequestBody(
+        definition,
+        applicationServiceClient.eventInputTypes[definition.event]
+      ),
+      context
+    )) as { [key: string]: types.Event };
 
-    const { error } = eventResult;
+    const { error } = eventResult[definition.event];
 
     if (error && typeof error === "string") {
       throw new Error(error);
@@ -90,14 +129,14 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
      * Rehydration: when application-event evaluates, it should re-hydrate the
      * input parameters for re-evaluation
      * ============================== */
-    const rehydrationId = eventResult?.application?.id;
+    const rehydrationId = eventResult[definition.event]?.application?.id;
 
     if (rehydrationId) {
       try {
-        const application = await applicationServiceClient.getApplication(
-          context,
-          eventResult.application.id as string,
-        );
+        const  { application } = await applicationServiceClient.sendRequest({
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id: rehydrationId },
+        }, context) as unknown as { application: types.Application };
 
         Object.defineProperty(input, "application", { value: application });
       } catch (error) {
@@ -108,7 +147,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       }
     }
 
-    return eventResult as Output;
+    return eventResult;
   };
 
   toJSON() {
