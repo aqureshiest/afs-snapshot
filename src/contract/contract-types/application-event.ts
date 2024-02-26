@@ -4,7 +4,6 @@ import { GqlRequestBody } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 
-
 const MUTATIVE_EVENTS = Object.freeze([
   "addDetails",
   "addInformation",
@@ -26,7 +25,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
   }
 
   buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
-    const { event, fields = "", payload = {} }  = definition;
+    const { event, fields = "", payload = {} } = definition;
     let vars = "";
     let types = "";
 
@@ -43,8 +42,8 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
           error
         }
       }`,
-      variables: { ...payload, meta: { service: "apply-flow-service" } }
-    }
+      variables: { ...payload, meta: { service: "apply-flow-service" } },
+    };
   }
 
   /**
@@ -99,10 +98,11 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       if (!applicationServiceClient.eventInputTypes) {
         await applicationServiceClient.getEventInputTypes(injections);
       }
-    } catch(error) {
+    } catch (error) {
       context.logger.error({
         error,
-        message: "[dc77e2d9] Failed to get event types and unable to perform request"
+        message:
+          "[dc77e2d9] Failed to get event types and unable to perform request",
       });
       throw error;
     }
@@ -114,9 +114,9 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     const eventResult = (await applicationServiceClient.sendRequest(
       this.buildRequestBody(
         definition,
-        applicationServiceClient.eventInputTypes[definition.event]
+        applicationServiceClient.eventInputTypes[definition.event],
       ),
-      context
+      context,
     )) as { [key: string]: types.Event };
 
     const { error } = eventResult[definition.event];
@@ -133,10 +133,13 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
     if (rehydrationId) {
       try {
-        const  { application } = await applicationServiceClient.sendRequest({
-          query: TEMP_DEFAULT_APPLICATION_QUERY,
-          variables: { id: rehydrationId },
-        }, context) as unknown as { application: types.Application };
+        const { application } = (await applicationServiceClient.sendRequest(
+          {
+            query: TEMP_DEFAULT_APPLICATION_QUERY,
+            variables: { id: rehydrationId },
+          },
+          context,
+        )) as unknown as { application: types.Application };
 
         Object.defineProperty(input, "application", { value: application });
       } catch (error) {

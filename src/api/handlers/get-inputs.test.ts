@@ -24,102 +24,132 @@ describe("[d7c20b00] get-inputs handler", () => {
       params: {},
       body: {},
       query: {},
-      headers: {}
-    }
+      headers: {},
+    };
   });
 
   it("should throw when applicationServiceClient is not instantiated", async () => {
-    assert.rejects(async () => await getInputs({} as PluginContext, req as Request, {} as Response, () => {}));
+    assert.rejects(
+      async () =>
+        await getInputs(
+          {} as PluginContext,
+          req as Request,
+          {} as Response,
+          () => {},
+        ),
+    );
   });
 
   it("should set res.locals.input to the queried application when a root application does not exist", async () => {
     const res = {
       locals: {
         application: {
-          id: 1
-        }
-      }
+          id: 1,
+        },
+      },
     };
 
-    mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
-      return {
-        application: {
-          id: 1,
-        }
-      }
-    });
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        return {
+          application: {
+            id: 1,
+          },
+        };
+      },
+    );
 
-    await getInputs(context, req as Request, res as unknown as Response, () => {});
+    await getInputs(
+      context,
+      req as Request,
+      res as unknown as Response,
+      () => {},
+    );
     assert.deepEqual(res.locals, {
       application: {
-        id: 1
+        id: 1,
       },
       input: {
         application: {
-          id: 1
+          id: 1,
         },
         request: {
-          ...req
-        }
-      }
-    })
+          ...req,
+        },
+      },
+    });
   });
 
   it("should set the flattened root application on the response object with just a primary", async () => {
     const res = {
       locals: {
         application: {
-          id: 1
-        }
-      }
+          id: 1,
+        },
+      },
     };
     // initial request to fetch an application
-    mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
-      return {
-        application: {
-          id: 2,
-          root: {
-            id: 1,
-            primary: null,
-          }
-        }
-      }
-    });
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        return {
+          application: {
+            id: 2,
+            root: {
+              id: 1,
+              primary: null,
+            },
+          },
+        };
+      },
+    );
     // second request to fetch the root application and its applicants
-    mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
-      return {
-        application: {
-          id: 1,
-          applicants: [
-            {
-              id: 2
-            }
-          ]
-        }
-      }
-    });
-    
-    await getInputs(context, req as Request, res as unknown as Response, () => {});
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        return {
+          application: {
+            id: 1,
+            applicants: [
+              {
+                id: 2,
+              },
+            ],
+          },
+        };
+      },
+    );
+
+    await getInputs(
+      context,
+      req as Request,
+      res as unknown as Response,
+      () => {},
+    );
     assert.deepEqual(res.locals, {
       application: {
-        id: 1
+        id: 1,
       },
       input: {
         application: {
           id: 1,
           applicants: [
             {
-              id: 2
-            }
+              id: 2,
+            },
           ],
           primary: {
-            id: 2
-          }
+            id: 2,
+          },
         },
         request: {
-          ...req
-        }
-      }
+          ...req,
+        },
+      },
     });
   });
 
@@ -127,66 +157,79 @@ describe("[d7c20b00] get-inputs handler", () => {
     const res = {
       locals: {
         application: {
-          id: 1
-        }
-      }
+          id: 1,
+        },
+      },
     };
     // initial request to fetch an application
-    mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
-      return {
-        application: {
-          id: 2,
-          root: {
-            id: 1,
-            primary: null,
-            cosigner: null
-          }
-        }
-      }
-    });
-    // second request to fetch the root application and its applicants
-    mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
-      return {
-        application: {
-          id: 1,
-          applicants: [
-            {
-              id: 2,
-              relationships: [
-                {
-                  id: 1,
-                  relationship: "root"
-                },
-                {
-                  id: 2,
-                  relationship: "primary"
-                }
-              ]
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        return {
+          application: {
+            id: 2,
+            root: {
+              id: 1,
+              primary: null,
+              cosigner: null,
             },
-            {
-              id: 3,
-              relationships: [
-                {
-                  id: 1,
-                  relationship: "root"
-                },
-                {
-                  id: 3,
-                  relationship: "cosigner"
-                }
-              ]
-            }
-          ],
-          primary: null,
-          cosigner: null,
-        }
-      }
-    });
-    
-    await getInputs(context, req as Request, res as unknown as Response, () => {});
+          },
+        };
+      },
+    );
+    // second request to fetch the root application and its applicants
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        return {
+          application: {
+            id: 1,
+            applicants: [
+              {
+                id: 2,
+                relationships: [
+                  {
+                    id: 1,
+                    relationship: "root",
+                  },
+                  {
+                    id: 2,
+                    relationship: "primary",
+                  },
+                ],
+              },
+              {
+                id: 3,
+                relationships: [
+                  {
+                    id: 1,
+                    relationship: "root",
+                  },
+                  {
+                    id: 3,
+                    relationship: "cosigner",
+                  },
+                ],
+              },
+            ],
+            primary: null,
+            cosigner: null,
+          },
+        };
+      },
+    );
+
+    await getInputs(
+      context,
+      req as Request,
+      res as unknown as Response,
+      () => {},
+    );
     assert.deepEqual(res.locals, {
       application: {
-        id: 1
+        id: 1,
       },
       input: {
         application: {
@@ -197,59 +240,59 @@ describe("[d7c20b00] get-inputs handler", () => {
               relationships: [
                 {
                   id: 1,
-                  relationship: "root"
+                  relationship: "root",
                 },
                 {
                   id: 2,
-                  relationship: "primary"
-                }
-              ]
+                  relationship: "primary",
+                },
+              ],
             },
             {
               id: 3,
               relationships: [
                 {
                   id: 1,
-                  relationship: "root"
+                  relationship: "root",
                 },
                 {
                   id: 3,
-                  relationship: "cosigner"
-                }
-              ]
-            }
+                  relationship: "cosigner",
+                },
+              ],
+            },
           ],
           primary: {
             id: 2,
             relationships: [
               {
                 id: 1,
-                relationship: "root"
+                relationship: "root",
               },
               {
                 id: 2,
-                relationship: "primary"
-              }
-            ]
+                relationship: "primary",
+              },
+            ],
           },
-          cosigner:             {
+          cosigner: {
             id: 3,
             relationships: [
               {
                 id: 1,
-                relationship: "root"
+                relationship: "root",
               },
               {
                 id: 3,
-                relationship: "cosigner"
-              }
-            ]
-          }
+                relationship: "cosigner",
+              },
+            ],
+          },
         },
         request: {
-          ...req
-        }
-      }
+          ...req,
+        },
+      },
     });
   });
 });
