@@ -27,17 +27,20 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
   buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
     const { event, fields = "", payload = {} }  = definition;
-    let vars = "";
-    let types = "";
-
+    const varsArray: string[] = [];
+    const typesArray: string[] = [];
+  
     for (const [key, value] of Object.entries(inputTypes)) {
-      vars += `${key}: $${key}, `;
-      types += `${key}: ${value}, `;
+      varsArray.push(`${key}: $${key}`);
+      typesArray.push(`$${key}: ${value}`);
     }
+  
+    const vars = varsArray.join(', ');
+    const types = typesArray.join(', ');
 
     return {
       query: `mutation(${types}) {
-        ${event}(${vars}){
+        ${event} (${vars}){
           ${fields}
           createdAt
           error
@@ -111,11 +114,24 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       throw new Error("[694d632f] Event is not defined on event types");
     }
 
+    const body = this.buildRequestBody(
+      definition,
+      applicationServiceClient.eventInputTypes[definition.event]
+    );
+
+    // const test =`mutation($relationships: [RelationshipInput], $meta: EventMeta) {
+    //   createApplication(relationships: $relationships, meta: $meta) {
+    //     application { id }
+    //     createdAt
+    //     error
+    //   }
+    // }`
+
+    // body.query = test
+
+    console.log("f6507545 meee request body", body);
     const eventResult = (await applicationServiceClient.sendRequest(
-      this.buildRequestBody(
-        definition,
-        applicationServiceClient.eventInputTypes[definition.event]
-      ),
+      body,
       context
     )) as { [key: string]: types.Event };
 
