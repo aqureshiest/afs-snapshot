@@ -40,7 +40,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
     return {
       query: `mutation(${types}) {
-        ${event} (${vars}){
+        ${event}(${vars}){
           ${fields}
           createdAt
           error
@@ -114,24 +114,11 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       throw new Error("[694d632f] Event is not defined on event types");
     }
 
-    const body = this.buildRequestBody(
-      definition,
-      applicationServiceClient.eventInputTypes[definition.event]
-    );
-
-    // const test =`mutation($relationships: [RelationshipInput], $meta: EventMeta) {
-    //   createApplication(relationships: $relationships, meta: $meta) {
-    //     application { id }
-    //     createdAt
-    //     error
-    //   }
-    // }`
-
-    // body.query = test
-
-    console.log("f6507545 meee request body", body);
     const eventResult = (await applicationServiceClient.sendRequest(
-      body,
+      this.buildRequestBody(
+        definition,
+        applicationServiceClient.eventInputTypes[definition.event]
+      ),
       context
     )) as { [key: string]: types.Event };
 
