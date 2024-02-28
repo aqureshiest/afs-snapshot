@@ -8,7 +8,6 @@ import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 import LendingDecisionServiceClient from "./index.js";
-import ApplicationServiceClient from "../application-service/index.js";
 
 describe("[96aaf9c1] Lending Decision Service Client", () => {
   let accessKey;
@@ -16,14 +15,11 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   let context;
   let client;
   let key;
-  let appServiceKey;
-  let appServiceAccessKey;
-  let appServicebaseUrl;
-  let applicationServiceClient;
 
   const root = uuidv4();
   const primary = uuidv4();
-  const appData = {
+  const cosigner = uuidv4();
+  const primaryAppData = {
     id: root,
     relationships: [
       {
@@ -87,6 +83,10 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
               start: "2020-01-01",
               end: "2050-01-01",
             },
+            {
+              amount: 2000000,
+              type: "retirement",
+            },
           ],
           amount: {
             requested: 1000000,
@@ -94,6 +94,103 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
             certified: null,
           },
         },
+      },
+    ],
+  };
+  const cosignedAppData = {
+    id: root,
+    relationships: [
+      {
+        id: primary,
+        relationship: "applicant",
+      },
+      {
+        id: cosigner,
+        relationship: "applicant",
+      },
+    ],
+    tags: ["cosigned", "serialization"],
+    applicants: [
+      {
+        ...primaryAppData.applicants[0],
+        relationships: [
+          {
+            id: root,
+            relationship: "root",
+          },
+          {
+            id: cosigner,
+            relationship: "cosigner",
+          },
+        ],
+      },
+      {
+        id: cosigner,
+        createdAt: "2024-02-27T22:19:48.567Z",
+        relationship: "applicant",
+        ssn: "pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3",
+        relationships: [
+          {
+            id: root,
+            relationship: "root",
+          },
+          {
+            id: primary,
+            relationship: "primary",
+          },
+        ],
+        details: {
+          name: {
+            first: "David",
+            last: "Hans",
+          },
+          dateOfBirth: "1945-10-14",
+          email: "someemail@email.com",
+          location: [
+            {
+              street1: "Fake Street1",
+              street2: "Fake Street2",
+              city: "Fake City",
+              state: "CA",
+              zip: "99999",
+              citizenship: "citizen",
+            },
+          ],
+          phone: [
+            {
+              type: "mobile",
+              number: "5555555555",
+            },
+          ],
+          education: [
+            {
+              degree: "bachelor",
+              enrollment: "full_time",
+              graduationDate: "2027-01-01",
+              termStart: "2024-01-23",
+              termEnd: "2027-01-01",
+              credits: 5,
+              opeid: "00130500",
+            },
+          ],
+          income: [
+            {
+              amount: 2000000,
+              type: "employment",
+              employer: "company",
+              name: null,
+              title: "employee",
+              start: "2020-01-01",
+              end: "2050-01-01",
+            },
+          ],
+          amount: {
+            requested: 1000000,
+            approved: null,
+            certified: null,
+          },
+        },
+        cognitoID: null,
       },
     ],
   };
@@ -113,23 +210,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     baseUrl =
       SensitiveString.ExtractValue(context.env.LENDING_DECISION_SERVICE_URL) ||
       "";
-    appServiceKey = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
-    appServiceAccessKey = Buffer.from(appServiceKey).toString("base64");
-    appServicebaseUrl =
-      SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
 
-    applicationServiceClient = new ApplicationServiceClient(
-      context,
-      appServiceAccessKey,
-      appServicebaseUrl,
-    );
-
-    mock.method(applicationServiceClient, "getApplication", async () => {
-      return appData;
-    });
-
-    context.loadedPlugins.applicationServiceClient.instance =
-      applicationServiceClient;
     client = new LendingDecisionServiceClient(context, accessKey, baseUrl);
   });
 
@@ -169,6 +250,35 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     });
 
     it("[d500977c] Throw an error on POST request to decision endpoint with app id and the response's status code !== 200", async () => {
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        () => {
+          return {
+            results: {
+              data: {
+                application: {
+                  ...primaryAppData,
+                  applicants: [
+                    {
+                      ...primaryAppData.applicants[0],
+                      details: {
+                        ...primaryAppData.applicants[0].details,
+                        location: [{}],
+                        education: [{}],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+            response: {
+              statusCode: 200,
+            },
+          };
+        },
+      );
+
       mock.method(client, "post", async () => {
         return {
           response: {
@@ -209,24 +319,6 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       }
     });
 
-    it("[424daac0] Throw an error during format payload due to missing accreditedSchoolService", async () => {
-      const missingServiceClientContext = {
-        ...context,
-        loadedPlugins: {
-          ...context.loadedPlugins,
-          accreditedSchoolService: {},
-        },
-      };
-      try {
-        await client.postDecisionRequest(missingServiceClientContext, root);
-      } catch (error) {
-        assert.strictEqual(
-          error.message,
-          "[d826cb3e] Accredited School Service client instance not found",
-        );
-      }
-    });
-
     it("[9a93d700] Throw an error during format payload due to missing PII Token Service", async () => {
       const missingServiceClientContext = {
         ...context,
@@ -241,6 +333,70 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         assert.strictEqual(
           error.message,
           "[61e82544] PII Token Service client instance not found",
+        );
+      }
+    });
+
+    it("[a76813b3] Throw an error if details are not present in application", async () => {
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        () => {
+          return {
+            results: {
+              data: {
+                application: {
+                  ...primaryAppData,
+                  applicants: [
+                    { ...primaryAppData.applicants[0], details: undefined },
+                  ],
+                },
+              },
+            },
+            response: {
+              statusCode: 200,
+            },
+          };
+        },
+      );
+
+      try {
+        await client.postDecisionRequest(context, root);
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[42b4cf11] Unable to parse application detail information",
+        );
+      }
+    });
+
+    it("[49b4267d] Throw error when trying to get App data", async () => {
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        () => {
+          return {
+            results: {
+              errors: [
+                {
+                  message: "Invalid",
+                },
+              ],
+            },
+            response: {
+              statusCode: 400,
+              statusMessage: "Application not found",
+            },
+          };
+        },
+      );
+
+      try {
+        await client.postDecisionRequest(context, root);
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[6d352332] error while retrieving application",
         );
       }
     });
@@ -276,7 +432,69 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.data.status, "completed");
   });
 
-  it("[6d9f1dd1] should post a decision", async () => {
+  it("[6d9f1dd1] should post a primary app decision", async () => {
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              application: primaryAppData,
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Application Review",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const results = await client.postDecisionRequest(context, root);
+
+    assert.deepEqual(results.message, "Decisioning Request is processed.");
+    assert.deepEqual(results.data.decisionOutcome, "Application Review");
+    assert.deepEqual(results.data.status, "completed");
+  });
+
+  it("[68361c40] should post a cosigned app decision", async () => {
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              application: cosignedAppData,
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+
     mock.method(client, "post", async () => {
       return {
         results: {

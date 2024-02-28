@@ -1,53 +1,49 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 import type { default as LendingDecisionServiceClient } from "clients/lending-decision-service/index.js";
+import * as typings from "@earnest/application-service-client/typings/codegen.js";
 
 type LendingDecisionServicePlugin = ChassisPlugin<LendingDecisionServiceClient>;
 interface IDecisionEntity {
   entityInfo: {
-    firstName: string;
-    lastName: string;
-    dob: string;
+    firstName: typings.NameDetail["first"];
+    lastName: typings.NameDetail["last"];
+    dob: typings.Details["dateOfBirth"];
     addresses: Array<{
-      addressLine1?: string;
-      addressLine2?: string;
-      city?: string;
-      state?: string;
-      country?: string;
+      addressLine1: typings.LocationDetail["street1"];
+      addressLine2: typings.LocationDetail["street2"];
+      city: typings.LocationDetail["city"];
+      state: typings.LocationDetail["state"];
+      type?: string;
     }>;
     ssn?: string;
-    email: string;
-    phoneNumber?: string;
-    citizenshipStatus: string;
+    email: typings.Details["email"];
+    phoneNumber?: typings.PhoneDetail["number"];
+    citizenshipStatus: typings.LocationDetail["citizenship"];
   };
   educations: Array<{
-    degreeType: string;
-    startDate?: Date;
-    endDate: Date;
-    status: string;
+    degreeType: typings.EducationDetail["degree"];
+    startDate?: typings.EducationDetail["termStart"];
+    endDate: typings.EducationDetail["termEnd"];
+    status: typings.EducationDetail["enrollment"];
     schoolName: string;
-    schoolCode?: string;
-    opeid?: string;
+    opeid?: typings.EducationDetail["opeid"];
   }>;
   employments: Array<{
-    employerName: string;
-    jobTitle: string;
-    employmentType?: string;
-    employmentStartDate: Date;
-    employmentEndDate: Date;
+    employerName: typings.IncomeDetail["employer"];
+    jobTitle: typings.IncomeDetail["title"];
+    employmentType?: typings.IncomeDetail["type"];
+    employmentStartDate: typings.IncomeDetail["start"];
+    employmentEndDate: typings.IncomeDetail["end"];
     employmentEndingSoon?: boolean;
-    salary?: number;
+    salary?: typings.IncomeDetail["amount"];
   }>;
   incomes: Array<{
-    incomeType: string;
-    value: number;
-  }>;
-  assets: Array<{
-    assetType: string;
-    value: number;
+    incomeType: typings.IncomeDetail["type"];
+    value: typings.IncomeDetail["amount"];
   }>;
   loanInfo: {
-    claimedLoanAmount: number;
+    claimedLoanAmount: typings.AmountDetail["requested"];
   };
   servicingInfo: {
     hasActiveLoan: boolean;

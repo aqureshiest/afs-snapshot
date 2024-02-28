@@ -65,6 +65,7 @@ export default class LendingDecisionServiceClient extends Client {
   ): Promise<DecisionPostResponse> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
+
     const piiTokenService = context.loadedPlugins.piiTokenService?.instance;
 
     if (!applicationServiceClient)
@@ -77,8 +78,7 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     let application: typings.Application = {} as typings.Application;
-    const applicationDecisionDetails: ApplicationDecisionDetails =
-      {} as ApplicationDecisionDetails;
+    const applicationDecisionDetails = {};
 
     try {
       const { application: foundApp } =
@@ -95,6 +95,7 @@ export default class LendingDecisionServiceClient extends Client {
         message: `[6d352332] error while retrieving application`,
         stack: error.stack,
       });
+      throw new Error("[6d352332] error while retrieving application");
     }
 
     if (application !== null && application.applicants) {
@@ -103,15 +104,17 @@ export default class LendingDecisionServiceClient extends Client {
         application.primary = application.applicants[0];
         // decrypt the SSN for the formatter. Do it here instead of making another post request
         // deep inside the formatter function
+
         const primaryApplicant = {
           ...application.applicants[0],
           ssn: await piiTokenService["getTokenValue"](
-            application.applicants[0]?.ssn,
+            application.applicants[0] ? application.applicants[0]["ssn"] : "",
           ),
         };
+
         applicationDecisionDetails["primary"] = this.formatRequestPayload(
           application?.product,
-          primaryApplicant as typings.Application,
+          primaryApplicant as typings.Application & { ssn?: string },
         );
       } else {
         application.applicants.forEach((applicant) => {
@@ -125,22 +128,25 @@ export default class LendingDecisionServiceClient extends Client {
               const app = application?.applicants?.find(
                 (a) => a?.id === relationship?.id,
               );
-              // decrypt the SSN for the formatter. Do it here instead of making another post request
-              // deep inside the formatter function
-              const updatedApplicant = {
-                ...app,
-                ssn: await piiTokenService["getTokenValue"](app?.ssn),
-              };
               if (
                 app &&
                 application &&
                 relationship &&
                 relationship.relationship
               ) {
+                // decrypt the SSN for the formatter. Do it here instead of making another post request
+                // deep inside the formatter function
+                const updatedApplicant = {
+                  ...app,
+                  ssn: await piiTokenService["getTokenValue"](
+                    app ? app["ssn"] : "",
+                  ),
+                };
+
                 applicationDecisionDetails[relationship.relationship] =
                   this.formatRequestPayload(
                     application?.product,
-                    updatedApplicant as typings.Application,
+                    updatedApplicant as typings.Application & { ssn?: string },
                   );
               }
             });
@@ -197,9 +203,9 @@ export default class LendingDecisionServiceClient extends Client {
    */
   private formatRequestPayload(
     product: typings.Maybe<string> | undefined,
-    application: any,
+    application: typings.Application & { ssn?: string },
   ) {
-    const { details, ssn } = application;
+    const { details } = application;
 
     if (!details) {
       throw new Error(
@@ -208,7 +214,7 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     const addresses = details?.location?.map((location) => {
-      if (!location) {
+      if (!location || (location && Object.keys(location).length === 0)) {
         return {};
       }
 
@@ -224,12 +230,12 @@ export default class LendingDecisionServiceClient extends Client {
          *    For now, we take first address and mark as primary address
          *    LDS needs to know what address is the primary address
          */
-        type: location.type,
+        type: location["type"],
       };
     });
 
     const educationDetails = details?.education?.map((education) => {
-      if (!education) {
+      if (!education || (education && Object.keys(education).length === 0)) {
         return {};
       }
 
@@ -239,11 +245,10 @@ export default class LendingDecisionServiceClient extends Client {
           ? new Date(education.graduationDate).toISOString()
           : "",
         status: education.enrollment,
-        schoolName: education.name,
+        // TODO: schoolName: education.name,
         opeid: education.opeid,
       };
     });
-    console.log("[2ba029] AJ DEBUG educationDetails", educationDetails);
 
     const employmentDetails = details?.income
       ?.filter((employment) => {
@@ -283,7 +288,7 @@ export default class LendingDecisionServiceClient extends Client {
           ? new Date(details.dateOfBirth).toISOString()
           : "",
         addresses,
-        ssn,
+        ssn: application.ssn ? application.ssn : "",
         email: details?.email || "",
         phoneNumber:
           details.phone?.find(
