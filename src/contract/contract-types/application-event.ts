@@ -25,14 +25,17 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
   }
 
   buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
-    const { event, fields = "", payload = {} } = definition;
-    let vars = "";
-    let types = "";
-
+    const { event, fields = "", payload = {} }  = definition;
+    const varsArray: string[] = [];
+    const typesArray: string[] = [];
+  
     for (const [key, value] of Object.entries(inputTypes)) {
-      vars += `${key}: $${key}, `;
-      types += `${key}: ${value}, `;
+      varsArray.push(`${key}: $${key}`);
+      typesArray.push(`$${key}: ${value}`);
     }
+  
+    const vars = varsArray.join(', ');
+    const types = typesArray.join(', ');
 
     return {
       query: `mutation(${types}) {
