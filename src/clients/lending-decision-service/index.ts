@@ -95,7 +95,7 @@ export default class LendingDecisionServiceClient extends Client {
         message: `[6d352332] error while retrieving application`,
         stack: error.stack,
       });
-      throw new Error("[6d352332] error while retrieving application");
+      throw error;
     }
 
     if (application !== null && application.applicants) {
@@ -178,6 +178,13 @@ export default class LendingDecisionServiceClient extends Client {
         Authorization: `Bearer ${this.accessKey}`,
       },
       payload,
+      resiliency: {
+        attempts: 3,
+        delay: 100,
+        timeout: 10000,
+        test: ({ response }) =>
+          Boolean(response.statusCode && response.statusCode <= 500),
+      },
     });
 
     if (response.statusCode && response.statusCode >= 400) {
@@ -255,11 +262,18 @@ export default class LendingDecisionServiceClient extends Client {
         if (employment?.type === "employment") return employment;
       })
       .map((employment) => {
+        if (
+          !employment ||
+          (employment && Object.keys(employment).length === 0)
+        ) {
+          return {};
+        }
+
         // Only obtain income details if the employer field is present
         return {
-          employerName: employment?.employer ? employment.employer : "",
-          jobTitle: employment?.title ? employment.title : "",
-          employmentType: employment?.type ? employment.type : "",
+          employerName: employment.employer,
+          jobTitle: employment.title,
+          employmentType: employment.type,
           employmentStartDate: employment?.start
             ? new Date(employment.start).toISOString()
             : "",
@@ -274,9 +288,13 @@ export default class LendingDecisionServiceClient extends Client {
         if (income?.type !== "employment") return income;
       })
       .map((income) => {
+        if (!income || (income && Object.keys(income).length === 0)) {
+          return {};
+        }
+
         return {
-          incomeType: income?.type,
-          value: income?.amount,
+          incomeType: income.type,
+          value: income.amount,
         };
       });
 
