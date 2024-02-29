@@ -394,10 +394,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       try {
         await client.postDecisionRequest(context, root);
       } catch (error) {
-        assert.strictEqual(
-          error.message,
-          "[6d352332] error while retrieving application",
-        );
+        assert.strictEqual(error.message, "Application not found");
       }
     });
   });
