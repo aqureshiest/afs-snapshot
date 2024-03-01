@@ -114,7 +114,7 @@ export default class LendingDecisionServiceClient extends Client {
 
         applicationDecisionDetails["primary"] = this.formatRequestPayload(
           application?.product,
-          primaryApplicant as typings.Application & { ssn?: string },
+          primaryApplicant as typings.Application,
         );
       } else {
         application.applicants.forEach((applicant) => {
@@ -146,7 +146,7 @@ export default class LendingDecisionServiceClient extends Client {
                 applicationDecisionDetails[relationship.relationship] =
                   this.formatRequestPayload(
                     application?.product,
-                    updatedApplicant as typings.Application & { ssn?: string },
+                    updatedApplicant as typings.Application,
                   );
               }
             });
@@ -210,7 +210,7 @@ export default class LendingDecisionServiceClient extends Client {
    */
   private formatRequestPayload(
     product: typings.Maybe<string> | undefined,
-    application: typings.Application & { ssn?: string },
+    application: typings.Application,
   ) {
     const { details } = application;
 

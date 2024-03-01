@@ -16,7 +16,7 @@ interface IDecisionEntity {
       state: typings.LocationDetail["state"];
       type?: string;
     }>;
-    ssn?: string;
+    ssn?: typings.Application["ssn"];
     email: typings.Details["email"];
     phoneNumber?: typings.PhoneDetail["number"];
     citizenshipStatus: typings.LocationDetail["citizenship"];
