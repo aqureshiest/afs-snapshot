@@ -103,3 +103,22 @@ query Applications($criteria: [ApplicationSearchCriteria]!) {
   }
 }
 `;
+
+export const ADD_REFERENCE_MUTATION = `
+  mutation addReferences($id: UUID!, $references: [ReferenceInput], $meta: EventMeta) {
+    addReferences(id: $id, references: $references, meta: $meta) {
+      error
+    }
+  }
+`;
+
+export const GENERIC_NEAS_QUERY = `
+  query Application($id: UUID!) {
+    application(id: $id) {
+      authID
+      details {
+        email
+      }
+    }
+  }
+`;
