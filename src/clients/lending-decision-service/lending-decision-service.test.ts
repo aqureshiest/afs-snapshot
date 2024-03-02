@@ -211,7 +211,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       SensitiveString.ExtractValue(context.env.LENDING_DECISION_SERVICE_URL) ||
       "";
 
-    client = new LendingDecisionServiceClient(context, accessKey, baseUrl);
+    client = new LendingDecisionServiceClient(accessKey, baseUrl);
   });
 
   describe("[03df6e1e] Lending Decision Client Error tests", () => {

@@ -17,11 +17,7 @@ export const plugin: Plugin<LendingDecisionServiceClient> = {
       SensitiveString.ExtractValue(context.env.LENDING_DECISION_SERVICE_URL) ||
       "";
 
-    const client = new LendingDecisionServiceClient(
-      context,
-      accessKey,
-      baseUrl,
-    );
+    const client = new LendingDecisionServiceClient(accessKey, baseUrl);
 
     plugin.instance = client;
   },

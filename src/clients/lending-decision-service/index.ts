@@ -7,7 +7,7 @@ import flattenApplication from "../../api/helpers.js";
 export default class LendingDecisionServiceClient extends Client {
   private accessKey: string;
 
-  constructor(context: PluginContext, accessKey: string, baseUrl: string) {
+  constructor(accessKey: string, baseUrl: string) {
     const options = { baseUrl };
     super(options);
     this.accessKey = accessKey;
