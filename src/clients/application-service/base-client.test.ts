@@ -8,7 +8,7 @@ import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 import BaseClient from "./base-client.js";
 
-describe("[d7c20b00] get-inputs handler", () => {
+describe("[4fa88750] get-inputs handler", () => {
   let accessKey;
   let baseUrl;
   let context;

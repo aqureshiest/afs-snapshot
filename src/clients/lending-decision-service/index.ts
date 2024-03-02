@@ -2,6 +2,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
 import { Client } from "@earnest/http";
+import flattenApplication from "../../api/helpers.js";
 
 export default class LendingDecisionServiceClient extends Client {
   private accessKey: string;
@@ -98,60 +99,36 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    if (application !== null && application.applicants) {
-      // flatten application
-      if (application.applicants.length == 1) {
-        application.primary = application.applicants[0];
-        // decrypt the SSN for the formatter. Do it here instead of making another post request
-        // deep inside the formatter function
+    application = flattenApplication(application);
 
-        const primaryApplicant = {
-          ...application.applicants[0],
-          ssn: await piiTokenService["getTokenValue"](
-            application.applicants[0] ? application.applicants[0]["ssn"] : "",
-          ),
-        };
-
-        applicationDecisionDetails["primary"] = this.formatRequestPayload(
-          application?.product,
-          primaryApplicant as typings.Application,
-        );
-      } else {
-        application.applicants.forEach((applicant) => {
-          const relationshipNotRoot =
-            applicant?.relationships?.filter(
-              (r) => r?.relationship !== "root",
-            ) || [];
-
-          if (relationshipNotRoot.length) {
-            relationshipNotRoot.forEach(async (relationship) => {
-              const app = application?.applicants?.find(
-                (a) => a?.id === relationship?.id,
-              );
-              if (
-                app &&
-                application &&
-                relationship &&
-                relationship.relationship
-              ) {
-                // decrypt the SSN for the formatter. Do it here instead of making another post request
-                // deep inside the formatter function
-                const updatedApplicant = {
-                  ...app,
-                  ssn: await piiTokenService["getTokenValue"](
-                    app ? app["ssn"] : "",
-                  ),
-                };
-
-                applicationDecisionDetails[relationship.relationship] =
-                  this.formatRequestPayload(
-                    application?.product,
-                    updatedApplicant as typings.Application,
-                  );
-              }
-            });
+    for (const applicant of [
+      APPLICANT_TYPES.Primary,
+      APPLICANT_TYPES.Cosigner,
+    ]) {
+      if (application[applicant]) {
+        let decryptedSsn;
+        try {
+          if (application[applicant] && application[applicant]?.ssn) {
+            decryptedSsn = await piiTokenService["getTokenValue"](
+              application[applicant]?.ssn,
+            );
           }
-        });
+        } catch (error) {
+          context.logger.error({
+            error,
+            message: `[cab65508] error while getting token value`,
+            stack: error.stack,
+          });
+          throw error;
+        }
+        const updatedApplicant = {
+          ...application[applicant],
+          ssn: decryptedSsn,
+        };
+        applicationDecisionDetails[applicant] = this.formatRequestPayload(
+          application?.product,
+          updatedApplicant as typings.Application,
+        );
       }
     }
 
@@ -166,7 +143,7 @@ export default class LendingDecisionServiceClient extends Client {
         applicationId,
       },
       isParentPlus: false,
-      isInternational: false,
+      isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       isMedicalResidency: false,
       appInfo: applicationDecisionDetails,
     } as DecisionRequestDetails;

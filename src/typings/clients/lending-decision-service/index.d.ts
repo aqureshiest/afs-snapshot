@@ -107,6 +107,11 @@ declare module "../../../clients/lending-decision-service/index.js" {
     SLO = "SLO",
   }
 
+  const enum APPLICANT_TYPES {
+    Cosigner = "cosigner",
+    Primary = "primary",
+  }
+
   type DecisionEntity = IDecisionEntity;
   type ApplicationDecisionDetails = IApplicationDecisionDetails;
   type DecisionRequestDetails = IDecisionRequestDetails;
