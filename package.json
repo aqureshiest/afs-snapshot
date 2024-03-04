@@ -25,7 +25,7 @@
   "dependencies": {
     "@earnest-labs/microservice-chassis": "2.1.x",
     "@earnest-labs/ts-sensitivestring": "^0.1.26",
-    "@earnest/application-service-client": "^1.0.7",
+    "@earnest/application-service-client": "^1.1.2",
     "@earnest/http": "^2.0.0",
     "@earnest/microservice-chassis-secret-loader": "^0.1.19",
     "@earnest/microservice-chassis-traceid-express-middleware": "^1.0.2",

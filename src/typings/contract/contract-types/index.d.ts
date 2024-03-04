@@ -4,7 +4,7 @@ import {
   Application,
   Event,
   EventName,
-  ApplicationSearchCriteria
+  ApplicationSearchCriteria,
 } from "@earnest/application-service-client/typings/codegen.js";
 import IContract, {
   Injections as IExecutionInjections,
