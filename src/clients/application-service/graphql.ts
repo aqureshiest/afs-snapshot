@@ -3,6 +3,7 @@ fragment ApplicantFragment on Application {
   id
   createdAt
   relationship
+  ssn
   relationships {
     id
     relationship
@@ -33,6 +34,7 @@ fragment ApplicantFragment on Application {
       termStart
       termEnd
       credits
+      opeid
     }
     income {
       amount
@@ -43,8 +45,13 @@ fragment ApplicantFragment on Application {
       start
       end
     }
+    amount {
+      requested
+      approved
+      certified
+    }
   }
-  cognitoId
+  cognitoID
 }
 
 fragment ApplicationFragment on Application {

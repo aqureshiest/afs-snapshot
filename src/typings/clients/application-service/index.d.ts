@@ -6,8 +6,11 @@ import * as codegen from "@earnest/application-service-client/typings/codegen.js
 export type Application = codegen.Application;
 export interface ApplicationServiceClient {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  eventInputTypes: {[key: string]: object};
-  sendRequest(body: types.GqlRequestBody, ...injections: any[]): Promise<unknown>;
+  eventInputTypes: { [key: string]: object };
+  sendRequest(
+    body: types.GqlRequestBody,
+    ...injections: any[]
+  ): Promise<unknown>;
   getEventInputTypes(...injections: any[]): Promise<void>;
 }
 
