@@ -2,7 +2,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { Client } from "@earnest/http";
 
-import { ADD_REFERENCE_MUTATION, GENERIC_NEAS_QUERY } from "../application-service/graphql.js";
+import { ADD_REFERENCE_MUTATION, NEAS_APPLICATION_QUERY } from "../application-service/graphql.js";
 
 export default class NeasClient<Injections extends unknown[]> extends Client<Injections> {
   #accessKey: string;
@@ -18,15 +18,15 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
    * I. Public Methods
    * ============================== */
   /**
-   * Creates an identityId and session in cognito
+   * Creates a new unauthenticated identity and session for a given application
    * @param id string
    * @param injections Injections
    * @returns 
    */
-  async createGuestId(
+  async createUnauthenticatedIdentity(
     id: string,
     ...injections: Injections
-  ): Promise<Client.Response<{ identityId: string, session: string }>["response"]> {
+  ): Promise<Client.Response<{ authId: string, sessionToken: string }>["response"]> {
     try {
       const context = injections[0] as PluginContext;
       const applicationServiceClient = context?.loadedPlugins?.applicationServiceClient?.instance;
@@ -51,18 +51,18 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
           },
         },
         ...injections
-      )) as Client.Response<{ identityId: string, session: string }>;
+      )) as Client.Response<{ authId: string, sessionToken: string }>;
 
       if (response.statusCode && response.statusCode >= 400) {
         throw new Error(response.statusMessage);
       }
 
-      const { identityId, session } = results;
+      const { authId, sessionToken } = results;
 
-      // create an identityId reference for the given application
+      // create an authID reference for the given application
       const addReferencesEvent = await applicationServiceClient.sendRequest({
         query: ADD_REFERENCE_MUTATION,
-        variables: { id, references: [{ referencedId: identityId, referenceType: "identityId" }], meta: "apply-flow-service" }
+        variables: { id, references: [{ referencedId: authId, referenceType: "authID" }], meta: "apply-flow-service" }
       }) as types.Event;
 
       if (addReferencesEvent.error != null) {
@@ -70,7 +70,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       }
 
       // set the session cookie in the response headers
-      response.headers["set-cookie"] = [session];
+      response.headers["set-cookie"] = [sessionToken];
 
       return response;
     } catch (error) {
@@ -83,17 +83,18 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
   }
 
   /**
-   * Creates an authId and session in cognito
+   * Associates an existing authId with a given email address if one exists,
+   * or creates a new authId for a given user
    * @param id string
-   * @param context PluginContext
+   * @param token string
    * @param injections Injections
    * @returns Promise<Client.Response<{ authId: string, session: string }["response"]>>
    */
   async createAuthId(
     id: string,
-    sessionId: string,
+    token: string,
     ...injections: Injections
-  ): Promise<Client.Response<{ authId: string, session: string }>["response"]> {
+  ): Promise<Client.Response<{ authId: string, sessionToken: string }>["response"]> {
     try {
       const context = injections[0] as PluginContext;
       const applicationServiceClient = context?.loadedPlugins?.applicationServiceClient?.instance;
@@ -103,7 +104,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       }
 
       const { application } = await applicationServiceClient.sendRequest({
-        query: GENERIC_NEAS_QUERY,
+        query: NEAS_APPLICATION_QUERY,
         variables: { id }
       }) as { application: types.Application };
 
@@ -122,7 +123,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
           uri: "/auth/identity/authId",
           headers: {
             ...this.headers,
-            Authorization: sessionId,
+            Authorization: token,
           },
           body: {
             email: details?.email
@@ -136,13 +137,13 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
           },
         },
         ...injections
-      )) as Client.Response<{ authId: string, session: string }>;
+      )) as Client.Response<{ authId: string, sessionToken: string }>;
 
       if (response.statusCode && response.statusCode >= 400) {
         throw new Error(response.statusMessage);
       }
 
-      const { authId, session } = results;
+      const { authId, sessionToken } = results;
 
       // create an authId reference for the given application
       const addReferencesEvent = await applicationServiceClient.sendRequest({
@@ -154,7 +155,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
         throw new Error(addReferencesEvent.error);
       }
 
-      response.headers["set-cookie"] = [session];
+      response.headers["set-cookie"] = [sessionToken];
 
       return response;
     } catch (error) {
@@ -167,25 +168,26 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
   }
 
   /**
-   * Send users a magic link that they can later use to resume their application
+   * Send users a email link that they can later use to resume their application
    * @param id string
+   * @param token string
    * @param injections Injections
    * @returns Promise<void>
    */
   async sendEmailLink(
     id: string,
-    sessionId: string,
+    token: string,
     ...injections: Injections): Promise<void> {
     try {
       const context = injections[0] as PluginContext;
       const applicationServiceClient = context?.loadedPlugins?.applicationServiceClient?.instance;
 
       if (!applicationServiceClient) {
-        throw new Error("Application-service-client is not instantiated and required when sending users a magic link")
+        throw new Error("Application-service-client is not instantiated and required when sending users an email link")
       }
 
       const { application } = await applicationServiceClient.sendRequest({
-        query: GENERIC_NEAS_QUERY,
+        query: NEAS_APPLICATION_QUERY,
         variables: { id }
       }) as { application: types.Application };
 
@@ -208,12 +210,12 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
           uri: "/auth/identity/access-code/send",
           headers: {
             ...this.headers,
-            Authorization: sessionId,
+            Authorization: token,
           },
           body: {
             applicationId: id,
             authId: authID,
-            email: details?.email,
+            emailId: details?.email,
             expirationDate: Date.now() + (1000 * 60 * 60 * 24 * 30), // 30 days
             attributesToVerify: [
               {
@@ -243,7 +245,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
     } catch (error) {
       this.#log({
         error: error.message,
-        message: "[2a7945e5] Failed to send access code",
+        message: "[2a7945e5] Failed to send email link",
       }, "error")
       throw error; 
     }

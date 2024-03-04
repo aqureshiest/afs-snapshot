@@ -112,7 +112,7 @@ export const ADD_REFERENCE_MUTATION = `
   }
 `;
 
-export const GENERIC_NEAS_QUERY = `
+export const NEAS_APPLICATION_QUERY = `
   query Application($id: UUID!) {
     application(id: $id) {
       authID

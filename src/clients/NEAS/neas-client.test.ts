@@ -17,9 +17,9 @@ describe("[fab1071e] NeasClient", () => {
     client = context.loadedPlugins.NeasClient.instance;
   });
 
-  it("[d14f4e15] should throw when creating a guest id and application-service-client is not instantiated", async () => {
+  it("[d14f4e15] should throw when creating an unauthenticated identity and application-service-client is not instantiated", async () => {
     assert.rejects(
-      async () =>  await client.createGuestId("1",
+      async () =>  await client.createUnauthenticatedIdentity("1",
       { loadedPlugins:
         { applicationServiceClient: 
           { 
@@ -30,7 +30,7 @@ describe("[fab1071e] NeasClient", () => {
     );
   });
 
-  it("[4fe613f4] should throw when creating a guest id and the request to NEAS fails", async () => {
+  it("[4fe613f4] should throw when creating an unauthenticated identity and the request to NEAS fails", async () => {
     mock.method(client, "post", () => {
       return {
         response: {
@@ -39,15 +39,15 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.rejects(async () =>  await client.createGuestId("1", context));
+    assert.rejects(async () =>  await client.createUnauthenticatedIdentity("1", context));
   });
 
-  it("[cac09811] should throw when creating a guest id and an error is returned when creating an identityId reference", async () => {
+  it("[cac09811] should throw when creating an unauthenticated identity and an error is returned when creating an identityId reference", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
-          identityId: "2",
-          session: "session"
+          authId: "2",
+          sessionToken: "session"
         },
         response: {
           statusCode: 200
@@ -59,7 +59,7 @@ describe("[fab1071e] NeasClient", () => {
         error: "Bad request"
       }
     });
-    assert.rejects(async () =>  await client.createGuestId("1", context));
+    assert.rejects(async () =>  await client.createUnauthenticatedIdentity("1", context));
   });
 
   it("[9c1dbc20] should set the session on headers['set-cookies'] and return the response", async () => {
@@ -72,8 +72,8 @@ describe("[fab1071e] NeasClient", () => {
     mock.method(client, "post", () => {
       return {
         results: {
-          identityId: "2",
-          session: "session"
+          authId: "2",
+          sessionToken: "session"
         },
         response
       }
@@ -83,13 +83,13 @@ describe("[fab1071e] NeasClient", () => {
         error: null
       }
     });
-    const result = await client.createGuestId("1", context);
+    const result = await client.createUnauthenticatedIdentity("1", context);
     assert.deepStrictEqual(result.headers["set-cookie"], ["session"]);
   });
 
   it("[fdf93ed5] should throw when creating an auth id and application-service-client is not instantiated", () => {
     assert.rejects(
-      async () =>  await client.createAuthId("1", "sessionId",
+      async () =>  await client.createAuthId("1", "token",
       { loadedPlugins:
         { applicationServiceClient: 
           { 
@@ -106,7 +106,7 @@ describe("[fab1071e] NeasClient", () => {
         application: null
       }
     });
-    assert.rejects(async () =>  await client.createAuthId("1", "sessionId", context)); 
+    assert.rejects(async () =>  await client.createAuthId("1", "token", context)); 
   });
 
   it("[c5178513] should throw when creating an auth id and an email detail doest not exist", () => {
@@ -119,7 +119,7 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.rejects(async () =>  await client.createAuthId("1", context)); 
+    assert.rejects(async () =>  await client.createAuthId("1", "token", context)); 
   });
 
   it("[da658e1b] should throw when creating an auth id and the request to NEAS fails", () => {
@@ -140,7 +140,7 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.rejects(async () =>  await client.createAuthId("1", "sessionId", context)); 
+    assert.rejects(async () =>  await client.createAuthId("1", "token", context)); 
   });
 
   it("[99416084] should throw when creating an auth id and an error is returned when creating an authId reference", () => {
@@ -148,7 +148,7 @@ describe("[fab1071e] NeasClient", () => {
       return {
         results: {
           authId: "2",
-          session: "session"
+          sessionToken: "session"
         },
         response: {
           statusCode: 200,
@@ -166,7 +166,7 @@ describe("[fab1071e] NeasClient", () => {
         error: "Bad request"
       }
     });
-    assert.rejects(async () =>  await client.createAuthId("1", "sessionId", context)); 
+    assert.rejects(async () =>  await client.createAuthId("1", "token", context)); 
   });
 
   it("[3f51d326] should set the session on headers['set-cookies'] and return the response", async () => {
@@ -179,8 +179,8 @@ describe("[fab1071e] NeasClient", () => {
     mock.method(client, "post", () => {
       return {
         results: {
-          identityId: "2",
-          session: "session"
+          authId: "2",
+          sessionToken: "session"
         },
         response
       }
@@ -195,7 +195,7 @@ describe("[fab1071e] NeasClient", () => {
         error: null
       }
     });
-    const result = await client.createAuthId("1", "sessionId", context);
+    const result = await client.createAuthId("1", "token", context);
     assert.deepStrictEqual(result.headers["set-cookie"], ["session"]);
   });
 
@@ -223,10 +223,10 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.rejects(async () =>  await client.sendEmailLink("1", "sessionId", context)); 
+    assert.rejects(async () =>  await client.sendEmailLink("1", "token", context)); 
   });
 
-  it("[da760e33] should throw when sending an email link and and an email detail does not exist", () => {
+  it("[da760e33] should throw when sending an email link and an email detail does not exist", () => {
     mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
       return {
         application: {
@@ -237,7 +237,7 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.rejects(async () =>  await client.sendEmailLink("1", "sessionId", context)); 
+    assert.rejects(async () =>  await client.sendEmailLink("1", "token", context)); 
   });
 
   it("[adfe133f] should throw when sending an email link and the request to NEAS fails", () => {
@@ -259,7 +259,7 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.rejects(async () =>  await client.sendEmailLink("1", "sessionId", context)); 
+    assert.rejects(async () =>  await client.sendEmailLink("1", "token", context)); 
   });
 
   it("[e155c81d] should send an email link", () => {
@@ -280,6 +280,6 @@ describe("[fab1071e] NeasClient", () => {
         }
       }
     });
-    assert.doesNotReject(async () =>  await client.sendEmailLink("1", "sessionId", context)); 
+    assert.doesNotReject(async () =>  await client.sendEmailLink("1", "token", context)); 
   });
 });
