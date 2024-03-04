@@ -12,7 +12,7 @@ describe("[d7c20b00] base-client for application-service-client", () => {
   let accessKey;
   let baseUrl;
   let context;
-  let client
+  let client;
   let key;
 
   before(async () => {
@@ -23,8 +23,9 @@ describe("[d7c20b00] base-client for application-service-client", () => {
 
     key = SensitiveString.ExtractValue(context.env.ACCESS_KEY) || "";
     accessKey = Buffer.from(key).toString("base64");
-    baseUrl = SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
-    client = new BaseClient({ baseUrl, accessKey }, context); 
+    baseUrl =
+      SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
+    client = new BaseClient({ baseUrl, accessKey }, context);
   });
 
   it("[28e9dd46] should instantiate the BaseClient", async() => {

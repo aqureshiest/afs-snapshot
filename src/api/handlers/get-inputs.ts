@@ -1,6 +1,7 @@
 import { Application } from "../../typings/clients/application-service/index.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 import { Request, Response, NextFunction } from "express";
+import flattenApplication from "../helpers.js";
 /**
  * Gather inputs for contract execution
  * TODO: get authentication artifacts
@@ -19,44 +20,30 @@ const getInputs: Handler = async function (
 
   if (id) {
     try {
-      const { application: app } = await ASclient.sendRequest({
-        query: TEMP_DEFAULT_APPLICATION_QUERY,
-        variables: { id }
-      }, context) as unknown as { application: Application };
+      const { application: app } = (await ASclient.sendRequest(
+        {
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id },
+        },
+        context,
+      )) as unknown as { application: Application };
 
       application = app;
       // we are gonna try the approach of always getting the Root Application in a flatten shape
       // by processing the relationships array, and putting them into their corresponding
       // keys on root Application
       if (application?.root?.id) {
-        const { application: rootApplication } = await ASclient.sendRequest({
-          query: TEMP_DEFAULT_APPLICATION_QUERY,
-          variables: { id: application.root.id }
-        }, context) as unknown as { application: Application };
+        const { application: rootApplication } = (await ASclient.sendRequest(
+          {
+            query: TEMP_DEFAULT_APPLICATION_QUERY,
+            variables: { id: application.root.id },
+          },
+          context,
+        )) as unknown as { application: Application };
 
         application = rootApplication;
       }
-
-      if (application !== null && application?.applicants?.length) {
-        // flatten application
-        if (application.applicants.length == 1) {
-          application.primary = application.applicants[0];
-        } else {
-          application.applicants.forEach((applicant) => {
-            const relationshipNotRoot = applicant?.relationships?.filter((r) => r?.relationship !== "root") || [];
-
-            if (relationshipNotRoot.length) {
-              relationshipNotRoot.forEach((relationship) => {
-                const app = application?.applicants?.find((a) => a?.id === relationship?.id);
-
-                if (app && application && relationship && relationship.relationship) {
-                  application[relationship.relationship] = app;
-                }
-              });
-            }
-          })
-        }
-      }
+      application = flattenApplication(application);
     } catch (ex) {
       context.logger.error({
         message: `[89af3057] error while retrieving application`,

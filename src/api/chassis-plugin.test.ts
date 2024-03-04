@@ -16,7 +16,8 @@ describe("[41a1abef] chassis-plugins", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
     await context.applicationServer.listen(3000);
-    applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance
+    applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient.instance;
   });
 
   beforeEach(() => {

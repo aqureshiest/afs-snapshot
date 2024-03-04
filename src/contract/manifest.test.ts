@@ -16,7 +16,8 @@ describe("[462fd166] manifest.execute", () => {
     pkg.logging = { level: "error" };
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
-    applicationServiceClient = context.loadedPlugins.applicationServiceClient.instance;
+    applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient.instance;
   });
 
   it("[be92134e] runs without error", async () => {
@@ -173,16 +174,16 @@ describe("[462fd166] manifest.execute", () => {
     assert.deepEqual(parsed, schema);
   });
 
-  it("[2eeb43a0] it should throw when executing an ApplicationEvent contract-type if a request to getEventInputTypes fails", async() => {
+  it("[2eeb43a0] it should throw when executing an ApplicationEvent contract-type if a request to getEventInputTypes fails", async () => {
     const input = {} as Input;
 
-    mock.method(applicationServiceClient, "getEventInputTypes", () =>  {
-      throw new Error("failed to get event inputs")
+    mock.method(applicationServiceClient, "getEventInputTypes", () => {
+      throw new Error("failed to get event inputs");
     });
 
     const manifest = new Manifest(context, "manifestApplicationEvent", {
       key: "testContract",
-      "*":  new Contract({
+      "*": new Contract({
         key: "testContract",
         raw: `{
           "event": "createApplication",
@@ -191,31 +192,31 @@ describe("[462fd166] manifest.execute", () => {
           },
           "fields": "application { id }"
         }`,
-        type: "applicationEvent"
-      })
+        type: "applicationEvent",
+      }),
     });
 
     try {
-      await manifest.execute(input, { context, ...input }); 
-    } catch(error) {
+      await manifest.execute(input, { context, ...input });
+    } catch (error) {
       assert(error);
     }
   });
 
-  it("[5995320f] it should throw when executing an ApplicationEvent contract-type if an event doesn't exist on eventInputTypes", async() => {
+  it("[5995320f] it should throw when executing an ApplicationEvent contract-type if an event doesn't exist on eventInputTypes", async () => {
     const input = {} as Input;
 
-    mock.method(applicationServiceClient, "getEventInputTypes", () =>  {
+    mock.method(applicationServiceClient, "getEventInputTypes", () => {
       applicationServiceClient.eventInputTypes = {
         eventDoesNotExist: {
-          args: "String!"
-        } 
-      }
+          args: "String!",
+        },
+      };
     });
 
     const manifest = new Manifest(context, "manifestApplicationEvent", {
       key: "testContract",
-      "*":  new Contract({
+      "*": new Contract({
         key: "testContract",
         raw: `{
           "event": "createApplication",
@@ -224,28 +225,31 @@ describe("[462fd166] manifest.execute", () => {
           },
           "fields": "application { id }"
         }`,
-        type: "applicationEvent"
-      })
+        type: "applicationEvent",
+      }),
     });
 
     try {
-      await manifest.execute(input, { context, ...input }); 
-    } catch(error) {
-      assert.equal(error.message, "[694d632f] Event is not defined on event types");
+      await manifest.execute(input, { context, ...input });
+    } catch (error) {
+      assert.equal(
+        error.message,
+        "[694d632f] Event is not defined on event types",
+      );
     }
 
     mock.reset();
   });
 
-  it("[1b2bbdaa] it should execute an ApplicationEvent contract-type", async() => {
+  it("[1b2bbdaa] it should execute an ApplicationEvent contract-type", async () => {
     const input = {} as Input;
 
     applicationServiceClient.eventInputTypes = {
       createApplication: {
         meta: "EventMeta",
-        relationships: "[RelationshipInput]"
-      } 
-    }
+        relationships: "[RelationshipInput]",
+      },
+    };
 
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
@@ -253,15 +257,15 @@ describe("[462fd166] manifest.execute", () => {
           id: 1,
           error: null,
           application: {
-            id: 2
-          }
-        }
-      }
+            id: 2,
+          },
+        },
+      };
     });
 
     const manifest = new Manifest(context, "manifestApplicationEvent", {
       key: "testContract",
-      "*":  new Contract({
+      "*": new Contract({
         key: "testContract",
         raw: `{
           "event": "createApplication",
@@ -270,8 +274,8 @@ describe("[462fd166] manifest.execute", () => {
           },
           "fields": "application { id }"
         }`,
-        type: "applicationEvent"
-      })
+        type: "applicationEvent",
+      }),
     });
 
     const { contract } = await manifest.execute(input, { context, ...input });
@@ -279,26 +283,26 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
-  it("[9edd8cee] it should execute an ApplicationData contract-type when an id exists in the definition", async() => {
+  it("[9edd8cee] it should execute an ApplicationData contract-type when an id exists in the definition", async () => {
     const input = {} as Input;
 
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
         application: {
-          id: 1
-        }
-      }
+          id: 1,
+        },
+      };
     });
 
     const manifest = new Manifest(context, "manifestApplicationData", {
       key: "testContract",
-      "*":  new Contract({
+      "*": new Contract({
         key: "testContract",
         raw: `{
           "id": 1
         }`,
-        type: "applicationData"
-      })
+        type: "applicationData",
+      }),
     });
 
     const { contract } = await manifest.execute(input, { context, ...input });
@@ -306,28 +310,24 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
-
-  it("[411017c5] it should execute an ApplicationData contract-type when criteria exists in the definition", async() => {
+  it("[411017c5] it should execute an ApplicationData contract-type when criteria exists in the definition", async () => {
     const input = {} as Input;
 
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
-        applications: [
-          { id: 1},
-          { id: 2 }
-        ]
-      }
+        applications: [{ id: 1 }, { id: 2 }],
+      };
     });
 
     const manifest = new Manifest(context, "manifestApplicationData", {
       key: "testContract",
-      "*":  new Contract({
+      "*": new Contract({
         key: "testContract",
         raw: `{
           "criteria": [{ "search": "test@earnest.com" }]
         }`,
-        type: "applicationData"
-      })
+        type: "applicationData",
+      }),
     });
 
     const { contract } = await manifest.execute(input, { context, ...input });

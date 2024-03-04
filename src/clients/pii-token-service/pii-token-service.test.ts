@@ -1,4 +1,4 @@
-import { describe, it, before } from "node:test";
+import { describe, it, before, mock } from "node:test";
 import assert from "node:assert";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
@@ -17,6 +17,65 @@ describe("[d32a4d27] PII Token Service Client", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
     client = context.loadedPlugins.piiTokenService.instance;
+  });
+
+  describe("[03df6e1e] PII Token Service Client Error tests", () => {
+    it("[ba730b42] Should throw an error on GET when no token given", async () => {
+      try {
+        await client.getTokenValue("");
+      } catch (error) {
+        assert.strictEqual(error.message, "[9cfa7507] Token is required.");
+      }
+    });
+
+    it("[975aa430] Should throw an error on GET response", async () => {
+      const token = "pii-token://tokens/f0cc1999-8704-4498-bb00-9f65a7d00063";
+      mock.method(client, "get", async () => {
+        return {
+          response: {
+            statusCode: 400,
+            statusMessage: "Error getting token",
+          },
+        };
+      });
+      try {
+        await client.getTokenValue(token);
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[6d12a0cf] getTokenValue failed with response code: 400",
+        );
+      }
+      mock.reset();
+    });
+
+    it("[9a6a892e] Should throw an error on POST when no SSN value is given", async () => {
+      try {
+        await client.saveToken("");
+      } catch (error) {
+        assert.strictEqual(error.message, "[7adfc728] Value is required.");
+      }
+    });
+
+    it("[8e391c37] Should throw an error on Post response", async () => {
+      mock.method(client, "post", async () => {
+        return {
+          response: {
+            statusCode: 400,
+            statusMessage: "Error saving token",
+          },
+        };
+      });
+      try {
+        await client.saveToken("123456789");
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[ec3424f2] saveToken failed with response code: 400",
+        );
+      }
+      mock.reset();
+    });
   });
 
   it("[94cfc052] Should be able to obtain SSN from Token", async () => {
