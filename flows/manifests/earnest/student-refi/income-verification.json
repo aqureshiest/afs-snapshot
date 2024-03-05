@@ -1,0 +1,5 @@
+{
+  "*": "income-verification",
+  "stage": "plaid-income-verification",
+  "method": "plaid.createLinkToken"
+}

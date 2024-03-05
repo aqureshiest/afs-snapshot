@@ -4,7 +4,7 @@ import {
   Application,
   Event,
   EventName,
-  ApplicationSearchCriteria
+  ApplicationSearchCriteria,
 } from "@earnest/application-service-client/typings/codegen.js";
 import IContract, {
   Injections as IExecutionInjections,
@@ -88,6 +88,25 @@ declare module "contract/contract-types/application-event.js" {
   type MutationSchema = IMutationSchema;
 
   type Output = { [key: string]: Event };
+}
+import "contract/contract-types/plaid-method.js";
+declare module "contract/contract-types/plaid-method.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    method: "createLinkToken" | "exchangePublicToken" | "getAccounts";
+    id?: string;
+    payload?: { [key: string]: unknown };
+    [key: string]: unknown;
+  };
+
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+
+  type Output = { [key: string]: unknown };
 }
 
 import "contract/contract-types/syllabus-section.js";

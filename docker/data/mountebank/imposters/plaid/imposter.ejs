@@ -1,0 +1,31 @@
+{
+  "port": 3015,
+  "protocol": "http",
+  "name": "plaid",
+  "defaultResponse": {
+    "statusCode": 500
+  },
+  "stubs": [
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "POST",
+            "path": "/link/token/create"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'plaid/link_token.json') %>",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

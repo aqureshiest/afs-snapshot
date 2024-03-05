@@ -19,20 +19,26 @@ const getInputs: Handler = async function (
 
   if (id) {
     try {
-      const { application: app } = await ASclient.sendRequest({
-        query: TEMP_DEFAULT_APPLICATION_QUERY,
-        variables: { id }
-      }, context) as unknown as { application: Application };
+      const { application: app } = (await ASclient.sendRequest(
+        {
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id },
+        },
+        context,
+      )) as unknown as { application: Application };
 
       application = app;
       // we are gonna try the approach of always getting the Root Application in a flatten shape
       // by processing the relationships array, and putting them into their corresponding
       // keys on root Application
       if (application?.root?.id) {
-        const { application: rootApplication } = await ASclient.sendRequest({
-          query: TEMP_DEFAULT_APPLICATION_QUERY,
-          variables: { id: application.root.id }
-        }, context) as unknown as { application: Application };
+        const { application: rootApplication } = (await ASclient.sendRequest(
+          {
+            query: TEMP_DEFAULT_APPLICATION_QUERY,
+            variables: { id: application.root.id },
+          },
+          context,
+        )) as unknown as { application: Application };
 
         application = rootApplication;
       }
@@ -43,18 +49,28 @@ const getInputs: Handler = async function (
           application.primary = application.applicants[0];
         } else {
           application.applicants.forEach((applicant) => {
-            const relationshipNotRoot = applicant?.relationships?.filter((r) => r?.relationship !== "root") || [];
+            const relationshipNotRoot =
+              applicant?.relationships?.filter(
+                (r) => r?.relationship !== "root",
+              ) || [];
 
             if (relationshipNotRoot.length) {
               relationshipNotRoot.forEach((relationship) => {
-                const app = application?.applicants?.find((a) => a?.id === relationship?.id);
+                const app = application?.applicants?.find(
+                  (a) => a?.id === relationship?.id,
+                );
 
-                if (app && application && relationship && relationship.relationship) {
+                if (
+                  app &&
+                  application &&
+                  relationship &&
+                  relationship.relationship
+                ) {
                   application[relationship.relationship] = app;
                 }
               });
             }
-          })
+          });
         }
       }
     } catch (ex) {

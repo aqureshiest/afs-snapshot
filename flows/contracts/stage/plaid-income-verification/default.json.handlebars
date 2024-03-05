@@ -1,0 +1,12 @@
+{
+
+  "type": "view",
+  "id": "{{application.id}}",
+  "definition": {
+    "type": "plaid-income-verification",
+    "definition": {
+      "key": "plaid-sdk",
+      "link_token": {{{ json (contract 'method' )}}}
+    }
+  }
+}
