@@ -32,7 +32,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       const applicationServiceClient = context?.loadedPlugins?.applicationServiceClient?.instance;
 
       if (!applicationServiceClient) {
-        throw new Error("Application-service-client is not instantiated and required to create an guest id")
+        throw new Error("[56f9bdec] Application-service-client is not instantiated and required to create an unauthenticated identity")
       }
 
       const { results, response } = (await this.post(
@@ -100,7 +100,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       const applicationServiceClient = context?.loadedPlugins?.applicationServiceClient?.instance;
 
       if (!applicationServiceClient) {
-        throw new Error("Application-service-client is not instantiated and required to create an authId")
+        throw new Error("[b0e4b066] Application-service-client is not instantiated and required to create an authId")
       }
 
       const { application } = await applicationServiceClient.sendRequest({
@@ -109,13 +109,13 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       }) as { application: types.Application };
 
       if (!application) {
-        throw new Error("Application does not exist");
+        throw new Error("[cc7eda2d] Application does not exist");
       }
 
       const { details } = application;
       
       if (details && !details?.email) {
-        throw new Error("An email address is required to create an authId");
+        throw new Error("[55858b44] An email address is required to create an authId");
       }
 
       const { results, response } = (await this.post(
@@ -183,7 +183,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       const applicationServiceClient = context?.loadedPlugins?.applicationServiceClient?.instance;
 
       if (!applicationServiceClient) {
-        throw new Error("Application-service-client is not instantiated and required when sending users an email link")
+        throw new Error("[a9050dc4] Application-service-client is not instantiated and required to send users an email link")
       }
 
       const { application } = await applicationServiceClient.sendRequest({
@@ -192,17 +192,17 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       }) as { application: types.Application };
 
       if (!application) {
-        throw new Error("Application does not exist");
+        throw new Error("[b2ca51ed] Application does not exist");
       }
 
       const { authID, details } = application;
 
       if (!authID) {
-        throw new Error("An authID is required to send an email link");
+        throw new Error("[3673aadd] An authID is required to send an email link");
       }
 
       if (details && !details?.email) {
-        throw new Error("An email address is required to send an email link");
+        throw new Error("[028aa77f] An email address is required to send an email link");
       }
 
       const { response } = (await this.post(
