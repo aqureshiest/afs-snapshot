@@ -1,0 +1,12 @@
+
+{{#if request.body.eventName}}
+  {
+    "event": "{{request.body.eventName}}",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "field1": "{{request.body.field1}}"
+    }
+  }
+{{else}}
+  null
+{{/if}}
