@@ -3,13 +3,22 @@ export type ApplicationType = "primary-only" | "with-cosigner" | "parent";
 export type UserRole = "primary" | "cosigner";
 
 export type EventProps = {
-  event: string;
   userId?: string;
   anonymousId: string;
-  properties: BaseEventProperties;
+  timestamp?: Date;
+  context?: any;
 };
 
-export type BaseEventProperties = {
+export type IdentifyEventProps = EventProps & {
+  traits: BaseTrackEventProperties;
+};
+
+export type TrackEventProps = EventProps & {
+  event: string;
+  properties: BaseTrackEventProperties;
+};
+
+export type BaseTrackEventProperties = {
   product: "SLR";
   product_subtype: ApplicationType;
   initiator: UserRole;
@@ -19,9 +28,7 @@ export type BaseEventProperties = {
   "Has no identifying info"?: "true";
 };
 
-export type BaseEventParameters = EventProps;
-
-export type ApplicationSectionStartedParams = BaseEventParameters & {
+export type ApplicationSectionStartedTrackParams = TrackEventProps & {
   properties: {
     section: string;
   };

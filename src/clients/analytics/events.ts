@@ -1,32 +1,63 @@
 import {
-  ApplicationSectionStartedParams,
-  BaseEventProperties,
+  ApplicationSectionStartedTrackParams,
   EventProps,
+  TrackEventProps,
+  IdentifyEventProps,
 } from "./types.js";
 
 const PRODUCT = { product: "SLR" };
 
 export class Event {
-  event: string;
-  properties: BaseEventProperties;
   anonymousId: string;
-  userId: string;
+  userId?: string;
+  timestamp?: Date;
+  context?: any;
 
   constructor(props: EventProps) {
+    this.anonymousId = props.anonymousId;
+    if (props.userId) {
+      this.userId = props.userId;
+    }
+
+    if (props.context) {
+      this.context = props.context;
+    }
+
+    if (props.timestamp) {
+      this.timestamp = props.timestamp;
+    }
+  }
+}
+
+export class IdentifyEvent extends Event {
+  traits: { [key: string]: string };
+
+  constructor(props: IdentifyEventProps) {
+    super(props);
+
+    this.traits = {
+      ...PRODUCT,
+      ...props.traits,
+    };
+  }
+}
+
+export class TrackEvent extends Event {
+  event: string;
+  properties: { [key: string]: string };
+
+  constructor(props: TrackEventProps) {
+    super(props);
     this.event = props.event;
     this.properties = {
       ...PRODUCT,
       ...props.properties,
     };
-
-    if (props.userId) {
-      this.userId = props.userId;
-    }
   }
 }
 
-export class ApplicationSectionStartedEvent extends Event {
-  constructor(props: ApplicationSectionStartedParams) {
+export class ApplicationSectionStartedTrackEvent extends TrackEvent {
+  constructor(props: ApplicationSectionStartedTrackParams) {
     super({
       ...props,
       event: "Application Section Started",

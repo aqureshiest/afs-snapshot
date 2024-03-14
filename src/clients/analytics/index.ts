@@ -1,13 +1,26 @@
 import { Analytics } from "@segment/analytics-node";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
-import { ApplicationSectionStartedEvent, Event } from "./events.js";
-import { ApplicationSectionStartedParams } from "./types.js";
+import {
+  ApplicationSectionStartedTrackEvent,
+  TrackEvent,
+  IdentifyEvent,
+} from "./events.js";
+import { ApplicationSectionStartedTrackParams } from "./types.js";
 
 export default class AnalyticsServiceClient {
   private client: Analytics;
   private logger: PluginContext["logger"];
 
   constructor(context: PluginContext, apiKey: string) {
+    if (!apiKey) {
+      const error = new Error("no apiKey found");
+      context.logger.error({
+        error,
+        message: error.message,
+      });
+      throw error;
+    }
+
     this.client = new Analytics({ writeKey: apiKey });
 
     if (context.logger != null) {
@@ -15,51 +28,55 @@ export default class AnalyticsServiceClient {
     }
   }
 
-  track(event: Event) {
-    try {
-      this.client.track(event);
-      this.logger.info(this.analyticsLog(event));
-    } catch (e) {
-      this.logger.error(this.analyticsErrorLog(e, event));
-    }
+  async track(event: TrackEvent) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.client.track(event, (err, ctx) => {
+          if (err) {
+            reject(err);
+          }
+          this.logger.info({ ...event, analyticsTag: "track-analytics-event" });
+          resolve(ctx);
+        });
+      } catch (e) {
+        this.logger.error({
+          error: e,
+          ...event,
+          analyticsTag: "track-analytics-error",
+        });
+        reject(e);
+      }
+    });
   }
 
-  identify(event: Event) {
-    try {
-      this.client.identify(event);
-      this.logger.info(this.analyticsLog(event));
-    } catch (e) {
-      this.logger.error(this.analyticsErrorLog(e, event));
-    }
+  identify(event: IdentifyEvent) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.client.identify(event, (err, ctx) => {
+          if (err) {
+            reject(err);
+          }
+          this.logger.info({
+            ...event,
+            analyticsTag: "identify-analytics-event",
+          });
+          resolve(ctx);
+        });
+      } catch (e) {
+        this.logger.error({
+          error: e,
+          ...event,
+          analyticsTag: "identify-analytics-error",
+        });
+        reject(e);
+      }
+    });
   }
 
-  trackApplicationSectionStarted(parameters: ApplicationSectionStartedParams) {
-    const event = new ApplicationSectionStartedEvent(parameters);
-    return this.track(event);
-  }
-
-  analyticsLog({ event, anonymousId, userId }: Event) {
-    return {
-      event,
-      anonymousId,
-      user: {
-        id: userId,
-      },
-      userAgent: null,
-      analyticsTag: "analytics-event",
-    };
-  }
-
-  analyticsErrorLog(error: Error, { event, anonymousId, userId }: Event) {
-    return {
-      error,
-      event,
-      anonymousId,
-      user: {
-        id: userId,
-      },
-      userAgent: null,
-      analyticsTag: "analytics-error",
-    };
+  async trackApplicationSectionStarted(
+    parameters: ApplicationSectionStartedTrackParams
+  ) {
+    const event = new ApplicationSectionStartedTrackEvent(parameters);
+    return await this.track(event);
   }
 }
