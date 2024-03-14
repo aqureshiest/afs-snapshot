@@ -11,7 +11,7 @@ export class Event {
   anonymousId: string;
   userId?: string;
   timestamp?: Date;
-  context?: any;
+  context?: { [key: string]: string };
 
   constructor(props: EventProps) {
     this.anonymousId = props.anonymousId;

@@ -6,7 +6,7 @@ export type EventProps = {
   userId?: string;
   anonymousId: string;
   timestamp?: Date;
-  context?: any;
+  context?: { [key: string]: string };
 };
 
 export type IdentifyEventProps = EventProps & {
