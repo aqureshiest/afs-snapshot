@@ -74,7 +74,7 @@ export default class AnalyticsServiceClient {
   }
 
   async trackApplicationSectionStarted(
-    parameters: ApplicationSectionStartedTrackParams
+    parameters: ApplicationSectionStartedTrackParams,
   ) {
     const event = new ApplicationSectionStartedTrackEvent(parameters);
     return await this.track(event);
