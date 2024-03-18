@@ -1,6 +1,5 @@
 import assert from "node:assert";
 import ContractType from "./base-contract.js";
-import PlaidClient from "../../clients/plaid/index.js";
 
 class PlaidMethod extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
@@ -13,8 +12,8 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     const method = input.request?.method;
 
     const { event, payload } = definition;
-
-    return true;
+    
+    return Boolean(definition.id);
   };
 
   /**
@@ -34,6 +33,7 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     assert(plaidClient, "[3eac36d3] plaidClient not instantiated");
     let result;
     try {
+      console.log(`Executing method ${definition.method}`, definition.payload)
       result = await plaidClient[definition.method](context, definition.id, definition.payload);
     } catch (ex) {
       console.log(ex);

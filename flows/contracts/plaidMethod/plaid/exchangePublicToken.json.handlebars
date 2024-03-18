@@ -1,0 +1,19 @@
+{{#if request.body.values.public_token}}
+  {{#if request.params.id}}
+  {
+    "method": "exchangePublicTokenAndGetAccounts",
+    "id": "{{request.params.id}}",
+    "payload": {
+      "public_token": "{{request.body.values.public_token}}"
+    }
+  }
+  {{else}} 
+  {  
+    "error": "Missing Application ID" 
+  }
+  {{/if}}
+{{else}} 
+  {  
+    "error": "Missing public_token" 
+  }
+  {{/if}}

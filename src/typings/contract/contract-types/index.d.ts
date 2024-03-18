@@ -95,8 +95,8 @@ declare module "contract/contract-types/plaid-method.js" {
   type Context = ChassisPluginContext;
   type Definition = {
     method: "createLinkToken" | "exchangePublicToken" | "getAccounts";
-    id?: string;
-    payload?: { [key: string]: unknown };
+    id: string;
+    payload?: { public_token: string };
     [key: string]: unknown;
   };
 

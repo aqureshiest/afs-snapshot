@@ -1,5 +1,5 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
-
+import type {AccountAssets as IAccountAssets, Item, ItemPublicTokenExchangeResponse} from 'plaid'
 import PlaidClient from "clients/plaid/index.js";
 type PlaidChassisPlugn =
   ChassisPlugin<PlaidClient>;
@@ -37,4 +37,10 @@ declare module "clients/plaid/index.js" {
      */
     hosted_link_url?: string;
   }
+  type PlaidGetAccounts = {
+    accounts: Array<IAccountAssets>,
+    item: Item
+  };
+  type PlaidAccessTokenResponse = ItemPublicTokenExchangeResponse;
+
 }

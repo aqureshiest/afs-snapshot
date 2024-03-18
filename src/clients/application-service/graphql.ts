@@ -26,6 +26,16 @@ fragment ApplicantFragment on Application {
       type
       number
     }
+    financialAccounts {
+      name
+      type
+      account_last4
+      institution_id
+      monolith_id
+      balance
+      plaidItemID
+      plaidAccessToken
+    }
     education {
       degree
       enrollment
@@ -44,7 +54,7 @@ fragment ApplicantFragment on Application {
       end
     }
   }
-  cognitoId
+  cognitoID
 }
 
 fragment ApplicationFragment on Application {

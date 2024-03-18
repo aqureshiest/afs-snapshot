@@ -1,12 +1,50 @@
 {
-
   "type": "view",
   "id": "{{application.id}}",
   "definition": {
-    "type": "plaid-income-verification",
+    "type": "landing",
     "definition": {
-      "key": "plaid-sdk",
-      "link_token": {{{ json (contract 'method' )}}}
+      "key": "plaid-landing",
+      "label": "Plaid Landing view",
+      "image": "illustrations.lp",
+      "header": {
+        "copy": "Let's verify your income.",
+        "subcopy": "Link the account(s) where your paycheck is deposited for accurate eligibility and rates assessment."
+      },
+      "list": [
+        {"copy": "CSpeeds up loan approval by up to 3 days", "icon": "icons.check"},
+        {"copy": "Personal information secured with end-to-end encryption", "icon": "icons.check"}
+      ],
+      "integrations": [
+        {
+          "key": "plaid",
+          "options": {
+            "link_token":{{{ json (contract 'method' )}}},
+            "onSuccess": {
+              "type": "request",
+              "properties": {
+                "manifest": "plaid/exchange",
+                "method": "POST"
+              }
+            }
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Verify income instantly",
+        "action": {
+          "type": "plaid-integration"
+        }
+      },
+      "secondaryAction": {
+        "copy": "Verify manually instead",
+        "action": {
+          "type": "navigate",
+          "properties": {
+            "goTo": "income-assets/{{request.body.id}}"
+          }
+        }
+      } 
     }
   }
 }
