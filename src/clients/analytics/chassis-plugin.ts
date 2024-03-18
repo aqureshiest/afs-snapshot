@@ -9,7 +9,7 @@ export const plugin: Plugin<AnalyticsServiceClient> = {
   registerOrder: 0,
   register: async (context: PluginContext) => {
     const apiKey =
-      SensitiveString.ExtractValue(context.env.ANALYTIVS_SEGMENT_API_KEY) || "";
+      SensitiveString.ExtractValue(context.env.ANALYTICS_SEGMENT_API_KEY) || "";
 
     const client = new AnalyticsServiceClient(context, apiKey);
 

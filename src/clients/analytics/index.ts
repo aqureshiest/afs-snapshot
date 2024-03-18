@@ -1,11 +1,5 @@
 import { Analytics } from "@segment/analytics-node";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
-import {
-  ApplicationSectionStartedTrackEvent,
-  TrackEvent,
-  IdentifyEvent,
-} from "./events.js";
-import { ApplicationSectionStartedTrackParams } from "./types.js";
 
 export default class AnalyticsServiceClient {
   private client: Analytics;
@@ -28,7 +22,7 @@ export default class AnalyticsServiceClient {
     }
   }
 
-  async track(event: TrackEvent) {
+  async track(event: AnalyticsTrackEvent) {
     return new Promise((resolve, reject) => {
       try {
         this.client.track(event, (err, ctx) => {
@@ -73,10 +67,7 @@ export default class AnalyticsServiceClient {
     });
   }
 
-  async trackApplicationSectionStarted(
-    parameters: ApplicationSectionStartedTrackParams,
-  ) {
-    const event = new ApplicationSectionStartedTrackEvent(parameters);
-    return await this.track(event);
+  async trackApplicationSectionStarted(parameters: AnalyticsTrackEvent) {
+    return await this.track(parameters);
   }
 }

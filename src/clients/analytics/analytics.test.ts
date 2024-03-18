@@ -4,8 +4,7 @@ import assert from "node:assert";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
-import AnalyticsServiceClient from "./index.js";
-import { ApplicationSectionStartedTrackParams } from "./types.js";
+import AnalyticsServiceClient, { type AnalyticsTrackEvent } from "./index.js";
 
 describe("[b8dcinbp] Analytics Service Client", () => {
   let context;
@@ -17,7 +16,6 @@ describe("[b8dcinbp] Analytics Service Client", () => {
 
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
-    console.log(context.loadedPlugins);
 
     client = context.loadedPlugins.analyticsServiceClient.instance;
 
@@ -28,7 +26,7 @@ describe("[b8dcinbp] Analytics Service Client", () => {
 
   describe("[yk8kus13] Track event tests", () => {
     it("[5lke3jnn] Application section started tracking when event given", async () => {
-      const props: ApplicationSectionStartedTrackParams = {
+      const props: AnalyticsTrackEvent = {
         anonymousId: "123",
         event: "Test event",
         properties: {
