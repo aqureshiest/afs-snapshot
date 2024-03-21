@@ -1,7 +1,6 @@
 import { describe, it, before, mock } from "node:test";
 import assert from "node:assert";
-import axios from "axios";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
@@ -23,12 +22,12 @@ describe("[cd30d05c] session auth strategy", () => {
   });
 
   it("[955ce279] should return set returned claims if a session token exists", async () => {
-    let req = {
+    const req = {
       cookies: {
         session: "session"
       }
     };
-    let res = { locals: {} }
+    const res = { locals: {} }
     mock.method(NeasClient, "getAuthStatus", () => {
       return {
         user_id: 1,

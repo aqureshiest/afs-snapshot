@@ -7,7 +7,7 @@ const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  let claims: Promise<{ [key: string]: unknown }>[] = [];
+  const claims: Promise<{ [key: string]: unknown }>[] = [];
 
   for (const strategy of strategies) {
     claims.push(strategy(context, req, res, next));
