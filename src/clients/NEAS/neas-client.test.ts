@@ -62,20 +62,16 @@ describe("[fab1071e] NeasClient", () => {
     assert.rejects(async () =>  await client.createUnauthenticatedIdentity("1", context));
   });
 
-  it("[9c1dbc20] should set the session on headers['set-cookies'] and return the response", async () => {
-    const response = {
-      statusCode: 200,
-      headers: {
-        "set-cookie": []
-      }
-    };
+  it("[9c1dbc20] should return a session token", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
           authId: "2",
           sessionToken: "session"
         },
-        response
+        response: {
+          statusCode: 200,  
+        }
       }
     });
     mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
@@ -84,7 +80,7 @@ describe("[fab1071e] NeasClient", () => {
       }
     });
     const result = await client.createUnauthenticatedIdentity("1", context);
-    assert.deepStrictEqual(result.headers["set-cookie"], ["session"]);
+    assert.equal(result, "session");
   });
 
   it("[fdf93ed5] should throw when creating an auth id and application-service-client is not instantiated", () => {
@@ -169,20 +165,16 @@ describe("[fab1071e] NeasClient", () => {
     assert.rejects(async () =>  await client.createAuthId("1", "token", context)); 
   });
 
-  it("[3f51d326] should set the session on headers['set-cookies'] and return the response", async () => {
-    const response = {
-      statusCode: 200,
-      headers: {
-        "set-cookie": []
-      }
-    };
+  it("[3f51d326] should return a new session token", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
           authId: "2",
           sessionToken: "session"
         },
-        response
+        response: {
+          statusCode: 200,
+        }
       }
     });
     mock.method(context.loadedPlugins.applicationServiceClient.instance, "sendRequest", () => {
@@ -196,7 +188,7 @@ describe("[fab1071e] NeasClient", () => {
       }
     });
     const result = await client.createAuthId("1", "token", context);
-    assert.deepStrictEqual(result.headers["set-cookie"], ["session"]);
+    assert.equal(result, "session");
   });
 
   it("[e3f0638e] should throw when sending an email link and application-service-client is not instantiated", async () => {
@@ -281,5 +273,32 @@ describe("[fab1071e] NeasClient", () => {
       }
     });
     assert.doesNotReject(async () =>  await client.sendEmailLink("1", "token", context)); 
+  });
+
+  it("[bb287e57] should get an auth status", async () => {
+    mock.method(client, "get", () => {
+      return {
+        results: {
+          user_id: 1,
+          expires_in: 1234,
+        },
+        response: {
+          statusCode: 200,
+        }
+      }
+    });
+    const results = await client.getAuthStatus("session", context);
+    assert.deepEqual(results, { user_id: 1, expires_in: 1234 }); 
+  });
+
+  it("[4327c5d6] should get not throw if an error occurs when getting an auth status", async () => {
+    mock.method(client, "get", () => {
+      return {
+        response: {
+          statusCode: 400,
+        }
+      }
+    });
+    assert.doesNotReject(async () =>  await client.getAuthStatus("session", context)); 
   });
 });

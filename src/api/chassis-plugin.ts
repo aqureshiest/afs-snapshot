@@ -1,6 +1,8 @@
 import * as handlers from "./handlers/index.js";
 import wrapAsyncHandler from "./wrap-async-handler.js";
 import * as constants from "./constants.js";
+import cookieParser from "cookie-parser";
+import authMiddleware from "./auth/index.js";
 
 export const plugin: Plugin = {
   name: "api",
@@ -14,6 +16,7 @@ export const plugin: Plugin = {
     context.application.use(
       `/apply/*/:id(${constants.UUID_REGEX.source})`,
       handlers.getManifest.bind(null, context),
+      wrapAsyncHandler(context, authMiddleware),
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
@@ -65,10 +68,12 @@ export const plugin: Plugin = {
     context.application.use(
       "/apply/*",
       handlers.getManifest.bind(null, context),
+      wrapAsyncHandler(context, authMiddleware),
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
 
     context.application.use(handlers.error.bind(null, context));
+    context.application.use(cookieParser());
   },
 };

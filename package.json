@@ -34,6 +34,7 @@
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^2.1.1",
     "axios": "^1.6.0",
+    "cookie-parser": "^1.4.6",
     "gql-query-builder": "^3.8.0",
     "handlebars-a-la-json": "^1.5.8",
     "http-errors": "^2.0.0",
