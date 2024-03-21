@@ -11,6 +11,7 @@ import Manifest from "./manifest.js";
 describe("[462fd166] manifest.execute", () => {
   let context;
   let applicationServiceClient;
+  // let analyticsServiceClient;
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
@@ -18,6 +19,8 @@ describe("[462fd166] manifest.execute", () => {
     await registerChassisPlugins(context);
     applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
+    // analyticsServiceClient =
+    //   context.loadedPlugins.analyticsServiceClient.instance;
   });
 
   it("[be92134e] runs without error", async () => {
@@ -234,7 +237,7 @@ describe("[462fd166] manifest.execute", () => {
     } catch (error) {
       assert.equal(
         error.message,
-        "[694d632f] Event is not defined on event types",
+        "[694d632f] Event is not defined on event types"
       );
     }
 
@@ -334,4 +337,38 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+
+  // it("[1b2bbdaa] it should execute an Analytics contract-type", async () => {
+  //   const input = {} as Input;
+
+  //   applicationServiceClient.eventInputTypes = {
+  //     createApplication: {
+  //       meta: "EventMeta",
+  //       relationships: "[RelationshipInput]",
+  //     },
+  //   };
+
+  //   mock.method(analyticsServiceClient, "track", () => {
+  //     return true;
+  //   });
+
+  //   const manifest = new Manifest(context, "analytics", {
+  //     key: "testContract",
+  //     "*": new Contract({
+  //       key: "testContract",
+  //       raw: `{
+  //         "event": "createApplication",
+  //         "payload": {
+  //           "relationships": []
+  //         },
+  //         "fields": "application { id }"
+  //       }`,
+  //       type: "applicationEvent",
+  //     }),
+  //   });
+
+  //   const { contract } = await manifest.execute(input, { context, ...input });
+
+  //   assert(contract);
+  // });
 });

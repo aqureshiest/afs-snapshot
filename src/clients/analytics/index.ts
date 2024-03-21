@@ -22,7 +22,7 @@ export default class AnalyticsServiceClient {
     }
   }
 
-  async track(event: AnalyticsTrackEvent) {
+  async track(event: TrackAnalyticsEvent) {
     return new Promise((resolve, reject) => {
       try {
         this.client.track(event, (err, ctx) => {
@@ -43,7 +43,7 @@ export default class AnalyticsServiceClient {
     });
   }
 
-  identify(event: IdentifyEvent) {
+  identify(event: IdentifyAnalyticsEvent) {
     return new Promise((resolve, reject) => {
       try {
         this.client.identify(event, (err, ctx) => {
@@ -67,7 +67,7 @@ export default class AnalyticsServiceClient {
     });
   }
 
-  async trackApplicationSectionStarted(parameters: AnalyticsTrackEvent) {
+  async trackApplicationSectionStarted(parameters: TrackAnalyticsEvent) {
     return await this.track(parameters);
   }
 }

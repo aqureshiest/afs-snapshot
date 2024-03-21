@@ -5,7 +5,7 @@ type AnalyticsServicePlugin = ChassisPlugin<AnalyticsServiceClient>;
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
-    analyticsTokenServiceClient: AnalyticsServicePlugin;
+    analyticsServiceClient: AnalyticsServicePlugin;
   }
 }
 
@@ -38,14 +38,13 @@ interface BaseTrackEventProperties {
   product: "SLR";
   product_subtype: ApplicationType;
   initiator: UserRole;
-  flowVariation: string;
   role: UserRole;
   section: string;
   "Has no identifying info"?: "true";
 }
 
 declare module "../../../clients/analytics/index.js" {
-  type Event = IEvent;
-  type IdentifyEvent = IIdentifyEvent;
-  type AnalyticsTrackEvent = ITrackEvent;
+  type AnalyticsEvent = IEvent;
+  type IdentifyAnalyticsEvent = IIdentifyEvent;
+  type TrackAnalyticsEvent = ITrackEvent;
 }

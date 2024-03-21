@@ -4,7 +4,7 @@ import assert from "node:assert";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
-import AnalyticsServiceClient, { type AnalyticsTrackEvent } from "./index.js";
+import AnalyticsServiceClient, { type TrackAnalyticsEvent } from "./index.js";
 
 describe("[b8dcinbp] Analytics Service Client", () => {
   let context;
@@ -26,7 +26,7 @@ describe("[b8dcinbp] Analytics Service Client", () => {
 
   describe("[yk8kus13] Track event tests", () => {
     it("[5lke3jnn] Application section started tracking when event given", async () => {
-      const props: AnalyticsTrackEvent = {
+      const props: TrackAnalyticsEvent = {
         anonymousId: "123",
         event: "Test event",
         properties: {
@@ -34,7 +34,6 @@ describe("[b8dcinbp] Analytics Service Client", () => {
           product: "SLR",
           product_subtype: "primary-only",
           initiator: "primary",
-          flowVariation: "Test",
           role: "primary",
         },
       };
