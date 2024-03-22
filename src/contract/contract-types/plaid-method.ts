@@ -31,15 +31,19 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     const { context } = injections;
     const plaidClient = context.loadedPlugins.plaid.instance;
     assert(plaidClient, "[3eac36d3] plaidClient not instantiated");
-    let result;
+    
     try {
       console.log(`Executing method ${definition.method}`, definition.payload)
-      result = await plaidClient[definition.method](context, definition.id, definition.payload);
+      return (await plaidClient[definition.method](context, definition.id, definition.payload)) as Output;
     } catch (ex) {
-      console.log(ex);
+      return {
+        method: definition.method,
+        ContractType: this.contractName,
+        error: ex.message
+      }
     }
 
-    return result;
+    
   };
 
   // toJSON() {

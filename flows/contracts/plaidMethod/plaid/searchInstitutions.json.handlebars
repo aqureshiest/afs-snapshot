@@ -1,0 +1,13 @@
+{{#if request.body.values.query}}
+  {
+    "method": "searchInstitutions",
+    "id": "-",
+    "payload": {
+      "query": "{{request.body.values.query}}"
+      }
+  }
+{{else}} 
+{  
+  "error": "Missing query param" 
+}
+{{/if}}

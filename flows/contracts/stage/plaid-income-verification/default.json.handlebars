@@ -1,6 +1,7 @@
+{{#if request.params.id}}
 {
   "type": "view",
-  "id": "{{application.id}}",
+  "id": "{{request.params.id}}",
   "definition": {
     "type": "landing",
     "definition": {
@@ -41,10 +42,16 @@
         "action": {
           "type": "navigate",
           "properties": {
-            "goTo": "income-assets/{{request.body.id}}"
+            "goTo": "income-assets/{{request.params.id}}"
           }
         }
       } 
     }
   }
 }
+{{else}}
+{
+  "statusCode": 401,
+  "message": "Id param is required."
+}
+{{/if}}

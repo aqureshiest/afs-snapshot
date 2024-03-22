@@ -16,7 +16,10 @@ interface IContractArguments<D> {
   input: IContractInput;
   context: ChassisPluginContext;
 }
-
+interface IError {
+  error: string,
+  contractType: string
+}
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {
   /**
@@ -94,7 +97,7 @@ declare module "contract/contract-types/plaid-method.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
-    method: "createLinkToken" | "exchangePublicToken" | "getAccounts";
+    method: "searchInstitutions" | "createLinkToken" | "exchangePublicToken" | "getAccounts" | "exchangePublicTokenAndGetAccounts";
     id: string;
     payload?: { public_token: string };
     [key: string]: unknown;
@@ -112,15 +115,19 @@ declare module "contract/contract-types/plaid-method.js" {
 import "contract/contract-types/syllabus-section.js";
 declare module "contract/contract-types/syllabus-section.js" {
   type Context = ChassisPluginContext;
+  type ProgressStats = {
+      totalQuestions: number;
+      completedQuestions: number;
+  }
   type Definition = {
     status: string;
     statuses: string[];
-    progress: number;
+    mode: "section" | "stats";
+    progress: ProgressStats;
     [key: string]: unknown;
   };
   type Transformation = {
-    status: string;
-    progress: number;
+    progress: ProgressStats;
     [key: string]: unknown;
   };
 

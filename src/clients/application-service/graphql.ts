@@ -27,6 +27,7 @@ fragment ApplicantFragment on Application {
       number
     }
     financialAccounts {
+      index
       name
       type
       account_last4

@@ -3,6 +3,7 @@ export { default as contract } from "./contract.js";
 export { default as ajv } from "./ajv.js";
 export { default as schema } from "./schema.js";
 export { default as obj } from "./obj.js";
+export { default as spread } from './spread.js'
 export const noop = function (v1) {
   v1.fn(this);
   return "";

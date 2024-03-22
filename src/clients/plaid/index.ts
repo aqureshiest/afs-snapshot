@@ -5,6 +5,7 @@ const gql = String.raw;
 export default class PlaidClient extends Client {
   clientID
   secret
+
   constructor(context: PluginContext, client_id: string, secret: string, baseUrl: string) {
     const options = { baseUrl };
     super(options);
@@ -28,18 +29,15 @@ export default class PlaidClient extends Client {
   
 
   async createLinkToken(context: PluginContext, id: string, payload) {
-    const ApplyBaseUrl =
-      SensitiveString.ExtractValue(
-        context.env.BASE_URL,
-      ) || "";
+
     const request = {
       user: {
         // TODO: get userId from reference cognitoID 
-        client_user_id: payload.cognitoID,
+        client_user_id: 'asdasdasdasd',
       },
       client_name: "Earnest", // TODO: based on application brand?
       products: ["assets"],
-      webhook: `${ApplyBaseUrl}/plaid/webhook/${id}`,
+      webhook: `${this.baseUrl}/plaid/webhook/${id}`,
       country_codes: ["US"],
       language: "en",
       ...this.auth
@@ -49,6 +47,15 @@ export default class PlaidClient extends Client {
       body: request,
       headers: this.headers
     });
+    console.log('results', results)
+    if (response.statusCode !== 200 || !results.link_token) {
+      context.logger.error({
+        client: 'plaid',
+        statusCode: response.statusCode,
+        message: response.statusMessage
+      })
+      throw new Error('[2f2bb50e] PLAID - failed to create plaid link_token')
+    }
     return results.link_token;
   }
   async getAccounts(context: PluginContext, id: string, payload) {
@@ -62,12 +69,48 @@ export default class PlaidClient extends Client {
       headers: this.headers
     })
     if (response.statusCode !== 200) {
-      context.logger.error(`[231c4ea1] PLAID - failed to get accounts, status code: ${response.statusCode}, ${response.statusMessage}`)
+      context.logger.error({
+        client: 'plaid',
+        statusCode: response.statusCode,
+        message: response.statusMessage
+      })
+      throw new Error(`[231c4ea1] PLAID - failed to get accounts, status code: ${response.statusCode}, ${response.statusMessage}`)
     } else {
       return results;
     }
   }
-
+ async searchInstitutions(context: PluginContext, id: string, payload) {
+  console.log('======= aqui')
+  if (!payload.query) {
+    throw new Error(`[49f71236] PLAID - query param is required.`)
+  }
+  const request = {
+    query: payload.query,
+    products: ["transactions"],
+    country_codes: ['US'],
+    ...this.auth
+  };
+  const {results, response} = await this.post<InstitutionsResponse>({
+    uri: '/institutions/search',
+    body: request,
+    headers: this.headers
+  });
+  if (response.statusCode !== 200 || !results.institutions) {
+    context.logger.error({
+      client: 'plaid',
+      statusCode: response.statusCode,
+      message: response.statusMessage
+    })
+    throw new Error(`[5bf3f425] PLAID - failed to search institutions - ${response.statusCode}, ${response.statusMessage}`)
+  } else {
+    return results.institutions.map(bank =>  {
+      return {
+        institution_id: bank.institution_id,
+        name: bank.name
+      }
+    });
+  }  
+ }
   //exchanges a public token for a acces_token/itemId
   async exchangePublicToken(context: PluginContext, id: string, payload) {
     const request = {
@@ -80,7 +123,12 @@ export default class PlaidClient extends Client {
       headers: this.headers
     });
     if (response.statusCode !== 200) {
-      context.logger.error(`[7459548f] PLAID - failed to exchange token, status code: ${response.statusCode}, ${response.statusMessage}`)
+      context.logger.error({
+        client: 'plaid',
+        statusCode: response.statusCode,
+        message: response.statusMessage
+      })
+      throw new Error(`[7459548f] PLAID - failed to exchange token, status code: ${response.statusCode}, ${response.statusMessage}`)
     } else {
       return results;
     }
@@ -99,6 +147,7 @@ export default class PlaidClient extends Client {
           return {
             name: faccount.official_name,
             type: faccount.type,
+            selected: true,
             account_last4: faccount.mask,
             institution_id: plaidResponse.item.institution_id,
             balance: faccount.balances.current,
