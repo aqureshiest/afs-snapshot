@@ -1,4 +1,4 @@
-import { Analytics } from "@segment/analytics-node";
+import { Analytics, Context } from "@segment/analytics-node";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 
 export default class AnalyticsServiceClient {
@@ -22,7 +22,7 @@ export default class AnalyticsServiceClient {
     }
   }
 
-  async track(event: TrackAnalyticsEvent) {
+  async track(event: TrackAnalyticsEvent): Promise<Context | undefined> {
     return new Promise((resolve, reject) => {
       try {
         this.client.track(event, (err, ctx) => {

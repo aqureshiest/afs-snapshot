@@ -5,6 +5,7 @@ import {
   UserRole,
 } from "../../typings/clients/analytics/index.js";
 import { TrackAnalyticsEvent } from "../../clients/analytics/index.js";
+import { Context } from "@segment/analytics-node";
 
 enum EVENT_TYPE {
   track,
@@ -12,7 +13,7 @@ enum EVENT_TYPE {
   pageView,
 }
 
-class Analytics extends ContractType<Definition, Definition, void> {
+class Analytics extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
     return "Analytics";
   }
@@ -74,24 +75,27 @@ class Analytics extends ContractType<Definition, Definition, void> {
 
     const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
 
+    let response: Context | undefined;
     switch (eventType) {
       case EVENT_TYPE.track:
-        await analyticsServiceClient.trackApplicationSectionStarted(props);
+        response =
+          await analyticsServiceClient.trackApplicationSectionStarted(props);
         break;
       case EVENT_TYPE.identify:
         break;
       case EVENT_TYPE.pageView:
         break;
       default:
-        null;
+        response = undefined;
     }
+
+    return response ? { event } : null;
   };
 
   toJSON() {
     if (!this.result) return null;
     return {
       event: this.result?.event,
-      id: this.result?.payload?.id,
     };
   }
 }
