@@ -44,4 +44,18 @@ describe("[cd30d05c] session auth strategy", () => {
       }
     });
   });
+
+  it("[d389ea54] should not set any claims if the request to getAuthStatus returns undefined", async () => {
+    const req = {
+      cookies: {
+        session: "session"
+      }
+    };
+    const res = { locals: {} }
+    mock.method(NeasClient, "getAuthStatus", () => {
+      return undefined
+    });
+    await authMiddleware(context, req as unknown as Request, res as Response, () => { })
+    assert.deepEqual(res.locals, { auth: { }});
+  });
 });
