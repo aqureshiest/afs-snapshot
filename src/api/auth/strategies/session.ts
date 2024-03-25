@@ -18,9 +18,11 @@ export default async function (
   const session = req.cookies?.session
   if (session) {
     const artifacts = await NeasClient.getAuthStatus(session, context);
-    claims = {
-      session: {
-        ...artifacts
+    if (artifacts) {
+      claims = {
+        session: {
+          ...artifacts
+        }
       }
     }
   }
