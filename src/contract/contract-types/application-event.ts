@@ -25,6 +25,11 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
   }
 
   buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
+    console.log(
+      "[bfcc6d] AJ DEBUG definition",
+      JSON.stringify(definition, null, 2),
+    );
+
     const { event, fields = "", payload = {} } = definition;
     const varsArray: string[] = [];
     const typesArray: string[] = [];
@@ -36,6 +41,8 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
     const vars = varsArray.join(", ");
     const types = typesArray.join(", ");
+    console.log("[df4191] AJ DEBUG vars", vars);
+    console.log("[67df13] AJ DEBUG types", types);
 
     return {
       query: `mutation(${types}) {
@@ -113,6 +120,10 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     if (!applicationServiceClient.eventInputTypes[definition.event]) {
       throw new Error("[694d632f] Event is not defined on event types");
     }
+    console.log(
+      "[b25c8a] AJ DEBUG definition",
+      JSON.stringify(definition, null, 2),
+    );
 
     const eventResult = (await applicationServiceClient.sendRequest(
       this.buildRequestBody(

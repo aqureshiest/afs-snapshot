@@ -142,11 +142,13 @@ export default class LendingDecisionServiceClient extends Client {
           : "", // Use application tags to find application type
       requestMetadata: {
         applicationId,
+        // userID
       },
       isParentPlus: false,
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       isMedicalResidency: false,
       appInfo: applicationDecisionDetails,
+      decisionSource: "apply-flow-service",
     } as DecisionRequestDetails;
 
     const { results, response } = await this.post<DecisionPostResponse>({
@@ -216,6 +218,7 @@ export default class LendingDecisionServiceClient extends Client {
          *    LDS needs to know what address is the primary address
          */
         type: location["type"],
+        // zip and country
       };
     });
 
@@ -325,6 +328,7 @@ export default class LendingDecisionServiceClient extends Client {
         aggregateLoanTotal: 0,
         hasActiveLoanCurrentYear: false,
       },
+      // need rates
     };
     return formattedPayload;
   }

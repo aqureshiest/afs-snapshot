@@ -20,7 +20,7 @@ export const plugin: Plugin = {
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
-
+    // /apply/decisionUpdate/{appID}
     /**
      * @openapi
      * /apply/*:

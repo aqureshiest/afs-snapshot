@@ -28,7 +28,7 @@ describe("[d7c20b00] base-client for application-service-client", () => {
     client = new BaseClient({ baseUrl, accessKey }, context);
   });
 
-  it("[28e9dd46] should instantiate the BaseClient", async() => {
+  it("[28e9dd46] should instantiate the BaseClient", async () => {
     assert(client);
   });
 

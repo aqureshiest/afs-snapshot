@@ -1,9 +1,9 @@
-
 {{#if request.params.id}}
   {
     "event": "addDetails",
     "payload": {
       "id": "{{request.params.id}}",
+      {{log request.body.values}}
       {{#with request.body.values}}
       "details": 
         {{#obj}} {{! make sure to flatten each element into a single line}}
@@ -22,11 +22,18 @@
             {"phone": [{"number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
           {{#if location}}
-            {"location": [{"index": 0, "street1": "{{location.street1}}", "street2": "{{location.street2}}", "city": "{{location.city}}", "state": "{{location.state}}", "zip": "{{location.zip}}" }]}
+            {"location": [{"index": 0, "street1": "{{location.street1}}", "street2": "{{location.street2}}", "city": "{{location.city}}", "state": "{{location.state}}", "zip": "{{location.zip}}" , "type": "primary"}]}
           {{/if}}
           {{#if citizenship}}
             {"location": [{ "index": 0,"citizenship": "{{citizenship}}" }] }
           {{/if}}
+          
+          {{!#if (and employment employerName jobTitle) }}
+          
+          {{!/if}}
+          {{!#if annualIncome}}
+          
+          {{!/if}}
         {{/obj}}
     },
     {{/with}}

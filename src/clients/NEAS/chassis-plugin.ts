@@ -3,7 +3,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 import NeasClient from "./index.js";
 
-export const plugin: Plugin<NeasClient<unknown []>> = {
+export const plugin: Plugin<NeasClient<unknown[]>> = {
   name: "NeasClient",
   version: "1.0.0",
   registerOrder: 0,
