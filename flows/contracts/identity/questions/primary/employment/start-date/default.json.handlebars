@@ -1,0 +1,37 @@
+{{#with application.primary}}
+{{!#if (or (eq details.income.0.type "self_employed") (eq deatils.income.0.type "future"))}}
+{
+  "type": "input",
+  "condtional": [
+    [
+        {
+            "field": "employment.employment", {{! field is stepKey.fieldKey}}
+            "op": "valueEquals",
+            "value": "self_employed"
+        }
+    ],
+    [
+        {
+            "field": "employment.employment", {{! field is stepKey.fieldKey}}
+            "op": "valueEquals",
+            "value": "future"
+        }
+    ]
+  ],
+  "definition": {
+      "key": "startDate",
+      "type": "inputIncome",
+      "value": {
+        "start": "{{{json details.income.0.start}}}"
+      },
+      "status": {{{json (contract 'primary_income_start_date_input_status')}}},
+      "label": {
+          "start": {
+            "copy": "Start date"
+          }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}"
+  }
+}
+{{!/if}}
+{{/with}}

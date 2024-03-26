@@ -1,0 +1,19 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "title",
+      "type": "inputIncome",
+      "value": {
+        "title": "{{{json details.income.0.title}}}"
+      },
+      "status": {{{json (contract 'primary_income_job_title_input_status')}}},
+      "label": {
+          "title": {
+            "copy": "Job title"
+          }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/employment/job-title' details.income.0.title}}}"
+  }
+}
+{{/with}}

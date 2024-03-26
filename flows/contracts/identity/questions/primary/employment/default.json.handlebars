@@ -1,0 +1,44 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "employmentType", {{! unique for UI}}
+      "type": "inputRadio",
+      "layout": "copyWithIcon",
+      "direction": "column",
+      "items": [
+        {
+            "id": "employed",
+            "label": "Employed",
+            "value": "employed"
+        },
+        {
+            "id": "self_employed",
+            "label": "Self-employed",
+            "value": "self_employed"
+        },
+        {
+            "id": "future",
+            "label": "Future (job offer)",
+            "value": "future"
+        },
+        {
+            "id": "retired",
+            "label": "Retired",
+            "value": "retired"
+        },
+        {
+            "id": "unemployed",
+            "label": "Unemployed",
+            "value": "unemployed"
+        }
+      ],
+      "status": {{{json (contract 'primary_employment_input_status')}}},
+      "value": "{{details.income.0.type}}",
+      "error": "{{{ ajv 'errors' 'questions/primary/employment' details.income.0.type }}}",
+      "label": {
+        "copy": "Employment Status"
+      }
+  }
+}
+{{/with}}

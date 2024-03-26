@@ -1,0 +1,20 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "amount",
+      "type": "inputIncome",
+      "value": {
+        "amount": "{{{json details.income.0.amount}}}"
+      },
+      "status": {{{json (contract 'primary_income_annual_income_input_status')}}},
+      "label": {
+          "amount": {
+            "copy": "Annual income before taxes"
+          }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/income/amount/annual-income' details.income.0.amount }}}",
+      "hint": "This could include wage income, bonuses, and commissions, subject to verification later."
+  }
+}
+{{/with}}

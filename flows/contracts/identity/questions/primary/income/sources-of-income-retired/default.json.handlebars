@@ -1,0 +1,25 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "sources_of_income", {{! unique for UI}}
+      "type": "inputRadio",
+       "layout": "copyWithIcon",
+        "direction": "column",
+        "items": [
+            {
+                "id": "social_security_pension",
+                "label": "Social Security / Pension",
+                "value": "social_security_pension"
+            },
+            {
+                "id": "401k",
+                "label": "401k",
+                "value": "401k"
+            }
+        ],
+        "status": {{{json (contract 'primary_income_sources_of_income_input_status')}}},
+        "value": "{{details.income.1.type}}"
+  }
+}
+{{/with}}

@@ -1,0 +1,22 @@
+{{#with application.primary}}
+{
+    "key": "income",
+    "label": "Student Income Info",
+    "submit": {
+        "copy": "Next Step",
+        "action": {{{json (contract 'save_primary_details_action')}}}
+    },
+    "condtional": [
+        [
+            {
+                "field": "consistent-Income.consistentIncome", {{! field is stepKey.fieldKey}}
+                "op": "valueEquals",
+                "value": "true"
+            }
+        ]
+        
+    ],
+    "rows": {{{json (contract 'student-info-consistent-income-rows')}}}
+    
+}
+{{/with}}

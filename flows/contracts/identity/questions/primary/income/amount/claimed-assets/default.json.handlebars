@@ -1,0 +1,20 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "amount",
+      "type": "inputIncome",
+      "value": {
+        "amount": "{{{json details.income.1.amount}}}"
+      },
+      "status": {{{json (contract 'primary_income_claimed_assets_input_status')}}},
+      "label": {
+          "amount": {
+            "copy": "Cash + retirement + investments"
+          }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/income/amount/claimed-assets' details.income.1.amount }}}",
+      "hint": "Including this can help us evaluate your financial stability leading to potentially lower rates."
+  }
+}
+{{/with}}

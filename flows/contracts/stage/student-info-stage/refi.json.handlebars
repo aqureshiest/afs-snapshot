@@ -1,0 +1,19 @@
+{
+    "key": "student-info",
+    "type": "form",
+    "label": "Student Info",
+    "status": "notStarted",
+    "showProgress": true,
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "basic": {
+                "type": "object",
+                "properties": {
+                    "phone": {{{json (schema 'questions/primary/phone')}}}
+                }
+            }
+        }
+    }
+}
