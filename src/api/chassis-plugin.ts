@@ -10,7 +10,7 @@ export const plugin: Plugin = {
   registerOrder: 1,
   register: async (context: Context) => {
     /* ============================== *
-     * I. All contracts gather inputs and execte contracts
+     * I. All contracts gather inputs and execute contracts
      * ============================== */
 
     context.application.use(

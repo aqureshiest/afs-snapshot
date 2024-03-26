@@ -9,11 +9,11 @@ export default async function (
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+): Promise<{ session: { [key: string]: unknown } } | undefined> {
   const NeasClient = context.loadedPlugins.NeasClient?.instance as NeasClient<unknown[]>;
   assert(NeasClient, "[de7f7d6c] NeasClient is not instantiated");
 
-  let claims = {};
+  let claims;
 
   const session = req.cookies?.session
   if (session) {

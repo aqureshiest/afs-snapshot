@@ -56,6 +56,6 @@ describe("[cd30d05c] session auth strategy", () => {
       return undefined
     });
     await authMiddleware(context, req as unknown as Request, res as Response, () => { })
-    assert.deepEqual(res.locals, { auth: { }});
+    assert.deepEqual(res.locals, { });
   });
 });
