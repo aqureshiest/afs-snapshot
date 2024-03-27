@@ -26,15 +26,19 @@ interface IEvent {
 }
 
 interface IIdentifyEvent extends IEvent {
-  traits: BaseTrackEventProperties;
+  traits: BaseEventProperties;
 }
 
 interface ITrackEvent extends IEvent {
   event: string;
-  properties: BaseTrackEventProperties;
+  properties: BaseEventProperties;
 }
 
-interface BaseTrackEventProperties {
+interface IPageEvent extends IEvent {
+  properties: BaseEventProperties;
+}
+
+interface BaseEventProperties {
   product: "SLR";
   product_subtype: ApplicationType;
   initiator: UserRole;
@@ -47,4 +51,5 @@ declare module "../../../clients/analytics/index.js" {
   type AnalyticsEvent = IEvent;
   type IdentifyAnalyticsEvent = IIdentifyEvent;
   type TrackAnalyticsEvent = ITrackEvent;
+  type PageAnalyticsEvent = IPageEvent;
 }

@@ -4,13 +4,16 @@ import {
   ApplicationType,
   UserRole,
 } from "../../typings/clients/analytics/index.js";
-import { TrackAnalyticsEvent } from "../../clients/analytics/index.js";
-import { Context } from "@segment/analytics-node";
+import {
+  IdentifyAnalyticsEvent,
+  PageAnalyticsEvent,
+  TrackAnalyticsEvent,
+} from "../../clients/analytics/index.js";
 
 enum EVENT_TYPE {
   track,
   identify,
-  pageView,
+  page,
 }
 
 class Analytics extends ContractType<Definition, Definition, Output> {
@@ -52,11 +55,40 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       context.loadedPlugins.analyticsServiceClient.instance;
     assert(
       analyticsServiceClient,
-      "[7d3b096f] AnalyticsServiceClient not instantiated",
+      "[e6falixw] AnalyticsServiceClient not instantiated",
     );
 
+    const { type, event } = definition;
+
+    const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
+
+    switch (eventType) {
+      case EVENT_TYPE.track:
+        await analyticsServiceClient.track(this.#buildTrackProps(definition));
+        break;
+      case EVENT_TYPE.identify:
+        await analyticsServiceClient.identify(
+          this.#buildIdentifyrops(definition),
+        );
+        break;
+      case EVENT_TYPE.page:
+        await analyticsServiceClient.page(this.#buildPageProps(definition));
+        break;
+      default:
+    }
+
+    return { event };
+  };
+
+  toJSON() {
+    if (!this.result) return null;
+    return {
+      event: this.result?.event,
+    };
+  }
+
+  #buildTrackProps(definition: Definition) {
     const {
-      type,
       event,
       payload: { id, section, product_subtype, initiator, role },
     } = definition;
@@ -73,30 +105,45 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       },
     };
 
-    const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
+    return props;
+  }
 
-    let response: Context | undefined;
-    switch (eventType) {
-      case EVENT_TYPE.track:
-        response =
-          await analyticsServiceClient.trackApplicationSectionStarted(props);
-        break;
-      case EVENT_TYPE.identify:
-        break;
-      case EVENT_TYPE.pageView:
-        break;
-      default:
-        response = undefined;
-    }
+  #buildIdentifyrops(definition: Definition) {
+    const {
+      payload: { id, section, product_subtype, initiator, role },
+    } = definition;
 
-    return response ? { event } : null;
-  };
-
-  toJSON() {
-    if (!this.result) return null;
-    return {
-      event: this.result?.event,
+    const props: IdentifyAnalyticsEvent = {
+      anonymousId: id,
+      traits: {
+        section,
+        product: "SLR",
+        product_subtype: product_subtype as ApplicationType,
+        initiator: initiator as UserRole,
+        role: role as UserRole,
+      },
     };
+
+    return props;
+  }
+
+  #buildPageProps(definition: Definition) {
+    const {
+      payload: { id, section, product_subtype, initiator, role },
+    } = definition;
+
+    const props: PageAnalyticsEvent = {
+      anonymousId: id,
+      properties: {
+        section,
+        product: "SLR",
+        product_subtype: product_subtype as ApplicationType,
+        initiator: initiator as UserRole,
+        role: role as UserRole,
+      },
+    };
+
+    return props;
   }
 }
 

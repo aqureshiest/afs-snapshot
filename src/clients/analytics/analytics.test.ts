@@ -37,7 +37,7 @@ describe("[b8dcinbp] Analytics Service Client", () => {
           role: "primary",
         },
       };
-      const resp = await client.trackApplicationSectionStarted(props);
+      const resp = await client.track(props);
 
       assert.equal(resp, true);
     });

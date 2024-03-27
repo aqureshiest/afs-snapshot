@@ -7,7 +7,7 @@ export default class AnalyticsServiceClient {
 
   constructor(context: PluginContext, apiKey: string) {
     if (!apiKey) {
-      const error = new Error("no apiKey found");
+      const error = new Error("[77vuxai5] no api key found");
       context.logger.error({
         error,
         message: error.message,
@@ -15,59 +15,93 @@ export default class AnalyticsServiceClient {
       throw error;
     }
 
-    this.client = new Analytics({ writeKey: apiKey });
+    this.client = new Analytics({
+      writeKey: apiKey,
+    });
 
     if (context.logger != null) {
       this.logger = context.logger;
     }
   }
 
-  async track(event: TrackAnalyticsEvent): Promise<Context | undefined> {
+  async track(event: TrackAnalyticsEvent): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
         this.client.track(event, (err, ctx) => {
           if (err) {
+            this.logError(
+              new Error(err["message"]),
+              event,
+              "track-analytics-error",
+            );
             reject(err);
           }
-          this.logger.info({ ...event, analyticsTag: "track-analytics-event" });
-          resolve(ctx);
+          this.log(ctx, "track-analytics-event");
+          resolve();
         });
       } catch (e) {
-        this.logger.error({
-          error: e,
-          ...event,
-          analyticsTag: "track-analytics-error",
-        });
+        this.logError(e, event, "track-analytics-error");
         reject(e);
       }
     });
   }
 
-  identify(event: IdentifyAnalyticsEvent) {
+  identify(event: IdentifyAnalyticsEvent): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
         this.client.identify(event, (err, ctx) => {
           if (err) {
+            this.logError(
+              new Error(err["message"]),
+              event,
+              "identify-analytics-error",
+            );
             reject(err);
           }
-          this.logger.info({
-            ...event,
-            analyticsTag: "identify-analytics-event",
-          });
-          resolve(ctx);
+          this.log(ctx, "identify-analytics-event");
+          resolve();
         });
       } catch (e) {
-        this.logger.error({
-          error: e,
-          ...event,
-          analyticsTag: "identify-analytics-error",
-        });
+        this.logError(e, event, "identify-analytics-error");
         reject(e);
       }
     });
   }
 
-  async trackApplicationSectionStarted(parameters: TrackAnalyticsEvent) {
-    return await this.track(parameters);
+  page(event: PageAnalyticsEvent): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.client.identify(event, (err, ctx) => {
+          if (err) {
+            this.logError(
+              new Error(err["message"]),
+              event,
+              "page-analytics-error",
+            );
+            reject(err);
+          }
+          this.log(ctx, "page-analytics-event");
+          resolve();
+        });
+      } catch (e) {
+        this.logError(e, event, "page-analytics-error");
+        reject(e);
+      }
+    });
+  }
+
+  log(ctx: Context | undefined, tag: string) {
+    this.logger.info({
+      ...ctx,
+      analyticsTag: tag,
+    });
+  }
+
+  logError(error: Error, event: AnalyticsEvent, tag: string) {
+    this.logger.error({
+      error,
+      ...event,
+      analyticsTag: tag,
+    });
   }
 }
