@@ -1,4 +1,10 @@
-import { Analytics, Context } from "@segment/analytics-node";
+import {
+  Analytics,
+  Context,
+  IdentifyParams,
+  PageParams,
+  TrackParams,
+} from "@segment/analytics-node";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 
 export default class AnalyticsServiceClient {
@@ -25,79 +31,55 @@ export default class AnalyticsServiceClient {
   }
 
   async track(event: TrackAnalyticsEvent): Promise<void> {
+    return this.asyncHandler(this.client.track, event, "track");
+  }
+
+  async identify(event: IdentifyAnalyticsEvent): Promise<void> {
+    return this.asyncHandler(this.client.identify, event, "identify");
+  }
+
+  async page(event: PageAnalyticsEvent): Promise<void> {
+    return this.asyncHandler(this.client.page, event, "page");
+  }
+
+  private asyncHandler<T extends TrackParams | IdentifyParams | PageParams>(
+    fn: (e: T, cb?: (err: unknown, ctx: Context | undefined) => void) => void,
+    event: T,
+    type: string
+  ): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        this.client.track(event, (err, ctx) => {
+        fn(event, (err: unknown, ctx: Context | undefined) => {
           if (err) {
             this.logError(
               new Error(err["message"]),
               event,
-              "track-analytics-error",
+              `${type}-analytics-error`
             );
             reject(err);
           }
-          this.log(ctx, "track-analytics-event");
+          this.log(ctx, `${type}-analytics-event`);
           resolve();
         });
       } catch (e) {
-        this.logError(e, event, "track-analytics-error");
+        this.logError(e, event, `${type}-analytics-error`);
         reject(e);
       }
     });
   }
 
-  identify(event: IdentifyAnalyticsEvent): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        this.client.identify(event, (err, ctx) => {
-          if (err) {
-            this.logError(
-              new Error(err["message"]),
-              event,
-              "identify-analytics-error",
-            );
-            reject(err);
-          }
-          this.log(ctx, "identify-analytics-event");
-          resolve();
-        });
-      } catch (e) {
-        this.logError(e, event, "identify-analytics-error");
-        reject(e);
-      }
-    });
-  }
-
-  page(event: PageAnalyticsEvent): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        this.client.identify(event, (err, ctx) => {
-          if (err) {
-            this.logError(
-              new Error(err["message"]),
-              event,
-              "page-analytics-error",
-            );
-            reject(err);
-          }
-          this.log(ctx, "page-analytics-event");
-          resolve();
-        });
-      } catch (e) {
-        this.logError(e, event, "page-analytics-error");
-        reject(e);
-      }
-    });
-  }
-
-  log(ctx: Context | undefined, tag: string) {
+  private log(ctx: Context | undefined, tag: string) {
     this.logger.info({
       ...ctx,
       analyticsTag: tag,
     });
   }
 
-  logError(error: Error, event: AnalyticsEvent, tag: string) {
+  private logError(
+    error: Error,
+    event: TrackParams | IdentifyParams | PageParams,
+    tag: string
+  ) {
     this.logger.error({
       error,
       ...event,

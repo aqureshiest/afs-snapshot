@@ -47,7 +47,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   evaluate = async (
     input: Input,
     injections: Injections,
-    definition: Definition,
+    definition: Definition
   ) => {
     const { context } = injections;
 
@@ -55,7 +55,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       context.loadedPlugins.analyticsServiceClient.instance;
     assert(
       analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated",
+      "[e6falixw] AnalyticsServiceClient not instantiated"
     );
 
     const { type, event } = definition;
@@ -64,15 +64,15 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     switch (eventType) {
       case EVENT_TYPE.track:
-        await analyticsServiceClient.track(this.#buildTrackProps(definition));
+        await analyticsServiceClient.track(this.buildTrackProps(definition));
         break;
       case EVENT_TYPE.identify:
         await analyticsServiceClient.identify(
-          this.#buildIdentifyrops(definition),
+          this.buildIdentifyrops(definition)
         );
         break;
       case EVENT_TYPE.page:
-        await analyticsServiceClient.page(this.#buildPageProps(definition));
+        await analyticsServiceClient.page(this.buildPageProps(definition));
         break;
       default:
     }
@@ -87,7 +87,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     };
   }
 
-  #buildTrackProps(definition: Definition) {
+  private buildTrackProps(definition: Definition) {
     const {
       event,
       payload: { id, section, product_subtype, initiator, role },
@@ -108,7 +108,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     return props;
   }
 
-  #buildIdentifyrops(definition: Definition) {
+  private buildIdentifyrops(definition: Definition) {
     const {
       payload: { id, section, product_subtype, initiator, role },
     } = definition;
@@ -127,7 +127,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     return props;
   }
 
-  #buildPageProps(definition: Definition) {
+  private buildPageProps(definition: Definition) {
     const {
       payload: { id, section, product_subtype, initiator, role },
     } = definition;
