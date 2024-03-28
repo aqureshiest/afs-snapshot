@@ -2,10 +2,8 @@ import assert from "node:assert";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { Client } from "@earnest/http";
-import createError, { HttpError } from "http-errors";
 
 import { ADD_REFERENCE_MUTATION, NEAS_APPLICATION_QUERY } from "../application-service/graphql.js";
-import { NeasClaims } from "typings/clients/NEAS/index.js";
 
 export default class NeasClient<Injections extends unknown[]> extends Client<Injections> {
   #accessKey: string;
