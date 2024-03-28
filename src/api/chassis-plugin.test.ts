@@ -9,6 +9,7 @@ import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 describe("[41a1abef] chassis-plugins", () => {
   let context: Context;
   let applicationServiceClient;
+  let NeasClient;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -18,6 +19,7 @@ describe("[41a1abef] chassis-plugins", () => {
     await context.applicationServer.listen(3000);
     applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
+    NeasClient = context.loadedPlugins.NeasClient?.instance;
   });
 
   beforeEach(() => {
@@ -45,15 +47,50 @@ describe("[41a1abef] chassis-plugins", () => {
   });
 
   it("[9c34ea12] Representative contracts", async () => {
+    mock.method(NeasClient, "verifySession", () => {
+      return {
+        results: {
+          user_id: 1,
+          expires_in: 1234,
+          isValid: true,
+        },
+        response: {
+          statusCode: 200,
+        }
+      }
+    });
     const request = axios.get(
       "http://localhost:3000/apply/nested/nested_manifest",
+      {
+        headers: {
+          idToken: "idToken",
+        }
+      }
     );
     return assert.doesNotReject(request);
   });
 
   it("[ac8836e7] Mutative contracts", async () => {
+    mock.method(NeasClient, "verifySession", () => {
+      return {
+        results: {
+          user_id: 1,
+          expires_in: 1234,
+          isValid: true,
+        },
+        response: {
+          statusCode: 200,
+        }
+      }
+    });
     const request = axios.post(
       "http://localhost:3000/apply/nested/nested_manifest",
+      {},
+      {
+        headers: {
+          idToken: "idToken",
+        }
+      }
     );
     return assert.doesNotReject(request);
   });

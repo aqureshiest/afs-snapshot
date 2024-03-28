@@ -275,30 +275,36 @@ describe("[fab1071e] NeasClient", () => {
     assert.doesNotReject(async () =>  await client.sendEmailLink("1", "token", context)); 
   });
 
-  it("[bb287e57] should get an auth status", async () => {
+  it("[bb287e57] should return the returned claims and response object when verifying a session", async () => {
     mock.method(client, "get", () => {
       return {
         results: {
           user_id: 1,
           expires_in: 1234,
+          isValid: true,
         },
         response: {
           statusCode: 200,
         }
       }
     });
-    const results = await client.getAuthStatus("session", context);
-    assert.deepEqual(results, { user_id: 1, expires_in: 1234 }); 
-  });
-
-  it("[4327c5d6] should get not throw if an error occurs when getting an auth status", async () => {
-    mock.method(client, "get", () => {
-      return {
-        response: {
-          statusCode: 400,
-        }
+    const result = await client.verifySession("idToken", context);
+    assert.deepEqual(result, {
+      results: {
+        user_id: 1,
+        expires_in: 1234,
+        isValid: true,
+      },
+      response: {
+        statusCode: 200,
       }
     });
-    assert.doesNotReject(async () =>  await client.getAuthStatus("session", context)); 
+  });
+
+  it("[4327c5d6] should throw if an error occurs when verifying a session", async () => {
+    mock.method(client, "get", () => {
+      throw new Error("error") 
+    });
+    assert.rejects(async () => await client.verifySession("idToken", context)); 
   });
 });

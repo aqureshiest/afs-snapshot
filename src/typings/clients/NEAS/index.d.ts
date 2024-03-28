@@ -8,3 +8,13 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
     NeasClient: NeasClientPlugin;
   }
 }
+
+export type NeasClaims = {
+  userId: number,
+  exp: number,
+  isValid: boolean,
+}
+
+declare module "clients/NEAS/index.js" {
+  type Claims = NeasClaims;
+}

@@ -2,8 +2,10 @@ import assert from "node:assert";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { Client } from "@earnest/http";
+import createError, { HttpError } from "http-errors";
 
 import { ADD_REFERENCE_MUTATION, NEAS_APPLICATION_QUERY } from "../application-service/graphql.js";
+import { NeasClaims } from "typings/clients/NEAS/index.js";
 
 export default class NeasClient<Injections extends unknown[]> extends Client<Injections> {
   #accessKey: string;
@@ -15,7 +17,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
     this.#logger = context.logger;
   }
 
-  get headers() {
+  get defaultHeaders() {
     return {
       ...super.headers,
       "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
 
       const { results, response } = (await this.post({
         uri: "/auth/identity/unauthenticated",
-        headers: this.headers,
+        headers: this.defaultHeaders,
         resiliency: this.resiliency,
       }, ...injections)) as Client.Response<{ authId: string, sessionToken: string }>;
 
@@ -107,7 +109,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       const { results, response } = (await this.post({
         uri: "/auth/identity/authId",
         headers: {
-          ...this.headers,
+          ...this.defaultHeaders,
           Authorization: token, // overrides default Authorization header
         },
         body: {
@@ -168,7 +170,7 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
       const { response } = (await this.post({
           uri: "/auth/identity/access-code/send",
           headers: {
-            ...this.headers,
+            ...this.defaultHeaders,
             Authorization: token, // overrides default Authorization header
           },
           body: {
@@ -203,26 +205,33 @@ export default class NeasClient<Injections extends unknown[]> extends Client<Inj
   }
 
   /**
-   * Requests whether a given session cookie is valid
+   * Requests whether a given idToken is valid
    * @param token string
    * @param injections Injections
+   * @returns Client.Response<Claims>
    */
-  async getAuthStatus(token: string, ...injections: Injections): Promise<{ [key: string]: unknown } | undefined> {
-    const { results, response } = (await this.get(
-      {
-        uri: "/auth/status",
-        headers: {
-          ...this.headers,
-          Authorization: token,
+  async verifySession(
+    token: string,
+    ...injections: Injections
+  ): Promise<Client.Response<Claims>> {
+    try {
+      const result = await this.get({
+        uri: "/auth/interservice/verify",
+        headers: this.defaultHeaders,
+        body: {
+          token
         },
         resiliency: this.resiliency,
-      }, ...injections)) as Client.Response<{ [key: string]: unknown }>;
+      }, ...injections) as Client.Response<Claims>;
 
-    if (response.statusCode && response.statusCode >= 400) {
-      this.#log({ message: "[82c1c755] Failed to get auth status" }, "warn");
-      return;
+      return result;
+    } catch (error) {
+      this.#log({
+        message: error.message,
+        statusCode: error.statusCode,
+      });
+      throw error;
     }
-    return results;
   }
 
   /* ============================== *
