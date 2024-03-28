@@ -1,11 +1,5 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import {
-  Context,
-  IdentifyParams,
-  PageParams,
-  TrackParams,
-} from "@segment/analytics-node";
 import AnalyticsServiceClient from "clients/analytics/index.js";
 type AnalyticsServicePlugin = ChassisPlugin<AnalyticsServiceClient>;
 
