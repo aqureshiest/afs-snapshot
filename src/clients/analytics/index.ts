@@ -47,7 +47,7 @@ export default class AnalyticsServiceClient {
   private asyncHandler<T extends TrackParams | IdentifyParams | PageParams>(
     fn: (e: T, cb?: (err: unknown, ctx: Context | undefined) => void) => void,
     event: T,
-    type: string
+    type: string,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
@@ -56,7 +56,7 @@ export default class AnalyticsServiceClient {
             this.logError(
               new Error(err["message"]),
               event,
-              `${type}-analytics-error`
+              `${type}-analytics-error`,
             );
             reject(err);
           }
@@ -80,7 +80,7 @@ export default class AnalyticsServiceClient {
   private logError(
     error: Error,
     event: TrackParams | IdentifyParams | PageParams,
-    tag: string
+    tag: string,
   ) {
     this.logger.error({
       error,
