@@ -5,10 +5,10 @@ import {
   UserRole,
 } from "../../typings/clients/analytics/index.js";
 import {
-  IdentifyAnalyticsEvent,
-  PageAnalyticsEvent,
-  TrackAnalyticsEvent,
-} from "../../clients/analytics/index.js";
+  IdentifyParams,
+  PageParams,
+  TrackParams,
+} from "@segment/analytics-node";
 
 enum EVENT_TYPE {
   track,
@@ -47,7 +47,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   evaluate = async (
     input: Input,
     injections: Injections,
-    definition: Definition,
+    definition: Definition
   ) => {
     const { context } = injections;
 
@@ -55,7 +55,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       context.loadedPlugins.analyticsServiceClient.instance;
     assert(
       analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated",
+      "[e6falixw] AnalyticsServiceClient not instantiated"
     );
 
     const { type, event } = definition;
@@ -68,7 +68,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         break;
       case EVENT_TYPE.identify:
         await analyticsServiceClient.identify(
-          this.buildIdentifyrops(definition),
+          this.buildIdentifyrops(definition)
         );
         break;
       case EVENT_TYPE.page:
@@ -90,11 +90,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildTrackProps(definition: Definition) {
     const {
       event,
-      payload: { id, section, product_subtype, initiator, role },
+      payload: { application_id, section, product_subtype, initiator, role },
     } = definition;
 
-    const props: TrackAnalyticsEvent = {
-      anonymousId: id,
+    const props: TrackParams = {
+      anonymousId: application_id,
       event,
       properties: {
         section,
@@ -110,11 +110,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
   private buildIdentifyrops(definition: Definition) {
     const {
-      payload: { id, section, product_subtype, initiator, role },
+      payload: { application_id, section, product_subtype, initiator, role },
     } = definition;
 
-    const props: IdentifyAnalyticsEvent = {
-      anonymousId: id,
+    const props: IdentifyParams = {
+      anonymousId: application_id,
       traits: {
         section,
         product: "SLR",
@@ -129,11 +129,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
   private buildPageProps(definition: Definition) {
     const {
-      payload: { id, section, product_subtype, initiator, role },
+      payload: { application_id, section, product_subtype, initiator, role },
     } = definition;
 
-    const props: PageAnalyticsEvent = {
-      anonymousId: id,
+    const props: PageParams = {
+      anonymousId: application_id,
       properties: {
         section,
         product: "SLR",

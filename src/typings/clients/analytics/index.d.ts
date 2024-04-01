@@ -25,31 +25,6 @@ interface IEvent {
   context?: { [key: string]: string };
 }
 
-interface IIdentifyEvent extends IEvent {
-  traits: BaseEventProperties;
-}
-
-interface ITrackEvent extends IEvent {
-  event: string;
-  properties: BaseEventProperties;
-}
-
-interface IPageEvent extends IEvent {
-  properties: BaseEventProperties;
-}
-
-interface BaseEventProperties {
-  product: "SLR";
-  product_subtype: ApplicationType;
-  initiator: UserRole;
-  role: UserRole;
-  section: string;
-  "Has no identifying info"?: "true";
-}
-
 declare module "../../../clients/analytics/index.js" {
   type AnalyticsEvent = IEvent;
-  type IdentifyAnalyticsEvent = IIdentifyEvent;
-  type TrackAnalyticsEvent = ITrackEvent;
-  type PageAnalyticsEvent = IPageEvent;
 }
