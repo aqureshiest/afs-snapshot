@@ -28,7 +28,7 @@ describe("[d7c20b00] get-inputs handler", () => {
     };
   });
 
-  it("should throw when applicationServiceClient is not instantiated", async () => {
+  it("[2efb6b79] should throw when applicationServiceClient is not instantiated", async () => {
     assert.rejects(
       async () =>
         await getInputs(
@@ -40,7 +40,7 @@ describe("[d7c20b00] get-inputs handler", () => {
     );
   });
 
-  it("should set res.locals.input to the queried application when a root application does not exist", async () => {
+  it("[f8e4e7f3] should set res.locals.input to the queried application when a root application does not exist", async () => {
     const res = {
       locals: {
         application: {
@@ -82,7 +82,7 @@ describe("[d7c20b00] get-inputs handler", () => {
     });
   });
 
-  it("should set the flattened root application on the response object with just a primary", async () => {
+  it("[f69befb9] should set the flattened root application on the response object with just a primary", async () => {
     const res = {
       locals: {
         application: {
@@ -153,7 +153,7 @@ describe("[d7c20b00] get-inputs handler", () => {
     });
   });
 
-  it("should set the flattened root application on the response object with both a primary and cosigner", async () => {
+  it("[87aad0fb] should set the flattened root application on the response object with both a primary and cosigner", async () => {
     const res = {
       locals: {
         application: {
@@ -294,5 +294,24 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
       },
     });
+  });
+
+  it("[7c2a5843] should not throw when the a request to application service fails", async () => {
+    const res = {
+      locals: {
+        application: {
+          id: 1,
+        },
+      },
+    };
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        throw new Error("request failed")
+      });
+
+    assert.doesNotReject(async () => { await getInputs(context, req as Request, res as unknown as Response, () => { }) });
   });
 });
