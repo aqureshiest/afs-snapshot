@@ -31,8 +31,8 @@ describe("[cd30d05c] session auth strategy", () => {
     mock.method(NeasClient, "verifySession", () => {
       return {
         results: {
-          user_id: 1,
-          expires_in: 1234,
+          userId: 1,
+          exp: Math.floor(Date.now() / 1000) + 1800,
           isValid: true,
         },
         response: {
@@ -40,16 +40,44 @@ describe("[cd30d05c] session auth strategy", () => {
         }
       }
     });
-    await authMiddleware(context, req as unknown as Request, res as Response, () => { })
+    await authMiddleware(context, req as unknown as Request, res as Response, () => { });
     assert.deepEqual(res.locals, {
       auth: {
         session: {
-          user_id: 1,
-          expires_in: 1234,
+          userId: 1,
+          exp: Math.floor(Date.now() / 1000) + 1800,
           isValid: true,
         }
       }
     });
+  });
+
+  it("[19cd0178] should throw an error when a session has expired", async () => {
+    const req = {
+      headers: {
+        idToken: "idToken"
+      }
+    };
+    const res = { locals: {} }
+    mock.method(NeasClient, "verifySession", () => {
+      return {
+        results: {
+          userId: 1,
+          exp: Math.floor(Date.now() / 1000) - 1800,
+          isValid: true,
+        },
+        response: {
+          statusCode: 200,
+        }
+      }
+    });
+    assert.rejects(
+      async () => await authMiddleware(context, req as unknown as Request, res as Response, () => { }),
+      (error: Error) => {
+        assert.equal(error.message, "[0963fa22] Unauthorized - session expired");
+        return true;
+      },
+    )
   });
 
   it("[e359c9ea] should throw when an idToken does not exist in the request headers", async () => {
@@ -57,7 +85,13 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {}
     };
     const res = { locals: {} }
-    assert.rejects(async () => await authMiddleware(context, req as unknown as Request, res as Response, () => { }))
+    assert.rejects(
+      async () => await authMiddleware(context, req as unknown as Request, res as Response, () => { }),
+      (error: Error) => {
+        assert.equal(error.message, "[6a1bed98] Unauthorized - missing idToken in request headers");
+        return true;
+      },
+    )
   });
 
   it("[d389ea54] should throw an error if the returned response.statusCode is 400", async () => {
@@ -75,6 +109,12 @@ describe("[cd30d05c] session auth strategy", () => {
         }
       }
     });
-    assert.rejects(async () => await authMiddleware(context, req as unknown as Request, res as Response, () => { }));
+    assert.rejects(
+      async () => await authMiddleware(context, req as unknown as Request, res as Response, () => { }),
+      (error: Error) => {
+        assert.equal(error.message, "[a6b44191] Unauthorized - invalid session");
+        return true;
+      },
+    );
   });
 });
