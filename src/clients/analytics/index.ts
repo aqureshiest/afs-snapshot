@@ -8,7 +8,7 @@ import {
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 
 export default class AnalyticsServiceClient {
-  private client: Analytics;
+  public client: Analytics;
   private logger: PluginContext["logger"];
 
   constructor(context: PluginContext, apiKey: string) {
@@ -31,8 +31,6 @@ export default class AnalyticsServiceClient {
   }
 
   async track(event: TrackParams): Promise<void> {
-    console.log("hii");
-
     return this.asyncHandler(this.client.track, event, "track");
   }
 
