@@ -57,7 +57,7 @@ const getInputs: Handler = async function (
       return authorized;
     }, false);
 
-    assert(isAuthorized, new Error("[dfbaf766] Unauthorized - applicants lack permissions for this session"));
+    assert(isAuthorized, new createError.Unauthorized("[dfbaf766] Unauthorized - applicants lack permissions for this session"));
   }
 
   res.locals.input = {
