@@ -1,55 +1,63 @@
+import assert from "node:assert";
+import createError from "http-errors";
+import { Request, Response, NextFunction } from "express";
+
 import { Application } from "../../typings/clients/application-service/index.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
-import { Request, Response, NextFunction } from "express";
 import flattenApplication from "../helpers.js";
-/**
- * Gather inputs for contract execution
- * TODO: get authentication artifacts
- */
+
+/* ============================== *
+* Gather inputs for contract execution
+* ============================== */
 const getInputs: Handler = async function (
   context,
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  const id = res.locals.application?.id;
-  const ASclient = context.loadedPlugins.applicationServiceClient.instance;
-  if (!ASclient)
-    throw new Error("[67c30fe0] Application Service client instance not found");
-  let application: Application | null = null;
+  const applicationId = res?.locals?.application?.id;
+  const userId = res?.locals?.auth?.session?.userId;
 
-  if (id) {
-    try {
-      const { application: app } = (await ASclient.sendRequest(
-        {
-          query: TEMP_DEFAULT_APPLICATION_QUERY,
-          variables: { id },
-        },
-        context,
-      )) as unknown as { application: Application };
+  const ASclient = context?.loadedPlugins?.applicationServiceClient?.instance;
+  assert(ASclient, new Error("[67c30fe0] Application Service client instance does not exist"));
 
-      application = app;
-      // we are gonna try the approach of always getting the Root Application in a flatten shape
-      // by processing the relationships array, and putting them into their corresponding
-      // keys on root Application
-      if (application?.root?.id) {
-        const { application: rootApplication } = (await ASclient.sendRequest(
-          {
-            query: TEMP_DEFAULT_APPLICATION_QUERY,
-            variables: { id: application.root.id },
-          },
-          context,
-        )) as unknown as { application: Application };
+  /* ============================== *
+   * I. Fetch Root Application
+   * ============================== */
+  let application;
+  if (applicationId) {
+    const { application: rootApplication } = (await ASclient.sendRequest({
+      query: TEMP_DEFAULT_APPLICATION_QUERY,
+      variables: { id: applicationId, root: true },
+    }, context,)) as unknown as { application: Application };
 
-        application = rootApplication;
+    assert(rootApplication, new Error("[fc867b3a] Root application does not exist"));
+
+    /* ============================== *
+     * II. Flatten Root Application 
+    * ============================== */
+    application = flattenApplication(rootApplication);
+
+    const { primary, cosigner } = application;
+
+    const applicants = [
+      ...(primary ? [primary] : []),
+      ...(cosigner ? [cosigner] : []),
+    ];
+
+    /* ============================== *
+     * III. Session Authorization 
+     * ============================== */
+    const isAuthorized = applicants.reduce((authorized, applicant) => {
+      const { monolithUserID } = applicant;
+
+      if ((monolithUserID && userId) && (monolithUserID === userId)) { // for v1, at least one applicant has to be authorized
+        authorized = true;
       }
-      application = flattenApplication(application);
-    } catch (ex) {
-      context.logger.error({
-        message: `[89af3057] error while retrieving application`,
-        stack: ex.stack,
-      });
-    }
+      return authorized;
+    }, false);
+
+    assert(isAuthorized, new createError.Unauthorized("[dfbaf766] Unauthorized - applicants lack permissions for this session"));
   }
 
   res.locals.input = {
