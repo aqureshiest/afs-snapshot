@@ -89,7 +89,7 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
         auth: {
           session: {
-            userId: 1234,
+            userId: "1234",
           }
         }
       },
@@ -101,7 +101,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           applicants: [
             {
               id: 1,
-              monolithUserID: 5678 // monolithUserID does not match the userId
+              monolithUserID: "5678" // monolithUserID does not match the userId
             }
           ]
         }
@@ -130,7 +130,7 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
         auth: {
           session: {
-            userId: 1234,
+            userId: "1234",
           }
         }
       },
@@ -143,7 +143,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           applicants: [
             {
               id: 1,
-              monolithUserID: 1234,
+              monolithUserID: "1234",
             }
           ]
         }
@@ -163,7 +163,7 @@ describe("[d7c20b00] get-inputs handler", () => {
       },
       auth: {
         session: {
-          userId: 1234
+          userId: "1234"
         }
       },
       input: {
@@ -172,12 +172,12 @@ describe("[d7c20b00] get-inputs handler", () => {
           applicants: [
             {
               id: 1,
-              monolithUserID: 1234
+              monolithUserID: "1234"
             },
           ],
           primary: {
             id: 1,
-            monolithUserID: 1234
+            monolithUserID: "1234"
           },
         },
         request: {
@@ -195,7 +195,7 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
         auth: {
           session: {
-            userId: 1234,
+            userId: "1234",
           }
         }
       },
@@ -208,7 +208,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           applicants: [
             {
               id: 1,
-              monolithUserID: 1234,
+              monolithUserID: "1234",
               relationships: [
                 {
                   id: 2,
@@ -222,7 +222,7 @@ describe("[d7c20b00] get-inputs handler", () => {
             },
             {
               id: 3,
-              monolithUserID: 5678,
+              monolithUserID: "5678",
               relationships: [
                 {
                   id: 2,
@@ -251,7 +251,7 @@ describe("[d7c20b00] get-inputs handler", () => {
       },
       auth: {
         session: {
-          userId: 1234,
+          userId: "1234",
         }
       },
       input: {
@@ -260,7 +260,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           applicants: [
             {
               id: 1,
-              monolithUserID: 1234,
+              monolithUserID: "1234",
               relationships: [
                 {
                   id: 2,
@@ -274,7 +274,7 @@ describe("[d7c20b00] get-inputs handler", () => {
             },
             {
               id: 3,
-              monolithUserID: 5678,
+              monolithUserID: "5678",
               relationships: [
                 {
                   id: 2,
@@ -289,7 +289,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           ],
           primary: {
             id: 1,
-            monolithUserID: 1234,
+            monolithUserID: "1234",
             relationships: [
               {
                 id: 2,
@@ -303,7 +303,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           },
           cosigner: {
             id: 3,
-            monolithUserID: 5678,
+            monolithUserID: "5678",
             relationships: [
               {
                 id: 2,

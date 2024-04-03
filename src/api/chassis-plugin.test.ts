@@ -37,7 +37,7 @@ describe("[41a1abef] chassis-plugins", () => {
     mock.method(NeasClient, "verifySession", () => {
       return {
         results: {
-          userId: 1,
+          userId: "1",
           exp: Math.floor(Date.now() / 1000) + 1800,
           isValid: true,
         },
@@ -54,7 +54,7 @@ describe("[41a1abef] chassis-plugins", () => {
           applicants: [
             {
               id: "3",
-              monolithUserID: 1 // monolithUserID needs to match userId claim for auth
+              monolithUserID: "1" // monolithUserID needs to match userId claim for auth
             }
           ],
         }
@@ -76,7 +76,7 @@ describe("[41a1abef] chassis-plugins", () => {
     mock.method(NeasClient, "verifySession", () => {
       return {
         results: {
-          userId: 1,
+          userId: "1",
           exp: Math.floor(Date.now() / 1000) + 1800,
           isValid: true,
         },
@@ -93,7 +93,7 @@ describe("[41a1abef] chassis-plugins", () => {
           applicants: [
             {
               id: "3",
-              monolithUserID: 1
+              monolithUserID: "1"
             }
           ],
         }
