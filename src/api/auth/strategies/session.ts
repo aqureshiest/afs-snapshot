@@ -4,16 +4,30 @@ import createError from "http-errors";
 
 import type NeasClient from "clients/NEAS/index.js";
 
-export default async function (context: Context, req: Request): Promise<Strategy> {
-  const NeasClient = context.loadedPlugins.NeasClient?.instance as NeasClient<unknown[]>;
+export default async function (
+  context: Context,
+  req: Request,
+): Promise<Strategy> {
+  const NeasClient = context.loadedPlugins.NeasClient?.instance as NeasClient<
+    unknown[]
+  >;
   assert(NeasClient, "[de7f7d6c] NeasClient is not instantiated");
 
-  const strategy: Strategy = { artifacts: null, error: null, };
-  
-  const idToken = req.headers?.idToken as string || req.headers?.idtoken as string;
-  assert(idToken, createError.Unauthorized("[6a1bed98] Unauthorized - missing idToken in request headers"));
+  const strategy: Strategy = { artifacts: null, error: null };
 
-  const { results, response } = await NeasClient.verifySession(idToken, context);
+  const idToken =
+    (req.headers?.idToken as string) || (req.headers?.idtoken as string);
+  assert(
+    idToken,
+    createError.Unauthorized(
+      "[6a1bed98] Unauthorized - missing idToken in request headers",
+    ),
+  );
+
+  const { results, response } = await NeasClient.verifySession(
+    idToken,
+    context,
+  );
 
   if (response.statusCode === 400) {
     strategy.error = createError.Unauthorized("[a6b44191] Unauthorized - invalid session");
@@ -31,8 +45,8 @@ export default async function (context: Context, req: Request): Promise<Strategy
     strategy.artifacts = {
       session: {
         ...results,
-      }
-    }
+      },
+    };
   }
 
   return strategy;

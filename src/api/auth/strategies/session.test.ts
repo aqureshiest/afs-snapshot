@@ -24,10 +24,10 @@ describe("[cd30d05c] session auth strategy", () => {
   it("[955ce279] should set returned claims on res.locals if an idToken exists", async () => {
     const req = {
       headers: {
-        idToken: "idToken"
-      }
+        idToken: "idToken",
+      },
     };
-    const res = { locals: {} }
+    const res = { locals: {} };
     mock.method(NeasClient, "verifySession", () => {
       return {
         results: {
@@ -37,8 +37,8 @@ describe("[cd30d05c] session auth strategy", () => {
         },
         response: {
           statusCode: 200,
-        }
-      }
+        },
+      };
     });
     await authMiddleware(context, req as unknown as Request, res as Response, () => { });
     assert.deepEqual(res.locals, {
@@ -47,8 +47,8 @@ describe("[cd30d05c] session auth strategy", () => {
           userId: 1,
           exp: Math.floor(Date.now() / 1000) + 1800,
           isValid: true,
-        }
-      }
+        },
+      },
     });
   });
 
@@ -82,7 +82,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[e359c9ea] should throw when an idToken does not exist in the request headers", async () => {
     const req = {
-      headers: {}
+      headers: {},
     };
     const res = { locals: {} }
     assert.rejects(
@@ -97,17 +97,17 @@ describe("[cd30d05c] session auth strategy", () => {
   it("[d389ea54] should throw an error if the returned response.statusCode is 400", async () => {
     const req = {
       headers: {
-        idToken: "idToken"
-      }
+        idToken: "idToken",
+      },
     };
-    const res = { locals: {} }
+    const res = { locals: {} };
     mock.method(NeasClient, "verifySession", () => {
       return {
         results: {},
         response: {
           statusCode: 400,
-        }
-      }
+        },
+      };
     });
     assert.rejects(
       async () => await authMiddleware(context, req as unknown as Request, res as Response, () => { }),

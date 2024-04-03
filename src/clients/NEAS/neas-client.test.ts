@@ -357,8 +357,8 @@ describe("[fab1071e] NeasClient", () => {
         },
         response: {
           statusCode: 200,
-        }
-      }
+        },
+      };
     });
     const result = await client.verifySession("idToken", context);
     assert.deepEqual(result, {
@@ -369,14 +369,14 @@ describe("[fab1071e] NeasClient", () => {
       },
       response: {
         statusCode: 200,
-      }
+      },
     });
   });
 
   it("[4327c5d6] should throw if an error occurs when verifying a session", async () => {
     mock.method(client, "get", () => {
-      throw new Error("error") 
+      throw new Error("error");
     });
-    assert.rejects(async () => await client.verifySession("idToken", context)); 
+    assert.rejects(async () => await client.verifySession("idToken", context));
   });
 });

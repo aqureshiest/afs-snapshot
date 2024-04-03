@@ -36,7 +36,7 @@ export default class NeasClient<
       timeout: 10000,
       test: ({ response }) =>
         Boolean(response.statusCode && response.statusCode <= 500),
-    }
+    };
   }
 
   /* ============================== *
@@ -46,39 +46,26 @@ export default class NeasClient<
    * Creates a new unauthenticated identity and session for a given application
    * @param id string
    * @param injections Injections
-   * @returns
+   * @returns Promise<string>
    */
   async createUnauthenticatedIdentity(
     id: string,
     ...injections: Injections
-  ): Promise<
-    Client.Response<{ authId: string; sessionToken: string }>["response"]
-  > {
+  ): Promise<string> {
     try {
       const context = injections[0] as PluginContext;
       const applicationServiceClient =
         context?.loadedPlugins?.applicationServiceClient?.instance;
-
-      if (!applicationServiceClient) {
-        throw new Error(
-          "[56f9bdec] Application-service-client is not instantiated and required to create an unauthenticated identity",
-        );
-      }
+      assert(
+        applicationServiceClient,
+        "[56f9bdec] Application-service-client is required to create an unauthenticated identity",
+      );
 
       const { results, response } = (await this.post(
         {
           uri: "/auth/identity/unauthenticated",
-          headers: {
-            ...this.headers,
-            Authorization: `${this.#accessKey}`,
-          },
-          resiliency: {
-            attempts: 3,
-            delay: 100,
-            timeout: 10000,
-            test: ({ response }) =>
-              Boolean(response.statusCode && response.statusCode <= 500),
-          },
+          headers: this.defaultHeaders,
+          resiliency: this.resiliency,
         },
         ...injections,
       )) as Client.Response<{ authId: string; sessionToken: string }>;
@@ -108,7 +95,7 @@ export default class NeasClient<
       this.#log(
         {
           error: error?.message,
-          message: "[5a3effd0] Failed to create guest id",
+          message: "[5a3effd0] Failed to create unauthenticated identity",
         },
         "error",
       );
@@ -128,54 +115,39 @@ export default class NeasClient<
     id: string,
     token: string,
     ...injections: Injections
-  ): Promise<
-    Client.Response<{ authId: string; sessionToken: string }>["response"]
-  > {
+  ): Promise<string> {
     try {
       const context = injections[0] as PluginContext;
       const applicationServiceClient =
         context?.loadedPlugins?.applicationServiceClient?.instance;
-
-      if (!applicationServiceClient) {
-        throw new Error(
-          "[b0e4b066] Application-service-client is not instantiated and required to create an authId",
-        );
-      }
+      assert(
+        applicationServiceClient,
+        "[b0e4b066] Application-service-client is required to create an authId",
+      );
 
       const { application } = (await applicationServiceClient.sendRequest({
         query: NEAS_APPLICATION_QUERY,
         variables: { id },
       })) as { application: types.Application };
-
-      if (!application) {
-        throw new Error("[cc7eda2d] Application does not exist");
-      }
+      assert(application, "[cc7eda2d] Application does not exist");
 
       const { details } = application;
-
-      if (details && !details?.email) {
-        throw new Error(
-          "[55858b44] An email address is required to create an authId",
-        );
-      }
+      assert(
+        details?.email,
+        "[55858b44] An email address is required to create an authId",
+      );
 
       const { results, response } = (await this.post(
         {
           uri: "/auth/identity/authId",
           headers: {
-            ...this.headers,
-            Authorization: token,
+            ...this.defaultHeaders,
+            Authorization: token, // overrides default Authorization header
           },
           body: {
             email: details?.email,
           },
-          resiliency: {
-            attempts: 3,
-            delay: 100,
-            timeout: 10000,
-            test: ({ response }) =>
-              Boolean(response.statusCode && response.statusCode <= 500),
-          },
+          resiliency: this.resiliency,
         },
         ...injections,
       )) as Client.Response<{ authId: string; sessionToken: string }>;
@@ -229,37 +201,23 @@ export default class NeasClient<
       const context = injections[0] as PluginContext;
       const applicationServiceClient =
         context?.loadedPlugins?.applicationServiceClient?.instance;
-
-      if (!applicationServiceClient) {
-        throw new Error(
-          "[a9050dc4] Application-service-client is not instantiated and required to send users an email link",
-        );
-      }
+      assert(
+        applicationServiceClient,
+        "[a9050dc4] Application-service-client is not instantiated and required to send users an email link",
+      );
 
       const { application } = (await applicationServiceClient.sendRequest({
         query: NEAS_APPLICATION_QUERY,
         variables: { id },
       })) as { application: types.Application };
-
-      if (!application) {
-        throw new Error("[b2ca51ed] Application does not exist");
-      }
+      assert(application, "[b2ca51ed] Application does not exist");
 
       const { authID, details } = application;
       assert(authID, "[3673aadd] An authID is required to send an email link");
-      assert(details?.email, "[028aa77f] An email address is required to send an email link");
-
-      if (!authID) {
-        throw new Error(
-          "[3673aadd] An authID is required to send an email link",
-        );
-      }
-
-      if (details && !details?.email) {
-        throw new Error(
-          "[028aa77f] An email address is required to send an email link",
-        );
-      }
+      assert(
+        details?.email,
+        "[028aa77f] An email address is required to send an email link",
+      );
 
       const { response } = (await this.post(
         {
@@ -284,13 +242,7 @@ export default class NeasClient<
               },
             ],
           },
-          resiliency: {
-            attempts: 3,
-            delay: 100,
-            timeout: 10000,
-            test: ({ response }) =>
-              Boolean(response.statusCode && response.statusCode <= 500),
-          },
+          resiliency: this.resiliency,
         },
         ...injections,
       )) as Client.Response<void>;
@@ -321,14 +273,17 @@ export default class NeasClient<
     ...injections: Injections
   ): Promise<Client.Response<Claims>> {
     try {
-      const result = await this.get({
-        uri: "/auth/interservice/verify",
-        headers: this.defaultHeaders,
-        body: {
-          token
+      const result = (await this.get(
+        {
+          uri: "/auth/interservice/verify",
+          headers: this.defaultHeaders,
+          body: {
+            token,
+          },
+          resiliency: this.resiliency,
         },
-        resiliency: this.resiliency,
-      }, ...injections) as Client.Response<Claims>;
+        ...injections,
+      )) as Client.Response<Claims>;
 
       return result;
     } catch (error) {

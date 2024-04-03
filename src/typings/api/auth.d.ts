@@ -10,10 +10,10 @@ type NeasArtifacts = NeasClaims;
 
 type StrategyResponse = {
   artifacts: {
-    session: NeasArtifacts
+    session: NeasArtifacts;
   } | null;
   error: HttpError | Error | null;
-}
+};
 
 declare module "api/auth/strategies/session.js" {
   type Context = PluginContext;

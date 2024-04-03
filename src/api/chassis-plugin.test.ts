@@ -43,8 +43,8 @@ describe("[41a1abef] chassis-plugins", () => {
         },
         response: {
           statusCode: 200,
-        }
-      }
+        },
+      };
     });
 
     mock.method(applicationServiceClient, "sendRequest", async () => {
@@ -66,8 +66,8 @@ describe("[41a1abef] chassis-plugins", () => {
       {
         headers: {
           idToken: "idToken",
-        }
-      }
+        },
+      },
     );
     return assert.doesNotReject(request);
   });
@@ -82,8 +82,8 @@ describe("[41a1abef] chassis-plugins", () => {
         },
         response: {
           statusCode: 200,
-        }
-      }
+        },
+      };
     });
 
     mock.method(applicationServiceClient, "sendRequest", async () => {
@@ -106,8 +106,8 @@ describe("[41a1abef] chassis-plugins", () => {
       {
         headers: {
           idToken: "idToken",
-        }
-      }
+        },
+      },
     );
     return assert.doesNotReject(request);
   });

@@ -21,19 +21,12 @@
           {{#if phone}}
             {"phone": [{"number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
-          {{#if location}}
-            {"location": [{"index": 0, "street1": "{{location.street1}}", "street2": "{{location.street2}}", "city": "{{location.city}}", "state": "{{location.state}}", "zip": "{{location.zip}}" , "type": "primary"}]}
+          {{#if location }}
+            {"location": [{"index": 0, "street1": "{{location.street1}}", "street2": "{{location.street2}}", "city": "{{location.city}}", "state": "{{location.state}}", "zip": "{{location.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
-          {{#if citizenship}}
-            {"location": [{ "index": 0,"citizenship": "{{citizenship}}" }] }
+          {{#if previousAddress }} 
+            {"location": [{"index": 1, "street1": "{{previousAddress.street1}}", "street2": "{{previousAddress.street2}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
-          
-          {{!#if (and employment employerName jobTitle) }}
-          
-          {{!/if}}
-          {{!#if annualIncome}}
-          
-          {{!/if}}
         {{/obj}}
     },
     {{/with}}

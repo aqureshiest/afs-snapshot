@@ -15,6 +15,7 @@
     ],
     "student-info-basic-rows": [
       "info/student-info.refi",
+      "questions/primary/dateOfBirth.default",
       "questions/primary/phone.default",
       "info/student-phone-disclosure.default"
     ],
@@ -24,7 +25,7 @@
     ],
     "student-info-previous-address-rows": [
       "info/student-address/previous-address.refi",
-      "questions/primary/address.default"
+      "questions/primary/address.refi"
     ],
     "student-info-employment-rows": [
       "info/student-employment.default",
