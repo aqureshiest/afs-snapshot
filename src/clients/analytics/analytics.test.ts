@@ -14,7 +14,7 @@ import {
 
 describe("[b8dcinbp] Analytics Service Client", () => {
   let context;
-  let client: AnalyticsServiceClient;
+  let analyticsServiceClient: AnalyticsServiceClient;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -23,50 +23,25 @@ describe("[b8dcinbp] Analytics Service Client", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
 
-    client = context.loadedPlugins.analyticsServiceClient.instance;
-
-    mock.method(
-      client.client,
-      "track",
-      async (
-        e: TrackParams,
-        cb: (err: unknown, ctx: Context | undefined) => void,
-      ) => {
-        const contx = new Context({ type: "track", ...e });
-
-        await Promise.resolve(cb(null, contx));
-      },
-    );
-
-    mock.method(
-      client.client,
-      "identify",
-      async (
-        e: IdentifyParams,
-        cb: (err: unknown, ctx: Context | undefined) => void,
-      ) => {
-        const contx = new Context({ type: "identify", ...e });
-
-        await Promise.resolve(cb(null, contx));
-      },
-    );
-
-    mock.method(
-      client.client,
-      "page",
-      async (
-        e: PageParams,
-        cb: (err: unknown, ctx: Context | undefined) => void,
-      ) => {
-        const contx = new Context({ type: "page", ...e });
-
-        await Promise.resolve(cb(null, contx));
-      },
-    );
+    analyticsServiceClient =
+      context.loadedPlugins.analyticsServiceClient.instance;
   });
 
   describe("[njr43ezv] Segment event tests", () => {
     it("[5lke3jnn] Application section started tracking when event given", async () => {
+      const mockTrackFn = mock.fn(
+        async (
+          e: TrackParams,
+          cb: (err: unknown, ctx: Context | undefined) => void,
+        ) => {
+          const contx = new Context({ type: "track", ...e });
+
+          await Promise.resolve(cb(null, contx));
+        },
+      );
+
+      mock.method(analyticsServiceClient.segmentClient, "track", mockTrackFn);
+
       const props: TrackParams = {
         anonymousId: "123",
         event: "Test event",
@@ -78,11 +53,27 @@ describe("[b8dcinbp] Analytics Service Client", () => {
           role: "primary",
         },
       };
-      const resp = await client.track(props);
+      await analyticsServiceClient.track(props);
 
-      assert.equal(resp, undefined);
+      assert.strictEqual(mockTrackFn.mock.calls.length, 1);
     });
     it("[a3y3u5na] Application section started identifying when event given", async () => {
+      const mockIdentifyFn = mock.fn(
+        async (
+          e: TrackParams,
+          cb: (err: unknown, ctx: Context | undefined) => void,
+        ) => {
+          const contx = new Context({ type: "identify", ...e });
+
+          await Promise.resolve(cb(null, contx));
+        },
+      );
+
+      mock.method(
+        analyticsServiceClient.segmentClient,
+        "identify",
+        mockIdentifyFn,
+      );
       const props: IdentifyParams = {
         anonymousId: "123",
         traits: {
@@ -93,11 +84,23 @@ describe("[b8dcinbp] Analytics Service Client", () => {
           role: "primary",
         },
       };
-      const resp = await client.identify(props);
+      await analyticsServiceClient.identify(props);
 
-      assert.equal(resp, undefined);
+      assert.strictEqual(mockIdentifyFn.mock.calls.length, 1);
     });
     it("[k43080cw] Application section started page when event given", async () => {
+      const mockPageFn = mock.fn(
+        async (
+          e: TrackParams,
+          cb: (err: unknown, ctx: Context | undefined) => void,
+        ) => {
+          const contx = new Context({ type: "page", ...e });
+
+          await Promise.resolve(cb(null, contx));
+        },
+      );
+
+      mock.method(analyticsServiceClient.segmentClient, "page", mockPageFn);
       const props: PageParams = {
         anonymousId: "123",
         properties: {
@@ -108,9 +111,9 @@ describe("[b8dcinbp] Analytics Service Client", () => {
           role: "primary",
         },
       };
-      const resp = await client.page(props);
+      await analyticsServiceClient.page(props);
 
-      assert.equal(resp, undefined);
+      assert.strictEqual(mockPageFn.mock.calls.length, 1);
     });
   });
 });

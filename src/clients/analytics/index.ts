@@ -8,7 +8,7 @@ import {
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 
 export default class AnalyticsServiceClient {
-  public client: Analytics;
+  public segmentClient: Analytics;
   private logger: PluginContext["logger"];
 
   constructor(context: PluginContext, apiKey: string) {
@@ -21,7 +21,7 @@ export default class AnalyticsServiceClient {
       throw error;
     }
 
-    this.client = new Analytics({
+    this.segmentClient = new Analytics({
       writeKey: apiKey,
     });
 
@@ -31,15 +31,15 @@ export default class AnalyticsServiceClient {
   }
 
   async track(event: TrackParams): Promise<void> {
-    return this.asyncHandler(this.client.track, event, "track");
+    return this.asyncHandler(this.segmentClient.track, event, "track");
   }
 
   async identify(event: IdentifyParams): Promise<void> {
-    return this.asyncHandler(this.client.identify, event, "identify");
+    return this.asyncHandler(this.segmentClient.identify, event, "identify");
   }
 
   async page(event: PageParams): Promise<void> {
-    return this.asyncHandler(this.client.page, event, "page");
+    return this.asyncHandler(this.segmentClient.page, event, "page");
   }
 
   private asyncHandler<T extends TrackParams | IdentifyParams | PageParams>(
