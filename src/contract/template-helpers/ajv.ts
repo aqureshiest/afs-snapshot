@@ -15,7 +15,6 @@ const ajvHelper: TemplateHelper = function (action, schema, data, ...args) {
   }
   const validate = ajv.getSchema(schema);
   if (!validate) {
-    console.log("[4603ae] AJ DEBUG ajvHelper schema", schema);
     throw new Error("[dd8f1051] unable to load validation schema");
   }
   const validation = validate(data);

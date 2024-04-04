@@ -70,7 +70,6 @@ const getInputs: Handler = async function (
       headers: req.headers,
     },
   };
-  // console.log('[40f547] AJ DEBUG application', application);
 
   return next();
 };

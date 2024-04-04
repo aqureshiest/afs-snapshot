@@ -32,7 +32,7 @@
       "questions/primary/employment.default"
     ],
     "student-info-income-rows": [
-      "info/student-income.default",
+      "info/student-employment.default",
       "questions/primary/employment/employer-name.default",
       "questions/primary/employment/job-title.default",
       "questions/primary/employment/start-date.default",
@@ -47,7 +47,7 @@
     ],
     "student-info-income-retired-additional-income-rows": [
       "info/student-income/additional-income.default",
-      "questions/primary/income/additional-income.default",
+      "questions/primary/income/has-additional-income.default",
       "info/student-income/additional-income-hint.default",
       "questions/primary/income/amount/additional-income.default"
     ],
