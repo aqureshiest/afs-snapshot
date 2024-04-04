@@ -52,6 +52,7 @@ fragment ApplicantFragment on Application {
     }
   }
   cognitoID
+  monolithUserID
 }
 
 fragment ApplicationFragment on Application {
