@@ -4,7 +4,11 @@ import assert from "node:assert";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
-import AnalyticsServiceClient from "./index.js";
+import AnalyticsServiceClient, {
+  IdentifyAnalyticsEvent,
+  PageAnalyticsEvent,
+  TrackAnalyticsEvent,
+} from "./index.js";
 import {
   Context,
   IdentifyParams,
@@ -42,15 +46,16 @@ describe("[b8dcinbp] Analytics Service Client", () => {
 
       mock.method(analyticsServiceClient.segmentClient, "track", mockTrackFn);
 
-      const props: TrackParams = {
-        anonymousId: "123",
+      const props: TrackAnalyticsEvent = {
+        userId: "123",
         event: "Test event",
         properties: {
+          applicationId: "123",
           section: "Test section",
           product: "SLR",
-          product_subtype: "primary-only",
-          initiator: "primary",
-          role: "primary",
+          loan_type: "independent",
+          source: "application",
+          step: "test step",
         },
       };
       await analyticsServiceClient.track(props);
@@ -60,7 +65,7 @@ describe("[b8dcinbp] Analytics Service Client", () => {
     it("[a3y3u5na] Application section started identifying when event given", async () => {
       const mockIdentifyFn = mock.fn(
         async (
-          e: TrackParams,
+          e: IdentifyParams,
           cb: (err: unknown, ctx: Context | undefined) => void,
         ) => {
           const contx = new Context({ type: "identify", ...e });
@@ -74,14 +79,11 @@ describe("[b8dcinbp] Analytics Service Client", () => {
         "identify",
         mockIdentifyFn,
       );
-      const props: IdentifyParams = {
-        anonymousId: "123",
+      const props: IdentifyAnalyticsEvent = {
+        userId: "123",
         traits: {
-          section: "Test section",
+          applicationId: "123",
           product: "SLR",
-          product_subtype: "primary-only",
-          initiator: "primary",
-          role: "primary",
         },
       };
       await analyticsServiceClient.identify(props);
@@ -91,7 +93,7 @@ describe("[b8dcinbp] Analytics Service Client", () => {
     it("[k43080cw] Application section started page when event given", async () => {
       const mockPageFn = mock.fn(
         async (
-          e: TrackParams,
+          e: PageParams,
           cb: (err: unknown, ctx: Context | undefined) => void,
         ) => {
           const contx = new Context({ type: "page", ...e });
@@ -101,14 +103,13 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       );
 
       mock.method(analyticsServiceClient.segmentClient, "page", mockPageFn);
-      const props: PageParams = {
-        anonymousId: "123",
+      const props: PageAnalyticsEvent = {
+        userId: "123",
+        name: "test page",
         properties: {
-          section: "Test section",
+          applicationId: "123",
           product: "SLR",
-          product_subtype: "primary-only",
-          initiator: "primary",
-          role: "primary",
+          source: "application",
         },
       };
       await analyticsServiceClient.page(props);

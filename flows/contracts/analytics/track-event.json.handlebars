@@ -4,13 +4,8 @@
     "event": "{{request.body.values.eventName}}",
     "type": "{{request.body.values.eventType}}",
     "payload": {
-      "application_id": "{{request.params.id}}",
       "section": "{{request.body.values.section}}",
-      "product_subtype": "{{request.body.values.product_subtype}}",
-      "loan_type": "{{request.body.values.loan_type}}",
-      "initiator": "{{request.body.values.initiator}}",
-      "role": "{{request.body.values.role}}",
-      "title": "{{request.body.values.title}}",
+      "name": "{{request.body.values.name}}",
       "source": "{{request.body.values.source}}",
       "step": "{{request.body.values.step}}"
     }

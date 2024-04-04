@@ -15,16 +15,41 @@ declare module "clients/analytics/chassis-plugin.ts" {
   type instance = AnalyticsServiceClient;
 }
 
-type ApplicationType = "primary-only" | "with-cosigner" | "parent";
-type UserRole = "primary" | "cosigner";
-
 interface IEvent {
-  userId?: string;
-  anonymousId: string;
+  userId: string;
   timestamp?: Date;
   context?: { [key: string]: string };
 }
 
+interface IIdentifyEvent extends IEvent {
+  traits: BaseEventProperties;
+}
+
+interface ITrackEvent extends IEvent {
+  event: string;
+  properties: BaseEventProperties & {
+    section: string;
+    loan_type: string;
+    source: string;
+    step: string;
+  };
+}
+
+interface IPageEvent extends IEvent {
+  name: string;
+  properties: BaseEventProperties & {
+    source: string;
+  };
+}
+
+interface BaseEventProperties {
+  product: "SLR";
+  applicationId: string;
+}
+
 declare module "../../../clients/analytics/index.js" {
   type AnalyticsEvent = IEvent;
+  type IdentifyAnalyticsEvent = IIdentifyEvent;
+  type TrackAnalyticsEvent = ITrackEvent;
+  type PageAnalyticsEvent = IPageEvent;
 }

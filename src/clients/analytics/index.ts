@@ -30,15 +30,15 @@ export default class AnalyticsServiceClient {
     }
   }
 
-  async track(event: TrackParams): Promise<void> {
+  async track(event: TrackAnalyticsEvent): Promise<void> {
     return this.asyncHandler(this.segmentClient.track, event, "track");
   }
 
-  async identify(event: IdentifyParams): Promise<void> {
+  async identify(event: IdentifyAnalyticsEvent): Promise<void> {
     return this.asyncHandler(this.segmentClient.identify, event, "identify");
   }
 
-  async page(event: PageParams): Promise<void> {
+  async page(event: PageAnalyticsEvent): Promise<void> {
     return this.asyncHandler(this.segmentClient.page, event, "page");
   }
 
