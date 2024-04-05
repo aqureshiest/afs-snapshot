@@ -14,13 +14,3 @@ declare module "clients/analytics/chassis-plugin.ts" {
   type Context = ChassisPluginContext;
   type instance = AnalyticsServiceClient;
 }
-
-interface IEvent {
-  userId: string;
-  timestamp?: Date;
-  context?: { [key: string]: string };
-}
-
-declare module "../../../clients/analytics/index.js" {
-  type AnalyticsEvent = IEvent;
-}

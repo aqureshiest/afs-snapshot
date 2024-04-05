@@ -32,12 +32,12 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       const mockTrackFn = mock.fn(
         async (
           e: TrackParams,
-          cb: (err: unknown, ctx: Context | undefined) => void
+          cb: (err: unknown, ctx: Context | undefined) => void,
         ) => {
           const contx = new Context({ type: "track", ...e });
 
           await Promise.resolve(cb(null, contx));
-        }
+        },
       );
 
       mock.method(analyticsServiceClient.segmentClient, "track", mockTrackFn);
@@ -62,18 +62,18 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       const mockIdentifyFn = mock.fn(
         async (
           e: IdentifyParams,
-          cb: (err: unknown, ctx: Context | undefined) => void
+          cb: (err: unknown, ctx: Context | undefined) => void,
         ) => {
           const contx = new Context({ type: "identify", ...e });
 
           await Promise.resolve(cb(null, contx));
-        }
+        },
       );
 
       mock.method(
         analyticsServiceClient.segmentClient,
         "identify",
-        mockIdentifyFn
+        mockIdentifyFn,
       );
       const props: IdentifyParams = {
         userId: "123",
@@ -90,12 +90,12 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       const mockPageFn = mock.fn(
         async (
           e: PageParams,
-          cb: (err: unknown, ctx: Context | undefined) => void
+          cb: (err: unknown, ctx: Context | undefined) => void,
         ) => {
           const contx = new Context({ type: "page", ...e });
 
           await Promise.resolve(cb(null, contx));
-        }
+        },
       );
 
       mock.method(analyticsServiceClient.segmentClient, "page", mockPageFn);
