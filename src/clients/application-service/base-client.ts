@@ -17,11 +17,11 @@ export default class BaseClient<
     }
   }
 
-  log(data: unknown, level?: string) {
-    if (level && this.logger[level]) {
-      this.logger[level](data);
+  log(message: { error?: Error, [key: string]: unknown}, ...injections: Injections) {
+    if (message && message?.error) {
+      this.logger.error(message);
     } else {
-      this.logger.info(data);
+      this.logger.info(message);
     }
   }
 }

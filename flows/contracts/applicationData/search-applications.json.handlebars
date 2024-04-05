@@ -1,0 +1,15 @@
+{{#with request.body}}
+  {{#if criteria}}
+    {{#obj}}
+      { "criteria": {{{ json criteria }}} }
+      {{#if limit}}
+        { "limit": {{ limit }} }
+      {{/if}}
+      {{#if page}}
+        { "page": {{ page }} }
+      {{/if}}
+    {{/obj}}
+  {{else}}
+    null
+  {{/if}}
+{{/with}}

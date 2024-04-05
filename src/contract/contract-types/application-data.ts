@@ -34,7 +34,7 @@ class ApplicationData extends ContractType<
       "[52fb1e44] ApplicationServiceClient not instantiated",
     );
     if ("id" in definition) {
-      const { application } = applicationServiceClient.sendRequest(
+      const { application } = await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: { id: definition.id },
@@ -44,10 +44,14 @@ class ApplicationData extends ContractType<
 
       return application;
     } else {
-      const { applications } = applicationServiceClient.sendRequest(
+      const { applications } = await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATIONS_QUERY,
-          variables: { search: definition.criteria },
+          variables: {
+            criteria: definition.criteria,
+            ...(definition?.limit ? { limit: definition?.limit } : {}),
+            ...(definition?.page ? { page: definition?.page } : {})
+          },
         },
         context,
       ) as unknown as { applications: [Application] };

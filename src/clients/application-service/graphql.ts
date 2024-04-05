@@ -3,7 +3,7 @@ fragment ApplicantFragment on Application {
   id
   createdAt
   relationship
-  ssn
+  ssnTokenURI
   relationships {
     id
     relationship
@@ -53,6 +53,7 @@ fragment ApplicantFragment on Application {
   }
   cognitoID
   monolithUserID
+  monolithLoanID
 }
 
 fragment ApplicationFragment on Application {
