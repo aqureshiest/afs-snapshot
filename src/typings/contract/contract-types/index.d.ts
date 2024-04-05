@@ -5,6 +5,7 @@ import {
   Event,
   EventName,
   ApplicationSearchCriteria,
+  Scalars,
 } from "@earnest/application-service-client/typings/codegen.js";
 import IContract, {
   Injections as IExecutionInjections,
@@ -121,6 +122,8 @@ declare module "contract/contract-types/application-data.js" {
     | { id: string }
     | {
         criteria: ApplicationSearchCriteria[];
+        limit?: Scalars["Int"]["input"],
+        page?: Scalars["Int"]["input"], 
       };
 
   type Definition = LookupDefinition;
