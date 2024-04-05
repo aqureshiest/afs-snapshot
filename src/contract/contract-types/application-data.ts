@@ -44,6 +44,8 @@ class ApplicationData extends ContractType<
 
       return application;
     } else {
+      assert(definition.criteria, "[0afdb895] search criteria is undefined");
+
       const { applications } = await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATIONS_QUERY,
