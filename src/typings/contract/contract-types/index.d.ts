@@ -146,5 +146,5 @@ declare module "contract/contract-types/analytics.js" {
 
   type Injections = IExecutionInjections;
 
-  type Output = { [key: string]: string } | null;
+  type Output = { [key: string]: string | boolean } | null;
 }

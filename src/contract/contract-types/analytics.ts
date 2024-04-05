@@ -1,10 +1,10 @@
 import assert from "node:assert";
 import ContractType from "./base-contract.js";
 import {
-  IdentifyAnalyticsEvent,
-  PageAnalyticsEvent,
-  TrackAnalyticsEvent,
-} from "../../clients/analytics/index.js";
+  IdentifyParams,
+  PageParams,
+  TrackParams,
+} from "@segment/analytics-node";
 
 enum EVENT_TYPE {
   track,
@@ -33,8 +33,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       return false;
     }
 
-    console.log("application", application);
-
     if (!application) {
       return false;
     }
@@ -51,7 +49,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   evaluate = async (
     input: Input,
     injections: Injections,
-    definition: Definition,
+    definition: Definition
   ) => {
     const { context } = injections;
 
@@ -59,19 +57,17 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       context.loadedPlugins.analyticsServiceClient.instance;
     assert(
       analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated",
+      "[e6falixw] AnalyticsServiceClient not instantiated"
     );
 
-    console.log("input", input);
-
-    const { type, event } = definition;
+    const { type } = definition;
 
     const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
 
     switch (eventType) {
       case EVENT_TYPE.track:
         await analyticsServiceClient.track(
-          this.buildTrackProps(input, definition),
+          this.buildTrackProps(input, definition)
         );
         break;
       case EVENT_TYPE.identify:
@@ -79,21 +75,14 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         break;
       case EVENT_TYPE.page:
         await analyticsServiceClient.page(
-          this.buildPageProps(input, definition),
+          this.buildPageProps(input, definition)
         );
         break;
       default:
     }
 
-    return { event };
+    return { success: true };
   };
-
-  toJSON() {
-    if (!this.result) return null;
-    return {
-      event: this.result?.event,
-    };
-  }
 
   private buildTrackProps(input: Input, definition: Definition) {
     const { application } = input;
@@ -109,7 +98,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       payload: { section, step },
     } = definition;
 
-    const props: TrackAnalyticsEvent = {
+    const props: TrackParams = {
       userId,
       event,
       properties: {
@@ -134,7 +123,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     assert(userId, "[osb14l7c] userId is null");
 
-    const props: IdentifyAnalyticsEvent = {
+    const props: IdentifyParams = {
       userId,
       traits: {
         applicationId: application.id,
@@ -158,7 +147,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       payload: { name },
     } = definition;
 
-    const props: PageAnalyticsEvent = {
+    const props: PageParams = {
       userId,
       name,
       properties: {

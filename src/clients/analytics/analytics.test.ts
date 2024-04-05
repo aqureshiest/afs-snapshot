@@ -4,11 +4,7 @@ import assert from "node:assert";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
-import AnalyticsServiceClient, {
-  IdentifyAnalyticsEvent,
-  PageAnalyticsEvent,
-  TrackAnalyticsEvent,
-} from "./index.js";
+import AnalyticsServiceClient from "./index.js";
 import {
   Context,
   IdentifyParams,
@@ -36,17 +32,17 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       const mockTrackFn = mock.fn(
         async (
           e: TrackParams,
-          cb: (err: unknown, ctx: Context | undefined) => void,
+          cb: (err: unknown, ctx: Context | undefined) => void
         ) => {
           const contx = new Context({ type: "track", ...e });
 
           await Promise.resolve(cb(null, contx));
-        },
+        }
       );
 
       mock.method(analyticsServiceClient.segmentClient, "track", mockTrackFn);
 
-      const props: TrackAnalyticsEvent = {
+      const props: TrackParams = {
         userId: "123",
         event: "Test event",
         properties: {
@@ -66,20 +62,20 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       const mockIdentifyFn = mock.fn(
         async (
           e: IdentifyParams,
-          cb: (err: unknown, ctx: Context | undefined) => void,
+          cb: (err: unknown, ctx: Context | undefined) => void
         ) => {
           const contx = new Context({ type: "identify", ...e });
 
           await Promise.resolve(cb(null, contx));
-        },
+        }
       );
 
       mock.method(
         analyticsServiceClient.segmentClient,
         "identify",
-        mockIdentifyFn,
+        mockIdentifyFn
       );
-      const props: IdentifyAnalyticsEvent = {
+      const props: IdentifyParams = {
         userId: "123",
         traits: {
           applicationId: "123",
@@ -94,16 +90,16 @@ describe("[b8dcinbp] Analytics Service Client", () => {
       const mockPageFn = mock.fn(
         async (
           e: PageParams,
-          cb: (err: unknown, ctx: Context | undefined) => void,
+          cb: (err: unknown, ctx: Context | undefined) => void
         ) => {
           const contx = new Context({ type: "page", ...e });
 
           await Promise.resolve(cb(null, contx));
-        },
+        }
       );
 
       mock.method(analyticsServiceClient.segmentClient, "page", mockPageFn);
-      const props: PageAnalyticsEvent = {
+      const props: PageParams = {
         userId: "123",
         name: "test page",
         properties: {
