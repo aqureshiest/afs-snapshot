@@ -10,7 +10,7 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
 }
 
 export type NeasClaims = {
-  userId: number,
+  userId: string,
   exp: number,
   isValid: boolean,
 }
