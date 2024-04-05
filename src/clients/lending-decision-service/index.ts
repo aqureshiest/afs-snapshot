@@ -108,9 +108,10 @@ export default class LendingDecisionServiceClient extends Client {
       if (application[applicant]) {
         let decryptedSsn;
         try {
-          if (application[applicant] && application[applicant]?.ssn) {
+          if (application[applicant] && application[applicant]?.ssnTokenURI) {
+            application[applicant]?.ssnTokenURI,
             decryptedSsn = await piiTokenService["getTokenValue"](
-              application[applicant]?.ssn,
+              application[applicant]?.ssnTokenURI,
             );
           }
         } catch (error) {
@@ -283,7 +284,7 @@ export default class LendingDecisionServiceClient extends Client {
           ? new Date(details.dateOfBirth).toISOString()
           : "",
         addresses,
-        ssn: application.ssn ? application.ssn : "",
+        ssn: application.ssnTokenURI ? application.ssnTokenURI : "",
         email: details?.email || "",
         phoneNumber:
           details.phone?.find(
