@@ -5,7 +5,7 @@
         { "criteria": [{ "monolithUserID": "{{ userId }}" }] }
       {{/if}}
     {{/with}}
-    {{#with request.body}}
+    {{#with request.params}}
       {{#if limit}}
         { "limit": {{ limit }} }
       {{/if}}
