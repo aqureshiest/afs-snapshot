@@ -136,3 +136,18 @@ declare module "contract/contract-types/application-data.js" {
 
   type Output = Application | Application[];
 }
+
+import "contract/contract-types/analytics.js";
+declare module "contract/contract-types/analytics.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    event: string;
+    type: string;
+    payload: { [key: string]: string };
+  };
+
+  type Injections = IExecutionInjections;
+
+  type Output = { [key: string]: string | boolean } | null;
+}

@@ -11,6 +11,7 @@ import Manifest from "./manifest.js";
 describe("[462fd166] manifest.execute", () => {
   let context;
   let applicationServiceClient;
+  let analyticsServiceClient;
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
@@ -18,6 +19,8 @@ describe("[462fd166] manifest.execute", () => {
     await registerChassisPlugins(context);
     applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
+    analyticsServiceClient =
+      context.loadedPlugins.analyticsServiceClient.instance;
   });
 
   it("[be92134e] runs without error", async () => {
@@ -327,6 +330,37 @@ describe("[462fd166] manifest.execute", () => {
           "criteria": [{ "search": "test@earnest.com" }]
         }`,
         type: "applicationData",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+
+  it("[1b2bbdaa] it should execute an Analytics contract-type", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+    } as Input;
+
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "track",
+          "payload":{
+            "id":"9999"
+          }
+        }`,
+        type: "analytics",
       }),
     });
 

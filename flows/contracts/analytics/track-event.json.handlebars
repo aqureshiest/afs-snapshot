@@ -1,0 +1,15 @@
+
+{{#if request.body.values}}
+  {
+    "event": "{{request.body.values.eventName}}",
+    "type": "{{request.body.values.eventType}}",
+    "payload": {
+      "section": "{{request.body.values.section}}",
+      "name": "{{request.body.values.name}}",
+      "source": "{{request.body.values.source}}",
+      "step": "{{request.body.values.step}}"
+    }
+  }
+{{else}}
+  null
+{{/if}}
