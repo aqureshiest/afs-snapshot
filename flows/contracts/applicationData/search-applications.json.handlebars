@@ -1,0 +1,19 @@
+{{#if auth.session}}
+  {{#obj}}
+    {{#with auth.session}}
+      {{#if userId}}
+        { "criteria": [{ "monolithUserID": "{{ userId }}" }] }
+      {{/if}}
+    {{/with}}
+    {{#with request.params}}
+      {{#if limit}}
+        { "limit": {{ limit }} }
+      {{/if}}
+      {{#if page}}
+        { "page": {{ page }} }
+      {{/if}}
+    {{/with}}
+  {{/obj}}
+{{else}}
+  null
+{{/if}}
