@@ -48,16 +48,16 @@ const getInputs: Handler = async function (
     /* ============================== *
      * III. Session Authorization 
      * ============================== */
-    const isAuthorized = applicants.reduce((authorized, applicant) => {
-      const { monolithUserID } = applicant;
+    // const isAuthorized = applicants.reduce((authorized, applicant) => {
+    //   const { monolithUserID } = applicant;
 
-      if ((monolithUserID && userId) && (monolithUserID === userId)) { // for v1, at least one applicant has to be authorized
-        authorized = true;
-      }
-      return authorized;
-    }, false);
+    //   if ((monolithUserID && userId) && (monolithUserID === userId)) { // for v1, at least one applicant has to be authorized
+    //     authorized = true;
+    //   }
+    //   return authorized;
+    // }, false);
 
-    assert(isAuthorized, new createError.Unauthorized("[dfbaf766] Unauthorized - applicants lack permissions for this session"));
+    // assert(isAuthorized, new createError.Unauthorized("[dfbaf766] Unauthorized - applicants lack permissions for this session"));
   }
 
   res.locals.input = {

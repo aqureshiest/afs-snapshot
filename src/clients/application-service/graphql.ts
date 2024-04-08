@@ -97,8 +97,8 @@ fragment MetaFragment on Application {
  */
 export const TEMP_DEFAULT_APPLICATION_QUERY = `
 ${META_FRAGMENT}
-query Application($id: String!) {
-  application(id: $id) {
+query Application($id: String!, $root: Boolean = false) {
+  application(id: $id, root: $root) {
     ...MetaFragment
   }
 }

@@ -10,11 +10,6 @@
           {{#if name}}
             {"name": {{{json name}}} }
           {{/if}}
-          {{#if dateOfBirth}}
-          {{! is date of birth gonna be an object {day, month, year}, or is it gonna be a qualified date? }}
-          {{! per figma design, it needs to be an object, but we have it as date on application-service }}
-            {"dateOfBirth": "{{dateOfBirth}}"}
-          {{/if}}
           {{#if email}}
             {"email": "{{email}}"}
           {{/if}}
@@ -26,6 +21,12 @@
           {{/if}}
           {{#if previousAddress }} 
             {"location": [{"index": 1, "street1": "{{previousAddress.street1}}", "street2": "{{previousAddress.street2}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
+          {{/if}}
+          {{#if employmentType }}
+            {"income": [{"index": 0, "type": "{{employmentType}}"}]}
+          {{/if}}
+          {{#if employerName}}
+             {"income": [{"index": 0, "employer": "{{employerName}}", "title": "{{jobTitle}}", "amount": {{{number annualIncome}}} }]}
           {{/if}}
         {{/obj}}
     },

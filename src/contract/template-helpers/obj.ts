@@ -5,6 +5,8 @@ const obj: TemplateHelper = function (context) {
   const obj = {};
 
   splitList.forEach((item) => {
+    // console.log('[ff9d29] AJ DEBUG item', JSON.stringify(item, null, 2));
+    
     if (item) {
       const parsedItem = JSON.parse(item);
   
@@ -25,7 +27,8 @@ const obj: TemplateHelper = function (context) {
       });
     }
   });
-
+  // console.log('[3c8b61] AJ DEBUG obj', JSON.stringify(obj, null, 2));
+  
   return `${JSON.stringify(obj)}`;
 };
 

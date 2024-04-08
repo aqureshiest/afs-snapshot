@@ -50,15 +50,11 @@
   ],
   "definition": {
       "key": "additionalAmount",
-      "type": "inputIncome",
-      "value": {
-        "amount": "{{{json details.income.2.amount}}}"
-      },
+      "type": "inputMoney",
+      "value":  "{{{details.income.2.amount}}}",
       "status": {{{json (contract 'primary_income_additional_income_input_status')}}},
       "label": {
-          "amount": {
-            "copy": "Total annual additional income (optional)"
-          }
+        "copy": "Total annual additional income (optional)"
       },
       "error": "{{{ ajv 'errors' 'questions/primary/income/amount/additional-income' details.income.2.amount }}}"
   }

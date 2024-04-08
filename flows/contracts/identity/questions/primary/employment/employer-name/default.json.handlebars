@@ -19,15 +19,11 @@
   ],
   "definition": {
       "key": "employerName",
-      "type": "inputIncome",
-      "value": {
-        "employer": "{{{json details.income.0.employer}}}"
-      },
+      "type": "inputText",
+      "value": "{{{details.income.0.employer}}}",
       "status": {{{json (contract 'primary_income_employer_name_input_status')}}},
-      "label": {
-          "employer": {
-            "copy": "Employer name"
-          }
+      "label": {  
+        "copy": "Employer name"
       },
       "error": "{{{ ajv 'errors' 'questions/primary/employment/employer-name' details.income.0.employer }}}"
   }
