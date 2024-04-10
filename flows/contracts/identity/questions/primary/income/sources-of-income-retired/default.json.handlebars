@@ -20,10 +20,10 @@
         ],
         "status": {{{json (contract 'primary_income_sources_of_income_input_status')}}},
         "value": "{{details.income.1.type}}",
-        "condtional": [
+        "conditional": [
         [
             {
-                "field": "employment.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
                 "value": "retired"
             }

@@ -11,17 +11,17 @@
         "copy": "Start date"
       },
       "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}",
-      "condtional": [
+      "conditional": [
         [
             {
-                "field": "employment.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
                 "value": "self_employed"
             }
         ],
         [
             {
-                "field": "employment.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
                 "value": "future"
             }

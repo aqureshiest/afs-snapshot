@@ -10,8 +10,7 @@
       "student-info-form/source-of-income",
       "student-info-form/additional-income",
       "student-info-form/consistent-income",
-      "student-info-form/consistent-income/has-consistent-income",
-      "student-info-form/regret-page"
+      "student-info-form/consistent-income/has-consistent-income"
     ],
     "student-info-basic-rows": [
       "info/student-info.refi",
@@ -20,7 +19,8 @@
     ],
     "student-info-address-rows": [
       "info/student-address.refi",
-      "questions/primary/address/additional-address.default"
+      "questions/primary/address/additional-address.default",
+      "questions/primary/address.refiCurrent"
     ],
     "student-info-previous-address-rows": [
       "info/student-address/previous-address.refi",
@@ -34,6 +34,7 @@
       "info/student-income.default",
       "questions/primary/employment/employer-name.default",
       "questions/primary/employment/job-title.default",
+      "questions/primary/employment/start-date.default",
       "questions/primary/income/amount/annual-income.default",
       "questions/primary/income/amount/claimed-assets.default",
       "questions/primary/income/amount/additional-income.default",
@@ -60,6 +61,7 @@
       "info/student-income/additional-income-hint.default"
     ],
 
+    "noop_details_action": "actions/noop-details.primary",
     "save_primary_details_action": "actions/save-details.primary",
     "primary_dob_input_status": "questions/primary/dateOfBirth.status",
     "primary_phone_input_status": "questions/primary/phone.status",

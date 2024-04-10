@@ -1,22 +1,19 @@
-{{#with application.primary}}
 {
-    "key": "income",
+    "key": "consistentIncome",
     "label": "Student Income Info",
     "submit": {
         "copy": "Next Step",
-        "action": {{{json (contract 'save_primary_details_action')}}}
+        "action": {{{json (contract 'noop_details_action')}}}
     },
-    "condtional": [
+    "conditional": [
         [
             {
-                "field": "employment.employment", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
                 "value": "unemployed"
             }
         ]
         
     ],
-    "rows": {{{json (contract 'student-info-unemployed-rows')}}}
-    
+    "rows": {{{json (contract 'student-info-unemployed-rows')}}}   
 }
-{{/with}}

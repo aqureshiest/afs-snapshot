@@ -50,6 +50,10 @@ fragment ApplicantFragment on Application {
       approved
       certified
     }
+    asset {
+      type
+      amount
+    }
   }
   cognitoID
   monolithUserID

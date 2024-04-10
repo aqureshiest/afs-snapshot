@@ -1,15 +1,15 @@
 {{#with application.primary}}
 {
-    "key": "income",
+    "key": "additionalIncome",
     "label": "Student Income Info",
     "submit": {
         "copy": "Next Step",
         "action": {{{json (contract 'save_primary_details_action')}}}
     },
-    "condtional": [
+    "conditional": [
         [
             {
-                "field": "employment.employment", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
                 "value": "retired"
             }

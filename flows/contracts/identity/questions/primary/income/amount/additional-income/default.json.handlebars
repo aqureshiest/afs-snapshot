@@ -1,62 +1,62 @@
 {{#with application.primary}}
 {
   "type": "input",
-  "condtional": [
-    [
-      {
-        "field": "employment.employment", {{! field is stepKey.fieldKey}}
-        "op": "valueEquals",
-        "value": "employed"
-      }
-    ],
-    [
-      {
-        "field": "employment.employment", {{! field is stepKey.fieldKey}}
-        "op": "valueEquals",
-        "value": "self_employed"
-      }
-    ],
-    [
-      {
-        "field": "employment.employment", {{! field is stepKey.fieldKey}}
-        "op": "valueEquals",
-        "value": "future"
-      }
-    ],
-    [
-      {
-        "field": "employment.employment", {{! field is stepKey.fieldKey}}
-        "op": "valueEquals",
-        "value": "retired"
-      },
-      {
-        "field": "addtional-income.addAddtionalIncome",
-        "op": "valueEquals",
-        "value": "true"
-      }
-    ],
-    [
-      {
-        "field": "employment.employment", {{! field is stepKey.fieldKey}}
-        "op": "valueEquals",
-        "value": "unemployed"
-      },
-      {
-        "field": "consistent-income.consistentIncome",
-        "op": "valueEquals",
-        "value": "true"
-      }
-    ]
-  ],
   "definition": {
-      "key": "additionalAmount",
-      "type": "inputMoney",
-      "value":  "{{{details.income.2.amount}}}",
-      "status": {{{json (contract 'primary_income_additional_income_input_status')}}},
-      "label": {
-        "copy": "Total annual additional income (optional)"
-      },
-      "error": "{{{ ajv 'errors' 'questions/primary/income/amount/additional-income' details.income.2.amount }}}"
+    "key": "additionalAmount",
+    "type": "inputMoney",
+    "value":  "{{{details.income.1.amount}}}",
+    "status": {{{json (contract 'primary_income_additional_income_input_status')}}},
+    "label": {
+      "copy": "Total annual additional income (optional)"
+    },
+    "error": "{{{ ajv 'errors' 'questions/primary/income/amount/additional-income' details.income.2.amount }}}",
+    "conditional": [
+      [
+        {
+          "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+          "op": "valueEquals",
+          "value": "employed"
+        }
+      ],
+      [
+        {
+          "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+          "op": "valueEquals",
+          "value": "self_employed"
+        }
+      ],
+      [
+        {
+          "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+          "op": "valueEquals",
+          "value": "future"
+        }
+      ],
+      [
+        {
+          "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+          "op": "valueEquals",
+          "value": "retired"
+        },
+        {
+          "field": "additionalIncome.addAddtionalIncome",
+          "op": "valueEquals",
+          "value": "true"
+        }
+      ],
+      [
+        {
+          "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+          "op": "valueEquals",
+          "value": "unemployed"
+        },
+        {
+            "field": "consistentIncome.hasConsistentIncome", {{! field is stepKey.fieldKey}}
+            "op": "valueEquals",
+            "value": "true"
+        }
+      ]
+    ]
   }
 }
 {{/with}}

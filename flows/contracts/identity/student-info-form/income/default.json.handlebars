@@ -7,12 +7,26 @@
         "action": {{{json (contract 'save_primary_details_action')}}}
     },
     "rows":  {{{ json (contract 'student-info-income-rows')}}},
-    "condtional": [
+    "conditional": [
         [
             {
-                "field": "employment.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
-                "value": "retired"
+                "value": "employed"
+            }
+        ],
+        [
+            {
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+                "op": "valueEquals",
+                "value": "self_employed"
+            }
+        ],
+        [
+            {
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+                "op": "valueEquals",
+                "value": "future"
             }
         ]
     ]

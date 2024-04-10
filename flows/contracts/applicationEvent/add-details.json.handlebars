@@ -16,8 +16,8 @@
           {{#if phone}}
             {"phone": [{"number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
-          {{#if location }}
-            {"location": [{"index": 0, "street1": "{{location.street1}}", "street2": "{{location.street2}}", "city": "{{location.city}}", "state": "{{location.state}}", "zip": "{{location.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
+          {{#if currentAddress }}
+            {"location": [{"index": 0, "street1": "{{currentAddress.street1}}", "street2": "{{currentAddress.street2}}", "city": "{{currentAddress.city}}", "state": "{{currentAddress.state}}", "zip": "{{currentAddress.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
           {{#if previousAddress }} 
             {"location": [{"index": 1, "street1": "{{previousAddress.street1}}", "street2": "{{previousAddress.street2}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
@@ -27,6 +27,15 @@
           {{/if}}
           {{#if employerName}}
              {"income": [{"index": 0, "employer": "{{employerName}}", "title": "{{jobTitle}}", "amount": {{{number annualIncome}}} }]}
+          {{/if}}
+          {{#if claimedAssets}}
+            {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{number claimedAssets}}} }]}
+          {{/if}}
+          {{#if additionalAmount}}
+            {"income": [{"index": 1, "amount": {{{number additionalAmount}}} }]}
+          {{/if}}
+          {{#if sourcesOfIncome}}
+            {"income": [{"index": 1, "type": "{{sourcesOfIncome}}" }]}
           {{/if}}
         {{/obj}}
     },

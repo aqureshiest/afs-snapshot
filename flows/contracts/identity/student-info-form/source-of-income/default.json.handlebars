@@ -1,16 +1,16 @@
 {{#with application.primary}}
 {
-    "key": "income",
-    "label": "Student Income Info",
+    "key": "sourcesOfIncome",
+    "label": "Student Source Income Info",
     "submit": {
         "copy": "Next Step",
         "action": {{{json (contract 'save_primary_details_action')}}}
     },
     "rows": {{{json (contract 'student-info-income-retired-rows')}}},
-    "condtional": [
+    "conditional": [
         [
             {
-                "field": "employment.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
                 "value": "retired"
             }
