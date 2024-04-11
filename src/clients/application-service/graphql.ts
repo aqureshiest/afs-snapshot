@@ -30,8 +30,9 @@ fragment ApplicantFragment on Application {
       index
       name
       type
+      selected
       account_last4
-      institution_id
+      institution_name
       monolith_id
       balance
       plaidItemID

@@ -1,8 +1,12 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
-import type {AccountAssets as IAccountAssets, Item, ItemPublicTokenExchangeResponse, Institution} from 'plaid'
+import type {
+  AccountAssets as IAccountAssets,
+  Item,
+  ItemPublicTokenExchangeResponse,
+  Institution as IInstitution,
+} from "plaid";
 import PlaidClient from "clients/plaid/index.js";
-type PlaidChassisPlugn =
-  ChassisPlugin<PlaidClient>;
+type PlaidChassisPlugn = ChassisPlugin<PlaidClient>;
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
@@ -36,13 +40,13 @@ declare module "clients/plaid/index.js" {
      * @memberof PlaidLinkToken
      */
     hosted_link_url?: string;
-  }
+  };
   type PlaidGetAccounts = {
-    accounts: Array<IAccountAssets>,
-    item: Item
+    accounts: Array<IAccountAssets>;
+    item: Item;
   };
   type PlaidAccessTokenResponse = ItemPublicTokenExchangeResponse;
-  type Institutions = Array<Institution>;
-  type InstitutionsResponse = {institutions: Institutions}
-
+  type Institutions = Array<IInstitution>;
+  type Institution = IInstitution;
+  type InstitutionsResponse = { institutions: Institutions };
 }

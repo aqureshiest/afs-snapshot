@@ -6,13 +6,8 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     return "PlaidMethod";
   }
 
-  /**
-   */
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   condition = (input: Input, context: Injections, definition: Definition) => {
-    const method = input.request?.method;
-
-    const { event, payload } = definition;
-    
     return Boolean(definition.id);
   };
 
@@ -27,23 +22,23 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     injections: Injections,
     definition: Definition,
   ) => {
-    console.log('======= aqui')
     const { context } = injections;
     const plaidClient = context.loadedPlugins.plaid.instance;
     assert(plaidClient, "[3eac36d3] plaidClient not instantiated");
-    
+
     try {
-      console.log(`Executing method ${definition.method}`, definition.payload)
-      return (await plaidClient[definition.method](context, definition.id, definition.payload)) as Output;
+      return (await plaidClient[definition.method](
+        context,
+        definition.id,
+        definition.payload,
+      )) as Output;
     } catch (ex) {
       return {
-        method: definition.method,
+        method: definition.plaidMethod,
         ContractType: this.contractName,
-        error: ex.message
-      }
+        error: ex.message,
+      };
     }
-
-    
   };
 
   // toJSON() {

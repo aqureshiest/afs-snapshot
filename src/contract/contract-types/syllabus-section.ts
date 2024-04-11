@@ -18,14 +18,14 @@ class Section extends ContractType<Definition, Transformation> {
       stats.completed === stats.total ? "completed" : "incomplete";
     definition.progress = {
       totalQuestions: stats.total,
-      completedQuestions: stats.completed
+      completedQuestions: stats.completed,
     };
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { statuses, ...result } = definition;
-    if (definition.mode === 'section') {
+    if (definition.mode === "section") {
       return result as unknown as Transformation;
     } else {
-      return {progress: result.progress}
+      return { progress: result.progress };
     }
   }
 }

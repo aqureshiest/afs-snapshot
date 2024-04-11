@@ -27,6 +27,9 @@
           {{#if citizenship}}
             {"location": [{ "index": 0,"citizenship": "{{citizenship}}" }] }
           {{/if}}
+          {{#if financialAccounts}}
+            {"financialAccounts": {{{json financialAccounts}}} }
+          {{/if}}
         {{/obj}}
     },
     {{/with}}

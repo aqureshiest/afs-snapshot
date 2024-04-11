@@ -16,5 +16,4 @@ export { default as section } from "./syllabus-section.js";
 /* ============================== *
  * Plaid
  * ============================== */
-export { default as plaidMethod } from "./plaid-method.js"
-
+export { default as plaidMethod } from "./plaid-method.js";

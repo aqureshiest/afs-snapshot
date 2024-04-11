@@ -89,6 +89,27 @@
           }
         }
       ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "POST",
+            "path": "/institutions/get_by_id"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'plaid/institutions_get_by_id.json') %>",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ]
     }
   ]
 }

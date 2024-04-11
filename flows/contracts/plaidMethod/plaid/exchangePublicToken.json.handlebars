@@ -1,7 +1,7 @@
 {{#if request.body.values.public_token}}
   {{#if request.params.id}}
   {
-    "method": "exchangePublicTokenAndGetAccounts",
+    "plaidMethod": "exchangePublicTokenAndGetAccounts",
     "id": "{{request.params.id}}",
     "payload": {
       "public_token": "{{request.body.values.public_token}}"
@@ -16,4 +16,4 @@
   {  
     "error": "Missing public_token" 
   }
-  {{/if}}
+{{/if}}

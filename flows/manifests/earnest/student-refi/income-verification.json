@@ -4,12 +4,5 @@
   "method": "plaid.createLinkToken",
   "section": "refi-primary-only-section",
   "questions-statuses": [
-    "questions/primary/school.status",
-    "questions/primary/name.status",
-    "questions/primary/dateOfBirth.status",
-    "questions/primary/email.status",
-    "questions/primary/phone.status",
-    "questions/primary/address.status",
-    "questions/primary/citizenship.status"
   ]
 }

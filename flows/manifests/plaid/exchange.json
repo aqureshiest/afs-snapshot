@@ -1,5 +1,4 @@
 {
-  "*": "redirect",
-  "actions": ["plaid.exchangePublicToken"],
-  "redirect": "redirect.income-verification-review"
+  "*": "response",
+  "actions": "plaid.exchangePublicToken"
 }

@@ -38,6 +38,8 @@ type IContractInput = {
     query?: { [key: string]: unknown };
     headers?: { [key: string]: unknown };
   };
+  manifest?: Manifest;
+  auth?: { [key: string]: unknown };
 };
 
 /**

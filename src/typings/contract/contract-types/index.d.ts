@@ -17,8 +17,8 @@ interface IContractArguments<D> {
   context: ChassisPluginContext;
 }
 interface IError {
-  error: string,
-  contractType: string
+  error: string;
+  contractType: string;
 }
 import "contract/contract-types/base-contract.js";
 declare module "contract/contract-types/base-contract.js" {
@@ -97,7 +97,12 @@ declare module "contract/contract-types/plaid-method.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
-    method: "searchInstitutions" | "createLinkToken" | "exchangePublicToken" | "getAccounts" | "exchangePublicTokenAndGetAccounts";
+    plaidMethod:
+      | "searchInstitutions"
+      | "createLinkToken"
+      | "exchangePublicToken"
+      | "getAccounts"
+      | "exchangePublicTokenAndGetAccounts";
     id: string;
     payload?: { public_token: string };
     [key: string]: unknown;
@@ -116,9 +121,9 @@ import "contract/contract-types/syllabus-section.js";
 declare module "contract/contract-types/syllabus-section.js" {
   type Context = ChassisPluginContext;
   type ProgressStats = {
-      totalQuestions: number;
-      completedQuestions: number;
-  }
+    totalQuestions: number;
+    completedQuestions: number;
+  };
   type Definition = {
     status: string;
     statuses: string[];
