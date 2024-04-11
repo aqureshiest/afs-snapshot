@@ -1,5 +1,4 @@
 {{#with application.primary}}
-{{!#if (or (eq details.income.0.type "self_employed") (eq deatils.income.0.type "future"))}}
 {
   "type": "input",
   "definition": {
@@ -14,14 +13,14 @@
       "conditional": [
         [
             {
-                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", 
                 "op": "valueEquals",
                 "value": "self_employed"
             }
         ],
         [
             {
-                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
+                "field": "employmentStatus.employmentType", 
                 "op": "valueEquals",
                 "value": "future"
             }
@@ -29,5 +28,4 @@
       ]
   }
 }
-{{!/if}}
 {{/with}}
