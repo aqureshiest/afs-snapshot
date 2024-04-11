@@ -7,7 +7,7 @@ const obj: TemplateHelper = function (context) {
   splitList.forEach((item) => {
     if (item) {
       const parsedItem = JSON.parse(item);
-  
+
       Object.keys(parsedItem).forEach((parsedItemKey) => {
         if (obj[parsedItemKey] === undefined) {
           obj[parsedItemKey] = parsedItem[parsedItemKey];

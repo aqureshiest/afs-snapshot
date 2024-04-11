@@ -33,6 +33,12 @@ declare module "contract/template-helpers/list.js" {
   type TemplateHelper = ITemplateHelper;
 }
 
+import "contract/template-helpers/spread.js";
+declare module "contract/template-helpers/spread.js" {
+  type Injections = IExecutionInjections;
+  type TemplateHelper = ITemplateHelper;
+}
+
 import "contract/template-helpers/obj.js";
 declare module "contract/template-helpers/obj.js" {
   type Injections = IExecutionInjections;

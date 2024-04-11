@@ -1,0 +1,8 @@
+{
+  "*": "income-verification",
+  "stage": "plaid-income-verification",
+  "method": "plaid.createLinkToken",
+  "section": "refi-primary-only-section",
+  "questions-statuses": [
+  ]
+}

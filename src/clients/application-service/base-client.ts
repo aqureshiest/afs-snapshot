@@ -17,7 +17,7 @@ export default class BaseClient<
     }
   }
 
-  log(message: { error?: Error, [key: string]: unknown}) {
+  log(message: { error?: Error; [key: string]: unknown }) {
     if (message && message?.error) {
       this.logger.error(message);
     } else {

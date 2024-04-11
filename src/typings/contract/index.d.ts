@@ -38,14 +38,14 @@ type IContractInput = {
     query?: { [key: string]: unknown };
     headers?: { [key: string]: unknown };
   };
-  manifest?: Manifest,
+  manifest?: Manifest;
   auth?: {
     session?: {
-      userId: string,
-      exp: number,
-      isValid: boolean,
-    }
-  }
+      userId: string;
+      exp: number;
+      isValid: boolean;
+    };
+  };
 };
 
 /**

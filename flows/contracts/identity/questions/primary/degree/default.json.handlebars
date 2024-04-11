@@ -1,0 +1,26 @@
+{
+  "type": "input",
+  "definition": {
+      "key": "degree",
+      "type": "inputRadio",
+      "layout": "bubble",
+      "direction": "row",
+      "items": [
+          {
+              "id": "undergraduate",
+              "value": "undergraduate",
+              "label": "Undergraduate"
+          },
+          {
+              "id": "graduate",
+              "value": "graduate",
+              "label": "Graduate"
+          }
+      ],
+      "status": "incomplete",
+      "value": "{{application.education.0.degree}}",
+      "label": {
+          "copy": "Degree type"
+      }
+  }
+}
