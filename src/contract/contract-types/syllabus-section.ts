@@ -16,10 +16,17 @@ class Section extends ContractType<Definition, Transformation> {
     });
     definition.status =
       stats.completed === stats.total ? "completed" : "incomplete";
-    definition.progress = Math.round((stats.completed / stats.total) * 100);
+    definition.progress = {
+      totalQuestions: stats.total,
+      completedQuestions: stats.completed,
+    };
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { statuses, ...result } = definition;
-    return result as unknown as Transformation;
+    if (definition.mode === "section") {
+      return result as unknown as Transformation;
+    } else {
+      return { progress: result.progress };
+    }
   }
 }
 export default Section;

@@ -1,0 +1,4 @@
+{
+  "*": "plaid.link_token",
+  "method": "plaid.createLinkToken"
+}

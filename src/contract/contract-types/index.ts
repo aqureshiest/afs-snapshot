@@ -18,3 +18,8 @@ export { default as section } from "./syllabus-section.js";
  * Decision
  * ============================== */
 export { default as decisionRequest } from "./decision-request.js";
+
+/* ============================== *
+ * Plaid
+ * ============================== */
+export { default as plaidMethod } from "./plaid-method.js";

@@ -1,4 +1,4 @@
-import { describe, it, before, after, mock } from "node:test";
+import { describe, it, before, beforeEach, after, mock } from "node:test";
 import assert from "node:assert";
 import axios from "axios";
 
@@ -20,6 +20,20 @@ describe("[41a1abef] chassis-plugins", () => {
     applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
     NeasClient = context.loadedPlugins.NeasClient?.instance;
+  });
+
+  beforeEach(() => {
+    mock.method(applicationServiceClient, "sendRequest", async () => {
+      return {
+        response: {
+          statusCode: 200,
+        },
+        results: {
+          data: { createApplication: { id: "08594f80" } },
+          errors: [],
+        },
+      };
+    });
   });
 
   after(async () => {

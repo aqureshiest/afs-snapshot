@@ -312,6 +312,73 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+  it("[5d6c5ca8] it should execute an plaidMethod contract-type when an id and a method keys exists in the definition", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestPlaidMethod", {
+      key: "testContract",
+      "*": new Contract({
+        key: "testContract",
+        raw: `{
+          "method": "getLinkToken",
+          "id": "asdasd",
+          "payload": {}
+        }`,
+        type: "plaidMethod",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+  it("[5d6c5ca8] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestSyllabus", {
+      key: "testContract",
+      "*": new Contract({
+        key: "testContract",
+        raw: `{
+          "status": "completed",
+          "statuses": ["completed", "completed", "completed"],
+          "mode": "stats",
+          "progress": {
+            "totalQuestions": 3,
+            "completedQuestions":0
+          },
+          "id": "asdasdasd"
+        }`,
+        type: "section",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+  it("[df40cd1a] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestSyllabus", {
+      key: "testContract",
+      "*": new Contract({
+        key: "testContract",
+        raw: `{
+          "status": "completed",
+          "statuses": ["completed", "completed", "completed"],
+          "mode": "section",
+          "progress": {
+            "totalQuestions": 3,
+            "completedQuestions":0
+          },
+          "id": "asdasdasd"
+        }`,
+        type: "section",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
 
   it("[411017c5] it should execute an ApplicationData contract-type when criteria exists in the definition", async () => {
     const input = {} as Input;
@@ -367,5 +434,122 @@ describe("[462fd166] manifest.execute", () => {
     const { contract } = await manifest.execute(input, { context, ...input });
 
     assert(contract);
+  });
+
+  it("[ae226507] obj helper", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+      {{#obj}}
+        {"testkey1": "testvalue1"}
+        {"testkeyArray": ["testvalue2"]}
+        {"testkeyArray": ["testvalue3"]}
+        {"testkeyArray": "testvalue3-2"}
+        {"testkeyArray2": ["testvalue4"]}
+      {{/obj}}
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      testkey1: "testvalue1",
+      testkeyArray: ["testvalue2", "testvalue3", "testvalue3-2"],
+      testkeyArray2: ["testvalue4"],
+    });
+  });
+  it("[ba9215d8] spread helper", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+      {
+        "testkey1": "testvalue1"
+        {{#spread}}
+          {"testkey2": "testvalue2", "testkey3": "testvalue3"}
+        {{/spread}}
+      }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      testkey1: "testvalue1",
+      testkey2: "testvalue2",
+      testkey3: "testvalue3",
+    });
+  });
+  it("[15d54c05] spread helper - empty definition", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+      {
+        "testkey1": "testvalue1"
+        {{#spread}}
+          null
+        {{/spread}}
+      }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      testkey1: "testvalue1",
+    });
+  });
+  it("[0cc7ae75] simple template helpers", async () => {
+    const input = {} as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+          {
+            {{#noop}} {"nothing": "this should not show} {{/noop}}
+            "equals": {{{eq "true" "true"}}},
+            "ne": {{{ne "true" "true"}}},
+            "lt": {{{lt 1 2}}},
+            "gt": {{{gt 1 2}}},
+            "lte": {{{lte 1 2}}},
+            "gte": {{{gte 1 2}}},
+            "not": {{{not true}}},
+            "notNull": {{{notNull null}}},
+            "includes": {{{includes "1,2" "1"}}},
+            "and": {{{and true true}}},
+            "or": {{{or true false}}}
+          }
+      `,
+      }),
+      arreglo: new Contract({ key: "arreglo", raw: `["1", "2"]` }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      equals: true,
+      ne: false,
+      lt: true,
+      gt: false,
+      lte: true,
+      gte: false,
+      not: false,
+      notNull: false,
+      includes: false,
+      and: true,
+      or: true,
+    });
   });
 });

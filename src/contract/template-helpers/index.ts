@@ -3,6 +3,7 @@ export { default as contract } from "./contract.js";
 export { default as ajv } from "./ajv.js";
 export { default as schema } from "./schema.js";
 export { default as obj } from "./obj.js";
+export { default as spread } from "./spread.js";
 export const noop = function (v1) {
   v1.fn(this);
   return "";
@@ -27,5 +28,5 @@ export function or(...args) {
   return Array.prototype.slice.call(args, 0, -1).some(Boolean);
 }
 export function number(v1) {
-  return Number(v1.replaceAll(/[^0-9.]/g, ""));
+  return Number(String(v1).replace(/[^0-9.]/g, ""));
 }

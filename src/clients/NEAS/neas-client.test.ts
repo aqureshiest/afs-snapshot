@@ -70,20 +70,16 @@ describe("[fab1071e] NeasClient", () => {
     );
   });
 
-  it("[9c1dbc20] should set the session on headers['set-cookies'] and return the response", async () => {
-    const response = {
-      statusCode: 200,
-      headers: {
-        "set-cookie": [],
-      },
-    };
+  it("[9c1dbc20] should return a session token", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
           authId: "2",
           sessionToken: "session",
         },
-        response,
+        response: {
+          statusCode: 200,
+        },
       };
     });
     mock.method(
@@ -205,20 +201,16 @@ describe("[fab1071e] NeasClient", () => {
     );
   });
 
-  it("[3f51d326] should set the session on headers['set-cookies'] and return the response", async () => {
-    const response = {
-      statusCode: 200,
-      headers: {
-        "set-cookie": [],
-      },
-    };
+  it("[3f51d326] should return a new session token", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
           authId: "2",
           sessionToken: "session",
         },
-        response,
+        response: {
+          statusCode: 200,
+        },
       };
     });
     mock.method(

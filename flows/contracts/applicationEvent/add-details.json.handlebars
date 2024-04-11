@@ -36,6 +36,9 @@
           {{#if sourcesOfIncome}}
             {"income": [{"index": 1, "type": "{{sourcesOfIncome}}" }]}
           {{/if}}
+          {{#if financialAccounts}}
+            {"financialAccounts": {{{json financialAccounts}}} }
+          {{/if}}
         {{/obj}}
     },
     {{/with}}
