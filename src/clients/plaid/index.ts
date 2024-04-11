@@ -38,11 +38,11 @@ export default class PlaidClient extends Client {
     const request = {
       user: {
         // TODO: get userId from reference cognitoID
-        client_user_id: "asdasdasdasd",
+        client_user_id: payload.userId,
       },
       client_name: "Earnest", // TODO: based on application brand?
       products: ["assets"],
-      webhook: `${this.baseUrl}/plaid/webhook/${id}`,
+      webhook: `${this.baseUrl}/webhooks/plaid/${id}`,
       country_codes: ["US"],
       language: "en",
       ...this.auth,
