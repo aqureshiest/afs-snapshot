@@ -16,11 +16,10 @@ export const plugin: Plugin = {
     context.application.use(
       `/apply/*/:id(${constants.UUID_REGEX.source})`,
       handlers.getManifest.bind(null, context),
-      // wrapAsyncHandler(context, authMiddleware),
+      wrapAsyncHandler(context, authMiddleware),
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
-    // /apply/decisionUpdate/{appID}
     /**
      * @openapi
      * /apply/*:
@@ -68,7 +67,7 @@ export const plugin: Plugin = {
     context.application.use(
       "/apply/*",
       handlers.getManifest.bind(null, context),
-      // wrapAsyncHandler(context, authMiddleware),
+      wrapAsyncHandler(context, authMiddleware),
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );

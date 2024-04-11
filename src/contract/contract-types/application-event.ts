@@ -25,7 +25,6 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
   }
 
   buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
-
     const { event, fields = "", payload = {} } = definition;
     const varsArray: string[] = [];
     const typesArray: string[] = [];
@@ -87,8 +86,6 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     injections: Injections,
     definition: Definition,
   ) => {
-    // console.log('[c540de] AJ DEBUG input ', JSON.stringify(input, null, 2));
-    // console.log('[c540de] AJ DEBUG definition ', JSON.stringify(definition, null, 2));
     const { context } = injections;
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;

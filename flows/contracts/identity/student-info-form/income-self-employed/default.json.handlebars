@@ -1,25 +1,18 @@
 {{#with application.primary}}
 {
-    "key": "income",
+    "key": "incomeSelfEmployed",
     "label": "Student Income Info",
     "submit": {
-        "copy": "Next step",
+        "copy": "Move to review",
         "action": {{{json (contract 'save_primary_details_action')}}}
     },
-    "rows":  {{{ json (contract 'student-info-income-rows')}}},
+    "rows":  {{{ json (contract 'student-info-income-self-employed-rows')}}},
     "conditional": [
         [
             {
                 "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
                 "op": "valueEquals",
-                "value": "employed"
-            }
-        ],
-        [
-            {
-                "field": "employmentStatus.employmentType", {{! field is stepKey.fieldKey}}
-                "op": "valueEquals",
-                "value": "future"
+                "value": "self_employed"
             }
         ]
     ]

@@ -7,6 +7,7 @@
       "student-info-form/address/previous-address.refi",
       "student-info-form/employment",
       "student-info-form/income",
+      "student-info-form/income-self-employed",
       "student-info-form/source-of-income",
       "student-info-form/additional-income",
       "student-info-form/consistent-income",
@@ -31,6 +32,16 @@
       "questions/primary/employment.default"
     ],
     "student-info-income-rows": [
+      "info/student-income.default",
+      "questions/primary/employment/employer-name.default",
+      "questions/primary/employment/job-title.default",
+      "questions/primary/employment/start-date.default",
+      "questions/primary/income/amount/annual-income.default",
+      "questions/primary/income/amount/claimed-assets.default",
+      "questions/primary/income/amount/additional-income.default",
+      "info/student-income/additional-income-hint.default"
+    ],
+    "student-info-income-self-employed-rows": [      
       "info/student-income.default",
       "questions/primary/employment/employer-name.default",
       "questions/primary/employment/job-title.default",

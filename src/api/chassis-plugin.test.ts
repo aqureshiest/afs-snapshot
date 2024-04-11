@@ -54,11 +54,11 @@ describe("[41a1abef] chassis-plugins", () => {
           applicants: [
             {
               id: "3",
-              monolithUserID: "1" // monolithUserID needs to match userId claim for auth
-            }
+              monolithUserID: "1", // monolithUserID needs to match userId claim for auth
+            },
           ],
-        }
-      }
+        },
+      };
     });
 
     const request = axios.get(
@@ -93,11 +93,11 @@ describe("[41a1abef] chassis-plugins", () => {
           applicants: [
             {
               id: "3",
-              monolithUserID: "1"
-            }
+              monolithUserID: "1",
+            },
           ],
-        }
-      }
+        },
+      };
     });
 
     const request = axios.post(

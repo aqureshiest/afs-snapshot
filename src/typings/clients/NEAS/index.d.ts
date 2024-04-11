@@ -10,10 +10,10 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
 }
 
 export type NeasClaims = {
-  userId: string,
-  exp: number,
-  isValid: boolean,
-}
+  userId: string;
+  exp: number;
+  isValid: boolean;
+};
 
 declare module "clients/NEAS/index.js" {
   type Claims = NeasClaims;

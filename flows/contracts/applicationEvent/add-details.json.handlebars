@@ -3,7 +3,6 @@
     "event": "addDetails",
     "payload": {
       "id": "{{request.params.id}}",
-      {{log request.body.values}}
       {{#with request.body.values}}
       "details": 
         {{#obj}} {{! make sure to flatten each element into a single line}}

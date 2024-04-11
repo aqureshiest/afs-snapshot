@@ -110,9 +110,9 @@ export default class LendingDecisionServiceClient extends Client {
         try {
           if (application[applicant] && application[applicant]?.ssnTokenURI) {
             application[applicant]?.ssnTokenURI,
-            decryptedSsn = await piiTokenService["getTokenValue"](
-              application[applicant]?.ssnTokenURI,
-            );
+              (decryptedSsn = await piiTokenService["getTokenValue"](
+                application[applicant]?.ssnTokenURI,
+              ));
           }
         } catch (error) {
           context.logger.error({

@@ -30,7 +30,9 @@ export default async function (
   );
 
   if (response.statusCode === 400) {
-    strategy.error = createError.Unauthorized("[a6b44191] Unauthorized - invalid session");
+    strategy.error = createError.Unauthorized(
+      "[a6b44191] Unauthorized - invalid session",
+    );
   }
 
   const { exp } = results;
@@ -38,7 +40,9 @@ export default async function (
   const now = Math.floor(Date.now() / 1000);
 
   if (now > exp) {
-    strategy.error = createError.Unauthorized("[0963fa22] Unauthorized - session expired");
+    strategy.error = createError.Unauthorized(
+      "[0963fa22] Unauthorized - session expired",
+    );
   }
 
   if (results) {

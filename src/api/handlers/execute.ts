@@ -20,7 +20,10 @@ const executeHandler: Handler = async function (
    *   with the DELETE method
    * ============================== */
 
-  const { contract } = await manifest.execute({ ...input, manifest, auth }, { context, ...input });
+  const { contract } = await manifest.execute(
+    { ...input, manifest, auth },
+    { context, ...input },
+  );
 
   return res.send(contract);
 };
