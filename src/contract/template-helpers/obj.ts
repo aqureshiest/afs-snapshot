@@ -5,23 +5,25 @@ const obj: TemplateHelper = function (context) {
   const obj = {};
 
   splitList.forEach((item) => {
-    const parsedItem = JSON.parse(item);
+    if (item) {
+      const parsedItem = JSON.parse(item);
 
-    Object.keys(parsedItem).forEach((parsedItemKey) => {
-      if (obj[parsedItemKey] === undefined) {
-        obj[parsedItemKey] = parsedItem[parsedItemKey];
-      } else {
-        if (Array.isArray(obj[parsedItemKey])) {
-          if (Array.isArray(parsedItem[parsedItemKey])) {
-            obj[parsedItemKey] = obj[parsedItemKey].concat(
-              parsedItem[parsedItemKey],
-            );
-          } else {
-            obj[parsedItemKey].push(parsedItem[parsedItemKey]);
+      Object.keys(parsedItem).forEach((parsedItemKey) => {
+        if (obj[parsedItemKey] === undefined) {
+          obj[parsedItemKey] = parsedItem[parsedItemKey];
+        } else {
+          if (Array.isArray(obj[parsedItemKey])) {
+            if (Array.isArray(parsedItem[parsedItemKey])) {
+              obj[parsedItemKey] = obj[parsedItemKey].concat(
+                parsedItem[parsedItemKey],
+              );
+            } else {
+              obj[parsedItemKey].push(parsedItem[parsedItemKey]);
+            }
           }
         }
-      }
-    });
+      });
+    }
   });
 
   return `${JSON.stringify(obj)}`;

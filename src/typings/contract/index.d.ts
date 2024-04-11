@@ -39,7 +39,13 @@ type IContractInput = {
     headers?: { [key: string]: unknown };
   };
   manifest?: Manifest;
-  auth?: { [key: string]: unknown };
+  auth?: {
+    session?: {
+      userId: string;
+      exp: number;
+      isValid: boolean;
+    };
+  };
 };
 
 /**

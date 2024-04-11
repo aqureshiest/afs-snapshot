@@ -8,7 +8,7 @@ import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 import BaseClient from "./base-client.js";
 
-describe("[d7c20b00] get-inputs handler", () => {
+describe("[d7c20b00] base-client for application-service-client", () => {
   let accessKey;
   let baseUrl;
   let context;
@@ -28,15 +28,15 @@ describe("[d7c20b00] get-inputs handler", () => {
     client = new BaseClient({ baseUrl, accessKey }, context);
   });
 
-  it("should instantiate the BaseClient", async () => {
+  it("[28e9dd46] should instantiate the BaseClient", async () => {
     assert(client);
   });
 
-  it("should log at a given logging level", () => {
+  it("[b707124d] should log at a given logging level", () => {
     assert.doesNotThrow(() => client.log("message", "error"));
   });
 
-  it("should log at the info level by default", () => {
+  it("[d6a8429b] should log at the info level by default", () => {
     assert.doesNotThrow(() => client.log("message"));
   });
 });

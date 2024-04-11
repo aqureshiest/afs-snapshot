@@ -3,6 +3,7 @@ fragment ApplicantFragment on Application {
   id
   createdAt
   relationship
+  ssnTokenURI
   relationships {
     id
     relationship
@@ -45,6 +46,7 @@ fragment ApplicantFragment on Application {
       termStart
       termEnd
       credits
+      opeid
     }
     income {
       amount
@@ -55,8 +57,15 @@ fragment ApplicantFragment on Application {
       start
       end
     }
+    amount {
+      requested
+      approved
+      certified
+    }
   }
   cognitoID
+  monolithUserID
+  monolithLoanID
 }
 
 fragment ApplicationFragment on Application {
@@ -114,4 +123,23 @@ query Applications($criteria: [ApplicationSearchCriteria]!) {
     ...MetaFragment
   }
 }
+`;
+
+export const ADD_REFERENCE_MUTATION = `
+  mutation addReferences($id: UUID!, $references: [ReferenceInput], $meta: EventMeta) {
+    addReferences(id: $id, references: $references, meta: $meta) {
+      error
+    }
+  }
+`;
+
+export const NEAS_APPLICATION_QUERY = `
+  query Application($id: UUID!) {
+    application(id: $id) {
+      authID
+      details {
+        email
+      }
+    }
+  }
 `;
