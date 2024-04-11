@@ -27,7 +27,7 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     assert(plaidClient, "[3eac36d3] plaidClient not instantiated");
 
     try {
-      return (await plaidClient[definition.method](
+      return (await plaidClient[definition.plaidMethod](
         context,
         definition.id,
         definition.payload,
