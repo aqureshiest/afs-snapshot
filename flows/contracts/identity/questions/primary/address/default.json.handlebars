@@ -5,12 +5,12 @@
       "key": "address",
       "type": "inputAddress",
       "value": {
-          "street1": "{{{json details.location.0.street1}}}",
-          "street2": "{{{json details.location.0.street2}}}",
-          "country": "{{{json details.location.0.country}}}",
-          "city": "{{{json details.location.0.city}}}",
-          "state": "{{{json details.location.0.state}}}",
-          "zip": "{{{json details.location.0.zip}}}"
+          "street1": "{{{ details.location.0.street1}}}",
+          "street2": "{{{ details.location.0.street2}}}",
+          "country": "{{{ details.location.0.country}}}",
+          "city": "{{{ details.location.0.city}}}",
+          "state": "{{{ details.location.0.state}}}",
+          "zip": "{{{ details.location.0.zip}}}"
       },
       "status": {{{json (contract 'primary_address_input_status')}}},
       "label": {

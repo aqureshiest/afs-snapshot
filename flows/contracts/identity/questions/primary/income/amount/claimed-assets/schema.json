@@ -1,0 +1,8 @@
+{
+    "type": "string",
+    "pattern": "^[0-9]+$",
+    "errorMessage": {
+        "pattern": "Invalid income amount",
+        "type": "Invalid income amount"
+    }
+}

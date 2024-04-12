@@ -1,3 +1,4 @@
+{{#if application.primary}}
 {{#with application.primary}}
 {
     "type": "input",
@@ -14,3 +15,9 @@
     }
 }
 {{/with}}
+{{else}}
+{
+    "statusCode": "401",
+    "message": "Application Primary missing"
+}
+{{/if}}

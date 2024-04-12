@@ -14,7 +14,9 @@ const ajvHelper: TemplateHelper = function (action, schema, data, ...args) {
     throw new Error("[162d0439] schema dictionary not instantiated");
   }
   const validate = ajv.getSchema(schema);
-  if (!validate) throw new Error("[dd8f1051] unable to load validation schema");
+  if (!validate) {
+    throw new Error("[dd8f1051] unable to load validation schema");
+  }
   const validation = validate(data);
   if (action === "validate") {
     return validation;

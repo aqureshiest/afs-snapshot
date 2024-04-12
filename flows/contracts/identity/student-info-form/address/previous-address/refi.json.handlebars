@@ -1,0 +1,18 @@
+{
+  "key": "previousAddress",
+  "label": "Student Previous Address",
+  "submit": {
+      "copy": "Next Step",
+      "action": {{{json (contract 'save_primary_details_action')}}}
+  },
+  "rows": {{{json (contract 'student-info-previous-address-rows')}}},
+  "conditional": [
+    [
+        {
+            "field": "currentAddress.sixMonthResidence",
+            "op": "valueEquals",
+            "value": "false"
+        }
+    ] 
+ ]
+}

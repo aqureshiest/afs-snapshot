@@ -1,0 +1,22 @@
+{{#with application.primary}}
+{
+    "key": "sourcesOfIncome",
+    "label": "Student Source Income Info",
+    "submit": {
+        "copy": "Next Step",
+        "action": {{{json (contract 'save_primary_details_action')}}}
+    },
+    "rows": {{{json (contract 'student-info-income-retired-rows')}}},
+    "conditional": [
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "retired"
+            }
+        ]
+        
+    ]
+    
+}
+{{/with}}

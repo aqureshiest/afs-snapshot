@@ -1,0 +1,31 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "startDate",
+      "type": "inputDate",
+      "value":  "{{{details.income.0.start}}}",
+      "status": {{{json (contract 'primary_income_start_date_input_status')}}},
+      "label": {
+        "copy": "Start date"
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}",
+      "conditional": [
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "self_employed"
+            }
+        ],
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "future"
+            }
+        ]
+      ]
+  }
+}
+{{/with}}

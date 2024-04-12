@@ -1,0 +1,19 @@
+{
+    "key": "hasConsistentIncome",
+    "label": "Student Income Info",
+    "submit": {
+        "copy": "Next Step",
+        "action": {{{json (contract 'save_primary_details_action')}}}
+    },
+    "conditional": [
+        [
+            {
+                "field": "consistentIncome.hasConsistentIncome", 
+                "op": "valueEquals",
+                "value": "true"
+            }
+        ]  
+    ],
+    "rows": {{{json (contract 'student-info-consistent-income-rows')}}}
+    
+}

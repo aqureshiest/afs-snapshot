@@ -20,7 +20,6 @@ export const plugin: Plugin = {
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
-
     /**
      * @openapi
      * /apply/*:

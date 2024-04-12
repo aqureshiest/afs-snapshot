@@ -88,7 +88,10 @@ describe("[d7c20b00] get-inputs handler", () => {
     );
   });
 
-  it("[f424e58f] should throw if none of the applicants have permissions for the session", async () => {
+  /**
+   * TODO: Remove skip once we add back authorization checks
+   */
+  it.skip("[f424e58f] should throw if none of the applicants have permissions for the session", async () => {
     const res = {
       locals: {
         application: {

@@ -1,0 +1,47 @@
+{{#if request.params.id}}
+{
+  "type": "view",
+  "id": "{{request.params.id}}",
+  "definition": {
+    "type": "landing",
+    "definition": {
+      "key": "landing",
+      "label": "Landing view",
+      "header": {
+        "asset": {
+          "type": "LocalAsset",
+          "name": "illustrations.success",
+          "center": true
+        },
+        "copy": "Just a few more steps before we get your rates locked in. "
+      },
+      "list": {
+        "type": "ol",
+        "items": [
+          {
+            "copy": "## Share a few more details \n\n We still need some personal and employment information from you."
+          },
+          {
+            "copy": "## Verify your income \n\n Improve your chance for approval by verifying your income."
+          }
+        ]
+      },
+      "primaryAction": {
+        "copy": "Next Step",
+        "action": {
+          "type": "navigate",
+          "properties": {
+            "goTo": "earnest/student-refi/student-info/{{application.primary.id}}"
+          }
+        }
+      }
+    }
+  }
+}
+{{else}}
+  {
+    "status": 401,
+    "mesasge": "id param is required"
+  }
+{{/if}}
+

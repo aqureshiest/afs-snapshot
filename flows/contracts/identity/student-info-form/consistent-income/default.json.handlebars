@@ -1,0 +1,19 @@
+{
+    "key": "consistentIncome",
+    "label": "Student Income Info",
+    "submit": {
+        "copy": "Next Step",
+        "action": {{{json (contract 'noop_details_action')}}}
+    },
+    "conditional": [
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "unemployed"
+            }
+        ]
+        
+    ],
+    "rows": {{{json (contract 'student-info-unemployed-rows')}}}   
+}

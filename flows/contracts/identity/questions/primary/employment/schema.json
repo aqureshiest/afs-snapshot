@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
+  "minLength": 1,
+  "errorMessage": {
+    "minLength": "Option must be longer than 1 character",
+    "pattern": "Invalid option",
+    "type": "Invalid option"
+  }
+}

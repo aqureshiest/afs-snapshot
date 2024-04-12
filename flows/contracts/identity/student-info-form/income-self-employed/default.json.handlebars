@@ -1,0 +1,20 @@
+{{#with application.primary}}
+{
+    "key": "incomeSelfEmployed",
+    "label": "Student Income Info",
+    "submit": {
+        "copy": "Move to review",
+        "action": {{{json (contract 'save_primary_details_action')}}}
+    },
+    "rows":  {{{ json (contract 'student-info-income-self-employed-rows')}}},
+    "conditional": [
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "self_employed"
+            }
+        ]
+    ]
+}
+{{/with}}

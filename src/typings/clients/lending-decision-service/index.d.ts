@@ -61,6 +61,7 @@ interface IApplicationDecisionDetails {
 interface IDecisionRequestDetails {
   product: string;
   decisioningWorkflowName: string;
+  decisionSource: string;
   applicationType: string;
   requestMetadata: {
     applicationId: string;

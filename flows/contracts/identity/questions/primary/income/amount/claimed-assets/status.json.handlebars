@@ -1,0 +1,7 @@
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/primary/income/amount/claimed-assets' details.income.1.amount) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}
