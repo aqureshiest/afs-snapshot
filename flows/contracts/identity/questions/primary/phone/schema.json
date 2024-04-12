@@ -1,8 +1,7 @@
 {
   "type": "string",
-  "minLength": 12,
-  "maxLength": 12,
-  "pattern": "([0-9]{3}-[0-9]{3}-[0-9]{4})",
+  "minLength": 10,
+  "maxLength": 10,
   "errorMessage": {
     "minLength": "Phone number is required",
     "maxLength": "Invalid phone number",

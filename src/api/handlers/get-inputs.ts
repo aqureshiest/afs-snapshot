@@ -16,6 +16,7 @@ const getInputs: Handler = async function (
   next: NextFunction,
 ) {
   const applicationId = res?.locals?.application?.id;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userId = res?.locals?.auth?.session?.userId;
 
   const ASclient = context?.loadedPlugins?.applicationServiceClient?.instance;
@@ -49,6 +50,7 @@ const getInputs: Handler = async function (
 
     const { primary, cosigner } = application;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const applicants = [
       ...(primary ? [primary] : []),
       ...(cosigner ? [cosigner] : []),
@@ -57,6 +59,7 @@ const getInputs: Handler = async function (
     /* ============================== *
      * III. Session Authorization
      * ============================== */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const isAuthorized = applicants.reduce((authorized, applicant) => {
       const { monolithUserID } = applicant;
 
