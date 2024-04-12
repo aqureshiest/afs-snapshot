@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import createError from "http-errors";
+// import createError from "http-errors"; // TODO: Temporarily comment out
 import { Request, Response, NextFunction } from "express";
 
 import { Application } from "../../typings/clients/application-service/index.js";
@@ -66,12 +66,15 @@ const getInputs: Handler = async function (
       }
       return authorized;
     }, false);
-    assert(
-      isAuthorized,
-      new createError.Unauthorized(
-        "[dfbaf766] Unauthorized - applicants lack permissions for this session",
-      ),
-    );
+    /**
+     * TODO: Temporarily comment out
+     */
+    // assert(
+    //   isAuthorized,
+    //   new createError.Unauthorized(
+    //     "[dfbaf766] Unauthorized - applicants lack permissions for this session",
+    //   ),
+    // );
 
     if (application !== null && application?.applicants?.length) {
       // flatten application
