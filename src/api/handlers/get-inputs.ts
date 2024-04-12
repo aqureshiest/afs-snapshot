@@ -71,6 +71,7 @@ const getInputs: Handler = async function (
     }, false);
     /**
      * TODO: Temporarily comment out
+     * remove .skip from get-inputs.test.ts as well
      */
     // assert(
     //   isAuthorized,
