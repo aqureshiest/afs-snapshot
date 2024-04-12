@@ -182,3 +182,19 @@ declare module "contract/contract-types/analytics.js" {
 
   type Output = { [key: string]: string | boolean } | null;
 }
+
+import "contract/contract-types/decision-request.js";
+declare module "contract/contract-types/decision-request.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    decisionRequestMethod: "postDecisionRequest";
+    id: string;
+  };
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+  type Output = { [key: string]: unknown };
+}

@@ -1,0 +1,5 @@
+{
+    "*": "redirect",
+    "actions": ["decision-request"],
+    "redirect": "redirect.interstitial"
+}

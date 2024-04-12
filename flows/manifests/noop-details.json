@@ -1,0 +1,6 @@
+{
+    "*": "redirect.conditional",
+    "actions": [],
+    "redirect": "redirect.regret"
+}
+  

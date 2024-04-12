@@ -1,0 +1,27 @@
+{{#with application.primary}}
+{
+    "key": "income",
+    "label": "Student Income Info",
+    "submit": {
+        "copy": "Next step",
+        "action": {{{json (contract 'save_primary_details_action')}}}
+    },
+    "rows":  {{{ json (contract 'student-info-income-rows')}}},
+    "conditional": [
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "employed"
+            }
+        ],
+        [
+            {
+                "field": "employmentStatus.employmentType", 
+                "op": "valueEquals",
+                "value": "future"
+            }
+        ]
+    ]
+}
+{{/with}}

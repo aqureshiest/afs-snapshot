@@ -1,15 +1,11 @@
 {{#with application.primary}}
-{{{log details.phone}}}
 {
     "type": "input",
     "definition": {
         "key": "phone",
         "type": "inputPhone",
         "status": {{{json (contract 'primary_phone_input_status')}}},
-        "value": {
-            "number": "{{{json details.phone.0.number}}}",
-            "type": "{{{json details.phone.0.type}}}"
-        },
+        "value": "{{details.phone.0.number}}",
         "label": {
             "copy": "Phone number"
         },
