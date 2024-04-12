@@ -268,12 +268,12 @@ export default class NeasClient<
    * @param injections Injections
    * @returns Client.Response<Claims>
    */
-  async verifySession(
+  async verifyToken(
     token: string,
     ...injections: Injections
   ): Promise<Client.Response<Claims>> {
     try {
-      const result = (await this.get(
+      const result = (await this.post(
         {
           uri: "/auth/interservice/verify",
           headers: this.defaultHeaders,

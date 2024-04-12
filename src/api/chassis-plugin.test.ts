@@ -48,7 +48,7 @@ describe("[41a1abef] chassis-plugins", () => {
   });
 
   it("[9c34ea12] Representative contracts", async () => {
-    mock.method(NeasClient, "verifySession", () => {
+    mock.method(NeasClient, "verifyToken", () => {
       return {
         results: {
           userId: "1",
@@ -87,7 +87,7 @@ describe("[41a1abef] chassis-plugins", () => {
   });
 
   it("[ac8836e7] Mutative contracts", async () => {
-    mock.method(NeasClient, "verifySession", () => {
+    mock.method(NeasClient, "verifyToken", () => {
       return {
         results: {
           userId: "1",
