@@ -1,6 +1,5 @@
 import assert from "node:assert";
 import ContractType from "./base-contract.js";
-import { GqlRequestBody } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 
