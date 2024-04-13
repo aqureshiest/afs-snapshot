@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import ContractType from "./base-contract.js";
-import GqlRequestBody from "@earnest/application-service-client";
+import { Types as AStypes } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 
@@ -24,7 +24,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     return "ApplicationEvent";
   }
 
-  buildRequestBody(definition: Definition, inputTypes): GqlRequestBody {
+  buildRequestBody(definition: Definition, inputTypes): AStypes.GqlRequestBody {
     const { event, fields = "", payload = {} } = definition;
     const varsArray: string[] = [];
     const typesArray: string[] = [];
