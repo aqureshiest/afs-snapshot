@@ -340,7 +340,7 @@ describe("[fab1071e] NeasClient", () => {
   });
 
   it("[bb287e57] should return the returned claims and response object when verifying a session", async () => {
-    mock.method(client, "get", () => {
+    mock.method(client, "post", () => {
       return {
         results: {
           user_id: 1,
@@ -352,7 +352,7 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    const result = await client.verifySession("idToken", context);
+    const result = await client.verifyToken("idToken", context);
     assert.deepEqual(result, {
       results: {
         user_id: 1,
@@ -366,9 +366,9 @@ describe("[fab1071e] NeasClient", () => {
   });
 
   it("[4327c5d6] should throw if an error occurs when verifying a session", async () => {
-    mock.method(client, "get", () => {
+    mock.method(client, "post", () => {
       throw new Error("error");
     });
-    assert.rejects(async () => await client.verifySession("idToken", context));
+    assert.rejects(async () => await client.verifyToken("idToken", context));
   });
 });

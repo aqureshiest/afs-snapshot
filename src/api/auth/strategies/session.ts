@@ -24,7 +24,7 @@ export default async function (
     ),
   );
 
-  const { results, response } = await NeasClient.verifySession(
+  const { results, response } = await NeasClient.verifyToken(
     idToken,
     context,
   );
