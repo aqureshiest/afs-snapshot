@@ -1,4 +1,4 @@
-{{#if (or (application.primary.cognitoID) (application.primary.monolithUserID))}}
+{{#if (or (notNull application.primary.cognitoID) (notNull application.primary.monolithUserID))}}
 {
   "plaidMethod": "createLinkToken",
   "id": "{{{request.params.id}}}",
