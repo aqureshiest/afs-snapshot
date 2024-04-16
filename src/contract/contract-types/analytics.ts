@@ -49,7 +49,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   evaluate = async (
     input: Input,
     injections: Injections,
-    definition: Definition,
+    definition: Definition
   ) => {
     const { context } = injections;
 
@@ -57,7 +57,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       context.loadedPlugins.analyticsServiceClient.instance;
     assert(
       analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated",
+      "[e6falixw] AnalyticsServiceClient not instantiated"
     );
 
     const { type } = definition;
@@ -67,7 +67,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     switch (eventType) {
       case EVENT_TYPE.track:
         await analyticsServiceClient.track(
-          this.buildTrackProps(input, definition),
+          this.buildTrackProps(input, definition)
         );
         break;
       case EVENT_TYPE.identify:
@@ -75,7 +75,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         break;
       case EVENT_TYPE.page:
         await analyticsServiceClient.page(
-          this.buildPageProps(input, definition),
+          this.buildPageProps(input, definition)
         );
         break;
       default:
@@ -108,6 +108,39 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         source: "application",
       },
     };
+
+    //employment_type
+    if (
+      application.details &&
+      application.details.income &&
+      application.details.income.length > 0
+    ) {
+      props.properties = {
+        ...props.properties,
+        employment_type: application.details.income[0].type,
+      };
+    }
+
+    //income_verification_method
+    if (
+      application.details &&
+      application.details.financialAccounts &&
+      application.details.financialAccounts.length > 0
+    ) {
+      props.properties = {
+        ...props.properties,
+        income_verification_method:
+          application.details.financialAccounts[0].type,
+      };
+    }
+
+    //decision
+    if (application.status) {
+      props.properties = {
+        ...props.properties,
+        decision: application.status.name,
+      };
+    }
 
     if (payload.section) {
       props.properties = { ...props.properties, section: payload.section };
@@ -145,20 +178,21 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     assert(userId, "[ypdvs5fo] userId is null");
 
-    const {
-      payload: { name, title },
-    } = definition;
+    const { payload } = definition;
 
     const props: PageParams = {
       userId,
-      name,
+      name: payload.name,
       properties: {
-        title,
         applicationId: application.id,
         product: application.product,
         source: "application",
       },
     };
+
+    if (payload.title) {
+      props.properties = { ...props.properties, title: payload.title };
+    }
 
     return props;
   }
