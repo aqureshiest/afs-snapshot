@@ -1,3 +1,4 @@
+{{#if (or (application.primary.cognitoID) (application.primary.monolithUserID))}}
 {
   "plaidMethod": "createLinkToken",
   "id": "{{{request.params.id}}}",
@@ -6,6 +7,12 @@
       "userId": "{{{application.primary.cognitoID}}}"
     {{else}}
       "userId": "{{{application.primary.monolithUserID}}}"
-    {{/else}}
+    {{/if}}
   }
 }
+{{else}} 
+ {
+  "status": "failed",
+  "error": "Application missing cognitoID or monolithUserID"
+ }
+{{/if}}
