@@ -24,8 +24,8 @@
           {{#if previousAddress }} 
             {"location": [{"index": 1, "street1": "{{previousAddress.street1}}", "street2": "{{previousAddress.street2}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
-          {{#if (and employmentType (or (eq employmentType "employed") (eq employmentType "self_employed") (eq employmentType "future"))) }}
-            {"income": [{"index": 0, "type": "employed"}]}
+          {{#if employmentType }}
+              {"income": [{"index": 0, "type": "{{{employmentStatus employmentType}}}"}]}
           {{/if}}
           {{#if jobTitle}}
               {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{number annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{startDate.year}}-{{startDate.month}}-{{startDate.day}}" {{/if}} }]}

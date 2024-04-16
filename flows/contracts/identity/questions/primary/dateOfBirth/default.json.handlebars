@@ -7,9 +7,11 @@
         "type": "inputDate",
         "status": {{{json (contract 'primary_dob_input_status')}}},
         "value": {
-          "month": {{month details.dateOfBirth}},
-          "day": {{day details.dateOfBirth}},
-          "year": {{year details.dateOfBirth}}
+          {{#if details.dateOfBirth}}
+            "month": {{month details.dateOfBirth}},
+            "day": {{day details.dateOfBirth}},
+            "year": {{year details.dateOfBirth}}
+          {{/if}}
         },
         "label": {
           "copy": "Date of birth"

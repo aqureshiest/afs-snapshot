@@ -39,3 +39,11 @@ export function day(v1) {
 export function year(v1) {
   return new Date(v1).getFullYear();
 }
+export function employmentStatus(v1) {
+  const employed = ["employed", "self_employed", "future"];
+  if (employed.includes(v1)) {
+    return "employed";
+  } else {
+    return v1;
+  }
+}
