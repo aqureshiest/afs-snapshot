@@ -30,3 +30,12 @@ export function or(...args) {
 export function number(v1) {
   return Number(String(v1).replace(/[^0-9.]/g, ""));
 }
+export function month(v1) {
+  return new Date(v1).getMonth() + 1;
+}
+export function day(v1) {
+  return new Date(v1).getDate();
+}
+export function year(v1) {
+  return new Date(v1).getFullYear();
+}

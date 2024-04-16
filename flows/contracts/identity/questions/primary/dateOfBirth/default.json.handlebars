@@ -6,9 +6,13 @@
         "key": "dateOfBirth",
         "type": "inputDate",
         "status": {{{json (contract 'primary_dob_input_status')}}},
-        "value": "{{details.dateOfBirth}}",
+        "value": {
+          "month": {{month details.dateOfBirth}},
+          "day": {{day details.dateOfBirth}},
+          "year": {{year details.dateOfBirth}}
+        },
         "label": {
-            "copy": "Date of birth"
+          "copy": "Date of birth"
         },
         "hint": "",
         "error": "{{{ ajv 'errors' 'questions/primary/dateOfBirth' details.dateOfBirth }}}"

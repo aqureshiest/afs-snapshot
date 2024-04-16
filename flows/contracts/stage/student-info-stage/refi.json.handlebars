@@ -11,7 +11,52 @@
             "basic": {
                 "type": "object",
                 "properties": {
+                    "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
                     "phone": {{{json (schema 'questions/primary/phone')}}}
+                }
+            },
+            "income": {
+                "type": "object",
+                "properties": {
+                    "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                    "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                    "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                    "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                }
+            },
+            "incomeSelfEmployed": {
+                "type": "object",
+                "properties": {
+                    "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                    "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
+                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                    "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                    "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                }
+            },
+            "incomeFutureEmployment": {
+                "type": "object",
+                "properties": {
+                    "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                    "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                    "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
+                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                    "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                    "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                }
+            },
+            "additionalIncome": {
+                "type": "object",
+                "properties": {
+                    "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                }
+            },
+            "hasConsistentIncome": {
+                "type": "object",
+                "properties": {
+                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                    "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                 }
             }
         }
