@@ -8,6 +8,7 @@
       "student-info-form/employment",
       "student-info-form/income",
       "student-info-form/income-self-employed",
+      "student-info-form/future-employment.refi",
       "student-info-form/source-of-income",
       "student-info-form/additional-income",
       "student-info-form/consistent-income",
@@ -15,6 +16,7 @@
     ],
     "student-info-basic-rows": [
       "info/student-info.refi",
+      "questions/primary/dateOfBirth.default",
       "questions/primary/phone.default",
       "info/student-phone-disclosure.default"
     ],
@@ -35,13 +37,21 @@
       "info/student-income.default",
       "questions/primary/employment/employer-name.default",
       "questions/primary/employment/job-title.default",
-      "questions/primary/employment/start-date.default",
       "questions/primary/income/amount/annual-income.default",
       "questions/primary/income/amount/claimed-assets.default",
       "questions/primary/income/amount/additional-income.default",
       "info/student-income/additional-income-hint.default"
     ],
     "student-info-income-self-employed-rows": [      
+      "info/student-income.default",
+      "questions/primary/employment/job-title.default",
+      "questions/primary/employment/start-date.default",
+      "questions/primary/income/amount/annual-income.default",
+      "questions/primary/income/amount/claimed-assets.default",
+      "questions/primary/income/amount/additional-income.default",
+      "info/student-income/additional-income-hint.default"
+    ],
+    "student-info-income-future-rows": [
       "info/student-income.default",
       "questions/primary/employment/employer-name.default",
       "questions/primary/employment/job-title.default",
@@ -74,6 +84,8 @@
 
     "noop_details_action": "actions/noop-details.primary",
     "save_primary_details_action": "actions/save-details.primary",
+    "save_primary_employment_details_action": "actions/save-details.employment",
+    "save_primary_other_income_details_action": "actions/save-details.other-incomes",
     "primary_dob_input_status": "questions/primary/dateOfBirth.status",
     "primary_phone_input_status": "questions/primary/phone.status",
     "primary_address_input_status": "questions/primary/address.status",

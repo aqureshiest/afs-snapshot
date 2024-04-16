@@ -4,28 +4,18 @@
   "definition": {
       "key": "startDate",
       "type": "inputDate",
-      "value":  "{{{details.income.0.start}}}",
       "status": {{{json (contract 'primary_income_start_date_input_status')}}},
+      "value": {
+        {{#if details.income.0.start}}
+          "month": {{month details.income.0.start}},
+          "day": {{day details.income.0.start}},
+          "year": {{year details.income.0.start}}
+        {{/if}}
+      },
       "label": {
         "copy": "Start date"
       },
-      "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}",
-      "conditional": [
-        [
-            {
-                "field": "employmentStatus.employmentType", 
-                "op": "valueEquals",
-                "value": "self_employed"
-            }
-        ],
-        [
-            {
-                "field": "employmentStatus.employmentType", 
-                "op": "valueEquals",
-                "value": "future"
-            }
-        ]
-      ]
+      "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}"
   }
 }
 {{/with}}

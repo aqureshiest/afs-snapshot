@@ -24,10 +24,7 @@ export default async function (
     ),
   );
 
-  const { results, response } = await NeasClient.verifyToken(
-    idToken,
-    context,
-  );
+  const { results, response } = await NeasClient.verifyToken(idToken, context);
 
   if (response.statusCode === 400) {
     strategy.error = createError.Unauthorized(
