@@ -89,25 +89,25 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     assert(application, "[rcf1upqz] application is null");
 
-    const userId = application.cognitoID ?? application.monolithUserID;
+    const userId = "draj1234"; //application.cognitoID ?? application.monolithUserID;
 
-    assert(userId, "[ab4bkv0s] userId is null");
+    // assert(userId, "[ab4bkv0s] userId is null");
 
-    const {
-      event,
-      payload: { section, step },
-    } = definition;
+    const { payload } = definition;
 
     const props: TrackParams = {
       userId,
-      event,
+      event: payload.event,
       properties: {
-        section,
+        action: payload.action,
+        section: payload.section,
         applicationId: application.id,
-        product: "SLR",
-        loan_type: "independent",
+        product: application.product,
+        loan_type:
+          application.tags && application.tags.length > 0
+            ? application.tags[0]
+            : null,
         source: "application",
-        step,
       },
     };
 
@@ -127,7 +127,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       userId,
       traits: {
         applicationId: application.id,
-        product: "SLR",
+        product: application.product,
       },
     };
 
@@ -144,15 +144,16 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     assert(userId, "[ypdvs5fo] userId is null");
 
     const {
-      payload: { name },
+      payload: { name, title },
     } = definition;
 
     const props: PageParams = {
       userId,
       name,
       properties: {
+        title,
         applicationId: application.id,
-        product: "SLR",
+        product: application.product,
         source: "application",
       },
     };

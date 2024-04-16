@@ -1,5 +1,5 @@
 {
   "*": "redirect",
-  "actions": ["add-details"],
+  "actions": ["add-details", "server-application-section-submitted"],
   "redirect": ["redirect.refi-review"]
 }

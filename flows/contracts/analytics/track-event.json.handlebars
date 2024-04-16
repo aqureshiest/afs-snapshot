@@ -1,13 +1,15 @@
 
 {{#if request.body.values}}
   {
-    "event": "{{request.body.values.eventName}}",
     "type": "{{request.body.values.eventType}}",
     "payload": {
+      "event": "{{request.body.values.eventName}}",
       "section": "{{request.body.values.section}}",
       "name": "{{request.body.values.name}}",
+      "title": "{{request.body.values.title}}",
       "source": "{{request.body.values.source}}",
-      "step": "{{request.body.values.step}}"
+      "action": "{{request.body.values.action}}",
+      "text": "{{request.body.values.text}}",
     }
   }
 {{else}}
