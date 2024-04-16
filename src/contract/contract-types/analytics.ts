@@ -89,9 +89,9 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     assert(application, "[rcf1upqz] application is null");
 
-    const userId = "draj1234"; //application.cognitoID ?? application.monolithUserID;
+    const userId = application.cognitoID ?? application.monolithUserID;
 
-    // assert(userId, "[ab4bkv0s] userId is null");
+    assert(userId, "[ab4bkv0s] userId is null");
 
     const { payload } = definition;
 
