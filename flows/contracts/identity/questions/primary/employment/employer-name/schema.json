@@ -1,10 +1,10 @@
 {
     "type": "string",
-    "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
+    "pattern": "^[\\x00-\\x7F]*$",
     "minLength": 1,
     "errorMessage": {
         "minLength": "Employer name must be longer than 1 character",
         "pattern": "Invalid employer name",
         "type": "Invalid employer name"
     }
-  }
+}

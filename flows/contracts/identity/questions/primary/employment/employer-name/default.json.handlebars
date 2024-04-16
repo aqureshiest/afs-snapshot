@@ -1,22 +1,6 @@
 {{#with application.primary}}
 {
   "type": "input",
-  "conditional": [
-    [
-      {
-          "field": "employment.employment", 
-          "op": "valueEquals",
-          "value": "employed"
-      }
-    ],
-    [
-      {
-          "field": "employment.employment", 
-          "op": "valueEquals",
-          "value": "future"
-      }
-    ]
-  ],
   "definition": {
       "key": "employerName",
       "type": "inputText",

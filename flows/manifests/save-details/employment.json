@@ -1,0 +1,5 @@
+{
+    "*": "redirect",
+    "actions": ["add-details"],
+    "redirect": ["redirect.income-verification"]
+  }

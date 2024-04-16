@@ -1,10 +1,12 @@
 {{#if (eq request.body.values.hasConsistentIncome "false")}}
 {
-  "type": "navigate",
-  "properties": {
-    "goTo": {{{ json (contract 'redirect') }}}
+  "action": {
+    "type": "navigate",
+    "properties": {
+      "goTo": {{{ json (contract 'redirect') }}}
+    }
   },
-  "actions": {{{ json (contract 'actions') }}}
+  "result": {{{ json (contract 'actions') }}}
 }
 {{else}}
     null
