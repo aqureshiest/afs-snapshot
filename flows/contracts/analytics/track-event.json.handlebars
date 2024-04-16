@@ -1,17 +1,19 @@
 
-{{#if request.body.values}}
-  {
-    "type": "{{request.body.values.eventType}}",
-    "payload": {
-      "event": "{{request.body.values.eventName}}",
-      "section": "{{request.body.values.section}}",
-      "name": "{{request.body.values.name}}",
-      "title": "{{request.body.values.title}}",
-      "source": "{{request.body.values.source}}",
-      "action": "{{request.body.values.action}}",
-      "text": "{{request.body.values.text}}",
+{{#if request.body.values.analytics}}
+  {{#with request.body.values.analytics}}
+    {
+      "type": "{{type}}",
+      "payload": {
+        "event": "{{event}}",
+        "section": "{{section}}",
+        "name": "{{name}}",
+        "title": "{{title}}",
+        "source": "{{source}}",
+        "action": "{{action}}",
+        "text": "{{text}}",
+      }
     }
-  }
+  {{/with}}
 {{else}}
   null
 {{/if}}

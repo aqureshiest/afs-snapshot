@@ -99,8 +99,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       userId,
       event: payload.event,
       properties: {
-        action: payload.action,
-        section: payload.section,
         applicationId: application.id,
         product: application.product,
         loan_type:
@@ -110,6 +108,10 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         source: "application",
       },
     };
+
+    if(payload.section){
+      props.properties = {...props.properties, section:payload.section};
+    }
 
     return props;
   }
