@@ -1,9 +1,6 @@
 {
     "type": "string",
-    "nullable": true,
-    "minLength": 1,
     "errorMessage": {
-      "minLength": "Amount is required",
       "type": "Enter a valid number"
     }
 }
