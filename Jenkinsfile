@@ -117,6 +117,12 @@ pipeline {
         }
         failure {
           createSplunkHttpEvent([serviceName: env.SERVICE_NAME, stepName: "ci-staging-deployment", templateName: "microservice-chassis", result: "failure"], [], env.SERVICE_NAME, versionFromPackageJson(), "service-template-event")
+          slackSendOnBranch(
+            'main',
+            "#${env.SLACK_CHANNEL}",
+            'danger',
+            "[apply-flow-service]: Pipeline stage 'Deploy to Staging' failed! (<${env.BUILD_URL}|Details>)"
+          )
         }
         cleanup {
           cleanAll()

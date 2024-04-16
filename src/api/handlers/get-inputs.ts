@@ -60,15 +60,15 @@ const getInputs: Handler = async function (
      * III. Session Authorization
      * ============================== */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const isAuthorized = applicants.reduce((authorized, applicant) => {
-      const { monolithUserID } = applicant;
+    // const isAuthorized = applicants.reduce((authorized, applicant) => {
+    //   const { monolithUserID } = applicant;
 
-      if (monolithUserID && userId && monolithUserID === userId) {
-        // for v1, at least one applicant has to be authorized
-        authorized = true;
-      }
-      return authorized;
-    }, false);
+    //   if (monolithUserID && userId && monolithUserID === userId) {
+    //     // for v1, at least one applicant has to be authorized
+    //     authorized = true;
+    //   }
+    //   return authorized;
+    // }, false);
     /**
      * TODO: Temporarily comment out
      * remove .skip from get-inputs.test.ts as well

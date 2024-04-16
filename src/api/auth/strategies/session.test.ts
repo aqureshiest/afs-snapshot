@@ -28,7 +28,7 @@ describe("[cd30d05c] session auth strategy", () => {
       },
     };
     const res = { locals: {} };
-    mock.method(NeasClient, "verifySession", () => {
+    mock.method(NeasClient, "verifyToken", () => {
       return {
         results: {
           userId: 1,
@@ -64,7 +64,7 @@ describe("[cd30d05c] session auth strategy", () => {
       },
     };
     const res = { locals: {} };
-    mock.method(NeasClient, "verifySession", () => {
+    mock.method(NeasClient, "verifyToken", () => {
       return {
         results: {
           userId: 1,
@@ -124,7 +124,7 @@ describe("[cd30d05c] session auth strategy", () => {
       },
     };
     const res = { locals: {} };
-    mock.method(NeasClient, "verifySession", () => {
+    mock.method(NeasClient, "verifyToken", () => {
       return {
         results: {},
         response: {
