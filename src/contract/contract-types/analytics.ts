@@ -109,8 +109,8 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       },
     };
 
-    if(payload.section){
-      props.properties = {...props.properties, section:payload.section};
+    if (payload.section) {
+      props.properties = { ...props.properties, section: payload.section };
     }
 
     return props;
