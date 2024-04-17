@@ -1,5 +1,5 @@
 {
   "*": "redirect.default",
-  "actions": ["create.applicant", "create.cosigner"],
+  "actions": ["create.applicant", "create.cosigner", "server-application-started"],
   "redirect": "redirect.syllabus"
 }
