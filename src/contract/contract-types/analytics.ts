@@ -49,7 +49,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   evaluate = async (
     input: Input,
     injections: Injections,
-    definition: Definition
+    definition: Definition,
   ) => {
     const { context } = injections;
 
@@ -57,7 +57,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       context.loadedPlugins.analyticsServiceClient.instance;
     assert(
       analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated"
+      "[e6falixw] AnalyticsServiceClient not instantiated",
     );
 
     const { type } = definition;
@@ -67,7 +67,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     switch (eventType) {
       case EVENT_TYPE.track:
         await analyticsServiceClient.track(
-          this.buildTrackProps(input, definition)
+          this.buildTrackProps(input, definition),
         );
         break;
       case EVENT_TYPE.identify:
@@ -75,7 +75,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         break;
       case EVENT_TYPE.page:
         await analyticsServiceClient.page(
-          this.buildPageProps(input, definition)
+          this.buildPageProps(input, definition),
         );
         break;
       default:
