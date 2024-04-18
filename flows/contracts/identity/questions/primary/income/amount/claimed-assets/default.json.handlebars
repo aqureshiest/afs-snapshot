@@ -4,7 +4,11 @@
   "definition": {
       "key": "claimedAssets",
       "type": "inputMoney",
-      "value":  "{{{details.asset.0.amount}}}",
+      {{#if details.asset.0.amount}}
+        "value":  "{{{formatCentsToDollars details.asset.0.amount}}}",
+      {{else}}
+        "value": "",
+      {{/if}}
       "status": {{{json (contract 'primary_income_claimed_assets_input_status')}}},
       "label": {
         "copy": "Cash + retirement + investments"

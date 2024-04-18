@@ -3,7 +3,6 @@
     "event": "addDetails",
     "payload": {
       "id": "{{request.params.id}}",
-      {{log request.body.values}}
       {{#with request.body.values}}
       "details": 
         {{#obj}} {{! make sure to flatten each element into a single line}}
@@ -29,13 +28,13 @@
               {"income": [{"index": 0, "type": "{{{employmentType}}}"}]}
           {{/if}}
           {{#if jobTitle}}
-              {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{number annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
+              {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
           {{/if}}
           {{#if claimedAssets}}
-            {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{number claimedAssets}}} }]}
+            {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
           {{/if}}
           {{#if additionalAmount}}
-            {"income": [{"index": 1, "amount": {{{number additionalAmount}}} }]}
+            {"income": [{"index": 1, "amount": {{{formatDollarsToCents additionalAmount}}} }]}
           {{/if}}
           {{#if sourcesOfIncome}}
             {"income": [{"index": 1, "type": "{{sourcesOfIncome}}" }]}

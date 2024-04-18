@@ -56,3 +56,17 @@ export function dateObjToString(v1) {
   const day = String(v1.day).padStart(2, "0");
   return `${v1.year}-${month}-${day}`;
 }
+
+export function formatDollarsToCents(v1) {
+  const value = number(v1);
+  let cents = (value + "").replace(/[^\d.-]/g, "");
+  if (cents && cents.includes(".")) {
+    cents = cents.substring(0, cents.indexOf(".") + 3);
+  }
+  return cents ? Math.round(parseFloat(cents) * 100) : 0;
+}
+
+export function formatCentsToDollars(v1) {
+  const result = parseFloat((v1 + "").replace(/[^\d.-]/g, ""));
+  return result ? result / 100 : 0;
+}
