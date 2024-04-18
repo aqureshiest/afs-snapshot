@@ -4,7 +4,11 @@
   "definition": {
       "key": "annualIncome",
       "type": "inputMoney",
-      "value":"{{{details.income.0.amount}}}",
+      {{#if details.income.0.amount}}
+        "value": "{{{formatCentsToDollars details.income.0.amount}}}",
+      {{else}}
+        "value": "",
+      {{/if}}
       "status": {{{json (contract 'primary_income_annual_income_input_status')}}},
       "label": {
         "copy": "Annual income before taxes"

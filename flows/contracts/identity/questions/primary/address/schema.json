@@ -89,7 +89,7 @@
       "zip": {
         "minLength": 5,
         "maxLength": 10,
-        "pattern": "^[\\x00-\\x7F]*$",
+        "pattern": "^\\d{5}(?:[-\\s]\\d{4})?$",
         "type": "string",
         "errorMessage": {
           "minLength": "Zipcode is required",
