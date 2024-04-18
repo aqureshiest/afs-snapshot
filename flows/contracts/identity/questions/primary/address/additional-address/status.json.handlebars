@@ -1,0 +1,7 @@
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/primary/address/additional-address' sixMonthResidence) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}

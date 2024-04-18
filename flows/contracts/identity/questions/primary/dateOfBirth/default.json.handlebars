@@ -8,9 +8,9 @@
         "status": {{{json (contract 'primary_dob_input_status')}}},
         "value": {
           {{#if details.dateOfBirth}}
-            "month": {{month details.dateOfBirth}},
-            "day": {{day details.dateOfBirth}},
-            "year": {{year details.dateOfBirth}}
+            "month": "{{month details.dateOfBirth}}",
+            "day": "{{day details.dateOfBirth}}",
+            "year": "{{year details.dateOfBirth}}"
           {{/if}}
         },
         "label": {
