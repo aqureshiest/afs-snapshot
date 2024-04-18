@@ -31,19 +31,28 @@ export function number(v1) {
   return Number(String(v1).replace(/[^0-9.]/g, ""));
 }
 export function month(v1) {
-  return new Date(v1).getMonth() + 1;
+  return String(new Date(v1).getMonth() + 1).padStart(2, "0");
 }
 export function day(v1) {
-  return new Date(v1).getDate();
+  return String(new Date(v1).getDate()).padStart(2, "0");
 }
 export function year(v1) {
   return new Date(v1).getFullYear();
 }
-export function employmentStatus(v1) {
-  const employed = ["employed", "self_employed", "future"];
-  if (employed.includes(v1)) {
-    return "employed";
-  } else {
-    return v1;
-  }
+/**
+ * TODO: retirenment and unemployed income.type will be removed.
+ * Determimne best way to save employment status type
+ */
+// export function employmentStatus(v1) {
+//   const employed = ["employed", "self_employed", "future"];
+//   if (employed.includes(v1)) {
+//     return "employed";
+//   } else {
+//     return v1;
+//   }
+// }
+export function dateObjToString(v1) {
+  const month = String(v1.month).padStart(2, "0");
+  const day = String(v1.day).padStart(2, "0");
+  return `${v1.year}-${month}-${day}`;
 }

@@ -6,6 +6,15 @@
     "type": "inputRadio",
     "layout": "copyWithIcon",
     "direction": "row",
+    {{#if (or details.location.0.type details.location.1.type)}}
+      "value": {{#if (and details.location.1.type (eq details.location.1.type "previous"))}} "false" 
+               {{else}} 
+                  {{#if (and details.location.0.type (eq details.location.0.type "primary")) }} "true"  
+                  {{/if}} 
+               {{/if}},
+    {{else}}
+      "value": "",
+    {{/if}}
     "items": [
       {
           "id": "yes",
@@ -17,7 +26,9 @@
           "label": "No",
           "value": "false"
       }
-    ]
+    ],
+    "status": {{{json (contract 'primary_additional_address_input_status')}}},
+    "error": "{{{ ajv 'errors' 'questions/primary/address/additional-address' sixMonthResidence }}}"
   }
 }
 {{/with}}

@@ -1,0 +1,8 @@
+{ 
+    "type": "string",
+    "enum": ["true", "false"],
+    "errorMessage": {
+        "enum": "Please select Yes or No"
+    },
+    "required": ["hasConsistentIncome"]
+}
