@@ -1,100 +1,103 @@
 {
-    "*": "refi-student-info",
-    "stage": "student-info-stage.refi",
-    "steps": [
-      "student-info-form/basic.refi",
-      "student-info-form/address/current-address.refi",
-      "student-info-form/address/previous-address.refi",
-      "student-info-form/employment",
-      "student-info-form/income",
-      "student-info-form/income-self-employed",
-      "student-info-form/future-employment.refi",
-      "student-info-form/source-of-income",
-      "student-info-form/additional-income",
-      "student-info-form/consistent-income",
-      "student-info-form/consistent-income/has-consistent-income"
-    ],
-    "student-info-basic-rows": [
-      "info/student-info.refi",
-      "questions/primary/dateOfBirth.default",
-      "questions/primary/phone.default",
-      "info/student-phone-disclosure.default"
-    ],
-    "student-info-address-rows": [
-      "info/student-address.refi",
-      "questions/primary/address/additional-address.default",
-      "questions/primary/address.refiCurrent"
-    ],
-    "student-info-previous-address-rows": [
-      "info/student-address/previous-address.refi",
-      "questions/primary/address.refi"
-    ],
-    "student-info-employment-rows": [
-      "info/student-employment.default",
-      "questions/primary/employment.default"
-    ],
-    "student-info-income-rows": [
-      "info/student-income.default",
-      "questions/primary/employment/employer-name.default",
-      "questions/primary/employment/job-title.default",
-      "questions/primary/income/amount/annual-income.default",
-      "questions/primary/income/amount/claimed-assets.default",
-      "questions/primary/income/amount/additional-income.default",
-      "info/student-income/additional-income-hint.default"
-    ],
-    "student-info-income-self-employed-rows": [      
-      "info/student-income.default",
-      "questions/primary/employment/job-title.default",
-      "questions/primary/employment/start-date.default",
-      "questions/primary/income/amount/annual-income.default",
-      "questions/primary/income/amount/claimed-assets.default",
-      "questions/primary/income/amount/additional-income.default",
-      "info/student-income/additional-income-hint.default"
-    ],
-    "student-info-income-future-rows": [
-      "info/student-income.default",
-      "questions/primary/employment/employer-name.default",
-      "questions/primary/employment/job-title.default",
-      "questions/primary/employment/start-date.default",
-      "questions/primary/income/amount/annual-income.default",
-      "questions/primary/income/amount/claimed-assets.default",
-      "questions/primary/income/amount/additional-income.default",
-      "info/student-income/additional-income-hint.default"
-    ],
-    "student-info-income-retired-rows": [
-      "info/student-income/sources-of-income.default",
-      "questions/primary/income/sources-of-income-retired.default"
-    ],
-    "student-info-income-retired-additional-income-rows": [
-      "info/student-income/additional-income.default",
-      "questions/primary/income/has-additional-income.default",
-      "info/student-income/additional-income-hint.default",
-      "questions/primary/income/amount/additional-income.default"
-    ],
-    "student-info-unemployed-rows": [
-      "info/student-consistent-income-source.default",
-      "questions/primary/income/consistent-income.default"
-    ],
-    "student-info-consistent-income-rows": [
-      "info/student-income.default",
-      "questions/primary/income/amount/annual-income.default",
-      "questions/primary/income/amount/additional-income.default",
-      "info/student-income/additional-income-hint.default"
-    ],
+  "*": "refi-student-info",
+  "stage": "student-info-stage.refi",
+  "steps": [
+    "student-info-form/basic.refi",
+    "student-info-form/address/current-address.refi",
+    "student-info-form/address/previous-address.refi",
+    "student-info-form/employment",
+    "student-info-form/income",
+    "student-info-form/income-self-employed",
+    "student-info-form/future-employment.refi",
+    "student-info-form/source-of-income",
+    "student-info-form/additional-income",
+    "student-info-form/consistent-income",
+    "student-info-form/consistent-income/has-consistent-income"
+  ],
+  "student-info-basic-rows": [
+    "info/student-info.refi",
+    "questions/primary/dateOfBirth.default",
+    "questions/primary/phone.default",
+    "info/student-phone-disclosure.default"
+  ],
+  "student-info-address-rows": [
+    "info/student-address.refi",
+    "questions/primary/address/additional-address.default",
+    "questions/primary/address.refiCurrent"
+  ],
+  "student-info-previous-address-rows": [
+    "info/student-address/previous-address.refi",
+    "questions/primary/address.refi"
+  ],
+  "student-info-employment-rows": [
+    "info/student-employment.default",
+    "questions/primary/employment.default"
+  ],
+  "student-info-income-rows": [
+    "info/student-income.default",
+    "questions/primary/employment/employer-name.default",
+    "questions/primary/employment/job-title.default",
+    "questions/primary/income/amount/annual-income.default",
+    "questions/primary/income/amount/claimed-assets.default",
+    "questions/primary/income/amount/additional-income.default",
+    "info/student-income/additional-income-hint.default"
+  ],
+  "student-info-income-self-employed-rows": [      
+    "info/student-income.default",
+    "questions/primary/employment/job-title.default",
+    "questions/primary/employment/start-date.default",
+    "questions/primary/income/amount/annual-income.default",
+    "questions/primary/income/amount/claimed-assets.default",
+    "questions/primary/income/amount/additional-income.default",
+    "info/student-income/additional-income-hint.default"
+  ],
+  "student-info-income-future-rows": [
+    "info/student-income.default",
+    "questions/primary/employment/employer-name.default",
+    "questions/primary/employment/job-title.default",
+    "questions/primary/employment/start-date.default",
+    "questions/primary/income/amount/annual-income.default",
+    "questions/primary/income/amount/claimed-assets.default",
+    "questions/primary/income/amount/additional-income.default",
+    "info/student-income/additional-income-hint.default"
+  ],
+  "student-info-income-retired-rows": [
+    "info/student-income/sources-of-income.default",
+    "questions/primary/income/sources-of-income-retired.default"
+  ],
+  "student-info-income-retired-additional-income-rows": [
+    "info/student-income/additional-income.default",
+    "questions/primary/income/has-additional-income.default",
+    "info/student-income/additional-income-hint.default",
+    "questions/primary/income/amount/additional-income.default"
+  ],
+  "student-info-unemployed-rows": [
+    "info/student-consistent-income-source.default",
+    "questions/primary/income/consistent-income.default"
+  ],
+  "student-info-consistent-income-rows": [
+    "info/student-income.default",
+    "questions/primary/income/amount/annual-income.default",
+    "questions/primary/income/amount/additional-income.default",
+    "info/student-income/additional-income-hint.default"
+  ],
 
-    "noop_details_action": "actions/noop-details.primary",
-    "save_primary_details_action": "actions/save-details.primary",
-    "save_primary_employment_details_action": "actions/save-details.employment",
-    "save_primary_other_income_details_action": "actions/save-details.other-incomes",
-    "primary_dob_input_status": "questions/primary/dateOfBirth.status",
-    "primary_phone_input_status": "questions/primary/phone.status",
-    "primary_address_input_status": "questions/primary/address.status",
-    "primary_employment_input_status": "questions/primary/employment.status",
-    "primary_income_employer_name_input_status": "questions/primary/employment/employer-name.status",
-    "primary_income_job_title_input_status": "questions/primary/employment/job-title.status",
-    "primary_income_start_date_input_status": "questions/primary/employment/start-date.status",
-    "primary_income_annual_income_input_status": "questions/primary/income/amount/annual-income.status",
-    "primary_income_claimed_assets_input_status": "questions/primary/income/amount/claimed-assets.status",
-    "primary_income_additional_income_input_status": "questions/primary/income/amount/additional-income.status",
-    "primary_income_sources_of_income_input_status": "questions/primary/income/sources-of-income-retired.status"
+  "noop_details_action": "actions/noop-details.primary",
+  "save_primary_details_action": "actions/save-details.primary",
+  "save_primary_employment_details_action": "actions/save-details.employment",
+  "save_primary_other_income_details_action": "actions/save-details.other-incomes",
+  "primary_dob_input_status": "questions/primary/dateOfBirth.status",
+  "primary_phone_input_status": "questions/primary/phone.status",
+  "primary_address_input_status": "questions/primary/address.status",
+  "primary_additional_address_input_status": "questions/primary/address/additional-address.status",
+  "primary_employment_input_status": "questions/primary/employment.status",
+  "primary_income_employer_name_input_status": "questions/primary/employment/employer-name.status",
+  "primary_income_job_title_input_status": "questions/primary/employment/job-title.status",
+  "primary_income_start_date_input_status": "questions/primary/employment/start-date.status",
+  "primary_income_annual_income_input_status": "questions/primary/income/amount/annual-income.status",
+  "primary_income_claimed_assets_input_status": "questions/primary/income/amount/claimed-assets.status",
+  "primary_income_additional_income_input_status": "questions/primary/income/amount/additional-income.status",
+  "primary_income_sources_of_income_input_status": "questions/primary/income/sources-of-income-retired.status",
+  "primary_consistent_income_input_status": "questions/primary/income/consistent-income.status",
+  "primary_retired_has_additional_income_status": "questions/primary/income/has-additional-income.status"
 }

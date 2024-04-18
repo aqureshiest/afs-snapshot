@@ -22,6 +22,7 @@ fragment ApplicantFragment on Application {
       state
       zip
       citizenship
+      type
     }
     phone {
       type
