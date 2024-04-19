@@ -1,5 +1,5 @@
 {
   "*": "redirect.default",
-  "actions": ["create.root", "server-application-started"],
+  "actions": ["create.root"],
   "redirect": "redirect.landing"
 }
