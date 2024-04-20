@@ -2,26 +2,23 @@
 {
   "type": "input",
   "definition": {
-      "key": "address",
+      "reviewStyle": false,
+      "key": "currentAddress",
       "type": "inputAddress",
       "value": {
-          "street1": "{{{ details.location.0.street1}}}",
-          "street2": "{{{ details.location.0.street2}}}",
-          "country": "{{{ details.location.0.country}}}",
+          "street": "{{{ details.location.0.street1}}}",
+          "apt": "{{{ details.location.0.street2}}}",
           "city": "{{{ details.location.0.city}}}",
           "state": "{{{ details.location.0.state}}}",
           "zip": "{{{ details.location.0.zip}}}"
       },
       "status": {{{json (contract 'primary_address_input_status')}}},
-      "label": {
-          "street1": {
+      "labels": {
+          "street": {
               "copy": "Street address"
           },
-          "street2": {
+          "apt": {
               "copy": "Apt/Suite number (optional)"
-          },
-          "country": {
-            "copy": "country"
           },
           "city": {
               "copy": "City"

@@ -1,0 +1,18 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "incomeInfoReview",
+        "type": "infoReview",
+        "label": "Income Verification",
+        "copy": "My accounts \n\n ",
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/income-verification/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}

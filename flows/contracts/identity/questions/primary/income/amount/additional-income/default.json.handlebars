@@ -5,7 +5,8 @@
     "key": "additionalAmount",
     "type": "inputMoney",
     {{#if details.income.2.amount}}
-      "value":  "{{{formatCentsToDollars details.income.2.amount}}}",
+      {{log details.income.2.amount}}
+      "value":  "{{{formatToUSCurrency details.income.2.amount}}}",
     {{else}}
       "value": "",
     {{/if}}

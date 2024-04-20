@@ -1,0 +1,11 @@
+{{#with application.primary}}
+{
+    "key": "refi-review",
+    "label": "Student Refi Review",
+    "submit": {
+        "copy": "Submit my application"
+    },
+    "progress": 100,
+    "rows":  {{{ json (contract 'student-info-review-rows')}}}
+}
+{{/with}}

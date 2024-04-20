@@ -1,0 +1,18 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "basicInfoReview",
+        "type": "infoReview",
+        "label": "Personal Info",
+        "copy": "Full Name \n\n **{{details.name.first}} {{details.name.last}}** \n\n Date of Birth \n\n **{{reviewDateFormatter details.dateOfBirth}}** \n\n Phone Number \n\n **{{formatPhoneNumber details.phone.0.number}}** \n\n Email \n\n **{{details.email}}** \n\n Address \n\n **{{details.location.0.street1}} {{details.location.0.street2}}** \n\n **{{details.location.0.city}} {{details.location.0.state}} {{details.location.0.zip}}** \n\n Citizenship \n\n **{{details.location.0.citizenship}}** \n\n Social Security Number \n\n **REDACTED**",
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/edit/personal-info/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}

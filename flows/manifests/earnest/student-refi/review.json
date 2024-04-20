@@ -1,0 +1,16 @@
+{
+    "*": "refi-review",
+    "stage": "review.refi",
+    "steps": [
+        "student-info-form/review.refi"
+    ],
+    "student-info-review-rows": [
+        "info/student-review.default",
+        "info/student-info/review.default",
+        "info/student-education/review.default",
+        "info/student-loan-amount/review.default",
+        "info/student-employment/review.default",
+        "info/student-finances/review.default",
+        "questions/primary/consent.default"
+    ]
+}

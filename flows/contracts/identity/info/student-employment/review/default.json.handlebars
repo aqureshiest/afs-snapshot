@@ -1,0 +1,18 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "employmentInfoReview",
+        "type": "infoReview",
+        "label": "Employment Info",
+        "copy": "Employment Status \n\n **{{details.income.0.type}}** \n\n {{#if details.income.0.employer}} Employer name \n\n **{{details.income.0.employer}}** \n\n {{/if}} Job Title \n\n **{{details.income.0.title}}** \n\n {{#if details.income.0.start}} Start Date \n\n **{{reviewDateFormatter details.income.0.start}}** \n\n {{/if}} Annual Income before taxes \n\n **{{formatToUSCurrency details.income.0.amount}}** \n\n Cash + retirement + investments \n\n **{{formatToUSCurrency details.asset.0.amount}}** \n\n Additional income \n\n **{{formatToUSCurrency details.income.2.amount}}** \n\n Sources of Income \n\n",
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/student-info/{{id}}?step=employmentStatus"
+            }
+        }
+    }
+}
+{{/with}}

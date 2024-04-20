@@ -1,14 +1,14 @@
 {
   "type": "string",
-  "properties": {      
-    "citizenship": {
-        "enum": [
-          "citizen",
-          "permanent_resident",
-          "asylee",
-          "daca",
-          "non-resident"
-        ]
-    }
-  }
+  "enum": [
+    "citizen",
+    "permanent_resident",
+    "asylee",
+    "daca",
+    "non-resident"
+  ],
+  "errorMessage": {
+    "enum": "Please select a citizenship status"
+  },
+  "required": ["citizenship"]
 }

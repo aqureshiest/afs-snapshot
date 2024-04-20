@@ -1,0 +1,19 @@
+
+{{#with application}}
+{
+    "type": "info",
+    "definition": {
+        "key": "loanAmountReview",
+        "type": "infoReview",
+        "label": "Loan Details",
+        "copy": "Refinance amount \n\n **{{formatToUSCurrency details.amount.requested}}**",
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/edit/loan-info/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}

@@ -1,0 +1,18 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "educationReview",
+        "type": "infoReview",
+        "label": "Academic Info",
+        "copy": "College or school name \n\n **PLACEHOLDER** \n\n Highest degree \n\n **{{details.education.0.degree}}** \n\n Graduation Date \n\n **{{details.education.0.graduationDate}}**",
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": ""
+            }
+        }
+    }
+}
+{{/with}}

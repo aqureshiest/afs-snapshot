@@ -70,3 +70,24 @@ export function formatCentsToDollars(v1) {
   const result = parseFloat((v1 + "").replace(/[^\d.-]/g, ""));
   return result ? result / 100 : 0;
 }
+
+export function formatToUSCurrency(v1) {
+  if (v1) {
+    return formatCentsToDollars(v1).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  }
+}
+
+export function formatPhoneNumber(v1) {
+  return `${v1.substring(0, 3)}-${v1.substring(3, 6)}-${v1.substring(6, 10)}`;
+}
+
+export function reviewDateFormatter(v1) {
+  // Date is formatted as yyyy-mm-dd
+  const dateSplit = v1.split("-");
+
+  // return date format as mm-dd-yyyy
+  return `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;
+}
