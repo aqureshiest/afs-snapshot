@@ -20,15 +20,10 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   /**
    */
   condition = (input: Input, context: Injections, definition: Definition) => {
-    const method = input.request?.method;
-
     const { application } = input;
 
     const { type } = definition;
 
-    if (!(method && method === "POST")) {
-      return false;
-    }
     if (!(type in EVENT_TYPE)) {
       return false;
     }
@@ -50,7 +45,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     input: Input,
     injections: Injections,
     definition: Definition,
-  ) => {
+  ) => {    
     const { context } = injections;
 
     const analyticsServiceClient =
