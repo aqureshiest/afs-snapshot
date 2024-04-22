@@ -45,7 +45,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     input: Input,
     injections: Injections,
     definition: Definition,
-  ) => {    
+  ) => {
     const { context } = injections;
 
     const analyticsServiceClient =
