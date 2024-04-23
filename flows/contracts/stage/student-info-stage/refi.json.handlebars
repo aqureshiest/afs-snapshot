@@ -18,13 +18,20 @@
             "currentAddress": {
                 "type": "object",
                 "properties": {
-                    "currentAddress": {{{json (schema 'questions/primary/address')}}}
+                    "currentAddress": {{{json (schema 'questions/primary/address')}}},
+                    "sixMonthResidence": {{{json (schema 'questions/primary/address/additional-address')}}}
                 }
             },
             "previousAddress": {
                 "type": "object",
                 "properties": {
                     "previousAddress": {{{json (schema 'questions/primary/address')}}}
+                }
+            },
+            "employmentStatus": {
+                "type": "object",
+                "properties": {
+                    "employmentType": {{{json (schema 'questions/primary/employment')}}}
                 }
             },
             "income": {
@@ -58,10 +65,23 @@
                     "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                 }
             },
+            "sourcesOfIncome": {
+                "type": "object",
+                "properties": {
+                    "sourcesOfIncome": {{{json (schema 'questions/primary/income/sources-of-income-retired')}}}
+                }
+            },
             "additionalIncome": {
                 "type": "object",
                 "properties": {
+                    "addAddtionalIncome": {{{json (schema 'questions/primary/income/has-additional-income')}}},
                     "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                }
+            },
+            "consistentIncome": {
+                "type": "object",
+                "properties": {
+                    "hasConsistentIncome": {{{json (schema 'questions/primary/income/consistent-income')}}}
                 }
             },
             "hasConsistentIncome": {

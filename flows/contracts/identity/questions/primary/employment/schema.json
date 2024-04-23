@@ -1,10 +1,8 @@
-{
-  "type": "string",
-  "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-  "minLength": 1,
-  "errorMessage": {
-    "minLength": "Option must be longer than 1 character",
-    "pattern": "Invalid option",
-    "type": "Invalid option"
-  }
+{ 
+    "type": "string",
+    "enum": ["employed", "self_employed", "future", "retired", "unemployed"],
+    "errorMessage": {
+      "enum": "Please select an employment status"
+    },
+    "required": ["employmentType"]
 }

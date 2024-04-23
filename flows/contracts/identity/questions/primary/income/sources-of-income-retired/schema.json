@@ -1,11 +1,8 @@
-{
+{ 
     "type": "string",
-    "properties": {      
-      "type": {
-        "enum": [
-            "social_security_pension",
-            "401k"
-        ]
-      }
-    }
-  }
+    "enum": ["social_security_or_pension", "investment"],
+    "errorMessage": {
+        "enum": "Please select a source of income"
+    },
+    "required": ["sourcesOfIncome"]
+}

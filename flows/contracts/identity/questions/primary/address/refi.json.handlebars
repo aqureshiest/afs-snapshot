@@ -8,21 +8,17 @@
       "value": {
           "street": "{{{ details.location.1.street1}}}",
           "apt": "{{{ details.location.1.street2}}}",
-          "country": "{{{ details.location.1.country}}}",
           "city": "{{{ details.location.1.city}}}",
           "state": "{{{ details.location.1.state}}}",
           "zip": "{{{ details.location.1.zip}}}"
       },
       "status": {{{json (contract 'primary_address_input_status')}}},
-      "label": {
+      "labels": {
           "street": {
               "copy": "Street address"
           },
           "apt": {
               "copy": "Apt/Suite number (optional)"
-          },
-          "country": {
-            "copy": "country"
           },
           "city": {
               "copy": "City"

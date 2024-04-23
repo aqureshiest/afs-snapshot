@@ -4,7 +4,11 @@
   "definition": {
     "key": "additionalAmount",
     "type": "inputMoney",
-    "value":  "{{{details.income.1.amount}}}",
+    {{#if details.income.2.amount}}
+      "value":  "{{{formatCentsToDollars details.income.2.amount}}}",
+    {{else}}
+      "value": "",
+    {{/if}}
     "status": {{{json (contract 'primary_income_additional_income_input_status')}}},
     "label": {
       "copy": "Total annual additional income (optional)"

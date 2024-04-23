@@ -6,6 +6,11 @@
       "type": "inputRadio",
       "layout": "copyWithIcon",
       "direction": "column",
+      {{#if details.income.0.type }}
+        "value": "{{details.income.0.type}}",
+      {{else}}
+        "value": "",
+      {{/if}}
       "items": [
         {
             "id": "employed",

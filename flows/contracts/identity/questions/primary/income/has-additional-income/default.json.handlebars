@@ -1,3 +1,4 @@
+{{#with application.primary}}
 {
     "type": "input",
     "definition": {
@@ -5,6 +6,11 @@
         "type": "inputRadio",
         "layout": "copyWithIcon",
         "direction": "row",
+        {{#if details.income.2.amount}}
+            "value": "true",
+        {{else}}
+            "value": "",
+        {{/if}}
         "items": [
             {
                 "id": "yes",
@@ -16,6 +22,9 @@
                 "label": "No",
                 "value": "false"
             }
-        ]
+        ],
+        "status": {{{json (contract 'primary_retired_has_additional_income_status')}}},
+        "error": "{{{ ajv 'errors' 'questions/primary/income/has-additional-income' addAddtionalIncome }}}"
     }
 }
+{{/with}}
