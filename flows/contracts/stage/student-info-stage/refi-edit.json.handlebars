@@ -18,6 +18,12 @@
                     "currentAddress": {{{json (schema 'questions/primary/address')}}},
                     "citizenship": {{{json (schema 'questions/primary/citizenship')}}}
                 }
+            },
+            "editLoanlDetails": {
+                "type": "object",
+                "properties": {
+                    "loanAmount": {{{json (schema 'questions/primary/loan')}}}
+                }
             }
         }
     }

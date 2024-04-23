@@ -35,7 +35,7 @@ fragment ApplicantFragment on Application {
       selected
       account_last4
       institution_name
-      monolith_id
+      monolithFinancialAccountID
       balance
       plaidItemID
       plaidAccessToken

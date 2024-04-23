@@ -23,3 +23,9 @@ export { default as decisionRequest } from "./decision-request.js";
  * Plaid
  * ============================== */
 export { default as plaidMethod } from "./plaid-method.js";
+
+
+/* ============================== *
+ * PII Token Service
+ * ============================== */
+export { default as piiRequest } from "./pii-request.js"

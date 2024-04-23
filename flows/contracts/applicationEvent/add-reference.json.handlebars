@@ -1,0 +1,16 @@
+{{#if request.params.id}}
+  {
+    "event": "addReferences",
+    "payload": {
+      "id": "{{request.params.id}}",
+      {{#with request.body.values}}
+        {{#if ssn}}
+            "references": [{"referenceId": "ssnyo", "referenceType": "ssnTokenURI"}] 
+        {{/if}}
+    },
+    {{/with}}
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}

@@ -2,13 +2,13 @@
     "*": "refi-student-info",
     "stage": "student-info-stage.refi-edit",
     "steps": [
-      "student-info-form/basic.refi-edit"
+      "student-info-form/loan.refi-edit"
     ],
-    "student-info-basic-rows": [
-      "info/student-info/edit.default",
+    "student-loan-form-rows": [
+      "info/student-loan-amount/edit.default",
       "questions/primary/loan.default"
     ],
   
-    "save_edited_details_action": "actions/save-details.save-review",
+    "save_edited_details_action": "actions/save-details.save-loan-review",
     "primary_loan_input_status": "questions/primary/loan.status"
   }

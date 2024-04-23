@@ -198,3 +198,21 @@ declare module "contract/contract-types/decision-request.js" {
   };
   type Output = { [key: string]: unknown };
 }
+
+import "contract/contract-types/pii-request.js";
+declare module "contract/contract-types/pii-request.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    piiRequestMethod: "saveToken" | "getToken";
+    id: string;
+    value?: string;
+    token?: string;
+  };
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+  type Output = { [key: string]: unknown };
+}

@@ -4,7 +4,7 @@ import PiiTokenServiceClient from "./index.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 export const plugin: Plugin<PiiTokenServiceClient> = {
-  name: "piiTokenService",
+  name: "piiTokenServiceClient",
   version: "1.0.0",
   registerOrder: 0,
   register: async (context: PluginContext) => {
