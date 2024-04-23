@@ -1,0 +1,15 @@
+{{#if request.params.id }}
+  {{#if applicationState }}
+    {{#with applicationState }}
+      {{#if step}}
+        "{{manifest}}?step={{step}}"
+      {{else}}
+        {{manifest}}
+      {{/if}}
+    {{/with}}
+  {{else}}
+    {{#with application}}
+      "{{brand}}/{{product}}/{{id}}"
+    {{/with}}
+  {{/if}}
+{{/if}}
