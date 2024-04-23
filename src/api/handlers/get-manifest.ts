@@ -7,7 +7,7 @@ import { Request, Response, NextFunction } from "express";
  * TODO: get application from application-service
  * TODO: get authentication artifacts
  */
-const getManifest: Handler = function (
+const getManifest: Handler = async function (
   context,
   req: Request,
   res: Response,
@@ -16,6 +16,12 @@ const getManifest: Handler = function (
   const manifests = context.loadedPlugins.contractExecution.instance?.manifests;
 
   assert(manifests);
+
+  const redisClient = context?.loadedPlugins?.redis?.instance;
+  assert(
+    redisClient,
+    new Error("[2a6c51a4] Redis client instance does not exist"),
+  );
 
   const { 0: manifestName, id } = req.params;
 
@@ -28,6 +34,12 @@ const getManifest: Handler = function (
       `[58d1ca55] manifest "${manifestName}" not found`,
     );
   }
+
+  const manifestState = id
+    ? await redisClient.getManifestState(context, `${manifestName}/${id}`, null)
+    : {};
+
+  res.locals.manifestState = manifestState;
 
   res.locals.manifest = manifest;
   return next();

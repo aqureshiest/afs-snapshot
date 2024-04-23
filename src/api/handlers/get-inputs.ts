@@ -25,6 +25,12 @@ const getInputs: Handler = async function (
     new Error("[67c30fe0] Application Service client instance does not exist"),
   );
 
+  const redisClient = context?.loadedPlugins?.redis?.instance;
+  assert(
+    redisClient,
+    new Error("[2a6c51a4] Redis client instance does not exist"),
+  );
+
   /* ============================== *
    * I. Fetch Root Application
    * ============================== */
@@ -111,10 +117,16 @@ const getInputs: Handler = async function (
       }
     }
   }
-
+  const applicationStep = await redisClient.getApplicationStep(
+    context,
+    application.id,
+    null,
+  );
   res.locals.input = {
+    applicationState: applicationStep,
     application: application,
     request: {
+      originalUrl: req.originalUrl,
       method: req.method,
       params: req.params,
       body: req.body,

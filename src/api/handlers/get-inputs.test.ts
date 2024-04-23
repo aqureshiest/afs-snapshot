@@ -179,6 +179,7 @@ describe("[d7c20b00] get-inputs handler", () => {
           userId: "1234",
         },
       },
+      applicationState: null,
       input: {
         application: {
           id: 2,
@@ -259,6 +260,7 @@ describe("[d7c20b00] get-inputs handler", () => {
       () => {},
     );
     assert.deepEqual(res.locals, {
+      applicationState: null,
       application: {
         id: 1,
       },
