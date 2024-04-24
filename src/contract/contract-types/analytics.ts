@@ -48,32 +48,39 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   ) => {
     const { context } = injections;
 
-    const analyticsServiceClient =
-      context.loadedPlugins.analyticsServiceClient.instance;
-    assert(
-      analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated",
-    );
+    try {
+      const analyticsServiceClient =
+        context.loadedPlugins.analyticsServiceClient.instance;
+      assert(
+        analyticsServiceClient,
+        "[e6falixw] AnalyticsServiceClient not instantiated",
+      );
 
-    const { type } = definition;
+      const { type } = definition;
 
-    const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
+      const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
 
-    switch (eventType) {
-      case EVENT_TYPE.track:
-        await analyticsServiceClient.track(
-          this.buildTrackProps(input, definition),
-        );
-        break;
-      case EVENT_TYPE.identify:
-        await analyticsServiceClient.identify(this.buildIdentifyProps(input));
-        break;
-      case EVENT_TYPE.page:
-        await analyticsServiceClient.page(
-          this.buildPageProps(input, definition),
-        );
-        break;
-      default:
+      switch (eventType) {
+        case EVENT_TYPE.track:
+          await analyticsServiceClient.track(
+            this.buildTrackProps(input, definition),
+          );
+          break;
+        case EVENT_TYPE.identify:
+          await analyticsServiceClient.identify(this.buildIdentifyProps(input));
+          break;
+        case EVENT_TYPE.page:
+          await analyticsServiceClient.page(
+            this.buildPageProps(input, definition),
+          );
+          break;
+        default:
+      }
+    } catch (error) {
+      context.logger.error({
+        error,
+        message: "[sc44e9r3] Failed to track Segment event",
+      });
     }
 
     return { success: true };
@@ -82,7 +89,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildTrackProps(input: Input, definition: Definition) {
     const { application } = input;
 
-    assert(application, "[rcf1upqz] application is null");
+    assert(application?.primary, "[rcf1upqz] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
@@ -94,7 +101,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       userId,
       event: payload.event,
       properties: {
-        applicationId: application.id,
+        applicationId: application.primary.id,
         product: application.product,
         loan_type:
           application.tags && application.tags.length > 0
@@ -104,28 +111,41 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       },
     };
 
+    console.log(application);
+    console.log(payload);
+
     //employment_type
-    if (
-      application.details &&
-      application.details.income &&
-      application.details.income.length > 0
+    if (payload.employment_type) {
+      props.properties = {
+        ...props.properties,
+        employment_type: payload.employment_type,
+      };
+    } else if (
+      application.primary.details &&
+      application.primary.details.income &&
+      application.primary.details.income.length > 0
     ) {
       props.properties = {
         ...props.properties,
-        employment_type: application.details.income[0]?.type,
+        employment_type: application.primary.details.income[0]?.type,
       };
     }
 
     //income_verification_method
-    if (
-      application.details &&
-      application.details.financialAccounts &&
-      application.details.financialAccounts.length > 0
+    if (payload.income_verification_method) {
+      props.properties = {
+        ...props.properties,
+        income_verification_method: payload.income_verification_method,
+      };
+    } else if (
+      application.primary.details &&
+      application.primary.details.financialAccounts &&
+      application.primary.details.financialAccounts.length > 0
     ) {
       props.properties = {
         ...props.properties,
         income_verification_method:
-          application.details.financialAccounts[0]?.type,
+          application.primary.details.financialAccounts[0]?.type,
       };
     }
 
@@ -147,7 +167,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildIdentifyProps(input: Input) {
     const { application } = input;
 
-    assert(application, "[96fie6o9] application is null");
+    assert(application?.primary, "[rcf1upqz] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
@@ -156,10 +176,12 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     const props: IdentifyParams = {
       userId,
       traits: {
-        applicationId: application.id,
+        applicationId: application.primary.id,
         product: application.product,
       },
     };
+
+    console.log(props);
 
     return props;
   }
@@ -167,7 +189,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildPageProps(input: Input, definition: Definition) {
     const { application } = input;
 
-    assert(application, "[aw4q38ox] application is not null");
+    assert(application?.primary, "[rcf1upqz] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
@@ -179,7 +201,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       userId,
       name: payload.name,
       properties: {
-        applicationId: application.id,
+        applicationId: application.primary.id,
         product: application.product,
         source: "application",
       },

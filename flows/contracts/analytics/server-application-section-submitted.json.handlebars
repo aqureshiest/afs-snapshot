@@ -1,35 +1,25 @@
 {{#if request.params.id}}
-  {
-    "type": "track",
-    "payload": {
-      "event": "Server Application Section Submitted",
-      {{#with request.body.values}}
-          {{#if dateOfBirth}} 
-            "section": "primary-info"
-          {{else if name}}
-            "section": "primary-info"
-          {{else if email}}
-            "section": "primary-info"
-          {{else if phone}}
-            "section": "primary-info"
-          {{else if currentAddress }}
-            "section": "primary-info"
-          {{else if previousAddress }} 
-            "section": "primary-info"
-          {{else if employmentType }}
-            "section": "employment"
-          {{else if jobTitle}}
-            "section": "employment"
-          {{else if claimedAssets}}
-            "section": "income"
-          {{else if additionalAmount}}
-            "section": "income"
-          {{else if sourcesOfIncome}}
-            "section": "income"
-          {{else if financialAccounts}}
-            "section": "income"
-          {{/if}}
+  {{#with request.body.values}}
+    {
+      {{#if (or currentAddress employmentType annualIncome financialAccounts addAddtionalIncome) }}
+        "type": "track",
+      {{else}}
+        "type": "",
+      {{/if}}
+      "payload": {
+        {{#if currentAddress }}
+          "section": "primary-info",
+        {{else if employmentType }}
+          "section": "employment type",
+          "employment_type": "{{employmentType}}",
+        {{else if (or annualIncome addAddtionalIncome)}}
+          "section": "income",
+        {{else if financialAccounts}}
+          "section": "income",
+          "income_verification_method": "{{financialAccounts.[0].type}}",
+        {{/if}}
+        "event": "Server Application Section Submitted"
+      }
     }
-    {{/with}}
-  }
+  {{/with}}
 {{/if}}
