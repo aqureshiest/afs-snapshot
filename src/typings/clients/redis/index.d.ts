@@ -9,7 +9,6 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   }
 }
 declare module "clients/redis/index.js" {
-  // cloned from Plaid SDK
   type ApplicationStep = {
     manifest: string;
     step?: string;
