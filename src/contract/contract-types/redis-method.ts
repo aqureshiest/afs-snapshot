@@ -12,10 +12,10 @@ class RedisMethod extends ContractType<Definition, Definition, Output> {
   };
 
   /**
-   * TODO: use the contracts definition to determine which ApplicationService mutation
-   * to apply, and how to construct the payload
+   * TODO: use the contracts definition to determine which redis volatile state method
+   * to call
    *
-   * This function should probably return some information about the event that was created
+   * This function should return the result of the method called
    */
   evaluate = async (
     input: Input,
