@@ -67,16 +67,10 @@ export default class LendingDecisionServiceClient extends Client {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
-    const piiTokenService = context.loadedPlugins.piiTokenService?.instance;
-
     if (!applicationServiceClient)
       throw new Error(
         "[45ff82b1] Application Service client instance not found",
       );
-
-    if (!piiTokenService) {
-      throw new Error("[61e82544] PII Token Service client instance not found");
-    }
 
     let application: typings.Application = {} as typings.Application;
     const applicationDecisionDetails = {};
@@ -106,50 +100,24 @@ export default class LendingDecisionServiceClient extends Client {
       APPLICANT_TYPES.Cosigner,
     ]) {
       if (application[applicant]) {
-        let decryptedSsn;
-        try {
-          if (application[applicant] && application[applicant]?.ssnTokenURI) {
-            application[applicant]?.ssnTokenURI,
-              (decryptedSsn = await piiTokenService["getTokenValue"](
-                application[applicant]?.ssnTokenURI,
-              ));
-          }
-        } catch (error) {
-          context.logger.error({
-            error,
-            message: `[cab65508] error while getting token value`,
-            stack: error.stack,
-          });
-          throw error;
-        }
-        const updatedApplicant = {
-          ...application[applicant],
-          ssn: decryptedSsn,
-        };
         applicationDecisionDetails[applicant] = this.formatRequestPayload(
-          application?.product,
-          updatedApplicant as typings.Application,
+          application[applicant] as typings.Application,
         );
       }
     }
 
     const payload = {
-      product: application?.product,
+      product: "SLR",
       decisioningWorkflowName: "AUTO_APPROVAL",
-      applicationType:
-        application?.tags && application?.tags.length > 0
-          ? application?.tags[0]
-          : "", // Use application tags to find application type
+      decisionSource: "apply-flow-service",
+      applicationType: "PRIMARY_ONLY",
       requestMetadata: {
         applicationId,
-        // userID
+        userId: application.monolithUserID,
       },
-      isParentPlus: false,
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
-      isMedicalResidency: false,
       appInfo: applicationDecisionDetails,
-      decisionSource: "apply-flow-service",
-    } as DecisionRequestDetails;
+    } as unknown as DecisionRequestDetails;
 
     const { results, response } = await this.post<DecisionPostResponse>({
       uri: "/v2/decision",
@@ -188,10 +156,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @param application IApplicationFragment
    * @returns {DecisionEntity}
    */
-  private formatRequestPayload(
-    product: typings.Maybe<string> | undefined,
-    application: typings.Application,
-  ) {
+  private formatRequestPayload(application: typings.Application) {
     const { details } = application;
 
     if (!details) {
@@ -200,27 +165,41 @@ export default class LendingDecisionServiceClient extends Client {
       );
     }
 
+    /**
+     * Format the location details to addresses array
+     */
     const addresses = details?.location?.map((location) => {
       if (!location || (location && Object.keys(location).length === 0)) {
         return {};
       }
-
       return {
         addressLine1: location.street1,
         addressLine2: location.street2,
         city: location.city,
         state: location.state,
-        /**
-         * TODO:
-         *    Once we add mechanisim to add multiple addresses
-         *    Ensure there is a way to signify primary vs not primary address
-         *    For now, we take first address and mark as primary address
-         *    LDS needs to know what address is the primary address
-         */
-        type: location["type"],
-        // zip and country
+        zip: location.zip,
+        type: location.type,
       };
     });
+
+    const entityDetails = {
+      firstName: details.name?.first || "",
+      lastName: details.name?.last || "",
+      dob: details.dateOfBirth
+        ? new Date(details.dateOfBirth).toISOString()
+        : "",
+      addresses,
+      ssn: application.ssnTokenURI ? application.ssnTokenURI : "",
+      email: details?.email || "",
+      phoneNumber:
+        details.phone?.find((phoneDetail) => phoneDetail && phoneDetail.number)
+          ?.number || "", // get first non-null number
+      citizenshipStatus:
+        details.location && details.location.length > 0
+          ? details.location.find((location) => location?.type === "primary")
+              ?.citizenship
+          : "",
+    };
 
     const educationDetails = details?.education?.map((education) => {
       if (!education || (education && Object.keys(education).length === 0)) {
@@ -238,9 +217,17 @@ export default class LendingDecisionServiceClient extends Client {
       };
     });
 
+    const employmentStatuses = [
+      "employed",
+      "self_employed",
+      "future",
+      "retired",
+      "unemployed",
+    ];
     const employmentDetails = details?.income
       ?.filter((employment) => {
-        if (employment?.type === "employment") return employment;
+        if (employmentStatuses.includes(employment?.type as string))
+          return employment;
       })
       .map((employment) => {
         if (
@@ -250,23 +237,46 @@ export default class LendingDecisionServiceClient extends Client {
           return {};
         }
 
-        // Only obtain income details if the employer field is present
+        /**
+         * TODO: Determine employment status. We'll be storing only 'employed' or 'misc' (for unemployed)
+         * need to determine if 'employed' is 'self-employed' or 'future'
+         * need to determine if 'retired'
+         */
+        // let status;
+        // const now = new Date()
+        // if (employment.type === 'employed') {
+        //   status = 'employed'
+        //   // For a 'Self Employed' status, we only collect a Job title and a Start Date and no Employer name
+        //   // If we have a start date that is in the past and a job title, user is self employed
+        //   if ((!employment.employer) && employment.title && (employment.start && ((new Date(employment.start)) < now))) {
+        //     status = 'self_employed'
+        //   }
+        //   // For a Future Employment, we collect Employer Name, Job Title, and start date
+        //   // If start date is in the future, user is Future employed
+        //   if((new Date(employment.start)) > now) {
+        //     status = 'future'
+        //   }
+        // }
+        // if (employment.type === 'misc') {
+        //   status = 'unemployed'
+        // }
+        // if (employment.type === 'social_security_or_pension') {
+        //   status = 'retired'
+        // }
         return {
           employerName: employment.employer,
           jobTitle: employment.title,
-          employmentType: employment.type,
+          employmentStatus: employment.type,
           employmentStartDate: employment?.start
             ? new Date(employment.start).toISOString()
             : "",
-          employmentEndDate: employment?.end
-            ? new Date(employment.end).toISOString()
-            : "",
+          amount: employment.amount,
         };
       });
 
     const otherIncomeDetails = details?.income
       ?.filter((income) => {
-        if (income?.type !== "employment") return income;
+        if (!employmentStatuses.includes(income?.type as string)) return income;
       })
       .map((income) => {
         if (!income || (income && Object.keys(income).length === 0)) {
@@ -279,54 +289,21 @@ export default class LendingDecisionServiceClient extends Client {
         };
       });
 
+    const assetsDetails = details?.asset?.map((asset) => {
+      return {
+        assetType: asset?.type,
+        value: asset?.amount,
+      };
+    });
+
     const formattedPayload = {
-      entityInfo: {
-        firstName: details.name?.first || "",
-        lastName: details.name?.last || "",
-        dob: details.dateOfBirth
-          ? new Date(details.dateOfBirth).toISOString()
-          : "",
-        addresses,
-        ssn: application.ssnTokenURI ? application.ssnTokenURI : "",
-        email: details?.email || "",
-        phoneNumber:
-          details.phone?.find(
-            (phoneDetail) => phoneDetail && phoneDetail.number,
-          )?.number || "", // get first non-null number
-        // TODO: citizenshipStatus: details.location.find((location) => location?.type === 'primary').citizenship,
-        citizenshipStatus:
-          details.location && details.location.length > 0
-            ? details?.location[0]?.citizenship || ""
-            : "",
-      },
+      entityInfo: entityDetails,
       educations: educationDetails,
       employments: employmentDetails,
-      incomes:
-        otherIncomeDetails && otherIncomeDetails.length > 0
-          ? otherIncomeDetails
-          : [
-              {
-                incomeType: "annual_additional_income",
-                value: 0,
-              },
-            ],
-      assets:
-        product === PRODUCTS.SLR
-          ? otherIncomeDetails
-          : [
-              {
-                assetType: "claimed_total_assets",
-                value: 0, // for Origination, we do not ask for assets, so send total as 0 to LDS
-              },
-            ],
+      incomes: otherIncomeDetails,
+      assets: assetsDetails,
       loanInfo: {
         claimedLoanAmount: details.amount?.requested,
-      },
-      servicingInfo: {
-        // TODO: Send false and 0 data here until we get servicing client up
-        hasActiveLoan: false,
-        aggregateLoanTotal: 0,
-        hasActiveLoanCurrentYear: false,
       },
       // need rates
     };
