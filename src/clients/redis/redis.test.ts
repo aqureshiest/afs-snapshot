@@ -38,7 +38,7 @@ describe("[61b95acc] Volatile Storage Client", () => {
       return undefined;
     });
     const response = await client.getApplicationStep(context, "1", {});
-    assert.deepEqual(response, null);
+    assert.deepEqual(response, {});
   });
   it("[dd21fcdc] should be able to setApplicationStep", async () => {
     const state = {
