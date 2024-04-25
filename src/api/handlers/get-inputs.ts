@@ -111,10 +111,20 @@ const getInputs: Handler = async function (
       }
     }
   }
-
+  const redisClient = context?.loadedPlugins?.redis?.instance;
+  let applicationStep;
+  if (redisClient) {
+    applicationStep = await redisClient.getApplicationStep(
+      context,
+      application.id,
+      null,
+    );
+  }
   res.locals.input = {
+    applicationState: applicationStep,
     application: application,
     request: {
+      originalUrl: req.originalUrl,
       method: req.method,
       params: req.params,
       body: req.body,

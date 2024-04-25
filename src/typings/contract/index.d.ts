@@ -7,6 +7,7 @@ import type { Application as IApplication } from "clients/application-service/in
 import * as contractTypes from "contract/contract-types/index.js";
 import type Contract from "contract/contract.js";
 import type Manifest from "contract/manifest.js";
+import type { ApplicationStep, ManifestState } from "clients/redis/index.js";
 
 type HandlebarsTemplate = ReturnType<
   ReturnType<typeof createJsonHandlebars>["compile"]
@@ -30,14 +31,17 @@ type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
  * TODO: fully define this shape
  */
 type IContractInput = {
+  applicationState: ApplicationStep;
   application: IApplication | null;
   request?: {
+    originalUrl?: string;
     method?: string;
     params?: { [key: string]: unknown };
     body?: { [key: string]: unknown };
     query?: { [key: string]: unknown };
     headers?: { [key: string]: unknown };
   };
+  manifestState?: ManifestState;
   manifest?: Manifest;
   auth?: {
     session?: {

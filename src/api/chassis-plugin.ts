@@ -17,6 +17,7 @@ export const plugin: Plugin = {
       `/apply/*/:id(${constants.UUID_REGEX.source})`,
       handlers.getManifest.bind(null, context),
       wrapAsyncHandler(context, authMiddleware),
+      wrapAsyncHandler(context, handlers.getManifest),
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
@@ -68,6 +69,7 @@ export const plugin: Plugin = {
       "/apply/*",
       handlers.getManifest.bind(null, context),
       wrapAsyncHandler(context, authMiddleware),
+      wrapAsyncHandler(context, handlers.getManifest),
       wrapAsyncHandler(context, handlers.getInputs),
       wrapAsyncHandler(context, handlers.execute),
     );
