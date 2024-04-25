@@ -20,7 +20,7 @@
             {"email": "{{email}}"}
           {{/if}}
           {{#if phone}}
-            {"phone": [{"number": "{{phone}}", "type": "mobile"}]}
+            {"phone": [{"index": 0, "number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
           {{#if currentAddress }}
             {"location": [{"index": 0, "street1": "{{currentAddress.street}}", "street2": "{{currentAddress.apt}}", "city": "{{currentAddress.city}}", "state": "{{currentAddress.state}}", "zip": "{{currentAddress.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
