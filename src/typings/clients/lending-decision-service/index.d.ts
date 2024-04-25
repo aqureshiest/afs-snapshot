@@ -24,11 +24,11 @@ interface IDecisionEntity {
   };
   educations: Array<{
     degreeType: typings.EducationDetail["degree"];
-    startDate?: typings.EducationDetail["termStart"];
     endDate: typings.EducationDetail["termEnd"];
-    status: typings.EducationDetail["enrollment"];
     schoolName: string;
-    opeid?: typings.EducationDetail["opeid"];
+    schoolType: string;
+    schoolCode: string;
+    opeid: typings.EducationDetail["opeid"];
   }>;
   employments: Array<{
     employerName?: typings.IncomeDetail["employer"];
@@ -47,8 +47,8 @@ interface IDecisionEntity {
   }>;
   financialInfo: {
     hasPlaid: boolean;
-    plaidAccessTokens: Array<string>;
-    financialAccounts: Array<{
+    plaidAccessTokens?: Array<string>;
+    financialAccounts?: Array<{
       accountType: string;
       accountSubType: typings.FinancialAccountsDetail["type"];
       balance: typings.FinancialAccountsDetail["balance"];

@@ -63,7 +63,7 @@ export default class LendingDecisionServiceClient extends Client {
   async postDecisionRequest(
     context: PluginContext,
     applicationId: string, // Assuming root app ID
-  ): Promise<DecisionPostResponse> {
+  ): Promise<DecisionPostResponse | void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
@@ -100,8 +100,10 @@ export default class LendingDecisionServiceClient extends Client {
       APPLICANT_TYPES.Cosigner,
     ]) {
       if (application[applicant]) {
-        applicationDecisionDetails[applicant] = this.formatRequestPayload(
+        applicationDecisionDetails[applicant] = await this.formatRequestPayload(
+          context,
           application[applicant] as typings.Application,
+          application.details?.amount?.requested,
         );
       }
     }
@@ -113,40 +115,41 @@ export default class LendingDecisionServiceClient extends Client {
       applicationType: "PRIMARY_ONLY",
       requestMetadata: {
         applicationId,
-        userId: application.monolithUserID,
+        userId: application[APPLICANT_TYPES.Primary]?.monolithUserID,
       },
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
+    console.log("[0933a5] AJ DEBUG payload", JSON.stringify(payload, null, 2));
 
-    const { results, response } = await this.post<DecisionPostResponse>({
-      uri: "/v2/decision",
-      headers: {
-        ...this.headers,
-        Authorization: `Bearer ${this.accessKey}`,
-      },
-      payload,
-      resiliency: {
-        attempts: 3,
-        delay: 100,
-        timeout: 10000,
-        test: ({ response }) =>
-          Boolean(response.statusCode && response.statusCode <= 500),
-      },
-    });
+    // const { results, response } = await this.post<DecisionPostResponse>({
+    //   uri: "/v2/decision",
+    //   headers: {
+    //     ...this.headers,
+    //     Authorization: `Bearer ${this.accessKey}`,
+    //   },
+    //   payload,
+    //   resiliency: {
+    //     attempts: 3,
+    //     delay: 100,
+    //     timeout: 10000,
+    //     test: ({ response }) =>
+    //       Boolean(response.statusCode && response.statusCode <= 500),
+    //   },
+    // });
 
-    if (response.statusCode && response.statusCode >= 400) {
-      const error = new Error(
-        `[a571403f] Failed to post decision: ${response.statusMessage}`,
-      );
-      context.logger.error({
-        error,
-        message: response.statusMessage, // Log the actual status message from LDS
-        statusCode: response.statusCode,
-      });
-      throw error;
-    }
-    return results;
+    // if (response.statusCode && response.statusCode >= 400) {
+    //   const error = new Error(
+    //     `[a571403f] Failed to post decision: ${response.statusMessage}`,
+    //   );
+    //   context.logger.error({
+    //     error,
+    //     message: response.statusMessage, // Log the actual status message from LDS
+    //     statusCode: response.statusCode,
+    //   });
+    //   throw error;
+    // }
+    // return results;
   }
 
   /**
@@ -156,7 +159,11 @@ export default class LendingDecisionServiceClient extends Client {
    * @param application IApplicationFragment
    * @returns {DecisionEntity}
    */
-  private formatRequestPayload(application: typings.Application) {
+  private async formatRequestPayload(
+    context: PluginContext,
+    application: typings.Application,
+    loanAmount: typings.AmountDetail["requested"],
+  ) {
     const { details } = application;
 
     if (!details) {
@@ -201,22 +208,36 @@ export default class LendingDecisionServiceClient extends Client {
           : "",
     };
 
-    const educationDetails = details?.education?.map((education) => {
-      if (!education || (education && Object.keys(education).length === 0)) {
-        return {};
-      }
+    /**
+     * Format the education details
+     */
+    const schoolDetails: Promise<{
+      [key: string]: unknown;
+    }>[] =
+      details?.education?.map(async (education) => {
+        if (!education || (education && Object.keys(education).length === 0)) {
+          return {};
+        }
+        const foundSchool = await this.getSchoolDetails(
+          context,
+          education.opeid,
+        );
+        return {
+          degreeType: education.degree,
+          endDate: education.graduationDate
+            ? new Date(education.graduationDate).toISOString()
+            : "",
+          schoolName: foundSchool.name,
+          schoolCode: foundSchool.forProfit ? "for_profit" : "not_for_profit",
+          opeid: education.opeid,
+        };
+      }) || [];
 
-      return {
-        degreeType: education.degree,
-        endDate: education.graduationDate
-          ? new Date(education.graduationDate).toISOString()
-          : "",
-        status: education.enrollment,
-        // TODO: schoolName: education.name,
-        opeid: education.opeid,
-      };
-    });
+    const educationDetails = await Promise.all(schoolDetails);
 
+    /**
+     * Format the employment details
+     */
     const employmentStatuses = [
       "employed",
       "self_employed",
@@ -274,6 +295,9 @@ export default class LendingDecisionServiceClient extends Client {
         };
       });
 
+    /**
+     * Format the incomes
+     */
     const otherIncomeDetails = details?.income
       ?.filter((income) => {
         if (!employmentStatuses.includes(income?.type as string)) return income;
@@ -289,6 +313,9 @@ export default class LendingDecisionServiceClient extends Client {
         };
       });
 
+    /**
+     * Format assets
+     */
     const assetsDetails = details?.asset?.map((asset) => {
       return {
         assetType: asset?.type,
@@ -296,6 +323,29 @@ export default class LendingDecisionServiceClient extends Client {
       };
     });
 
+    /**
+     * Format the financial accounts
+     */
+    const plaidTokens: Array<string> = [];
+    let hasPlaid = false;
+    const financialAccountDetails = details?.financialAccounts?.map(
+      (account) => {
+        if (account?.plaidAccessToken) {
+          hasPlaid = true;
+          plaidTokens.push(account?.plaidAccessToken);
+        }
+        return {
+          accountType: "banking",
+          accountSubType: account?.type,
+          balance: account?.balance,
+          accountInstitutionName: account?.institution_name,
+        };
+      },
+    );
+
+    /**
+     * The end result formatted for LDS
+     */
     const formattedPayload = {
       entityInfo: entityDetails,
       educations: educationDetails,
@@ -303,10 +353,35 @@ export default class LendingDecisionServiceClient extends Client {
       incomes: otherIncomeDetails,
       assets: assetsDetails,
       loanInfo: {
-        claimedLoanAmount: details.amount?.requested,
+        claimedLoanAmount: loanAmount,
+      },
+      financialInfo: {
+        hasPlaid,
+        ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
+        ...(!hasPlaid ? { financialAccounts: financialAccountDetails } : {}),
       },
       // need rates
     };
     return formattedPayload;
+  }
+
+  private async getSchoolDetails(
+    context: PluginContext,
+    opeid: typings.EducationDetail["opeid"],
+  ) {
+    const accreditedSchoolService =
+      context.loadedPlugins.accreditedSchoolService?.instance;
+
+    if (!accreditedSchoolService)
+      throw new Error(
+        "[964e8743] Accredited School Service client instance not found",
+      );
+    const search = { opeid: opeid };
+    const schools = await accreditedSchoolService["getSchools"](
+      search,
+      context,
+    );
+    const foundSchool = schools.find((school) => school.opeid8 === opeid);
+    return foundSchool;
   }
 }
