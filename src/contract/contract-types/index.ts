@@ -23,3 +23,8 @@ export { default as decisionRequest } from "./decision-request.js";
  * Plaid
  * ============================== */
 export { default as plaidMethod } from "./plaid-method.js";
+
+/* ============================== *
+ * Redis - volatile state storage
+ * ============================== */
+export { default as redisMethod } from "./redis-method.js";
