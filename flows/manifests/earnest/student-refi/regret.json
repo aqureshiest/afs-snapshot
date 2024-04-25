@@ -1,4 +1,5 @@
 {
     "*": "regret-view",
-    "stage": "regret.refi"
+    "stage": "regret.refi",
+    "analytics": ["server-loan-decisioned-regret"]
 }

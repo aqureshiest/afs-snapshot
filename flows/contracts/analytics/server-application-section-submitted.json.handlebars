@@ -1,7 +1,7 @@
 {{#if request.params.id}}
   {{#with request.body.values}}
     {
-      {{#if (or currentAddress employmentType annualIncome financialAccounts addAddtionalIncome) }}
+      {{#if (or currentAddress employmentType annualIncome financialAccounts addAddtionalIncome public_token accounts) }}
         "type": "track",
       {{else}}
         "type": "",
@@ -14,9 +14,12 @@
           "employment_type": "{{employmentType}}",
         {{else if (or annualIncome addAddtionalIncome)}}
           "section": "income",
-        {{else if financialAccounts}}
-          "section": "income",
-          "income_verification_method": "{{financialAccounts.[0].type}}",
+        {{else if public_token}}
+          "section": "income verification",
+          "income_verification_method": "plaid",
+        {{else if accounts}}
+          "section": "income verification",
+          "income_verification_method": "manual",
         {{/if}}
         "event": "Server Application Section Submitted"
       }

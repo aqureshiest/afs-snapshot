@@ -12,6 +12,14 @@ enum EVENT_TYPE {
   page,
 }
 
+const enum SECTION {
+  primary_info = "primary_info",
+  employment = "employment",
+  employment_type = "employment_type",
+  income = "income",
+  income_verification = "income_verification",
+}
+
 class Analytics extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
     return "Analytics";
@@ -111,9 +119,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       },
     };
 
-    console.log(application);
-    console.log(payload);
-
     //employment_type
     if (payload.employment_type) {
       props.properties = {
@@ -121,8 +126,8 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         employment_type: payload.employment_type,
       };
     } else if (
-      application.primary.details &&
-      application.primary.details.income &&
+      payload.section === SECTION.income &&
+      application?.primary?.details?.income &&
       application.primary.details.income.length > 0
     ) {
       props.properties = {
@@ -137,23 +142,13 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         ...props.properties,
         income_verification_method: payload.income_verification_method,
       };
-    } else if (
-      application.primary.details &&
-      application.primary.details.financialAccounts &&
-      application.primary.details.financialAccounts.length > 0
-    ) {
-      props.properties = {
-        ...props.properties,
-        income_verification_method:
-          application.primary.details.financialAccounts[0]?.type,
-      };
     }
 
     //decision
-    if (application.status) {
+    if (payload.decision) {
       props.properties = {
         ...props.properties,
-        decision: application.status.name,
+        decision: payload.decision,
       };
     }
 
