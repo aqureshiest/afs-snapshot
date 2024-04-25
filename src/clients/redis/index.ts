@@ -61,11 +61,15 @@ export default class RedisClient {
     const stringValue = await this.client.get(
       `${this.prefix}_appstep_${appID}`,
     );
-    if (stringValue) {
-      return JSON.parse(stringValue);
-    } else {
-      return null;
+    let parsed = {};
+    if (stringValue && stringValue !== null) {
+      try {
+        parsed = JSON.parse(stringValue);
+      } catch (ex) {
+        context.logger.error(ex);
+      }
     }
+    return parsed;
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -89,7 +93,15 @@ export default class RedisClient {
     const manifestStateValue = await this.client.get(
       `${this.prefix}_manstate_${manifest}`,
     );
-    return JSON.parse(manifestStateValue);
+    let parsed = {};
+    if (manifestStateValue && manifestStateValue !== null) {
+      try {
+        parsed = JSON.parse(manifestStateValue);
+      } catch (ex) {
+        context.logger.error(ex);
+      }
+    }
+    return parsed;
   }
 
   async setManifestState(context: PluginContext, manifest: string, value) {

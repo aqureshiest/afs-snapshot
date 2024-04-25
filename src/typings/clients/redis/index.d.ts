@@ -10,7 +10,7 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
 }
 declare module "clients/redis/index.js" {
   type ApplicationStep = {
-    manifest: string;
+    manifest?: string;
     step?: string;
   } | null;
   type ManifestState = {
