@@ -16,7 +16,16 @@
                     "phone": {{{json (schema 'questions/primary/phone')}}},
                     "email": {{{json (schema 'questions/primary/email')}}},
                     "currentAddress": {{{json (schema 'questions/primary/address')}}},
-                    "citizenship": {{{json (schema 'questions/primary/citizenship')}}}
+                    "citizenship": {{{json (schema 'questions/primary/citizenship')}}},
+                    "ssn": {{{json (schema 'questions/primary/ssn')}}}
+                }
+            },
+            "editEducationInfo": {
+                "type": "object",
+                "properties": {
+                    "school": {{{json (schema 'questions/primary/school')}}},
+                    "degree": {{{json (schema 'questions/primary/degree')}}},
+                    "graduationDate": {{{json (schema 'questions/primary/graduationDate')}}}
                 }
             },
             "editLoanlDetails": {

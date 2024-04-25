@@ -5,12 +5,17 @@
         "key": "educationReview",
         "type": "infoReview",
         "label": "Academic Info",
-        "copy": "College or school name \n\n **PLACEHOLDER** \n\n Highest degree \n\n **{{details.education.0.degree}}** \n\n Graduation Date \n\n **{{details.education.0.graduationDate}}**",
+        "items":
+            {{#list}}
+                {"id": "schoolName", "label": "College or school name", "value": "{{getSchoolName (getSchool details.education.0.opeid (contract 'getSchools'))}}"}
+                {"id": "highestDegree", "label": "Highest degree", "value": "{{toUpper details.education.0.degree}}"}
+                {"id": "gradDate", "label": "Graducation date", "value": "{{reviewDateFormatter details.education.0.graduationDate}}"}
+            {{/list}},
         "editAction": {
             "key": "",
             "type": "navigate",
             "properties": {
-                "goTo": ""
+                "goTo": "earnest/student-refi/edit/education-info/{{id}}"
             }
         }
     }

@@ -27,6 +27,9 @@
           {{#if previousAddress }} 
             {"location": [{"index": 1, "street1": "{{previousAddress.street}}", "street2": "{{previousAddress.apt}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
+          {{#if (or school degree graduationDate)}}
+            {"education": [{"index": 0 {{#if school }}, "opeid": "{{school.opeid8}}" {{/if}} {{#if degree}}, "degree": "{{degree}}" {{/if}} {{#if graduationDate}}, "graduationDate": "{{dateObjToString graduationDate}}" {{/if}} }]}
+          {{/if}}
           {{#if employmentType}}
               {"income": [{"index": 0, "type": "{{employmentType}}", "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
           {{/if}}

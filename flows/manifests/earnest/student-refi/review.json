@@ -12,5 +12,8 @@
         "info/student-employment/review.default",
         "info/student-finances/review.default",
         "questions/primary/consent.default"
-    ]
+    ],
+
+    "decryptPiiSsn": "pii-get-primary-ssn",
+    "getSchools": "get-schools"
 }

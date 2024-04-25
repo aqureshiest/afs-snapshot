@@ -204,10 +204,26 @@ declare module "contract/contract-types/pii-request.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
-    piiRequestMethod: "saveToken" | "getToken";
+    piiRequestMethod: "saveToken" | "getTokenValue";
     id: string;
-    value?: string;
-    token?: string;
+    value: string;
+  };
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+  type Output = { [key: string]: unknown };
+}
+
+import "contract/contract-types/accredited-school-service-request.js";
+declare module "contract/contract-types/accredited-school-service-request.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    accreditedSchoolServiceRequestMethod: "getSchools";
+    id: string;
+    search: { opeid?: string; name?: string };
   };
   type Injections = IExecutionInjections;
 

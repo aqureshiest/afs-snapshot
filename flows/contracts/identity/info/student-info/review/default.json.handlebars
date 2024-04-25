@@ -5,7 +5,19 @@
         "key": "basicInfoReview",
         "type": "infoReview",
         "label": "Personal Info",
-        "copy": "Full Name \n\n **{{details.name.first}} {{details.name.last}}** \n\n Date of Birth \n\n **{{reviewDateFormatter details.dateOfBirth}}** \n\n Phone Number \n\n **{{formatPhoneNumber details.phone.0.number}}** \n\n Email \n\n **{{details.email}}** \n\n Address \n\n **{{details.location.0.street1}} {{details.location.0.street2}}** \n\n **{{details.location.0.city}} {{details.location.0.state}} {{details.location.0.zip}}** \n\n Citizenship \n\n **{{details.location.0.citizenship}}** \n\n Social Security Number \n\n **REDACTED**",
+        "items": 
+        {{#list}}
+            {"id": "name", "label": "Full Name", "value": "{{details.name.first}} {{details.name.last}}"}
+            {"id": "dateOfBirth", "label": "Date of Birth", "value": "{{reviewDateFormatter details.dateOfBirth}}"}
+            {"id": "phone", "label": "Phone Number", "value": "{{formatPhoneNumber details.phone.0.number}}"}
+            {"id": "email", "label": "Email", "value": "{{details.email}}"}
+            {"id": "address", "label": "Address", "value": "{{formatAddress (findCurrentAddress details.location)}}"}
+            {{#if (findPreviousAddress details.location) }}
+                {"id": "previousAddress", "label": "Previous Address", "value": "{{formatAddress (findPreviousAddress details.location)}}"}
+            {{/if}}
+            {"id": "citizenship", "label": "Citizenship", "value": "{{toUpper details.location.0.citizenship }}"}
+            {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' ( contract 'decryptPiiSsn' )}}"}
+        {{/list}},
         "editAction": {
             "key": "",
             "type": "navigate",

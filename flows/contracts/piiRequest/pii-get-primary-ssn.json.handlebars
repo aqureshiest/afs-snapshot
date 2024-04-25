@@ -1,0 +1,9 @@
+{{#if (and request.params.id application.primary.ssnTokenURI)}}
+  {
+    "piiRequestMethod": "getTokenValue",
+    "id": "{{request.params.id}}",
+    "value": "{{application.primary.ssnTokenURI}}"
+  }
+{{else}}
+  null
+{{/if}} 

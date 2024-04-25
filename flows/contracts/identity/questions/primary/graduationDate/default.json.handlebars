@@ -1,0 +1,28 @@
+{{#if application.primary}}
+{{#with application.primary}}
+{
+    "type": "input",
+    "definition": {
+        "key": "graduationDate",
+        "type": "inputDate",
+        "status": {{{json (contract 'primary_gradDate_input_status')}}},
+        "value": {
+          {{#if details.education.0.graduationDate}}
+            "month": "{{month details.education.0.graduationDate}}",
+            "day": "{{day details.education.0.graduationDate}}",
+            "year": "{{year details.education.0.graduationDate}}"
+          {{/if}}
+        },
+        "label": {
+          "copy": "Graduation Date"
+        },
+        "error": "{{{ ajv 'errors' 'questions/primary/graduationDate' details.education.0.graduationDate }}}"
+    }
+}
+{{/with}}
+{{else}}
+{
+    "statusCode": "401",
+    "message": "Application Primary missing"
+}
+{{/if}}

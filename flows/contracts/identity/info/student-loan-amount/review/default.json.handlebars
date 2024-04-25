@@ -6,7 +6,9 @@
         "key": "loanAmountReview",
         "type": "infoReview",
         "label": "Loan Details",
-        "copy": "Refinance amount \n\n **{{formatToUSCurrency details.amount.requested}}**",
+        "items": [
+            {"id": "refinanceAmount", "label": "Refinance amount", "value": "{{formatToUSCurrency details.amount.requested}}"}
+        ],
         "editAction": {
             "key": "",
             "type": "navigate",

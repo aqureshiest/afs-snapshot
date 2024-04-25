@@ -113,71 +113,47 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     if (!applicationServiceClient.eventInputTypes[definition.event]) {
       throw new Error("[694d632f] Event is not defined on event types");
     }
-    console.log(`[a0e7d7] AJ DEBUG application-event before ${definition.event} request`);
-    const query =  this.buildRequestBody(
-      definition,
-      applicationServiceClient.eventInputTypes[definition.event],
-    )
-    
-    
-    try {
-      console.log(`[bf2143f1] AJ DEBUG application-event executing ${definition.event} request`);
-      console.log('[6d4eef0c] AJ DEBUG query', JSON.stringify(query, null, 2));
-      debugger
-      const eventResult = (await applicationServiceClient.sendRequest(
-        query,
-        context,
-      )) as { [key: string]: types.Event };
-      debugger
-      console.log(`[812021ca] AJ DEBUG ${definition.event} eventResult`, eventResult);
-      
-      const { error } = eventResult[definition.event];
-      console.log(`[e102eedd] AJ DEBUG application-event ${definition.event} error`, error);
-      
-      if (error && typeof error === "string") {
-        throw new Error(error);
-      }
-      return eventResult;
-    } catch (e) {
-      console.log(`[914414e3] AJ DEBUG application-event ${definition.event} error`, e);
-      throw e
-    }
 
+    const eventResult = (await applicationServiceClient.sendRequest(
+      this.buildRequestBody(
+        definition,
+        applicationServiceClient.eventInputTypes[definition.event],
+      ),
+      context,
+    )) as { [key: string]: types.Event };
+
+    const { error } = eventResult[definition.event];
+
+    if (error && typeof error === "string") {
+      throw new Error(error);
+    }
 
     /* ============================== *
      * Rehydration: when application-event evaluates, it should re-hydrate the
      * input parameters for re-evaluation
      * ============================== */
-    // const rehydrationId = eventResult[definition.event]?.application?.id;
-    // console.log('[5a7cad] AJ DEBUG definition.event ', definition.event);
-    // console.log('[6d3953] AJ DEBUG eventResult[definition.event] ', eventResult[definition.event]);
-    
-    // console.log(`[5adc6b] AJ DEBUG application-event ${definition.event} rehydrationId `, rehydrationId);
-    
-    // if (rehydrationId) {
-    //   try {
-    //     const { application } = (await applicationServiceClient.sendRequest(
-    //       {
-    //         query: TEMP_DEFAULT_APPLICATION_QUERY,
-    //         variables: { id: rehydrationId },
-    //       },
-    //       context,
-    //     )) as unknown as { application: types.Application };
-    //     console.log(`[60103a] AJ DEBUG rehydrate ${definition.event} application`, application);
-        
-    //     Object.defineProperty(input, "application", { value: application });  
-    //   } catch (error) {
-    //     console.log(`[4280d8] AJ DEBUG rehydrate ${definition.event} error`, error);
-        
-    //     context.logger.warn({
-    //       message: "failed to rehydrate application",
-    //       contract: this.id,
-    //     });
-    //   }
-    // }
-    // console.log(`[b0ca6f] AJ DEBUG application-event ${definition.event} returning result eventResult`, eventResult);
-    
-    // return eventResult;
+    const rehydrationId = eventResult[definition.event]?.application?.id;
+
+    if (rehydrationId) {
+      try {
+        const { application } = (await applicationServiceClient.sendRequest(
+          {
+            query: TEMP_DEFAULT_APPLICATION_QUERY,
+            variables: { id: rehydrationId },
+          },
+          context,
+        )) as unknown as { application: types.Application };
+
+        Object.defineProperty(input, "application", { value: application });
+      } catch (error) {
+        context.logger.warn({
+          message: "failed to rehydrate application",
+          contract: this.id,
+        });
+      }
+    }
+
+    return eventResult;
   };
 
   toJSON() {

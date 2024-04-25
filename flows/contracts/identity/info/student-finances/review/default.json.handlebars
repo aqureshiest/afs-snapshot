@@ -5,7 +5,11 @@
         "key": "incomeInfoReview",
         "type": "infoReview",
         "label": "Income Verification",
-        "copy": "My accounts \n\n ",
+        "items": {{#list}}
+            {{#each details.financialAccounts}}
+             {"id": "{{this.index}}", "label": "{{this.name}}", "value": "{{this.name}} - {{this.account_last4}}" }
+            {{/each}}
+          {{/list}},
         "editAction": {
             "key": "",
             "type": "navigate",

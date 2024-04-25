@@ -5,7 +5,7 @@
       "id": "{{request.params.id}}",
       {{#with request.body.values}}
         {{#if ssn}}
-            "references": [{"referenceId": "ssnyo", "referenceType": "ssnTokenURI"}] 
+            "references": [{"referenceId": "{{{contract "encryptPii"}}}", "referenceType": "ssnTokenURI"}] 
         {{/if}}
     },
     {{/with}}
