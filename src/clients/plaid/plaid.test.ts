@@ -4,11 +4,11 @@ import assert from "node:assert";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
-import AccreditedSchoolServiceClient from "./index.js";
+import PlaidClient from "./index.js";
 
-describe("[f8395630] Application Service Client", () => {
+describe("[f8395630] Plaid Client", () => {
   let context;
-  let client: AccreditedSchoolServiceClient;
+  let client: PlaidClient;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
