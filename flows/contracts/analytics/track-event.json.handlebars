@@ -1,6 +1,6 @@
 
-{{#if request.body.values.analytics}}
-  {{#with request.body.values.analytics}}
+{{#if request.body.values}}
+  {{#with request.body.values}}
     {
       "type": "{{type}}",
       "payload": {
