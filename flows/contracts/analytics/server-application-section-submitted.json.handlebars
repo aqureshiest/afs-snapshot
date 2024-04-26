@@ -1,13 +1,14 @@
 {{#if request.params.id}}
   {{#with request.body.values}}
     {
-      {{#if (or currentAddress employmentType annualIncome financialAccounts addAddtionalIncome public_token accounts) }}
+      {{#if (or (and currentAddress (eq sixMonthResidence "true")) previousAddress employmentType 
+      annualIncome financialAccounts addAddtionalIncome public_token accounts) }}
         "type": "track",
       {{else}}
         "type": "",
       {{/if}}
       "payload": {
-        {{#if currentAddress }}
+        {{#if (or currentAddress previousAddress) }}
           "section": "primary-info",
         {{else if employmentType }}
           "section": "employment type",
