@@ -7,7 +7,7 @@ import { Request, Response, NextFunction } from "express";
  * TODO: get application from application-service
  * TODO: get authentication artifacts
  */
-const getManifest: Handler = function (
+const getManifest: Handler = async function (
   context,
   req: Request,
   res: Response,
@@ -28,7 +28,18 @@ const getManifest: Handler = function (
       `[58d1ca55] manifest "${manifestName}" not found`,
     );
   }
+  const redisClient = context?.loadedPlugins?.redis?.instance;
+  if (redisClient) {
+    const manifestState = id
+      ? await redisClient.getManifestState(
+          context,
+          `${manifestName}/${id}`,
+          null,
+        )
+      : {};
 
+    res.locals.manifestState = manifestState;
+  }
   res.locals.manifest = manifest;
   return next();
 };
