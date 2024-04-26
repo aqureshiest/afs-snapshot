@@ -83,6 +83,7 @@ fragment ApplicationFragment on Application {
     }
   }
   product
+  brand
 }
 
 fragment MetaFragment on Application {

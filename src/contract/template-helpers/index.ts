@@ -118,3 +118,12 @@ export function toUpper(value) {
 export function getSchoolName(school) {
   return school?.name;
 }
+
+export function hasValues(value) {
+  if (value) {
+    return Object.values(value).some(
+      (v) => v !== null && typeof v !== "undefined",
+    );
+  }
+  return false;
+}

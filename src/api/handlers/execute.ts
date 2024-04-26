@@ -7,7 +7,7 @@ const executeHandler: Handler = async function (
   res: Response,
   next: NextFunction,
 ) {
-  const { manifest, input, auth } = res.locals;
+  const { manifest, input, auth, manifestState } = res.locals;
 
   /* ============================== *
    * TODO: Provide context about the request to the execution context so
@@ -21,7 +21,7 @@ const executeHandler: Handler = async function (
    * ============================== */
 
   const { contract } = await manifest.execute(
-    { ...input, manifest, auth },
+    { ...input, manifest, auth, manifestState },
     { context, ...input },
   );
 

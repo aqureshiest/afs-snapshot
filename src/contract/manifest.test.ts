@@ -7,6 +7,7 @@ import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 
 import Contract from "./contract.js";
 import Manifest from "./manifest.js";
+import RedisClient from "../clients/redis/index.js";
 
 describe("[462fd166] manifest.execute", () => {
   let context;
@@ -328,6 +329,62 @@ describe("[462fd166] manifest.execute", () => {
     });
 
     const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+  it("[813a2d8a] it should execute an redisMethod contract-type when an id and a method keys exists in the definition", async () => {
+    const input = {} as Input;
+    const redisClient = new RedisClient(context);
+    redisClient.client = {
+      get: async function () {},
+    };
+    // redisClient.connect(context)
+    const state = {
+      manifest: "test",
+      step: "test",
+    };
+
+    mock.method(redisClient.client, "get", async () => {
+      return JSON.stringify(state);
+    });
+
+    const manifest = new Manifest(
+      {
+        ...context,
+        loadedPlugins: {
+          ...context.loadedPlugins,
+          redis: {
+            instance: redisClient,
+          },
+        },
+      },
+      "manifestRedisMethod",
+      {
+        key: "testContract",
+        "*": new Contract({
+          key: "testContract",
+          raw: `{
+          "redisMethod": "getApplicationStep",
+          "key": "asdasd",
+          "value": {}
+        }`,
+          type: "redisMethod",
+        }),
+      },
+    );
+
+    const { contract } = await manifest.execute(input, {
+      context: {
+        ...context,
+        loadedPlugins: {
+          ...context.loadedPlugins,
+          redis: {
+            instance: redisClient,
+          },
+        },
+      },
+      ...input,
+    });
 
     assert(contract);
   });

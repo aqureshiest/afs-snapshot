@@ -10,6 +10,7 @@ import {
 import IContract, {
   Injections as IExecutionInjections,
 } from "contract/contract.js";
+import type { ApplicationStep, ManifestState } from "clients/redis/index.js";
 
 interface IContractArguments<D> {
   id: string;
@@ -199,6 +200,28 @@ declare module "contract/contract-types/decision-request.js" {
   type Output = { [key: string]: unknown };
 }
 
+import "contract/contract-types/redis-method.js";
+declare module "contract/contract-types/redis-method.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    redisMethod:
+      | "getApplicationStep"
+      | "setApplicationStep"
+      | "getManifestState"
+      | "setManifestState";
+    key: string;
+    value?: ApplicationStep | ManifestState;
+  };
+
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+  type Output = { [key: string]: unknown };
+}
+
 import "contract/contract-types/pii-request.js";
 declare module "contract/contract-types/pii-request.js" {
   type Input = IContractInput;
@@ -232,3 +255,4 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
   };
   type Output = { [key: string]: unknown };
 }
+

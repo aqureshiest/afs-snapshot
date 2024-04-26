@@ -11,10 +11,11 @@ interface IDecisionEntity {
     dob: typings.Details["dateOfBirth"];
     addresses: Array<{
       addressLine1: typings.LocationDetail["street1"];
-      addressLine2: typings.LocationDetail["street2"];
+      addressLine2?: typings.LocationDetail["street2"];
       city: typings.LocationDetail["city"];
       state: typings.LocationDetail["state"];
-      type?: string;
+      zip: typings.LocationDetail["zip"];
+      type?: typings.LocationDetail["type"];
     }>;
     ssn?: typings.Application["ssnTokenURI"];
     email: typings.Details["email"];
@@ -23,32 +24,47 @@ interface IDecisionEntity {
   };
   educations: Array<{
     degreeType: typings.EducationDetail["degree"];
-    startDate?: typings.EducationDetail["termStart"];
     endDate: typings.EducationDetail["termEnd"];
-    status: typings.EducationDetail["enrollment"];
     schoolName: string;
-    opeid?: typings.EducationDetail["opeid"];
+    schoolType: string;
+    schoolCode: string;
+    opeid: typings.EducationDetail["opeid"];
   }>;
   employments: Array<{
-    employerName: typings.IncomeDetail["employer"];
+    employerName?: typings.IncomeDetail["employer"];
     jobTitle: typings.IncomeDetail["title"];
-    employmentType?: typings.IncomeDetail["type"];
+    employmentStatus: typings.IncomeDetail["type"];
     employmentStartDate: typings.IncomeDetail["start"];
-    employmentEndDate: typings.IncomeDetail["end"];
-    employmentEndingSoon?: boolean;
-    salary?: typings.IncomeDetail["amount"];
+    amount: typings.IncomeDetail["amount"];
   }>;
   incomes: Array<{
     incomeType: typings.IncomeDetail["type"];
     value: typings.IncomeDetail["amount"];
   }>;
+  assets: Array<{
+    assetType: typings.AssetDetail["type"];
+    value: typings.AssetDetail["amount"];
+  }>;
+  financialInfo: {
+    hasPlaid: boolean;
+    plaidAccessTokens?: Array<string>;
+    financialAccounts?: Array<{
+      accountType: string;
+      accountSubType: typings.FinancialAccountsDetail["type"];
+      balance: typings.FinancialAccountsDetail["balance"];
+      accountInstitutionName: typings.FinancialAccountsDetail["institution_name"];
+    }>;
+  };
+  ratesInfo: {
+    rateMapVersion: string;
+    rateMapTag: string;
+    rateAdjustmentData: {
+      name: string;
+      amount: number;
+    };
+  };
   loanInfo: {
     claimedLoanAmount: typings.AmountDetail["requested"];
-  };
-  servicingInfo: {
-    hasActiveLoan: boolean;
-    aggregateLoanTotal: number;
-    hasActiveLoanCurrentYear: boolean;
   };
 }
 
@@ -61,14 +77,13 @@ interface IApplicationDecisionDetails {
 interface IDecisionRequestDetails {
   product: string;
   decisioningWorkflowName: string;
-  decisionSource: string;
+  decisionSource?: string;
   applicationType: string;
   requestMetadata: {
+    userId: string;
     applicationId: string;
   };
-  isParentPlus: boolean;
   isInternational: boolean;
-  isMedicalResidency: boolean;
   appInfo: IApplicationDecisionDetails;
 }
 

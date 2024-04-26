@@ -33,3 +33,8 @@ export { default as piiRequest } from "./pii-request.js";
  * Accredited School Service
  * ============================== */
 export { default as accreditedSchoolRequest } from "./accredited-school-service-request.js";
+
+/* ============================== *
+ * Redis - volatile state storage
+ * ============================== */
+export { default as redisMethod } from "./redis-method.js";
