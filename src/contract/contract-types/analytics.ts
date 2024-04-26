@@ -12,6 +12,14 @@ enum EVENT_TYPE {
   page,
 }
 
+const enum SECTION {
+  primary_info = "primary_info",
+  employment = "employment",
+  employment_type = "employment_type",
+  income = "income",
+  income_verification = "income_verification",
+}
+
 class Analytics extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
     return "Analytics";
@@ -20,15 +28,10 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   /**
    */
   condition = (input: Input, context: Injections, definition: Definition) => {
-    const method = input.request?.method;
-
     const { application } = input;
 
     const { type } = definition;
 
-    if (!(method && method === "POST")) {
-      return false;
-    }
     if (!(type in EVENT_TYPE)) {
       return false;
     }
@@ -53,32 +56,39 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   ) => {
     const { context } = injections;
 
-    const analyticsServiceClient =
-      context.loadedPlugins.analyticsServiceClient.instance;
-    assert(
-      analyticsServiceClient,
-      "[e6falixw] AnalyticsServiceClient not instantiated",
-    );
+    try {
+      const analyticsServiceClient =
+        context.loadedPlugins.analyticsServiceClient.instance;
+      assert(
+        analyticsServiceClient,
+        "[e6falixw] AnalyticsServiceClient not instantiated",
+      );
 
-    const { type } = definition;
+      const { type } = definition;
 
-    const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
+      const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
 
-    switch (eventType) {
-      case EVENT_TYPE.track:
-        await analyticsServiceClient.track(
-          this.buildTrackProps(input, definition),
-        );
-        break;
-      case EVENT_TYPE.identify:
-        await analyticsServiceClient.identify(this.buildIdentifyProps(input));
-        break;
-      case EVENT_TYPE.page:
-        await analyticsServiceClient.page(
-          this.buildPageProps(input, definition),
-        );
-        break;
-      default:
+      switch (eventType) {
+        case EVENT_TYPE.track:
+          await analyticsServiceClient.track(
+            this.buildTrackProps(input, definition),
+          );
+          break;
+        case EVENT_TYPE.identify:
+          await analyticsServiceClient.identify(this.buildIdentifyProps(input));
+          break;
+        case EVENT_TYPE.page:
+          await analyticsServiceClient.page(
+            this.buildPageProps(input, definition),
+          );
+          break;
+        default:
+      }
+    } catch (error) {
+      context.logger.error({
+        error,
+        message: "[sc44e9r3] Failed to track Segment event",
+      });
     }
 
     return { success: true };
@@ -87,29 +97,64 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildTrackProps(input: Input, definition: Definition) {
     const { application } = input;
 
-    assert(application, "[rcf1upqz] application is null");
+    assert(application?.primary, "[rcf1upqz] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
     assert(userId, "[ab4bkv0s] userId is null");
 
-    const {
-      event,
-      payload: { section, step },
-    } = definition;
+    const { payload } = definition;
 
     const props: TrackParams = {
       userId,
-      event,
+      event: payload.event,
       properties: {
-        section,
-        applicationId: application.id,
-        product: "SLR",
-        loan_type: "independent",
+        applicationId: application.primary.id,
+        product: application.product,
+        loan_type:
+          application.tags && application.tags.length > 0
+            ? application.tags[0]
+            : null,
         source: "application",
-        step,
       },
     };
+
+    //employment_type
+    if (payload.employment_type) {
+      props.properties = {
+        ...props.properties,
+        employment_type: payload.employment_type,
+      };
+    } else if (
+      payload.section === SECTION.income &&
+      application?.primary?.details?.income &&
+      application.primary.details.income.length > 0
+    ) {
+      props.properties = {
+        ...props.properties,
+        employment_type: application.primary.details.income[0]?.type,
+      };
+    }
+
+    //income_verification_method
+    if (payload.income_verification_method) {
+      props.properties = {
+        ...props.properties,
+        income_verification_method: payload.income_verification_method,
+      };
+    }
+
+    //decision
+    if (payload.decision) {
+      props.properties = {
+        ...props.properties,
+        decision: payload.decision,
+      };
+    }
+
+    if (payload.section) {
+      props.properties = { ...props.properties, section: payload.section };
+    }
 
     return props;
   }
@@ -117,19 +162,21 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildIdentifyProps(input: Input) {
     const { application } = input;
 
-    assert(application, "[96fie6o9] application is null");
+    assert(application?.primary, "[rcf1upqz] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
-    assert(userId, "[osb14l7c] userId is null");
+    assert(userId, "[ab4bkv0s] userId is null");
 
     const props: IdentifyParams = {
       userId,
       traits: {
-        applicationId: application.id,
-        product: "SLR",
+        applicationId: application.primary.id,
+        product: application.product,
       },
     };
+
+    console.log(props);
 
     return props;
   }
@@ -137,25 +184,27 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildPageProps(input: Input, definition: Definition) {
     const { application } = input;
 
-    assert(application, "[aw4q38ox] application is not null");
+    assert(application?.primary, "[rcf1upqz] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
-    assert(userId, "[ypdvs5fo] userId is null");
+    assert(userId, "[ab4bkv0s] userId is null");
 
-    const {
-      payload: { name },
-    } = definition;
+    const { payload } = definition;
 
     const props: PageParams = {
       userId,
-      name,
+      name: payload.name,
       properties: {
-        applicationId: application.id,
-        product: "SLR",
+        applicationId: application.primary.id,
+        product: application.product,
         source: "application",
       },
     };
+
+    if (payload.title) {
+      props.properties = { ...props.properties, title: payload.title };
+    }
 
     return props;
   }
