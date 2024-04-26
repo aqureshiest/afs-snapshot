@@ -11,7 +11,6 @@ function getSchoolByName(request, state) {
           state: "CA",
           city: "Berkeley",
           country: "USA",
-          forProfit: false,
         },
         {
           id: 1526,
