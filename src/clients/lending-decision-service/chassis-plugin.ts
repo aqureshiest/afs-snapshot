@@ -18,7 +18,6 @@ export const plugin: Plugin<LendingDecisionServiceClient> = {
       "";
 
     const client = new LendingDecisionServiceClient(accessKey, baseUrl);
-    client.postDecisionRequest(context, "cc4deebb-4780-462f-bd6d-f8c98086a218");
 
     plugin.instance = client;
   },

@@ -120,36 +120,35 @@ export default class LendingDecisionServiceClient extends Client {
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
-    console.log("[0933a5] AJ DEBUG payload", JSON.stringify(payload, null, 2));
 
-    // const { results, response } = await this.post<DecisionPostResponse>({
-    //   uri: "/v2/decision",
-    //   headers: {
-    //     ...this.headers,
-    //     Authorization: `Bearer ${this.accessKey}`,
-    //   },
-    //   payload,
-    //   resiliency: {
-    //     attempts: 3,
-    //     delay: 100,
-    //     timeout: 10000,
-    //     test: ({ response }) =>
-    //       Boolean(response.statusCode && response.statusCode <= 500),
-    //   },
-    // });
+    const { results, response } = await this.post<DecisionPostResponse>({
+      uri: "/v2/decision",
+      headers: {
+        ...this.headers,
+        Authorization: `Bearer ${this.accessKey}`,
+      },
+      payload,
+      resiliency: {
+        attempts: 3,
+        delay: 100,
+        timeout: 10000,
+        test: ({ response }) =>
+          Boolean(response.statusCode && response.statusCode <= 500),
+      },
+    });
 
-    // if (response.statusCode && response.statusCode >= 400) {
-    //   const error = new Error(
-    //     `[a571403f] Failed to post decision: ${response.statusMessage}`,
-    //   );
-    //   context.logger.error({
-    //     error,
-    //     message: response.statusMessage, // Log the actual status message from LDS
-    //     statusCode: response.statusCode,
-    //   });
-    //   throw error;
-    // }
-    // return results;
+    if (response.statusCode && response.statusCode >= 400) {
+      const error = new Error(
+        `[a571403f] Failed to post decision: ${response.statusMessage}`,
+      );
+      context.logger.error({
+        error,
+        message: response.statusMessage, // Log the actual status message from LDS
+        statusCode: response.statusCode,
+      });
+      throw error;
+    }
+    return results;
   }
 
   /**
@@ -360,7 +359,17 @@ export default class LendingDecisionServiceClient extends Client {
         ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
         ...(!hasPlaid ? { financialAccounts: financialAccountDetails } : {}),
       },
-      // need rates
+      // Rates need to be pulled from partner-api which is something that
+      // Apply flow shouldn't handle. In v2 need to determine where to get this
+      // Hard code for now:
+      ratesInfo: {
+        rateMapVersion: "120",
+        rateMapTag: "default",
+        rateAdjustmentData: {
+          name: "juno",
+          amount: 0,
+        },
+      },
     };
     return formattedPayload;
   }
