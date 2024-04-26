@@ -363,7 +363,7 @@ export default class LendingDecisionServiceClient extends Client {
       // Apply flow shouldn't handle. In v2 need to determine where to get this
       // Hard code for now:
       ratesInfo: {
-        rateMapVersion: "120",
+        rateMapVersion: "slo-62.1",
         rateMapTag: "default",
         rateAdjustmentData: {
           name: "juno",
