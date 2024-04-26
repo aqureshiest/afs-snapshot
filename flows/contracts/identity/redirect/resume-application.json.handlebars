@@ -1,10 +1,10 @@
 {{#if request.params.id }}
-  {{#if applicationState }}
+  {{#if hasValues applicationState }}
     {{#with applicationState }}
       {{#if step}}
         "{{manifest}}?step={{step}}"
       {{else}}
-        {{manifest}}
+        "{{manifest}}"
       {{/if}}
     {{/with}}
   {{else}}
