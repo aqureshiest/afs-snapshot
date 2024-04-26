@@ -70,3 +70,12 @@ export function formatCentsToDollars(v1) {
   const result = parseFloat((v1 + "").replace(/[^\d.-]/g, ""));
   return result ? result / 100 : 0;
 }
+
+export function hasValues(value) {
+  if (value) {
+    return Object.values(value).some(
+      (v) => v !== null && typeof v !== "undefined",
+    );
+  }
+  return false;
+}
