@@ -63,7 +63,7 @@ export default class LendingDecisionServiceClient extends Client {
   async postDecisionRequest(
     context: PluginContext,
     applicationId: string, // Assuming root app ID
-  ): Promise<DecisionPostResponse | void> {
+  ): Promise<DecisionPostResponse> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
@@ -109,10 +109,10 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     const payload = {
-      product: "SLR",
+      product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
       decisioningWorkflowName: "AUTO_APPROVAL",
       decisionSource: "apply-flow-service",
-      applicationType: "PRIMARY_ONLY",
+      applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
       requestMetadata: {
         applicationId,
         userId: application[APPLICANT_TYPES.Primary]?.monolithUserID,
@@ -258,7 +258,7 @@ export default class LendingDecisionServiceClient extends Client {
         }
 
         /**
-         * TODO: Determine employment status. We'll be storing only 'employed' or 'misc' (for unemployed)
+         * TODO: For v2 determine employment status. We'll be storing only 'employed' or 'misc' (for unemployed)
          * need to determine if 'employed' is 'self-employed' or 'future'
          * need to determine if 'retired'
          */
