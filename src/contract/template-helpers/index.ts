@@ -41,14 +41,6 @@ export function day(v1) {
 export function year(v1) {
   return new Date(v1).getFullYear();
 }
-export function hasValues(value) {
-  if (value) {
-    return Object.values(value).some(
-      (v) => v !== null && typeof v !== "undefined",
-    );
-  }
-  return false;
-}
 /**
  * TODO: retirenment and unemployed income.type will be removed.
  * Determimne best way to save employment status type

@@ -38,7 +38,7 @@
           {{/if}}
           {{#if additionalAmount}}
             {{! until the additional amount ui component allows for checked box sources, hard code type to 'rental'}}
-            {"index": 2, "type": "rental", "amount": {{{formatDollarsToCents additionalAmount}}} }
+            {"income": [{"index": 2, "type": "rental", "amount": {{{formatDollarsToCents additionalAmount}}} }]}
           {{/if}}
           {{#if sourcesOfIncome}}
             {"income": [{"index": 1, "type": "{{sourcesOfIncome}}" }]}

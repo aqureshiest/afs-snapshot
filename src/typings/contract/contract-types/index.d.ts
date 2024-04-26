@@ -255,4 +255,3 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
   };
   type Output = { [key: string]: unknown };
 }
-

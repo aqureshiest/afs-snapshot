@@ -4,6 +4,7 @@ fragment ApplicantFragment on Application {
   createdAt
   relationship
   ssnTokenURI
+  lendingDecisionID
   relationships {
     id
     relationship
@@ -82,6 +83,7 @@ fragment ApplicationFragment on Application {
       certified
     }
   }
+  lendingDecisionID
   product
   brand
 }

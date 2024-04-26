@@ -1,0 +1,10 @@
+{{! we should get decision status, but we're just trying to get lendingDecisionID of application from application service }}
+{{#if application}}
+{{log application}}
+  {
+    "decisionRequestMethod": "getDecision",
+    "id": "{{{application.lendingDecisionID.[0]}}}"
+  }
+{{else}}
+  null
+{{/if}} 

@@ -12,11 +12,11 @@ describe("[d32a4d27] PII Token Service Client", () => {
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
-    pkg.logging = { level: "error" };
+    pkg.logging = { level: "info" };
 
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
-    client = context.loadedPlugins.piiTokenService.instance;
+    client = context.loadedPlugins.piiTokenServiceClient.instance;
   });
 
   describe("[03df6e1e] PII Token Service Client Error tests", () => {

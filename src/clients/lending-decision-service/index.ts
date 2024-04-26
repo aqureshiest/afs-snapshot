@@ -121,39 +121,22 @@ export default class LendingDecisionServiceClient extends Client {
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
 
-    // const { results, response } = await this.post<DecisionPostResponse>({
-    //   uri: "/v2/decision",
-    //   headers: {
-    //     ...this.headers,
-    //     Authorization: `Bearer ${this.accessKey}`,
-    //   },
-    //   payload,
-    //   resiliency: {
-    //     attempts: 3,
-    //     delay: 100,
-    //     timeout: 10000,
-    //     test: ({ response }) =>
-    //       Boolean(response.statusCode && response.statusCode <= 500),
-    //   },
-    // });
-    const { results, response } = {
-      results: {
-        message: "Decisioning Request is processed.",
-        data: {
-          decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
-          seedId: "12341234123412341234123421",
-          status: "completed",
-          journeyApplicationStatus: "waiting_review",
-          decisionOutcome: "Application Review",
-          journeyToken: "J-w34tsdgae4541234d",
-          journeyApplicationToken: "JA-asdfasert45634",
-        },
+    const { results, response } = await this.post<DecisionPostResponse>({
+      uri: "/v2/decision",
+      headers: {
+        ...this.headers,
+        Authorization: `Bearer ${this.accessKey}`,
       },
-      response: {
-        statusCode: 200,
-        statusMessage: "TESTING YO",
+      payload,
+      resiliency: {
+        attempts: 3,
+        delay: 100,
+        timeout: 10000,
+        test: ({ response }) =>
+          Boolean(response.statusCode && response.statusCode <= 500),
       },
-    };
+    });
+
     if (response.statusCode && response.statusCode >= 400) {
       const error = new Error(
         `[a571403f] Failed to post decision: ${response.statusMessage}`,
@@ -165,7 +148,50 @@ export default class LendingDecisionServiceClient extends Client {
       });
       throw error;
     }
-    return results.data;
+
+    try {
+      const { application: foundApp } =
+        (await applicationServiceClient.sendRequest({
+          query: String.raw`mutation (
+            $id: UUID!
+            $references: [ReferenceInput]
+            $meta: EventMeta
+            $status: ApplicationStatusName!
+          ) {
+            addReferences(id: $id, references: $references, meta: $meta) {
+              id
+              application {
+                id
+              }
+            }
+            setStatus(id: $id, meta: $meta, status: $status) {
+              id
+              application {
+                id
+              }
+            }
+          }`,
+          variables: {
+            references: [
+              {
+                referenceType: "lendingDecisionID",
+                referenceId: results.decisioningToken,
+              },
+            ],
+            id: applicationId,
+            status: "submitted", // TODO: Inititial status of application until response from LDS
+          },
+        })) as unknown as { application: typings.Application };
+      application = foundApp;
+    } catch (error) {
+      context.logger.error({
+        error,
+        message: `[6d352332] error while retrieving application`,
+        stack: error.stack,
+      });
+      throw error;
+    }
+    return results;
   }
 
   /**
