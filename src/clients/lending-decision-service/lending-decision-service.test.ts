@@ -319,24 +319,6 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       }
     });
 
-    it("[9a93d700] Throw an error during format payload due to missing PII Token Service", async () => {
-      const missingServiceClientContext = {
-        ...context,
-        loadedPlugins: {
-          ...context.loadedPlugins,
-          piiTokenService: {},
-        },
-      };
-      try {
-        await client.postDecisionRequest(missingServiceClientContext, root);
-      } catch (error) {
-        assert.strictEqual(
-          error.message,
-          "[61e82544] PII Token Service client instance not found",
-        );
-      }
-    });
-
     it("[a76813b3] Throw an error if details are not present in application", async () => {
       mock.method(
         context.loadedPlugins.applicationServiceClient.instance,

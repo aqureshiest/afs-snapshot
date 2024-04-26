@@ -40,7 +40,7 @@ export default class AccreditedSchoolServiceClient extends Client {
   }
 
   async getSchools(
-    search: { opeid8?: string; name?: string; loanType?: LoanType },
+    search: { opeid?: string; name?: string; loanType?: LoanType },
     context: PluginContext,
   ): Promise<Array<School>> {
     const { results, response } = await this.get<{
