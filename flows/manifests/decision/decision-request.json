@@ -1,5 +1,5 @@
 {
     "*": "redirect",
-    "actions": ["server-application-submitted", "decision-request", "server-loan-decisioned"],
+    "actions": ["decision-request"],
     "redirect": "redirect.interstitial"
 }
