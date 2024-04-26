@@ -1,0 +1,36 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "reviewStyle": false,
+      "key": "currentAddress",
+      "type": "inputAddress",
+      "value": {
+          "street": "{{{ details.location.0.street1}}}",
+          "apt": "{{{ details.location.0.street2}}}",
+          "city": "{{{ details.location.0.city}}}",
+          "state": "{{{ details.location.0.state}}}",
+          "zip": "{{{ details.location.0.zip}}}"
+      },
+      "status": {{{json (contract 'primary_address_input_status')}}},
+      "labels": {
+          "street": {
+              "copy": "Street address"
+          },
+          "apt": {
+              "copy": "Apt/Suite number (optional)"
+          },
+          "city": {
+              "copy": "City"
+          },
+          "state": {
+              "copy": "State"
+          },
+          "zip": {
+              "copy": "Zipcode"
+          }
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/address' details.location }}}"
+  }
+}
+{{/with}}

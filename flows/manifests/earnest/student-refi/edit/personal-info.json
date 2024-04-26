@@ -10,7 +10,19 @@
       "questions/primary/dateOfBirth.default",
       "questions/primary/phone.default",
       "questions/primary/email.default",
-      "questions/primary/address.default",
+      "questions/primary/address.refiCurrentAddress-edit",
+      "questions/primary/citizenship.refi",
+      "questions/primary/ssn.default"
+    ],
+
+    "student-info-basic-withprevAddress-rows": [
+      "info/student-info/edit.default",
+      "questions/primary/name.default",
+      "questions/primary/dateOfBirth.default",
+      "questions/primary/phone.default",
+      "questions/primary/email.default",
+      "questions/primary/address.refiCurrentAddress-edit",
+      "questions/primary/address.refi-prevAddress-edit",
       "questions/primary/citizenship.refi",
       "questions/primary/ssn.default"
     ],

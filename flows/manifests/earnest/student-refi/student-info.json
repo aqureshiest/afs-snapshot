@@ -24,11 +24,11 @@
   "student-info-address-rows": [
     "info/student-address.refi",
     "questions/primary/address/additional-address.default",
-    "questions/primary/address.refiCurrent"
+    "questions/primary/address.refiCurrentAddress"
   ],
   "student-info-previous-address-rows": [
     "info/student-address/previous-address.refi",
-    "questions/primary/address.refi"
+    "questions/primary/address.refi-prevAddress"
   ],
   "student-info-employment-rows": [
     "info/student-employment.default",

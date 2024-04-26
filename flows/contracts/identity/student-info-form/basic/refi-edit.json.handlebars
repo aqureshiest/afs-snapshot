@@ -1,3 +1,4 @@
+{{#with application.primary}}
 {
     "key": "editPersonalInfo",
     "label": "Personal Info",
@@ -5,5 +6,10 @@
         "copy": "Save",
         "action": {{{json (contract 'save_edited_details_action')}}}
     },
-    "rows": {{{json (contract 'student-info-basic-rows')}}}
+    {{#if (findPreviousAddress details.location)}}
+        "rows": {{{json (contract 'student-info-basic-withprevAddress-rows')}}}
+    {{else}}
+        "rows": {{{json (contract 'student-info-basic-rows')}}}
+    {{/if}}
 }
+{{/with}}

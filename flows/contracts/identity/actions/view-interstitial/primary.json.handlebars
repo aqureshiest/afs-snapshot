@@ -1,0 +1,10 @@
+{{#with application}}
+{{log 'view-interstitial'}}
+{
+    "key": "submitInterstitial",
+    "type": "navigate",
+    "properties": {
+        "goTo": "earnest/student-refi/interstitial/{{id}}"
+    }
+}
+{{/with}}
