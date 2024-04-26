@@ -33,8 +33,6 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
         definition.value,
       );
     } catch (ex) {
-      // console.log('[0dd003] AJ DEBUG PiiRequest ERRROR', ex);
-
       console.log(ex);
     }
 

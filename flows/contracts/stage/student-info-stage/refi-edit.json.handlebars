@@ -41,112 +41,104 @@
             "editEmploymentInfo": {
                 "type": "object",
                 "properties": {
-                    "employmentType": {
-                        "enum": ["employed", "self_employed", "future", "retired", "unemployed"],
-                        "errorMessage": {
-                            "enum": "Please select an employment status"
-                        }
-                    },
-                    "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
-                    "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
-                    "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
-                    "sourcesOfIncome": {
-                        "type": "string",
-                        "enum": ["social_security_or_pension", "investment"],
-                        "errorMessage": {
-                            "enum": "Please select a source of income"
-                        }                    
-                    },
-                    "addAddtionalIncome": {
-                        "type": "string",
-                        "enum": ["true", "false"],
-                        "errorMessage": {
-                            "enum": "Please select Yes or No"
-                        }    
-                    },
-                    "hasConsistentIncome": {
-                        "type": "string",
-                        "enum": ["true", "false"],
-                        "errorMessage": {
-                            "enum": "Please select Yes or No"
-                        }
-                    },
-                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                    "annualIncomeFuture": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                    "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
-                    "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                    "employmentType": {{{json (schema 'questions/primary/employment')}}}
                 },
                 "allOf": [
-                    { "$ref": "#/properties/editEmploymentInfo/definitions/retired-requires-props" },
-                    { "$ref": "#/properties/editEmploymentInfo/definitions/unemployed-requires-props" },
-                    { "$ref": "#/properties/editEmploymentInfo/definitions/employed-requires-props" },
-                    { "$ref": "#/properties/editEmploymentInfo/definitions/self-employed-requires-props" },
-                    { "$ref": "#/properties/editEmploymentInfo/definitions/future-employed-requires-props" }
-                ],
-                "required": ["employmentType"],
-                "definitions": {
-                    "is-employed": {
-                        "properties": {
-                            "employmentType": { "enum": ["employed"] }
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "employed" } 
+                            }
                         },
-                        "required": ["employmentType"]
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
                     },
-                    "is-self-employed": {
-                        "properties": {
-                            "employmentType": { "enum": ["self_employed"] }
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "self_employed" } 
+                            }
                         },
-                        "required": ["employmentType"]
+                        "then": {
+                            "properties": {
+                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                                "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
                     },
-                    "is-future": {
-                        "properties": {
-                            "employmentType": { "enum": ["future"] }
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "future" } 
+                            }
                         },
-                        "required": ["employmentType"]
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                                "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
+                                "annualIncomeFuture": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
                     },
-                    "is-retired": {
-                        "properties": {
-                            "employmentType": { "enum": ["retired"] }
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "retired" } 
+                            }
                         },
-                        "required": ["employmentType"]
+                        "then": {
+                            "properties": {
+                                "sourcesOfIncome": {
+                                    "type": "string",
+                                    "enum": ["social_security_or_pension", "investment"],
+                                    "errorMessage": {
+                                        "enum": "Please select a source of income"
+                                    }                    
+                                },
+                                "addAddtionalIncome": {
+                                    "type": "string",
+                                    "enum": ["true", "false"],
+                                    "errorMessage": {
+                                        "enum": "Please select Yes or No"
+                                    }    
+                                }
+                            }
+                        }
                     },
-                    "is-unemployed": {
-                        "properties": {
-                            "employmentType": { "enum": ["unemployed"] }
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "unemployed" } 
+                            }
                         },
-                        "required": ["employmentType"]
-                    },
-                    "retired-requires-props": {
-                        "anyOf": [
-                            { "not": { "$ref": "#/properties/editEmploymentInfo/definitions/is-retired"  } },
-                            { "required": ["sourcesOfIncome", "addAddtionalIncome"]}
-                        ]
-                    },
-                    "unemployed-requires-props": {
-                        "anyOf": [
-                            { "not": { "$ref": "#/properties/editEmploymentInfo/definitions/is-unemployed"  } },
-                            { "required": ["hasConsistentIncome"]}
-                        ]
-                    },
-                    "employed-requires-props": {
-                        "anyOf": [
-                            { "not": { "$ref": "#/properties/editEmploymentInfo/definitions/is-employed"  } },
-                            { "required": ["employerName", "jobTitle", "annualIncome", "claimedAssets", "additionalAmount"]}
-                        ] 
-                    },
-                    "self-employed-requires-props": {
-                        "anyOf": [
-                            { "not": { "$ref": "#/properties/editEmploymentInfo/definitions/is-self-employed"  } },
-                            { "required": ["jobTitle", "startDate", "annualIncome", "claimedAssets", "additionalAmount"]}
-                        ] 
-                    },
-                    "future-employed-requires-props": {
-                        "anyOf": [
-                            { "not": { "$ref": "#/properties/editEmploymentInfo/definitions/is-future"  } },
-                            { "required": ["employerName", "jobTitle", "startDate", "annualIncome", "claimedAssets", "additionalAmount"]}
-                        ] 
+                        "then": {
+                            "properties": {
+                                "hasConsistentIncome": {
+                                    "type": "string",
+                                    "enum": ["true", "false"],
+                                    "errorMessage": {
+                                        "enum": "Please select Yes or No"
+                                    }
+                                },
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
                     }
-
-                }
+                ]
             }
         }
     }

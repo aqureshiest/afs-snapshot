@@ -37,8 +37,6 @@ class AccreditedSchoolServiceRequest extends ContractType<
         definition.accreditedSchoolServiceRequestMethod
       ](definition.search);
     } catch (ex) {
-      // console.log('[db228e74] AJ DEBUG AccreditedSchoolServiceRequest ERRROR', ex);
-
       console.log(ex);
     }
 
