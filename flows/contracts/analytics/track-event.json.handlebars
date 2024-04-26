@@ -1,15 +1,19 @@
 
 {{#if request.body.values}}
-  {
-    "event": "{{request.body.values.eventName}}",
-    "type": "{{request.body.values.eventType}}",
-    "payload": {
-      "section": "{{request.body.values.section}}",
-      "name": "{{request.body.values.name}}",
-      "source": "{{request.body.values.source}}",
-      "step": "{{request.body.values.step}}"
+  {{#with request.body.values}}
+    {
+      "type": "{{type}}",
+      "payload": {
+        "event": "{{event}}",
+        "section": "{{section}}",
+        "name": "{{name}}",
+        "title": "{{title}}",
+        "source": "{{source}}",
+        "action": "{{action}}",
+        "text": "{{text}}",
+      }
     }
-  }
+  {{/with}}
 {{else}}
   null
 {{/if}}

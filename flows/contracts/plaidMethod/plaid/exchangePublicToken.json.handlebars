@@ -1,5 +1,6 @@
 {{#if request.body.values.public_token}}
   {{#if request.params.id}}
+    {{#noop}}{{ contract 'analytics' }}{{/noop}}
   {
     "plaidMethod": "exchangePublicTokenAndGetAccounts",
     "id": "{{request.params.id}}",

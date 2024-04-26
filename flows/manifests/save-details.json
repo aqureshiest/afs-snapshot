@@ -1,4 +1,5 @@
 {
   "*": "response",
-  "actions": ["add-details"]
+  "actions": ["add-details"],
+  "analytics": ["server-application-section-submitted"]
 }

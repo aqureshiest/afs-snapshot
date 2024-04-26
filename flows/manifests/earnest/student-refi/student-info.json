@@ -1,5 +1,6 @@
 {
   "*": "refi-student-info",
+  "analytics": ["server-application-started"],
   "stage": "student-info-stage.refi",
   "steps": [
     "student-info-form/basic.refi",
