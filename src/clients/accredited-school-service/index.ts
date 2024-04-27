@@ -52,8 +52,8 @@ export default class AccreditedSchoolServiceClient extends Client {
       schools: Array<School>;
     }>(HttpRequest.Method.Get, {
       uri: `/schools`,
-      query: search,
       headers: this.headers,
+      query: search,
     });
 
     if (response.statusCode && response.statusCode >= 400) {
