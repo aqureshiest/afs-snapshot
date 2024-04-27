@@ -24,11 +24,11 @@
   "student-info-address-rows": [
     "info/student-address.refi",
     "questions/primary/address/additional-address.default",
-    "questions/primary/address.refiCurrent"
+    "questions/primary/address.refiCurrentAddress"
   ],
   "student-info-previous-address-rows": [
     "info/student-address/previous-address.refi",
-    "questions/primary/address.refi"
+    "questions/primary/address.refi-prevAddress"
   ],
   "student-info-employment-rows": [
     "info/student-employment.default",
@@ -57,7 +57,7 @@
     "questions/primary/employment/employer-name.default",
     "questions/primary/employment/job-title.default",
     "questions/primary/employment/start-date.default",
-    "questions/primary/income/amount/annual-income.default",
+    "questions/primary/income/amount/annual-income.future",
     "questions/primary/income/amount/claimed-assets.default",
     "questions/primary/income/amount/additional-income.default",
     "info/student-income/additional-income-hint.default"

@@ -1,0 +1,5 @@
+{
+    "*": "redirect",
+    "actions": ["add-details-review"],
+    "redirect": ["redirect.refi-review"]
+}

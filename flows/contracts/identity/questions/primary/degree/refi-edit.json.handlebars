@@ -1,0 +1,29 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "degree",
+      "type": "inputRadio",
+      "layout": "bubble",
+      "direction": "row",
+      "items": [
+          {
+              "id": "undergraduate",
+              "value": "undergraduate",
+              "label": "Undergraduate"
+          },
+          {
+              "id": "graduate",
+              "value": "graduate",
+              "label": "Graduate"
+          }
+      ],
+      "status": {{{json (contract 'primary_degree_input_status')}}},
+      "value": "{{details.education.0.degree}}",
+      "label": {
+          "copy": "Highest Degree"
+      },
+      "error": "{{{ ajv 'errors' 'questions/primary/degree' details.dateOfBirth }}}"
+  }
+}
+{{/with}}

@@ -1,0 +1,146 @@
+{{#with application.primary}}
+{
+    "key": "student-personal-info-edit",
+    "type": "form",
+    "label": "Edit Student Info",
+    "status": "notStarted",
+    "showProgress": true,
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "editPersonalInfo": {
+                "type": "object",
+                "properties": {
+                    "name": {{{json (schema 'questions/primary/name')}}},
+                    "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
+                    "phone": {{{json (schema 'questions/primary/phone')}}},
+                    "email": {{{json (schema 'questions/primary/email')}}},
+                    "currentAddress": {{{json (schema 'questions/primary/address')}}},
+                    {{#if (findPreviousAddress details.location)}}
+                        "previousAddress": {{{json (schema 'questions/primary/address')}}},
+                    {{/if}}
+                    "citizenship": {{{json (schema 'questions/primary/citizenship')}}},
+                    "ssn": {{{json (schema 'questions/primary/ssn')}}}
+                }
+            },
+            "editEducationInfo": {
+                "type": "object",
+                "properties": {
+                    "school": {{{json (schema 'questions/primary/school')}}},
+                    "degree": {{{json (schema 'questions/primary/degree')}}},
+                    "graduationDate": {{{json (schema 'questions/primary/graduationDate')}}}
+                }
+            },
+            "editLoanlDetails": {
+                "type": "object",
+                "properties": {
+                    "loanAmount": {{{json (schema 'questions/primary/loan')}}}
+                }
+            },
+            "editEmploymentInfo": {
+                "type": "object",
+                "properties": {
+                    "employmentType": {{{json (schema 'questions/primary/employment')}}}
+                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "employed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "self_employed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                                "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "future" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
+                                "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
+                                "annualIncomeFuture": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "retired" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "sourcesOfIncome": {
+                                    "type": "string",
+                                    "enum": ["social_security_or_pension", "investment"],
+                                    "errorMessage": {
+                                        "enum": "Please select a source of income"
+                                    }                    
+                                },
+                                "addAddtionalIncome": {
+                                    "type": "string",
+                                    "enum": ["true", "false"],
+                                    "errorMessage": {
+                                        "enum": "Please select Yes or No"
+                                    }    
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "unemployed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "hasConsistentIncome": {
+                                    "type": "string",
+                                    "enum": ["true", "false"],
+                                    "errorMessage": {
+                                        "enum": "Please select Yes or No"
+                                    }
+                                },
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
+{{/with}}

@@ -1,0 +1,17 @@
+
+{{#if application}}
+{
+  "action": {
+    "key": "submitInterstitial",
+    "type": "interstitial",
+    "properties": {
+      "showSpinner": true,
+      "header": { "copy": "One moment. We’re reviewing your application." },
+      "action": {{{json (contract 'statusAction')}}}
+    }
+  },
+  "result": {{{json (contract 'actions')}}}
+}
+{{else}}
+  null
+{{/if}}

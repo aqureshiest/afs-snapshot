@@ -1,0 +1,10 @@
+{
+    "type": "string",
+    "minLength": 9,
+    "maxLength": 9,
+    "errorMessage": {
+      "minLength": "Social Security Number Required",
+      "maxLength": "Invalid Social Security Number",
+      "type": "Social Security number is required"
+    }
+}

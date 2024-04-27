@@ -1,0 +1,37 @@
+{
+    "type": "input",
+    "definition": {
+        "key": "hasConsistentIncome",
+        "type": "inputRadio",
+        "layout": "copyWithIcon",
+        "direction": "row",
+        "value": "",
+        "items": [
+            {
+                "id": "yes",
+                "label": "Yes",
+                "value": "true"
+            },
+            {
+                "id": "no",
+                "label": "No",
+                "value": "false"
+            }
+        ],
+        "conditional": [
+            [
+                {
+                    "field": "editEmploymentInfo.employmentType",
+                    "op": "valueEquals",
+                    "value": "unemployed"
+                }
+            ]
+
+        ],
+        "status": {{{json (contract 'primary_consistent_income_input_status')}}},
+        "error": "{{{ ajv 'errors' 'questions/primary/income/consistent-income' hasConsistentIncome }}}",
+        "label": {
+            "copy": "Do you currently have a consistent source of income?"
+        }
+    }
+}

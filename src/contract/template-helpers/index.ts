@@ -4,6 +4,8 @@ export { default as ajv } from "./ajv.js";
 export { default as schema } from "./schema.js";
 export { default as obj } from "./obj.js";
 export { default as spread } from "./spread.js";
+export { default as maskValue } from "./maskValue.js";
+export { default as getSchool } from "./getSchool.js";
 export const noop = function (v1) {
   v1.fn(this);
   return "";
@@ -69,6 +71,52 @@ export function formatDollarsToCents(v1) {
 export function formatCentsToDollars(v1) {
   const result = parseFloat((v1 + "").replace(/[^\d.-]/g, ""));
   return result ? result / 100 : 0;
+}
+
+export function formatToUSCurrency(v1) {
+  if (v1) {
+    return formatCentsToDollars(v1).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  }
+}
+
+export function formatPhoneNumber(v1) {
+  return `${v1.substring(0, 3)}-${v1.substring(3, 6)}-${v1.substring(6, 10)}`;
+}
+
+export function reviewDateFormatter(v1) {
+  // Date from Application Service is formatted as yyyy-mm-dd
+  const dateSplit = v1.split("-");
+
+  // return date format as mm-dd-yyyy to UI
+  return `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;
+}
+
+export function findCurrentAddress(addresses) {
+  const currentAddress = addresses.find(
+    (address) => address.type && address.type === "primary",
+  );
+  return currentAddress ? currentAddress : addresses[0];
+}
+
+export function formatAddress(address) {
+  return `${address.street1} ${address.street2} ${address.city} ${address.state} ${address.zip}`;
+}
+
+export function findPreviousAddress(addresses) {
+  return addresses.find(
+    (address) => address.type && address.type === "previous",
+  );
+}
+
+export function toUpper(value) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export function getSchoolName(school) {
+  return school?.name;
 }
 
 export function hasValues(value) {

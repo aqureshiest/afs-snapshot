@@ -15,6 +15,36 @@
       "label": {
         "copy": "Start date"
       },
+      "conditional": [
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ]
+      ],
       "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}"
   }
 }

@@ -1,0 +1,36 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "annualIncomeFuture",
+      "type": "inputMoney",
+      {{#if details.income.0.amount}}
+        "value": "{{{formatToUSCurrency details.income.0.amount}}}",
+      {{else}}
+        "value": "",
+      {{/if}}
+      "status": {{{json (contract 'primary_income_annual_income_input_status')}}},
+      "label": {
+        "copy": "Future annual income before taxes"
+      },
+      "conditional": [
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ]
+      ],
+      "error": "{{{ ajv 'errors' 'questions/primary/income/amount/annual-income' details.income.0.amount }}}",
+      "hint": "This could include wage income, bonuses, and commissions, subject to verification later."
+  }
+}
+{{/with}}

@@ -1,0 +1,23 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "educationReview",
+        "type": "infoReview",
+        "label": "Academic Info",
+        "items":
+            {{#list}}
+                {"id": "schoolName", "label": "College or school name", "value": "{{getSchoolName (getSchool details.education.0.opeid (contract 'getSchools'))}}"}
+                {"id": "highestDegree", "label": "Highest degree", "value": "{{toUpper details.education.0.degree}}"}
+                {"id": "gradDate", "label": "Graducation date", "value": "{{reviewDateFormatter details.education.0.graduationDate}}"}
+            {{/list}},
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/edit/education-info/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}

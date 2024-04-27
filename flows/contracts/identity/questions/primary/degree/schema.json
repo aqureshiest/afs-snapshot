@@ -1,10 +1,29 @@
 {
   "type": "string",
-  "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
-  "minLength": 1,
+  "enum": [
+    "high_school",
+    "incomplete_grads",
+    "associates",
+    "bachelors",
+    "undergraduate",
+    "graduate",
+    "masters_of_arts",
+    "masters_of_science_or_engineering",
+    "other_masters",
+    "other_medical",
+    "jd",
+    "md",
+    "dds",
+    "do",
+    "dvm",
+    "mba",
+    "phd",
+    "pharmd",
+    "other",
+    "none"
+  ],
   "errorMessage": {
-      "minLength": "Degree must be longer than 1 character",
-      "pattern": "Invalid degree",
-      "type": "Invalid degree"
-  }
+    "enum": "Please select your highest completed degree"
+  },
+  "required": ["degree"]
 }

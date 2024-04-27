@@ -1,12 +1,23 @@
 {
   "type": "object",
   "properties": {
-      "opeid": {
+      "opeid8": {
           "type": "string",
+          "minLength": 8,
           "errorMessage": "Please select a school from dropbox"
+      }, 
+      "name": {
+        "type": "string",
+        "pattern": "^[\\x00-\\x7F]*$",
+        "minLength": 1,
+        "errorMessage": {
+            "minLength": "Please enter your school name",
+            "pattern": "Please select a school from dropdown",
+            "type": "Invalid school name"
+        }
       }
   },
   "required": [
-      "opeid"
+      "opeid8"
   ]
 }

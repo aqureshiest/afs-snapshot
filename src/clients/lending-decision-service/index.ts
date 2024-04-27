@@ -148,6 +148,49 @@ export default class LendingDecisionServiceClient extends Client {
       });
       throw error;
     }
+
+    try {
+      const { application: foundApp } =
+        (await applicationServiceClient.sendRequest({
+          query: String.raw`mutation (
+            $id: UUID!
+            $references: [ReferenceInput]
+            $meta: EventMeta
+            $status: ApplicationStatusName!
+          ) {
+            addReferences(id: $id, references: $references, meta: $meta) {
+              id
+              application {
+                id
+              }
+            }
+            setStatus(id: $id, meta: $meta, status: $status) {
+              id
+              application {
+                id
+              }
+            }
+          }`,
+          variables: {
+            references: [
+              {
+                referenceType: "lendingDecisionID",
+                referenceId: results.decisioningToken,
+              },
+            ],
+            id: applicationId,
+            status: "submitted", // TODO: Inititial status of application until response from LDS
+          },
+        })) as unknown as { application: typings.Application };
+      application = foundApp;
+    } catch (error) {
+      context.logger.error({
+        error,
+        message: `[6d352332] error while retrieving application`,
+        stack: error.stack,
+      });
+      throw error;
+    }
     return results;
   }
 

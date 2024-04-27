@@ -1,0 +1,20 @@
+{
+    "*": "refi-student-info",
+    "stage": "student-info-stage.refi-edit",
+    "steps": [
+      "student-info-form/education.refi-edit"
+    ],
+    "student-education-info-rows": [
+      "info/student-education/edit.default",
+      "questions/primary/school.refi-edit",
+      "questions/primary/degree.refi-edit",
+      "questions/primary/graduationDate.default"
+    ],
+  
+    "save_edited_details_action": "actions/save-details.save-review",
+    "primary_school_input_status": "questions/primary/school.status",
+    "primary_degree_input_status": "questions/primary/degree.status",
+    "primary_gradDate_input_status": "questions/primary/graduationDate.status",
+    "decryptPiiSsn": "pii-get-primary-ssn",
+    "getSchools": "get-schools"
+  }

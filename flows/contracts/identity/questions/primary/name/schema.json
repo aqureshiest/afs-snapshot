@@ -3,20 +3,21 @@
     "properties": {
         "first": {
             "type": "string",
-            "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
+            "pattern": "^[\\x00-\\x7F]*$",
             "errorMessage": "First name is required."
         },
         "last": {
             "type": "string",
-            "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
+            "pattern": "^[\\x00-\\x7F]*$",
+            "errorMessage": "Last name is required."
         },
         "middle": {
             "type": "string",
-            "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
+            "pattern": "^[\\x00-\\x7F]*$"
         },
         "title": {
             "type": "string",
-            "pattern": "^[^@!¡¿?#$%^&*()_+]+$"
+            "pattern": "^[\\x00-\\x7F]*$"
         }
     },
     "required": [

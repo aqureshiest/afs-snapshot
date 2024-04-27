@@ -1,0 +1,23 @@
+{{#if this.application.id}}
+{
+  "action": {
+    "key": "submitInterstitial",
+    "type": "interstitial",
+    "properties": {
+      "showSpinner": true,
+      "header": { "copy": "One moment. We’re reviewing your application." },
+      "actionDelay": 3000,
+      "action": 
+      {{#if (eq application.status.name 'submitted') }} 
+       {{{json (contract 'goToInterstitial')}}}
+      {{else if (eq application.status.name 'approved')}}
+        {{{json (contract 'checkoutAction')}}}
+      {{else}}
+        {{{json (contract 'homebaseAction')}}}
+      {{/if}}
+    }
+  }
+}
+{{else}}
+  null
+{{/if}}

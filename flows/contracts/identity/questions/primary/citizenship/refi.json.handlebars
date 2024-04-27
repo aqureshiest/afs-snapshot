@@ -1,0 +1,48 @@
+{{#with application.primary}}
+{
+    "type": "input",
+    "definition": {
+        "key": "citizenship",
+        "type": "inputRadio",
+        "layout": "copyWithIcon",
+        "direction": "column",
+        {{#if details.location.0.citizenship}}
+            "value": "{{details.location.0.citizenship}}",
+        {{else}}
+            "value": "",
+        {{/if}}
+        "items": [
+            {
+                "id": "citizen",
+                "label": "U.S. Citizen",
+                "value": "citizen"
+            },
+            {
+                "id": "permanent_resident",
+                "label": "U.S. Permanent Resident",
+                "value": "permanent_resident"
+            },
+            {
+                "id": "daca",
+                "label": "Deferred Action Childhood Arrivals",
+                "value": "daca"
+            },
+            {
+                "id": "asylee",
+                "label": "Asylee",
+                "value": "asylee"
+            },
+            {
+                "id": "non-resident",
+                "label": "Non-U.S. Resident/Other",
+                "value": "non-resident"
+            }
+        ],
+        "status": {{{json (contract 'primary_citizenship_input_status')}}},
+        "error": "{{{ ajv 'errors' 'questions/primary/citizenship' details.location.0.citizenship }}}",
+        "label": {
+            "copy": "Citizenship"
+        }
+    }
+}
+{{/with}}

@@ -5,7 +5,7 @@
       "key": "annualIncome",
       "type": "inputMoney",
       {{#if details.income.0.amount}}
-        "value": "{{{formatCentsToDollars details.income.0.amount}}}",
+        "value": "{{{formatToUSCurrency details.income.0.amount}}}",
       {{else}}
         "value": "",
       {{/if}}
@@ -13,6 +13,60 @@
       "label": {
         "copy": "Annual income before taxes"
       },
+      "conditional": [
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "unemployed"
+          },
+          {
+              "field": "consistentIncome.hasConsistentIncome", 
+              "op": "valueEquals",
+              "value": "true"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "unemployed"
+          },
+          {
+              "field": "editEmploymentInfo.hasConsistentIncome", 
+              "op": "valueEquals",
+              "value": "true"
+          }
+        ]
+      ],
       "error": "{{{ ajv 'errors' 'questions/primary/income/amount/annual-income' details.income.0.amount }}}",
       "hint": "This could include wage income, bonuses, and commissions, subject to verification later."
   }

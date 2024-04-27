@@ -1,0 +1,22 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "incomeInfoReview",
+        "type": "infoReview",
+        "label": "Income Verification",
+        "items": {{#list}}
+            {{#each details.financialAccounts}}
+             {"id": "{{this.index}}", "label": "{{this.name}}", "value": "{{this.name}} - {{this.account_last4}}" }
+            {{/each}}
+          {{/list}},
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/income-verification/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}
