@@ -112,7 +112,9 @@ export function findPreviousAddress(addresses) {
 }
 
 export function toUpper(value) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
+  if (value) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
 }
 
 export function getSchoolName(school) {
