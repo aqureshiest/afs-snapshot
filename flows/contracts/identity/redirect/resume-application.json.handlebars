@@ -1,5 +1,5 @@
 {{#if request.params.id }}
-  {{#if hasValues applicationState }}
+  {{#if (hasValues applicationState) }}
     {{#with applicationState }}
       {{#if step}}
         "{{manifest}}?step={{step}}"
