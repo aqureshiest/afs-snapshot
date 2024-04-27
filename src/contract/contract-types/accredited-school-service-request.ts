@@ -37,6 +37,8 @@ class AccreditedSchoolServiceRequest extends ContractType<
         definition.accreditedSchoolServiceRequestMethod
       ](definition.search);
     } catch (ex) {
+      context.logger.log(ex);
+      context.logger.info(ex);
       context.logger.error(ex);
     }
 
