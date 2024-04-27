@@ -45,7 +45,9 @@ export default class AccreditedSchoolServiceClient extends Client {
     context: PluginContext,
   ): Promise<Array<School>> {
     context.logger.info(
-      `[07709ff0] DEBUG Lorem ipsum dolor sit amet :: Requesting School Service :: search :: ${search}`,
+      `[07709ff0] DEBUG Lorem ipsum dolor sit amet :: Requesting School Service :: search :: ${JSON.stringify(
+        search,
+      )}`,
     );
     const { results, response } = await this.request<{
       schools: Array<School>;
