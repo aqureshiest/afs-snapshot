@@ -43,6 +43,9 @@ export default class AccreditedSchoolServiceClient extends Client {
     search: { opeid?: string; name?: string; loanType?: LoanType },
     context: PluginContext,
   ): Promise<Array<School>> {
+    context.logger.info(
+      `[07709ff0] DEBUG Lorem ipsum dolor sit amet :: Requesting School Service :: search :: ${search}`,
+    );
     const { results, response } = await this.get<{
       schools: Array<School>;
     }>({
