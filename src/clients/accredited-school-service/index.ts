@@ -21,6 +21,7 @@ export default class AccreditedSchoolServiceClient extends Client {
   ): Promise<SchoolDetails | null> {
     const { results, response } = await this.get<SchoolDetails>({
       uri: `/schools/${String(id)}`,
+      headers: this.headers,
     });
 
     if (response.statusCode === 404) {
@@ -52,6 +53,7 @@ export default class AccreditedSchoolServiceClient extends Client {
     }>(HttpRequest.Method.Get, {
       uri: `/schools`,
       query: search,
+      headers: this.headers,
     });
 
     if (response.statusCode && response.statusCode >= 400) {
