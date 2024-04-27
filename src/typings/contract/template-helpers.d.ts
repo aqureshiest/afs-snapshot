@@ -50,3 +50,17 @@ declare module "contract/template-helpers/ajv.js" {
   type Injections = IExecutionInjections;
   type TemplateHelper = ITemplateHelper<[string, string, unknown]>;
 }
+
+import "contract/template-helpers/maskValue.js";
+declare module "contract/template-helpers/maskValue.js" {
+  type Injections = IExecutionInjections;
+  type TemplateHelper = ITemplateHelper<[string, string]>;
+}
+
+import "contract/template-helpers/getSchool.js";
+declare module "contract/template-helpers/getSchool.js" {
+  type Injections = IExecutionInjections;
+  type TemplateHelper = ITemplateHelper<
+    [string, Array<{ [key: string]: unknown }>]
+  >;
+}

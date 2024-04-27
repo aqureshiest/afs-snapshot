@@ -1,0 +1,38 @@
+{
+    "*": "refi-student-info",
+    "stage": "student-info-stage.refi-edit",
+    "steps": [
+      "student-info-form/basic.refi-edit"
+    ],
+    "student-info-basic-rows": [
+      "info/student-info/edit.default",
+      "questions/primary/name.default",
+      "questions/primary/dateOfBirth.default",
+      "questions/primary/phone.default",
+      "questions/primary/email.default",
+      "questions/primary/address.refiCurrentAddress-edit",
+      "questions/primary/citizenship.refi",
+      "questions/primary/ssn.default"
+    ],
+
+    "student-info-basic-withprevAddress-rows": [
+      "info/student-info/edit.default",
+      "questions/primary/name.default",
+      "questions/primary/dateOfBirth.default",
+      "questions/primary/phone.default",
+      "questions/primary/email.default",
+      "questions/primary/address.refiCurrentAddress-edit",
+      "questions/primary/address.refi-prevAddress-edit",
+      "questions/primary/citizenship.refi",
+      "questions/primary/ssn.default"
+    ],
+  
+    "save_edited_details_action": "actions/save-details.save-personal-info-review",
+    "primary_dob_input_status": "questions/primary/dateOfBirth.status",
+    "primary_phone_input_status": "questions/primary/phone.status",
+    "primary_address_input_status": "questions/primary/address.status",
+    "primary_citizenship_input_status": "questions/primary/citizenship.status",
+    "primary_name_input_status": "questions/primary/name.status",
+    "primary_email_input_status": "questions/primary/email.status",
+    "decryptPiiSsn": "pii-get-primary-ssn"
+  }

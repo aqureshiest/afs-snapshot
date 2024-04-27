@@ -4,7 +4,87 @@
   "definition": {
       "key": "additionalIncomeDisclosure",
       "type": "infoCopy",
-      "copy": "## What is additional income? \n\n Any income in addition to a primary job, such as rental income, social security, pension, etc. You can also enter alimony, child support, or separate maintenance income but it’s not required. "
+      "copy": "## What is additional income? \n\n Any income in addition to a primary job, such as rental income, social security, pension, etc. You can also enter alimony, child support, or separate maintenance income but it’s not required. ",
+      "conditional": [
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "retired"
+          },
+          {
+            "field": "additionalIncome.addAddtionalIncome",
+            "op": "valueEquals",
+            "value": "true"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "unemployed"
+          },
+          {
+              "field": "consistentIncome.hasConsistentIncome", 
+              "op": "valueEquals",
+              "value": "true"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "unemployed"
+          },
+          {
+              "field": "consistentIncome.hasConsistentIncome", 
+              "op": "valueEquals",
+              "value": "true"
+          }
+        ]
+      ]
   }
 }
 {{/with}}

@@ -5,7 +5,7 @@
       "key": "claimedAssets",
       "type": "inputMoney",
       {{#if details.asset.0.amount}}
-        "value":  "{{{formatCentsToDollars details.asset.0.amount}}}",
+        "value":  "{{{formatToUSCurrency details.asset.0.amount}}}",
       {{else}}
         "value": "",
       {{/if}}
@@ -13,6 +13,50 @@
       "label": {
         "copy": "Cash + retirement + investments"
       },
+      "conditional": [
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ]
+      ],
       "error": "{{{ ajv 'errors' 'questions/primary/income/amount/claimed-assets' details.asset.0.amount }}}",
       "hint": "Including this can help us evaluate your financial stability leading to potentially lower rates."
   }

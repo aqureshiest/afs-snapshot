@@ -1,13 +1,15 @@
+{{#with application.primary}}
 {
     "type": "input",
     "definition": {
         "key": "name",
         "type": "inputName",
         "status": {{{json (contract 'primary_name_input_status')}}},
-        "value": {{{json application.primary.details.name}}},
+        "value": {{{json details.name}}},
         "label": {
             "copy": "Full legal name"
         },
-        "error": "{{{ ajv 'errors' 'questions/primary/name' application.primary.details.name }}}"
+        "error": "{{{ ajv 'errors' 'questions/primary/name' details.name }}}"
     }
 }
+{{/with}}

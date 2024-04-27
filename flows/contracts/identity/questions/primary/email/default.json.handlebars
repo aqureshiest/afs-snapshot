@@ -1,13 +1,16 @@
+{{#with application.primary}}
 {
     "type": "input",
     "definition": {
         "key": "email",
         "type": "inputEmail",
         "status": {{{json (contract 'primary_email_input_status')}}},
-        "value": "{{{ json application.primary.details.email }}}",
+        "value": "{{{ details.email }}}",
         "label": {
             "copy": "Email"
         },
-        "error": "{{{ajv 'errors' 'questions/primary/email' application.primary.details.email}}}"
+        "error": "{{{ajv 'errors' 'questions/primary/email' details.email}}}",
+        "hint": "By providing your email address, you allow us to use it  to contact you about your loan and tell you about our products and services."
     }
 }
+{{/with}}

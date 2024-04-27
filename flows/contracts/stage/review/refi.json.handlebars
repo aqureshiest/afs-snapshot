@@ -1,0 +1,29 @@
+{
+
+    "key": "review-stage",
+    "type": "form",
+    "status": "notStarted",
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "refi-review": {
+                "type": "object",
+                "properties": {
+                    "consent": {
+                        "type": "boolean",
+                        "minLength": 1,
+                        "const": true,
+                        "errorMessage": {
+                            "minLength": "To continue you must agree",
+                            "const": "To continue you must agree",
+                            "type": "To continue you must agree"
+                        }
+                    }
+                }
+            }
+        },
+        "required": [],
+        "additionalProperties": true
+    }
+}

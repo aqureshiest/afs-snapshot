@@ -1,5 +1,5 @@
 {
-    "*": "redirect",
+    "*": "response.interstitial",
     "actions": ["decision-request"],
-    "redirect": "redirect.interstitial"
+    "statusAction": "actions/decision-request.applicationStatus"
 }

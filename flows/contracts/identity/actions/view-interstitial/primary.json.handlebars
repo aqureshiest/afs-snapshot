@@ -1,0 +1,12 @@
+{{#with application}}
+{
+    "key": "submitInterstitial",
+    "type": "interstitial",
+    "properties": {
+      "showSpinner": true,
+      "header": { "copy": "One moment. We’re reviewing your application." },
+      "action": {{{json (contract 'actions') }}},
+      "actionDelay": 2000
+    }
+}
+{{/with}}

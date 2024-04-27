@@ -1,0 +1,44 @@
+{{#with application.primary}}
+{
+    "type": "input",
+    "definition": {
+        "key": "addAddtionalIncome",
+        "type": "inputRadio",
+        "layout": "copyWithIcon",
+        "direction": "row",
+        {{#if details.income.2.amount}}
+            "value": "true",
+        {{else}}
+            "value": "",
+        {{/if}}
+        "items": [
+            {
+                "id": "yes",
+                "label": "Yes",
+                "value": "true"
+            },
+            {
+                "id": "no",
+                "label": "No",
+                "value": "false"
+            }
+        ],
+        "conditional": [
+            [
+                {
+                    "field": "editEmploymentInfo.employmentType",
+                    "op": "valueEquals",
+                    "value": "retired"
+                }
+            ]
+
+        ],
+        "status": {{{json (contract 'primary_retired_has_additional_income_status')}}},
+        "error": "{{{ ajv 'errors' 'questions/primary/income/has-additional-income' addAddtionalIncome }}}",
+        "label": {
+            "copy": "Any additional income you'd like to include?"
+        },
+        "hint": "## What is additional income? \n\n Any income in addition to a primary job, such as rental income, social security, pension, etc. You can also enter alimony, child support, or separate maintenance income but it’s not required. "
+    }
+}
+{{/with}}

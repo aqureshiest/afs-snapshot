@@ -5,7 +5,7 @@
     "key": "additionalAmount",
     "type": "inputMoney",
     {{#if details.income.2.amount}}
-      "value":  "{{{formatCentsToDollars details.income.2.amount}}}",
+      "value":  "{{{formatToUSCurrency details.income.2.amount}}}",
     {{else}}
       "value": "",
     {{/if}}
@@ -13,7 +13,6 @@
     "label": {
       "copy": "Total annual additional income (optional)"
     },
-    "error": "{{{ ajv 'errors' 'questions/primary/income/amount/additional-income' details.income.2.amount }}}",
     "conditional": [
       [
         {
@@ -59,8 +58,54 @@
             "op": "valueEquals",
             "value": "true"
         }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType", 
+          "op": "valueEquals",
+          "value": "employed"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType", 
+          "op": "valueEquals",
+          "value": "self_employed"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType", 
+          "op": "valueEquals",
+          "value": "future"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType", 
+          "op": "valueEquals",
+          "value": "retired"
+        },
+        {
+          "field": "editEmploymentInfo.addAddtionalIncome",
+          "op": "valueEquals",
+          "value": "true"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType", 
+          "op": "valueEquals",
+          "value": "unemployed"
+        },
+        {
+            "field": "editEmploymentInfo.hasConsistentIncome", 
+            "op": "valueEquals",
+            "value": "true"
+        }
       ]
-    ]
+    ],
+    "error": "{{{ ajv 'errors' 'questions/primary/income/amount/additional-income' details.income.2.amount }}}"
   }
 }
 {{/with}}

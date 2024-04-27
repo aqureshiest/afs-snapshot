@@ -23,8 +23,6 @@
                 "value": "investment"
             }
         ],
-        "status": {{{json (contract 'primary_income_sources_of_income_input_status')}}},
-        "error": "{{{ ajv 'errors' 'questions/primary/income/sources-of-income-retired' sourcesOfIncome }}}",
         "conditional": [
             [
                 {
@@ -32,8 +30,18 @@
                     "op": "valueEquals",
                     "value": "retired"
                 }
+            ],
+            [
+                {
+                    "field": "editEmploymentInfo.employmentType",
+                    "op": "valueEquals",
+                    "value": "retired"
+                }
             ]
-        ]
+
+        ],
+        "status": {{{json (contract 'primary_income_sources_of_income_input_status')}}},
+        "error": "{{{ ajv 'errors' 'questions/primary/income/sources-of-income-retired' sourcesOfIncome }}}"
     }
 }
 {{/with}}

@@ -25,6 +25,16 @@ export { default as decisionRequest } from "./decision-request.js";
 export { default as plaidMethod } from "./plaid-method.js";
 
 /* ============================== *
+ * PII Token Service
+ * ============================== */
+export { default as piiRequest } from "./pii-request.js";
+
+/* ============================== *
+ * Accredited School Service
+ * ============================== */
+export { default as accreditedSchoolRequest } from "./accredited-school-service-request.js";
+
+/* ============================== *
  * Redis - volatile state storage
  * ============================== */
 export { default as redisMethod } from "./redis-method.js";

@@ -1,0 +1,6 @@
+{
+    "*": "response.response-decision-status",
+    "checkoutAction": "actions/checkout.default",
+    "homebaseAction": "actions/homebase.default",
+    "goToInterstitial": "actions/decision-request.applicationStatus"
+}

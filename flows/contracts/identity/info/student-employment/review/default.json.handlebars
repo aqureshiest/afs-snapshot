@@ -1,0 +1,41 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "employmentInfoReview",
+        "type": "infoReview",
+        "label": "Employment Info",
+        "items": 
+        {{#list}}
+            {{#if details.income.0.type}} 
+                {"id": "employmentStatus", "label": "Employment Status", "value": "{{toUpper details.income.0.type}}"}
+            {{/if}}
+            {{#if details.income.0.employer}} 
+                {"id": "employerName", "label": "Employer name", "value": "{{details.income.0.employer}}"}
+            {{/if}}
+            {{#if details.income.0.title}} 
+                {"id": "jobTitle", "label": "Job Title", "value": "{{details.income.0.title}}"}
+            {{/if}}
+            {{#if details.income.0.start}} 
+                {"id": "startDate", "label": "Start Date", "value": "{{reviewDateFormatter details.income.0.start}}"}
+            {{/if}}
+            {{#if details.income.0.amount}} 
+                {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+            {{/if}}
+            {{#if details.asset.0.amount}} 
+                {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
+            {{/if}}
+            {{#if details.income.2.amount}}
+                {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency details.income.2.amount}}"}
+            {{/if}}
+        {{/list}},
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/edit/employment-info/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}

@@ -9,6 +9,50 @@
       "label": {  
         "copy": "Job title"
       },
+      "conditional": [
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "employmentStatus.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "self_employed"
+          }
+        ],
+        [
+          {
+            "field": "editEmploymentInfo.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ]
+      ],
       "error": "{{{ ajv 'errors' 'questions/primary/employment/job-title' details.income.0.title}}}"
   }
 }

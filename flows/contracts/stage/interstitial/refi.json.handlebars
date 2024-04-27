@@ -7,7 +7,8 @@
     "properties": {
       "showSpinner": true,
       "header": { "copy": "One moment. We’re reviewing your application." },
-      "actionDelay": 1
+      "action": {{{ json (contract 'actions' )}}},
+      "actionDelay": 1000
     }
   }
 }

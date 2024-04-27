@@ -1,4 +1,5 @@
 {
     "*": "interstitial",
+    "actions": ["decision-request"],
     "stage": "interstitial.refi"
 }
