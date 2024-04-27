@@ -37,8 +37,10 @@ class AccreditedSchoolServiceRequest extends ContractType<
         definition.accreditedSchoolServiceRequestMethod
       ](definition.search);
     } catch (ex) {
-      context.logger.log(ex);
-      context.logger.info(ex);
+      context.logger.info({
+        messege: "[4fe92134] School Service :: HELLO WORLD",
+        ...ex,
+      });
       context.logger.error(ex);
     }
 
