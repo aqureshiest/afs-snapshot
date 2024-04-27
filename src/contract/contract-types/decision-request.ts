@@ -33,7 +33,7 @@ class DecisionRequest extends ContractType<Definition, Definition, Output> {
         definition.id,
       );
     } catch (ex) {
-      console.log(ex);
+      context.logger.error(ex);
     }
 
     return result;
