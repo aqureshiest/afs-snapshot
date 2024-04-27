@@ -8,9 +8,8 @@ export const plugin: Plugin<PiiTokenServiceClient> = {
   version: "1.0.0",
   registerOrder: 0,
   register: async (context: PluginContext) => {
-    const key =
+    const accessKey =
       SensitiveString.ExtractValue(context.env.PII_TOKEN_SERVICE_KEY) || "";
-    const accessKey = Buffer.from(key).toString("base64");
     const baseUrl =
       SensitiveString.ExtractValue(context.env.PII_TOKEN_SERVICE_BASEURL) || "";
 
