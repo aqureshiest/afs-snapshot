@@ -1,5 +1,6 @@
 import { Client } from "@earnest/http";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
+import { HttpRequest } from "@earnest/http";
 
 export default class AccreditedSchoolServiceClient extends Client {
   constructor(context: PluginContext, baseUrl: string) {
@@ -46,9 +47,9 @@ export default class AccreditedSchoolServiceClient extends Client {
     context.logger.info(
       `[07709ff0] DEBUG Lorem ipsum dolor sit amet :: Requesting School Service :: search :: ${search}`,
     );
-    const { results, response } = await this.get<{
+    const { results, response } = await this.request<{
       schools: Array<School>;
-    }>({
+    }>(HttpRequest.Method.Get, {
       uri: `/schools`,
       query: search,
     });

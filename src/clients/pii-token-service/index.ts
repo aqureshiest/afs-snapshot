@@ -1,5 +1,6 @@
 import { Client } from "@earnest/http";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
+import { HttpRequest } from "@earnest/http";
 export default class PiiTokenServiceClient extends Client {
   private accessKey: string;
   constructor(accessKey: string, baseUrl: string) {
@@ -30,18 +31,21 @@ export default class PiiTokenServiceClient extends Client {
     context.logger.info(
       `[a02ece2e] DEBUG Lorem ipsum dolor sit amet :: Requesting PII-token decrpytion :: "/tokens?uri=${encodedURI}"`,
     );
-    const { results, response } = await this.get<{ value: string }>({
-      uri: "/tokens?uri=" + encodedURI,
-      headers: {
-        ...this.headers,
-        Authorization: `Bearer ${this.accessKey}`,
+    const { results, response } = await this.request<{ value: string }>(
+      HttpRequest.Method.Get,
+      {
+        uri: "/tokens?uri=" + encodedURI,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+        resiliency: {
+          attempts: 3,
+          delay: 100,
+          timeout: 100000,
+        },
       },
-      resiliency: {
-        attempts: 3,
-        delay: 100,
-        timeout: 100000,
-      },
-    });
+    );
 
     if (response.statusCode == null || response.statusCode >= 400) {
       throw new Error(
