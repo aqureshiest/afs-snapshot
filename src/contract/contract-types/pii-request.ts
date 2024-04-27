@@ -33,7 +33,7 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
         definition.value,
       );
     } catch (ex) {
-      console.log(ex);
+      context.logger.error(ex);
     }
 
     return result;

@@ -54,18 +54,22 @@ export function year(v1) {
 //   }
 // }
 export function dateObjToString(v1) {
-  const month = String(v1.month).padStart(2, "0");
-  const day = String(v1.day).padStart(2, "0");
-  return `${v1.year}-${month}-${day}`;
+  if (v1) {
+    const month = String(v1.month).padStart(2, "0");
+    const day = String(v1.day).padStart(2, "0");
+    return `${v1.year}-${month}-${day}`;
+  }
 }
 
 export function formatDollarsToCents(v1) {
-  const value = number(v1);
-  let cents = (value + "").replace(/[^\d.-]/g, "");
-  if (cents && cents.includes(".")) {
-    cents = cents.substring(0, cents.indexOf(".") + 3);
+  if (v1) {
+    const value = number(v1);
+    let cents = (value + "").replace(/[^\d.-]/g, "");
+    if (cents && cents.includes(".")) {
+      cents = cents.substring(0, cents.indexOf(".") + 3);
+    }
+    return cents ? Math.round(parseFloat(cents) * 100) : 0;
   }
-  return cents ? Math.round(parseFloat(cents) * 100) : 0;
 }
 
 export function formatCentsToDollars(v1) {
@@ -74,24 +78,26 @@ export function formatCentsToDollars(v1) {
 }
 
 export function formatToUSCurrency(v1) {
-  if (v1) {
-    return formatCentsToDollars(v1).toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-  }
+  return formatCentsToDollars(v1).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 }
 
 export function formatPhoneNumber(v1) {
-  return `${v1.substring(0, 3)}-${v1.substring(3, 6)}-${v1.substring(6, 10)}`;
+  if (v1) {
+    return `${v1.substring(0, 3)}-${v1.substring(3, 6)}-${v1.substring(6, 10)}`;
+  }
 }
 
 export function reviewDateFormatter(v1) {
-  // Date from Application Service is formatted as yyyy-mm-dd
-  const dateSplit = v1.split("-");
+  if (v1) {
+    // Date from Application Service is formatted as yyyy-mm-dd
+    const dateSplit = v1.split("-");
 
-  // return date format as mm-dd-yyyy to UI
-  return `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;
+    // return date format as mm-dd-yyyy to UI
+    return `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;
+  }
 }
 
 export function findCurrentAddress(addresses) {
@@ -102,7 +108,9 @@ export function findCurrentAddress(addresses) {
 }
 
 export function formatAddress(address) {
-  return `${address.street1} ${address.street2} ${address.city} ${address.state} ${address.zip}`;
+  if (address) {
+    return `${address.street1} ${address.street2} ${address.city} ${address.state} ${address.zip}`;
+  }
 }
 
 export function findPreviousAddress(addresses) {
