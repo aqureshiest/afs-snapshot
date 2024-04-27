@@ -1,4 +1,5 @@
 import { Client } from "@earnest/http";
+import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 export default class PiiTokenServiceClient extends Client {
   private accessKey: string;
   constructor(accessKey: string, baseUrl: string) {
@@ -21,12 +22,16 @@ export default class PiiTokenServiceClient extends Client {
    * @param token string
    * @return {Promise<string>}
    */
-  async getTokenValue(token: string): Promise<string> {
+  async getTokenValue(context: PluginContext, token: string): Promise<string> {
     if (!token) {
       throw new Error("[9cfa7507] Token is required.");
     }
+    const encodedURI = encodeURIComponent(token);
+    context.logger.info(
+      `[a02ece2e] DEBUG Lorem ipsum dolor sit amet :: Requesting PII-token decrpytion :: "/tokens?uri=${encodedURI}"`,
+    );
     const { results, response } = await this.get<{ value: string }>({
-      uri: "/tokens?uri=" + encodeURIComponent(token),
+      uri: "/tokens?uri=" + encodedURI,
       headers: {
         ...this.headers,
         Authorization: `Bearer ${this.accessKey}`,
@@ -51,7 +56,7 @@ export default class PiiTokenServiceClient extends Client {
    * @param value string
    * @return {Promise<string>}
    */
-  async saveToken(value: string): Promise<string> {
+  async saveToken(context: PluginContext, value: string): Promise<string> {
     if (!value) {
       throw new Error("[7adfc728] Value is required.");
     }

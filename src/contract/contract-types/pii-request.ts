@@ -30,6 +30,7 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
     let result;
     try {
       result = await piiTokenService[definition.piiRequestMethod](
+        context,
         definition.value,
       );
     } catch (ex) {

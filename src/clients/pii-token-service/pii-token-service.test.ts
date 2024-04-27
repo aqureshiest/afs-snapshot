@@ -22,7 +22,7 @@ describe("[d32a4d27] PII Token Service Client", () => {
   describe("[03df6e1e] PII Token Service Client Error tests", () => {
     it("[ba730b42] Should throw an error on GET when no token given", async () => {
       try {
-        await client.getTokenValue("");
+        await client.getTokenValue(context, "");
       } catch (error) {
         assert.strictEqual(error.message, "[9cfa7507] Token is required.");
       }
@@ -39,7 +39,7 @@ describe("[d32a4d27] PII Token Service Client", () => {
         };
       });
       try {
-        await client.getTokenValue(token);
+        await client.getTokenValue(context, token);
       } catch (error) {
         assert.strictEqual(
           error.message,
@@ -51,7 +51,7 @@ describe("[d32a4d27] PII Token Service Client", () => {
 
     it("[9a6a892e] Should throw an error on POST when no SSN value is given", async () => {
       try {
-        await client.saveToken("");
+        await client.saveToken(context, "");
       } catch (error) {
         assert.strictEqual(error.message, "[7adfc728] Value is required.");
       }
@@ -67,7 +67,7 @@ describe("[d32a4d27] PII Token Service Client", () => {
         };
       });
       try {
-        await client.saveToken("123456789");
+        await client.saveToken(context, "123456789");
       } catch (error) {
         assert.strictEqual(
           error.message,
@@ -80,12 +80,12 @@ describe("[d32a4d27] PII Token Service Client", () => {
 
   it("[94cfc052] Should be able to obtain SSN from Token", async () => {
     const token = "pii-token://tokens/f0cc1999-8704-4498-bb00-9f65a7d00063";
-    const response = await client.getTokenValue(token);
+    const response = await client.getTokenValue(context, token);
     assert.equal(response, "999999999");
   });
 
   it("[f92cd5f3] Should return uri token when given SSN", async () => {
-    const response = await client.saveToken("123456789");
+    const response = await client.saveToken(context, "123456789");
     assert(response);
     assert.equal(
       response,

@@ -115,12 +115,16 @@ export default class LendingDecisionServiceClient extends Client {
       applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
       requestMetadata: {
         applicationId,
-        userId: application[APPLICANT_TYPES.Primary]?.monolithUserID,
+        userId: application[APPLICANT_TYPES.Primary]?.monolithUserID
+          ? application[APPLICANT_TYPES.Primary].monolithUserID
+          : application?.monolithUserID,
       },
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
-
+    context.logger.info(
+      `[4b4bcb92] DEBUG Lorem ipsum dolor sit amet :: LDS Payload :: ${payload}`,
+    );
     const { results, response } = await this.post<DecisionPostResponse>({
       uri: "/v2/decision",
       headers: {
