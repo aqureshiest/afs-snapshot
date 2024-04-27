@@ -33,8 +33,10 @@ class DecisionRequest extends ContractType<Definition, Definition, Output> {
         definition.id,
       );
     } catch (ex) {
-      context.logger.log(ex);
-      context.logger.info(ex);
+      context.logger.info({
+        messege: "[e87ed412] Lending Decision :: HELLO WORLD",
+        ...ex,
+      });
       context.logger.error(ex);
     }
 
