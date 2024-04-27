@@ -35,7 +35,7 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
       );
     } catch (ex) {
       context.logger.info({
-        messege: "[fbcd8ef5] Pii Token :: HELLO WORLD",
+        messege: "[fbcd8ef5] Pii Token Contract Failed",
         ...ex,
       });
       context.logger.error(ex);
