@@ -38,7 +38,7 @@ class AccreditedSchoolServiceRequest extends ContractType<
       ](definition.search);
     } catch (ex) {
       context.logger.info({
-        messege: "[4fe92134] School Service :: HELLO WORLD",
+        messege: "[4fe92134] School Service Contract Failed",
         ...ex,
       });
       context.logger.error(ex);
