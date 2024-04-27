@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import createError from "http-errors";
+// import createError from "http-errors"; // TODO: Temporarily comment out
 import { Request, Response, NextFunction } from "express";
 
 import { Application } from "../../typings/clients/application-service/index.js";
@@ -60,25 +60,25 @@ const getInputs: Handler = async function (
      * III. Session Authorization
      * ============================== */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const isAuthorized = applicants.reduce((authorized, applicant) => {
-      const { monolithUserID } = applicant;
+    // const isAuthorized = applicants.reduce((authorized, applicant) => {
+    //   const { monolithUserID } = applicant;
 
-      if (monolithUserID && userId && monolithUserID === userId) {
-        // for v1, at least one applicant has to be authorized
-        authorized = true;
-      }
-      return authorized;
-    }, false);
+    //   if (monolithUserID && userId && monolithUserID === userId) {
+    //     // for v1, at least one applicant has to be authorized
+    //     authorized = true;
+    //   }
+    //   return authorized;
+    // }, false);
     /**
      * TODO: Temporarily comment out
      * remove .skip from get-inputs.test.ts as well
      */
-    assert(
-      isAuthorized,
-      new createError.Unauthorized(
-        "[dfbaf766] Unauthorized - applicants lack permissions for this session",
-      ),
-    );
+    // assert(
+    //   isAuthorized,
+    //   new createError.Unauthorized(
+    //     "[dfbaf766] Unauthorized - applicants lack permissions for this session",
+    //   ),
+    // );
 
     if (application !== null && application?.applicants?.length) {
       // flatten application
