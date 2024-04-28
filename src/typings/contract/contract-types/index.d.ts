@@ -246,7 +246,10 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
   type Definition = {
     accreditedSchoolServiceRequestMethod: "getSchools";
     id?: string;
-    search: { opeid?: string; name?: string };
+    payload: {
+      id?: string;
+      search?: { opeid?: string; name?: string; loanType?: string };
+    };
   };
   type Injections = IExecutionInjections;
 

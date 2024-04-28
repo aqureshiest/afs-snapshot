@@ -88,22 +88,28 @@ interface IDecisionRequestDetails {
 }
 
 interface IDecisionPostResponse {
-  decisioningToken: string;
-  seedId: string;
-  status: string;
-  journeyApplicationStatus: string;
-  decisionOutcome: string;
-  journeyToken: string;
-  journeyApplicationToken: string;
+  message: string;
+  data: {
+    decisioningToken: string;
+    seedId: string;
+    status: string;
+    journeyApplicationStatus: string;
+    decisionOutcome: string;
+    journeyToken: string;
+    journeyApplicationToken: string;
+  };
 }
 
 interface IDecisionGetResponse {
-  decisioningToken: string;
-  seedId: string;
-  status: string;
-  journeyApplicationStatus: string;
-  requestedOn: string;
-  decisionOutcome: string;
+  message: string;
+  data: {
+    decisioningToken: string;
+    seedId: string;
+    status: string;
+    journeyApplicationStatus: string;
+    requestedOn: string;
+    decisionOutcome: string;
+  };
 }
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {

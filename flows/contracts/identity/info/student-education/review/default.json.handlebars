@@ -7,7 +7,7 @@
         "label": "Academic Info",
         "items":
             {{#list}}
-                {"id": "schoolName", "label": "College or school name", "value": "{{contract 'getSchools'}}"}
+                {"id": "schoolName", "label": "College or school name", "value": "{{json (contract 'getPrimarySchoolName') }}"}
                 {"id": "highestDegree", "label": "Highest degree", "value": "{{toUpper details.education.0.degree}}"}
                 {"id": "gradDate", "label": "Graducation date", "value": "{{reviewDateFormatter details.education.0.graduationDate}}"}
             {{/list}},

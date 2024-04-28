@@ -64,9 +64,6 @@ export default class LendingDecisionServiceClient extends Client {
     context: PluginContext,
     applicationId: string, // Assuming root app ID
   ): Promise<DecisionPostResponse> {
-    context.logger.info(
-      "[0b5ced6a] DEBUG Lorem ipsum dolor sit amet :: Post Decision Request",
-    );
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
@@ -125,18 +122,14 @@ export default class LendingDecisionServiceClient extends Client {
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
-    context.logger.info(
-      `[4b4bcb92] DEBUG Lorem ipsum dolor sit amet :: LDS Payload :: ${JSON.stringify(
-        payload,
-      )}`,
-    );
+
     const { results, response } = await this.post<DecisionPostResponse>({
       uri: "/v2/decision",
       headers: {
         ...this.headers,
         Authorization: `Bearer ${this.accessKey}`,
       },
-      payload,
+      body: payload,
       resiliency: {
         attempts: 3,
         delay: 100,
@@ -145,7 +138,7 @@ export default class LendingDecisionServiceClient extends Client {
           Boolean(response.statusCode && response.statusCode <= 500),
       },
     });
-
+    console.log("[d96758] AJ DEBUG results", JSON.stringify(results, null, 2));
     if (response.statusCode && response.statusCode >= 400) {
       const error = new Error(
         `[a571403f] Failed to post decision: ${response.statusMessage}`,
@@ -159,9 +152,8 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     try {
-      const { application: foundApp } =
-        (await applicationServiceClient.sendRequest({
-          query: String.raw`mutation (
+      const result = await applicationServiceClient.sendRequest({
+        query: String.raw`mutation (
             $id: UUID!
             $references: [ReferenceInput]
             $meta: EventMeta
@@ -180,22 +172,22 @@ export default class LendingDecisionServiceClient extends Client {
               }
             }
           }`,
-          variables: {
-            references: [
-              {
-                referenceType: "lendingDecisionID",
-                referenceId: results.decisioningToken,
-              },
-            ],
-            id: applicationId,
-            status: "submitted", // TODO: Inititial status of application until response from LDS
-          },
-        })) as unknown as { application: typings.Application };
-      application = foundApp;
+        variables: {
+          references: [
+            {
+              referenceType: "lendingDecisionID",
+              referenceId: results.data.decisioningToken,
+            },
+          ],
+          id: applicationId,
+          status: "submitted", // TODO: Inititial status of application until response from LDS
+        },
+      });
+      console.log("[f251d3] AJ DEBUG result", JSON.stringify(result, null, 2));
     } catch (error) {
       context.logger.error({
         error,
-        message: `[6d352332] error while retrieving application`,
+        message: `[6a91cce5] error while retrieving application`,
         stack: error.stack,
       });
       throw error;
@@ -236,6 +228,7 @@ export default class LendingDecisionServiceClient extends Client {
         city: location.city,
         state: location.state,
         zip: location.zip,
+        country: "US",
         type: location.type,
       };
     });
@@ -252,15 +245,19 @@ export default class LendingDecisionServiceClient extends Client {
       phoneNumber:
         details.phone?.find((phoneDetail) => phoneDetail && phoneDetail.number)
           ?.number || "", // get first non-null number
-      citizenshipStatus:
-        details.location && details.location.length > 0
-          ? details.location.find((location) => location?.type === "primary")
-              ?.citizenship
-          : "",
+      citizenshipStatus: "us_citizen",
+      // citizenshipStatus:
+      //   details.location && details.location.length > 0
+      //     ? details.location.find((location) => location?.type === "primary")
+      //         ?.citizenship
+      //     : "",
     };
 
     /**
      * Format the education details
+     */
+    /**
+     * TODO: Until accredited school service is fixed, hardcode the educationDetails
      */
     // const schoolDetails: Promise<{
     //   [key: string]: unknown;
@@ -279,7 +276,7 @@ export default class LendingDecisionServiceClient extends Client {
     //         ? new Date(education.graduationDate).toISOString()
     //         : "",
     //       schoolName: foundSchool.name,
-    //       schoolCode: foundSchool.id
+    //       schoolCode: `${foundSchool.id}`,
     //       schoolType: foundSchool.forProfit ? "for_profit" : "not_for_profit",
     //       opeid: education.opeid,
     //     };
@@ -288,7 +285,7 @@ export default class LendingDecisionServiceClient extends Client {
     // const educationDetails = await Promise.all(schoolDetails);
     const educationDetails = [
       {
-        degreeType: "undergrad",
+        degreeType: "bachelors",
         endDate: new Date("2005-01-12").toISOString(),
         schoolName: "University of Michigan",
         schoolCode: "6156",
@@ -350,9 +347,9 @@ export default class LendingDecisionServiceClient extends Client {
           employerName: employment.employer,
           jobTitle: employment.title,
           employmentStatus: employment.type,
-          employmentStartDate: employment?.start
-            ? new Date(employment.start).toISOString()
-            : "",
+          ...(["self_employed", "future"].includes(employment?.type as string)
+            ? { employmentStartDate: employment.start }
+            : {}),
           amount: employment.amount,
         };
       });
@@ -390,8 +387,9 @@ export default class LendingDecisionServiceClient extends Client {
      */
     const plaidTokens: Array<string> = [];
     let hasPlaid = false;
-    const financialAccountDetails = details?.financialAccounts?.map(
-      (account) => {
+    let financialAccountDetails;
+    if (details?.financialAccounts) {
+      financialAccountDetails = details?.financialAccounts?.map((account) => {
         if (account?.plaidAccessToken) {
           hasPlaid = true;
           plaidTokens.push(account?.plaidAccessToken);
@@ -402,8 +400,20 @@ export default class LendingDecisionServiceClient extends Client {
           balance: account?.balance,
           accountInstitutionName: account?.institution_name,
         };
-      },
-    );
+      });
+    } else {
+      /**
+       * TODO: Hardcoded for V1 until we
+       * figure out what to do for all employmentStatus != employed
+       * since we don't ask income verification for self / future / retired / unemployed
+       */
+      financialAccountDetails = {
+        accountType: "banking",
+        accountSubType: "checking",
+        balance: 110,
+        accountInstitutionName: "Chase",
+      };
+    }
 
     /**
      * The end result formatted for LDS
@@ -422,9 +432,12 @@ export default class LendingDecisionServiceClient extends Client {
         ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
         ...(!hasPlaid ? { financialAccounts: financialAccountDetails } : {}),
       },
-      // Rates need to be pulled from partner-api which is something that
-      // Apply flow shouldn't handle. In v2 need to determine where to get this
-      // Hard code for now:
+      /**
+       * TODO:
+       * Rates need to be pulled from partner-api which is something that
+       * Apply flow shouldn't handle. In v2 need to determine where to get this
+       * Hard code for now:
+       */
       ratesInfo: {
         rateMapVersion: "188.1",
         rateMapTag: "default",
