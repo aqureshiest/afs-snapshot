@@ -16,7 +16,7 @@
                 {"id": "previousAddress", "label": "Previous Address", "value": "{{formatAddress (findPreviousAddress details.location)}}"}
             {{/if}}
             {"id": "citizenship", "label": "Citizenship", "value": "{{toUpper details.location.0.citizenship }}"}
-            {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' ( contract 'decryptPiiSsn' )}}"}
+            {"id": "ssn", "label": "Social Security Number", "value": "***-****-999"}
         {{/list}},
         "editAction": {
             "key": "",
