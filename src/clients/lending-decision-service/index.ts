@@ -138,7 +138,7 @@ export default class LendingDecisionServiceClient extends Client {
           Boolean(response.statusCode && response.statusCode <= 500),
       },
     });
-    console.log("[d96758] AJ DEBUG results", JSON.stringify(results, null, 2));
+
     if (response.statusCode && response.statusCode >= 400) {
       const error = new Error(
         `[a571403f] Failed to post decision: ${response.statusMessage}`,
@@ -151,8 +151,20 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
+    let applicationStatus;
+    if (results && results.data.decisionOutcome) {
+      if (results.data.decisionOutcome === "Application Review") {
+        applicationStatus = "submitted"; // TODO: Inititial status of application until response from LDS
+      } else {
+        applicationStatus = results.data.decisionOutcome;
+      }
+    }
+
     try {
-      const result = await applicationServiceClient.sendRequest({
+      /**
+       * Store the lending decision token as a reference
+       */
+      await applicationServiceClient.sendRequest({
         query: String.raw`mutation (
             $id: UUID!
             $references: [ReferenceInput]
@@ -180,10 +192,9 @@ export default class LendingDecisionServiceClient extends Client {
             },
           ],
           id: applicationId,
-          status: "submitted", // TODO: Inititial status of application until response from LDS
+          status: applicationStatus,
         },
       });
-      console.log("[f251d3] AJ DEBUG result", JSON.stringify(result, null, 2));
     } catch (error) {
       context.logger.error({
         error,
@@ -233,6 +244,22 @@ export default class LendingDecisionServiceClient extends Client {
       };
     });
 
+    let citizenshipStatus =
+      details.location && details.location.length > 0
+        ? details.location.find((location) => location?.type === "primary")
+            ?.citizenship
+        : "";
+
+    if (citizenshipStatus === "citizen") {
+      // LDS expects 'us_citizen' instead. After V1, we should
+      // align on one standard for describing a US citizen
+      citizenshipStatus = "us_citizen";
+    } else if (citizenshipStatus === "non-resident") {
+      // LDS expects 'other' instead. After V1, we should
+      // align on one standard for describing a non-resident
+      citizenshipStatus = "other";
+    }
+
     const entityDetails = {
       firstName: details.name?.first || "",
       lastName: details.name?.last || "",
@@ -245,12 +272,7 @@ export default class LendingDecisionServiceClient extends Client {
       phoneNumber:
         details.phone?.find((phoneDetail) => phoneDetail && phoneDetail.number)
           ?.number || "", // get first non-null number
-      citizenshipStatus: "us_citizen",
-      // citizenshipStatus:
-      //   details.location && details.location.length > 0
-      //     ? details.location.find((location) => location?.type === "primary")
-      //         ?.citizenship
-      //     : "",
+      citizenshipStatus,
     };
 
     /**
@@ -348,7 +370,11 @@ export default class LendingDecisionServiceClient extends Client {
           jobTitle: employment.title,
           employmentStatus: employment.type,
           ...(["self_employed", "future"].includes(employment?.type as string)
-            ? { employmentStartDate: employment.start }
+            ? {
+                employmentStartDate: employment.start
+                  ? new Date(employment.start).toISOString()
+                  : "",
+              }
             : {}),
           amount: employment.amount,
         };
@@ -357,39 +383,45 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * Format the incomes
      */
-    const otherIncomeDetails = details?.income
-      ?.filter((income) => {
-        if (!employmentStatuses.includes(income?.type as string)) return income;
-      })
-      .map((income) => {
-        if (!income || (income && Object.keys(income).length === 0)) {
-          return {};
-        }
+    let otherIncomeDetails;
+    if (details?.income) {
+      otherIncomeDetails = details.income
+        .filter((income) => {
+          if (!employmentStatuses.includes(income?.type as string))
+            return income;
+        })
+        .map((income) => {
+          if (!income || (income && Object.keys(income).length === 0)) {
+            return {};
+          }
 
-        return {
-          incomeType: income.type,
-          value: income.amount,
-        };
-      });
-
+          return {
+            incomeType: income.type,
+            value: income.amount,
+          };
+        });
+    }
     /**
      * Format assets
      */
-    const assetsDetails = details?.asset?.map((asset) => {
-      return {
-        assetType: asset?.type,
-        value: asset?.amount,
-      };
-    });
-
+    let assetsDetails;
+    if (details?.asset) {
+      assetsDetails = details.asset.map((asset) => {
+        return {
+          assetType: asset?.type,
+          value: asset?.amount,
+        };
+      });
+    }
     /**
      * Format the financial accounts
      */
     const plaidTokens: Array<string> = [];
     let hasPlaid = false;
     let financialAccountDetails;
+
     if (details?.financialAccounts) {
-      financialAccountDetails = details?.financialAccounts?.map((account) => {
+      financialAccountDetails = details.financialAccounts.map((account) => {
         if (account?.plaidAccessToken) {
           hasPlaid = true;
           plaidTokens.push(account?.plaidAccessToken);
@@ -401,18 +433,6 @@ export default class LendingDecisionServiceClient extends Client {
           accountInstitutionName: account?.institution_name,
         };
       });
-    } else {
-      /**
-       * TODO: Hardcoded for V1 until we
-       * figure out what to do for all employmentStatus != employed
-       * since we don't ask income verification for self / future / retired / unemployed
-       */
-      financialAccountDetails = {
-        accountType: "banking",
-        accountSubType: "checking",
-        balance: 110,
-        accountInstitutionName: "Chase",
-      };
     }
 
     /**
@@ -422,15 +442,21 @@ export default class LendingDecisionServiceClient extends Client {
       entityInfo: entityDetails,
       educations: educationDetails,
       employments: employmentDetails,
-      incomes: otherIncomeDetails,
-      assets: assetsDetails,
+      incomes: otherIncomeDetails ? otherIncomeDetails : [],
+      assets: assetsDetails ? assetsDetails : [],
       loanInfo: {
         claimedLoanAmount: loanAmount,
       },
       financialInfo: {
         hasPlaid,
         ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
-        ...(!hasPlaid ? { financialAccounts: financialAccountDetails } : {}),
+        ...(!hasPlaid
+          ? {
+              financialAccounts: financialAccountDetails
+                ? financialAccountDetails
+                : [],
+            }
+          : {}),
       },
       /**
        * TODO:
