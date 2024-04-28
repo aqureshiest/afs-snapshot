@@ -1,9 +1,10 @@
-{{#if (and request.params.id application.primary.details.education)}}
+{{#if request.body.name}}
   {
     "accreditedSchoolServiceRequestMethod": "getSchools",
-    "id": "{{request.params.id}}",
     "search": {"name": "{{request.body.name}}"}
   }
 {{else}}
-  null
+  {
+    "error": "Payload must contain name"
+  }
 {{/if}} 

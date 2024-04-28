@@ -14,8 +14,7 @@ class AccreditedSchoolServiceRequest extends ContractType<
     /**
      * TODO: Add authentication checks
      */
-
-    return Boolean(definition.id);
+    return Boolean(definition.accreditedSchoolServiceRequestMethod);
   };
 
   evaluate = async (
@@ -31,20 +30,20 @@ class AccreditedSchoolServiceRequest extends ContractType<
       "[2aef0653] Accredited School Service client not instantiated",
     );
 
-    let result;
     try {
-      result = await accreditedSchoolServiceClient[
+      const result = await accreditedSchoolServiceClient[
         definition.accreditedSchoolServiceRequestMethod
-      ](definition.search);
+      ](definition.search, context);
+      return result;
     } catch (ex) {
-      context.logger.info({
-        messege: "[4fe92134] School Service Contract Failed",
+      context.logger.error({
+        message: "[4fe92134] School Service Contract Failed",
         ...ex,
       });
-      context.logger.error(ex);
+      return {
+        error: "[4fe92134] School Service Contract Failed",
+      };
     }
-
-    return result;
   };
 }
 
