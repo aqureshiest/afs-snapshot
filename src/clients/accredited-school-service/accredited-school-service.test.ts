@@ -31,7 +31,7 @@ describe("[f8395630] Application Service Client", () => {
   });
 
   it("[b6fa8369] should be able to get school data from id", async () => {
-    const response = await client.getSchool(context, { opeid: "00732978" });
+    const response = await client.getSchool(context, { id: "00732978" });
     assert(response);
     assert.deepStrictEqual(response.name, "ITT Technical Institute - Corona");
   });
