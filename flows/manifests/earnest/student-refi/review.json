@@ -15,7 +15,7 @@
     ],
 
     "decryptPiiSsn": "pii-get-primary-ssn",
-    "getSchools": "get-schools",
+    "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
     "actions": "actions/decision-request.primary"
 }

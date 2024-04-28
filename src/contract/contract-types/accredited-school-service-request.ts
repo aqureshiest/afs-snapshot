@@ -33,16 +33,14 @@ class AccreditedSchoolServiceRequest extends ContractType<
     try {
       const result = await accreditedSchoolServiceClient[
         definition.accreditedSchoolServiceRequestMethod
-      ](definition.search, context);
+      ](context, definition);
       return result;
     } catch (ex) {
       context.logger.error({
         message: "[4fe92134] School Service Contract Failed",
-        ...ex,
+        error: ex,
       });
-      return {
-        error: "[4fe92134] School Service Contract Failed",
-      };
+      return [];
     }
   };
 }
