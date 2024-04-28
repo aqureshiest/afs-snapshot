@@ -16,5 +16,6 @@
     "primary_degree_input_status": "questions/primary/degree.status",
     "primary_gradDate_input_status": "questions/primary/graduationDate.status",
     "decryptPiiSsn": "pii-get-primary-ssn",
-    "getSchools": "get-schools"
+    "getSchools": "get-schools",
+    "getPrimarySchoolName": "primary-get-school-name"
   }
