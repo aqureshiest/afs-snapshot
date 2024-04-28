@@ -64,6 +64,9 @@ export default class LendingDecisionServiceClient extends Client {
     context: PluginContext,
     applicationId: string, // Assuming root app ID
   ): Promise<DecisionPostResponse> {
+    context.logger.info(
+      "[0b5ced6a] DEBUG Lorem ipsum dolor sit amet :: Post Decision Request",
+    );
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
@@ -257,29 +260,40 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * Format the education details
      */
-    const schoolDetails: Promise<{
-      [key: string]: unknown;
-    }>[] =
-      details?.education?.map(async (education) => {
-        if (!education || (education && Object.keys(education).length === 0)) {
-          return {};
-        }
-        const foundSchool = await this.getSchoolDetails(
-          context,
-          education.opeid,
-        );
-        return {
-          degreeType: education.degree,
-          endDate: education.graduationDate
-            ? new Date(education.graduationDate).toISOString()
-            : "",
-          schoolName: foundSchool.name,
-          schoolCode: foundSchool.forProfit ? "for_profit" : "not_for_profit",
-          opeid: education.opeid,
-        };
-      }) || [];
+    // const schoolDetails: Promise<{
+    //   [key: string]: unknown;
+    // }>[] =
+    //   details?.education?.map(async (education) => {
+    //     if (!education || (education && Object.keys(education).length === 0)) {
+    //       return {};
+    //     }
+    //     const foundSchool = await this.getSchoolDetails(
+    //       context,
+    //       education.opeid,
+    //     );
+    //     return {
+    //       degreeType: education.degree,
+    //       endDate: education.graduationDate
+    //         ? new Date(education.graduationDate).toISOString()
+    //         : "",
+    //       schoolName: foundSchool.name,
+    //       schoolCode: foundSchool.id
+    //       schoolType: foundSchool.forProfit ? "for_profit" : "not_for_profit",
+    //       opeid: education.opeid,
+    //     };
+    //   }) || [];
 
-    const educationDetails = await Promise.all(schoolDetails);
+    // const educationDetails = await Promise.all(schoolDetails);
+    const educationDetails = [
+      {
+        degreeType: "undergrad",
+        endDate: new Date("2005-01-12").toISOString(),
+        schoolName: "University of Michigan",
+        schoolCode: "6156",
+        schoolType: "not_for_profit",
+        opeid: "00232503",
+      },
+    ];
 
     /**
      * Format the employment details
@@ -437,7 +451,14 @@ export default class LendingDecisionServiceClient extends Client {
       search,
       context,
     );
-    const foundSchool = schools.find((school) => school.opeid8 === opeid);
+    const foundSchoolId = schools.find((school) => school.opeid8 === opeid)?.id;
+    /**
+     * Do another await get to get the full details of the found school
+     */
+    const foundSchool = await accreditedSchoolService["getSchool"](
+      foundSchoolId,
+      context,
+    );
     return foundSchool;
   }
 }
