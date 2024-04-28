@@ -1,6 +1,5 @@
 import { Client } from "@earnest/http";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
-import { HttpRequest } from "@earnest/http";
 
 export default class AccreditedSchoolServiceClient extends Client {
   constructor(context: PluginContext, baseUrl: string) {
@@ -29,13 +28,10 @@ export default class AccreditedSchoolServiceClient extends Client {
     }
 
     if (response.statusCode && response.statusCode >= 400) {
-      const error = new Error("[29b9ae42] Failed to get school information");
       context.logger.error({
-        error,
-        message: error.message,
+        message: `[29b9ae42] Failed to get school information`,
         statusCode: response.statusCode,
       });
-      throw error;
     }
 
     return results;
@@ -45,27 +41,19 @@ export default class AccreditedSchoolServiceClient extends Client {
     search: { opeid?: string; name?: string; loanType?: LoanType },
     context: PluginContext,
   ): Promise<Array<School>> {
-    context.logger.info(
-      `[07709ff0] DEBUG Lorem ipsum dolor sit amet :: Requesting School Service :: search :: ${JSON.stringify(
-        search,
-      )}`,
-    );
-    const { results, response } = await this.request<{
+    const { results, response } = await this.get<{
       schools: Array<School>;
-    }>(HttpRequest.Method.Get, {
+    }>({
       uri: `/schools`,
       headers: this.headers,
       query: search,
     });
 
     if (response.statusCode && response.statusCode >= 400) {
-      const error = new Error("[730f8ada] Failed to get schools");
       context.logger.error({
-        error,
-        message: error.message,
+        message: "[730f8ada] Failed to get schools",
         statusCode: response.statusCode,
       });
-      throw error;
     }
 
     return results.schools;

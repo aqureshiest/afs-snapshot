@@ -113,7 +113,7 @@ const getInputs: Handler = async function (
   }
   const redisClient = context?.loadedPlugins?.redis?.instance;
   let applicationStep;
-  if (redisClient) {
+  if (redisClient && application) {
     applicationStep = await redisClient.getApplicationStep(
       context,
       application.id,
