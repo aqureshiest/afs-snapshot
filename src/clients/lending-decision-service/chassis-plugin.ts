@@ -8,11 +8,10 @@ export const plugin: Plugin<LendingDecisionServiceClient> = {
   version: "1.0.0",
   registerOrder: 0,
   register: async (context: PluginContext) => {
-    const key =
+    const accessKey =
       SensitiveString.ExtractValue(
         context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE,
       ) || "";
-    const accessKey = Buffer.from(key).toString("base64");
     const baseUrl =
       SensitiveString.ExtractValue(context.env.LENDING_DECISION_SERVICE_URL) ||
       "";
