@@ -126,7 +126,9 @@ export default class LendingDecisionServiceClient extends Client {
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
     context.logger.info(
-      `[4b4bcb92] DEBUG Lorem ipsum dolor sit amet :: LDS Payload :: ${payload}`,
+      `[4b4bcb92] DEBUG Lorem ipsum dolor sit amet :: LDS Payload :: ${JSON.stringify(
+        payload,
+      )}`,
     );
     const { results, response } = await this.post<DecisionPostResponse>({
       uri: "/v2/decision",

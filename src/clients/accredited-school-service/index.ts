@@ -29,12 +29,15 @@ export default class AccreditedSchoolServiceClient extends Client {
 
     if (response.statusCode && response.statusCode >= 400) {
       context.logger.error({
-        message: `[29b9ae42] Failed to get school information`,
+        message: response.statusMessage,
         statusCode: response.statusCode,
       });
+      throw new Error(
+        `[29b9ae42] Failed to get school information:  ${response.statusCode}, ${response.statusMessage}`,
+      );
+    } else {
+      return results;
     }
-
-    return results;
   }
 
   async getSchools(
@@ -51,11 +54,14 @@ export default class AccreditedSchoolServiceClient extends Client {
 
     if (response.statusCode && response.statusCode >= 400) {
       context.logger.error({
-        message: "[730f8ada] Failed to get schools",
+        message: response.statusMessage,
         statusCode: response.statusCode,
       });
+      throw new Error(
+        `[730f8ada] Failed to get schools:  ${response.statusCode}, ${response.statusMessage}`,
+      );
+    } else {
+      return results.schools;
     }
-
-    return results.schools;
   }
 }
