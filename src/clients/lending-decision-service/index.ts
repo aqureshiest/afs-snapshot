@@ -293,7 +293,7 @@ export default class LendingDecisionServiceClient extends Client {
           education.opeid,
         );
         return {
-          degreeType: education.degree,
+          degreeType: education.degree ? education.degree : "none",
           endDate: education.graduationDate
             ? new Date(education.graduationDate).toISOString()
             : "",
