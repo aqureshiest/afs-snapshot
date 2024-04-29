@@ -281,40 +281,30 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * TODO: Until accredited school service is fixed, hardcode the educationDetails
      */
-    // const schoolDetails: Promise<{
-    //   [key: string]: unknown;
-    // }>[] =
-    //   details?.education?.map(async (education) => {
-    //     if (!education || (education && Object.keys(education).length === 0)) {
-    //       return {};
-    //     }
-    //     const foundSchool = await this.getSchoolDetails(
-    //       context,
-    //       education.opeid,
-    //     );
-    //     return {
-    //       degreeType: education.degree,
-    //       endDate: education.graduationDate
-    //         ? new Date(education.graduationDate).toISOString()
-    //         : "",
-    //       schoolName: foundSchool.name,
-    //       schoolCode: `${foundSchool.id}`,
-    //       schoolType: foundSchool.forProfit ? "for_profit" : "not_for_profit",
-    //       opeid: education.opeid,
-    //     };
-    //   }) || [];
+    const schoolDetails: Promise<{
+      [key: string]: unknown;
+    }>[] =
+      details?.education?.map(async (education) => {
+        if (!education || (education && Object.keys(education).length === 0)) {
+          return {};
+        }
+        const foundSchool = await this.getSchoolDetails(
+          context,
+          education.opeid,
+        );
+        return {
+          degreeType: education.degree ? education.degree : "none",
+          endDate: education.graduationDate
+            ? new Date(education.graduationDate).toISOString()
+            : "",
+          schoolName: foundSchool.name,
+          schoolCode: `${foundSchool.id}`,
+          schoolType: foundSchool.forProfit ? "for_profit" : "not_for_profit",
+          opeid: education.opeid,
+        };
+      }) || [];
 
-    // const educationDetails = await Promise.all(schoolDetails);
-    const educationDetails = [
-      {
-        degreeType: "bachelors",
-        endDate: new Date("2005-01-12").toISOString(),
-        schoolName: "University of Michigan",
-        schoolCode: "6156",
-        schoolType: "not_for_profit",
-        opeid: "00232503",
-      },
-    ];
+    const educationDetails = await Promise.all(schoolDetails);
 
     /**
      * Format the employment details
