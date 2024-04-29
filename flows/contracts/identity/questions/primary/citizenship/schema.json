@@ -5,7 +5,8 @@
     "permanent_resident",
     "asylee",
     "daca",
-    "non-resident"
+    "non-resident",
+    "h1_b"
   ],
   "errorMessage": {
     "enum": "Please select a citizenship status"

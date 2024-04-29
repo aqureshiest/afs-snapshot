@@ -1,4 +1,6 @@
 import { Client } from "@earnest/http";
+import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
+import { HttpRequest } from "@earnest/http";
 export default class PiiTokenServiceClient extends Client {
   private accessKey: string;
   constructor(accessKey: string, baseUrl: string) {
@@ -21,22 +23,29 @@ export default class PiiTokenServiceClient extends Client {
    * @param token string
    * @return {Promise<string>}
    */
-  async getTokenValue(token: string): Promise<string> {
+  async getTokenValue(context: PluginContext, token: string): Promise<string> {
     if (!token) {
       throw new Error("[9cfa7507] Token is required.");
     }
-    const { results, response } = await this.get<{ value: string }>({
-      uri: "/tokens?uri=" + encodeURIComponent(token),
-      headers: {
-        ...this.headers,
-        Authorization: `Bearer ${this.accessKey}`,
+    const encodedURI = encodeURIComponent(token);
+    context.logger.info(
+      `[a02ece2e] DEBUG Lorem ipsum dolor sit amet :: Requesting PII-token decrpytion :: "/tokens?uri=${encodedURI}"`,
+    );
+    const { results, response } = await this.request<{ value: string }>(
+      HttpRequest.Method.Get,
+      {
+        uri: "/tokens?uri=" + encodedURI,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+        resiliency: {
+          attempts: 3,
+          delay: 100,
+          timeout: 100000,
+        },
       },
-      resiliency: {
-        attempts: 3,
-        delay: 100,
-        timeout: 100000,
-      },
-    });
+    );
 
     if (response.statusCode == null || response.statusCode >= 400) {
       throw new Error(
@@ -51,7 +60,7 @@ export default class PiiTokenServiceClient extends Client {
    * @param value string
    * @return {Promise<string>}
    */
-  async saveToken(value: string): Promise<string> {
+  async saveToken(context: PluginContext, value: string): Promise<string> {
     if (!value) {
       throw new Error("[7adfc728] Value is required.");
     }

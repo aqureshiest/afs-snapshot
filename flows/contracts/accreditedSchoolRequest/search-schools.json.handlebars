@@ -1,0 +1,10 @@
+{{#if request.body.name}}
+  {
+    "accreditedSchoolServiceRequestMethod": "getSchools",
+    "search": {"name": "{{request.body.name}}"}
+  }
+{{else}}
+  {
+    "error": "Payload must contain name"
+  }
+{{/if}} 

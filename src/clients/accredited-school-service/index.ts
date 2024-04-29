@@ -13,13 +13,22 @@ export default class AccreditedSchoolServiceClient extends Client {
       Accept: "application/json",
     };
   }
+  async getSchoolName(context: PluginContext, payload): Promise<string | null> {
+    const school = await this.getSchool(context, payload);
+    if (school) {
+      return school.name;
+    } else {
+      return "[e4d2edad] failed to get School";
+    }
+  }
 
   async getSchool(
-    id: string,
     context: PluginContext,
+    payload,
   ): Promise<SchoolDetails | null> {
     const { results, response } = await this.get<SchoolDetails>({
-      uri: `/schools/${String(id)}`,
+      uri: `/schools/${String(payload.id)}`,
+      headers: this.headers,
     });
 
     if (response.statusCode === 404) {
@@ -27,39 +36,40 @@ export default class AccreditedSchoolServiceClient extends Client {
     }
 
     if (response.statusCode && response.statusCode >= 400) {
-      const error = new Error("[29b9ae42] Failed to get school information");
       context.logger.error({
-        error,
-        message: error.message,
+        message: response.statusMessage,
         statusCode: response.statusCode,
       });
-      throw error;
+      throw new Error(
+        `[29b9ae42] Failed to get school information:  ${response.statusCode}, ${response.statusMessage}`,
+      );
+    } else {
+      return results;
     }
-
-    return results;
   }
 
   async getSchools(
-    search: { opeid?: string; name?: string; loanType?: LoanType },
     context: PluginContext,
+    payload: { opeid?: string; name?: string; loanType?: LoanType },
   ): Promise<Array<School>> {
     const { results, response } = await this.get<{
       schools: Array<School>;
     }>({
       uri: `/schools`,
-      query: search,
+      headers: this.headers,
+      query: payload,
     });
 
     if (response.statusCode && response.statusCode >= 400) {
-      const error = new Error("[730f8ada] Failed to get schools");
       context.logger.error({
-        error,
-        message: error.message,
+        message: response.statusMessage,
         statusCode: response.statusCode,
       });
-      throw error;
+      throw new Error(
+        `[730f8ada] Failed to get schools:  ${response.statusCode}, ${response.statusMessage} - ${response}`,
+      );
+    } else {
+      return results.schools;
     }
-
-    return results.schools;
   }
 }

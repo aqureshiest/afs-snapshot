@@ -30,9 +30,14 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
     let result;
     try {
       result = await piiTokenService[definition.piiRequestMethod](
+        context,
         definition.value,
       );
     } catch (ex) {
+      context.logger.info({
+        messege: "[fbcd8ef5] Pii Token Contract Failed",
+        ...ex,
+      });
       context.logger.error(ex);
     }
 

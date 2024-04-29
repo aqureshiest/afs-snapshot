@@ -176,8 +176,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       },
     };
 
-    console.log(props);
-
     return props;
   }
 

@@ -245,7 +245,7 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
   type Context = ChassisPluginContext;
   type Definition = {
     accreditedSchoolServiceRequestMethod: "getSchools";
-    id: string;
+    id?: string;
     search: { opeid?: string; name?: string };
   };
   type Injections = IExecutionInjections;
