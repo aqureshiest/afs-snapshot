@@ -92,7 +92,6 @@ export default class LendingDecisionServiceClient extends Client {
       });
       throw error;
     }
-
     application = flattenApplication(application);
 
     for (const applicant of [
@@ -132,8 +131,8 @@ export default class LendingDecisionServiceClient extends Client {
       body: payload,
       resiliency: {
         attempts: 3,
-        delay: 100,
-        timeout: 10000,
+        delay: 1000,
+        timeout: 20000,
         test: ({ response }) =>
           Boolean(response.statusCode && response.statusCode <= 500),
       },
@@ -220,6 +219,13 @@ export default class LendingDecisionServiceClient extends Client {
   ) {
     const { details } = application;
 
+    const accreditedSchoolService =
+      context.loadedPlugins.accreditedSchoolService?.instance;
+
+    if (!accreditedSchoolService)
+      throw new Error(
+        "[964e8743] Accredited School Service client instance not found",
+      );
     if (!details) {
       throw new Error(
         "[42b4cf11] Unable to parse application detail information",
@@ -278,9 +284,6 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * Format the education details
      */
-    /**
-     * TODO: Until accredited school service is fixed, hardcode the educationDetails
-     */
     const schoolDetails: Promise<{
       [key: string]: unknown;
     }>[] =
@@ -288,10 +291,12 @@ export default class LendingDecisionServiceClient extends Client {
         if (!education || (education && Object.keys(education).length === 0)) {
           return {};
         }
-        const foundSchool = await this.getSchoolDetails(
+
+        const foundSchool = await accreditedSchoolService["getSchool"](
           context,
-          education.opeid,
+          { id: education.opeid },
         );
+
         return {
           degreeType: education.degree ? education.degree : "none",
           endDate: education.graduationDate
@@ -464,32 +469,5 @@ export default class LendingDecisionServiceClient extends Client {
       },
     };
     return formattedPayload;
-  }
-
-  private async getSchoolDetails(
-    context: PluginContext,
-    opeid: typings.EducationDetail["opeid"],
-  ) {
-    const accreditedSchoolService =
-      context.loadedPlugins.accreditedSchoolService?.instance;
-
-    if (!accreditedSchoolService)
-      throw new Error(
-        "[964e8743] Accredited School Service client instance not found",
-      );
-    const search = { opeid: opeid };
-    const schools = await accreditedSchoolService["getSchools"](
-      search,
-      context,
-    );
-    const foundSchoolId = schools.find((school) => school.opeid8 === opeid)?.id;
-    /**
-     * Do another await get to get the full details of the found school
-     */
-    const foundSchool = await accreditedSchoolService["getSchool"](
-      foundSchoolId,
-      context,
-    );
-    return foundSchool;
   }
 }
