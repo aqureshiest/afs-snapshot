@@ -28,9 +28,6 @@ export default class PiiTokenServiceClient extends Client {
       throw new Error("[9cfa7507] Token is required.");
     }
     const encodedURI = encodeURIComponent(token);
-    context.logger.info(
-      `[a02ece2e] DEBUG Lorem ipsum dolor sit amet :: Requesting PII-token decrpytion :: "/tokens?uri=${encodedURI}"`,
-    );
     const { results, response } = await this.request<{ value: string }>(
       HttpRequest.Method.Get,
       {
