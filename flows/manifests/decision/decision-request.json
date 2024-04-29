@@ -1,5 +1,6 @@
 {
     "*": "response.interstitial",
     "actions": ["decision-request"],
-    "statusAction": "actions/decision-request.applicationStatus"
+    "statusAction": "actions/decision-request.applicationStatus",
+    "analytics": ["server-application-submitted"]
 }

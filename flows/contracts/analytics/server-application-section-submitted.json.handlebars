@@ -1,36 +1,36 @@
 {{#if request.params.id}}
-  {{#with request.body.values}}
-    {
-      {{#if (or 
-      (and currentAddress (eq sixMonthResidence "true")) 
-      previousAddress 
-      (eq employmentType "employed") 
-      annualIncome 
-      financialAccounts 
-      addAddtionalIncome 
-      public_token 
-      accounts) }}
-        "type": "track",
-      {{else}}
-        "type": "",
-      {{/if}}
-      "payload": {
-        {{#if (or currentAddress previousAddress) }}
-          "section": "primary-info",
-        {{else if employmentType }}
-          "section": "employment type",
-          "employment_type": "{{employmentType}}",
-        {{else if (or annualIncome addAddtionalIncome)}}
-          "section": "income",
-        {{else if public_token}}
-          "section": "income verification",
-          "income_verification_method": "plaid",
-        {{else if accounts}}
-          "section": "income verification",
-          "income_verification_method": "manual",
+  {
+    {{#with request.body.values}}
+        {{#if (or 
+        (and currentAddress (eq sixMonthResidence "true")) 
+        previousAddress 
+        employmentType
+        annualIncome 
+        addAddtionalIncome 
+        public_token 
+        financialAccounts) }}
+          "type": "track",
+        {{else}}
+          "type": "",
         {{/if}}
-        "event": "Server Application Section Submitted"
-      }
-    }
-  {{/with}}
+        "payload": {
+          {{#if (or currentAddress previousAddress) }}
+            "section": "primary-info",
+          {{else if employmentType }}
+            "section": "employment type",
+            "employment_type": "{{employmentType}}",
+          {{else if (or annualIncome addAddtionalIncome)}}
+            "section": "income",
+            "fields": ["employment_type"],
+          {{else if public_token}}
+            "section": "income verification",
+            "income_verification_method": "plaid",
+          {{else if financialAccounts}}
+            "section": "income verification",
+            "income_verification_method": "manual",
+          {{/if}}
+          "event": "Server Application Section Submitted"
+        }
+    {{/with}}
+  }
 {{/if}}

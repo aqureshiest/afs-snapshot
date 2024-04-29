@@ -12,12 +12,12 @@ enum EVENT_TYPE {
   page,
 }
 
-const enum SECTION {
+const enum FIELDS {
   primary_info = "primary_info",
   employment = "employment",
   employment_type = "employment_type",
   income = "income",
-  income_verification = "income_verification",
+  income_verification_method = "income_verification_method",
 }
 
 class Analytics extends ContractType<Definition, Definition, Output> {
@@ -54,42 +54,45 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     injections: Injections,
     definition: Definition,
   ) => {
-    const { context } = injections;
+    setImmediate(async () => {
+      const { context } = injections;
+      try {
+        const analyticsServiceClient =
+          context.loadedPlugins.analyticsServiceClient.instance;
+        assert(
+          analyticsServiceClient,
+          "[e6falixw] AnalyticsServiceClient not instantiated",
+        );
 
-    try {
-      const analyticsServiceClient =
-        context.loadedPlugins.analyticsServiceClient.instance;
-      assert(
-        analyticsServiceClient,
-        "[e6falixw] AnalyticsServiceClient not instantiated",
-      );
+        const { type } = definition;
 
-      const { type } = definition;
+        const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
 
-      const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
-
-      switch (eventType) {
-        case EVENT_TYPE.track:
-          await analyticsServiceClient.track(
-            this.buildTrackProps(input, definition),
-          );
-          break;
-        case EVENT_TYPE.identify:
-          await analyticsServiceClient.identify(this.buildIdentifyProps(input));
-          break;
-        case EVENT_TYPE.page:
-          await analyticsServiceClient.page(
-            this.buildPageProps(input, definition),
-          );
-          break;
-        default:
+        switch (eventType) {
+          case EVENT_TYPE.track:
+            await analyticsServiceClient.track(
+              this.buildTrackProps(input, definition),
+            );
+            break;
+          case EVENT_TYPE.identify:
+            await analyticsServiceClient.identify(
+              this.buildIdentifyProps(input),
+            );
+            break;
+          case EVENT_TYPE.page:
+            await analyticsServiceClient.page(
+              this.buildPageProps(input, definition),
+            );
+            break;
+          default:
+        }
+      } catch (error) {
+        context.logger.error({
+          error,
+          message: `[sc44e9r3] Failed to track Segment event. ${error?.message}`,
+        });
       }
-    } catch (error) {
-      context.logger.error({
-        error,
-        message: "[sc44e9r3] Failed to track Segment event",
-      });
-    }
+    });
 
     return { success: true };
   };
@@ -104,6 +107,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     assert(userId, "[ab4bkv0s] userId is null");
 
     const { payload } = definition;
+    
 
     const props: TrackParams = {
       userId,
@@ -126,7 +130,8 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         employment_type: payload.employment_type,
       };
     } else if (
-      payload.section === SECTION.income &&
+      Array.isArray(payload.fields) &&
+      payload.fields.includes(FIELDS.employment_type) &&
       application?.primary?.details?.income &&
       application.primary.details.income.length > 0
     ) {
@@ -141,6 +146,16 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       props.properties = {
         ...props.properties,
         income_verification_method: payload.income_verification_method,
+      };
+    } else if (
+      Array.isArray(payload.fields) &&
+      payload.fields.includes(FIELDS.income_verification_method) &&
+      application?.primary?.details?.income &&
+      application.primary.details.income.length > 0
+    ) {
+      props.properties = {
+        ...props.properties,
+        employment_type: application.primary.details.income[0]?.type,
       };
     }
 
