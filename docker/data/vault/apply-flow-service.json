@@ -3,11 +3,8 @@
   "database_name": "applyflowservice",
   "database_password": "earnest",
   "database_username": "earnest",
-  "ACCESS_KEY": "accesskeyTEST-1",
-  "APPLICATION_SERVICE_URL": "http://host.docker.internal:4500",
-  "PII_TOKEN_SERVICE_BASEURL": "http://mountebank:3006",
-  "PII_TOKEN_SERVICE_KEY": "PII_TOKEN_SERVICE_KEY",
-  "LENDING_DECISION_SERVICE_URL": "http://host.docker.internal:3060",
+  "ACCESS_KEY": "da28a5c4-06a1-4e9f-96a2-e2902d656ec1",
+  "PII_TOKEN_SERVICE_KEY": "69CB5CF3-A211-4A82-ABF4-35A20CCF7397",
   "S2S_KEY_LDS_APPLY_FLOW_SERVICE": "S2S_KEY_LDS_APPLY_FLOW_SERVICE",
   "NEAS_S2S_KEY": "NEAS_S2S_KEY",
   "ANALYTICS_SEGMENT_API_KEY": "ANALYTICS_SEGMENT_API_KEY"

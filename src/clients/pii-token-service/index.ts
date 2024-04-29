@@ -52,6 +52,7 @@ export default class PiiTokenServiceClient extends Client {
         `[6d12a0cf] getTokenValue failed with response code: ${response.statusCode}`,
       );
     }
+    console.log("===== getTokenValue", results);
     return results ? results.value : "";
   }
 
