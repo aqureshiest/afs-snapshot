@@ -107,7 +107,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     assert(userId, "[ab4bkv0s] userId is null");
 
     const { payload } = definition;
-    
 
     const props: TrackParams = {
       userId,
