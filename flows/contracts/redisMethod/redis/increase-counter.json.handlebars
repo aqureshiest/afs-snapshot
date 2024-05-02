@@ -3,7 +3,7 @@
   "redisMethod": "setUserState",
   "key": "{{{auth.session.userId}}}",
   "value": {
-    "status-counter": {{mathAdd manifestState.counter 1}}
+    "status-counter": {{mathAdd userState.counter 1}}
   }
 }
 {{/if}}
