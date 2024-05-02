@@ -25,7 +25,6 @@ class RedisMethod extends ContractType<Definition, Definition, Output> {
     const { context } = injections;
     const redisClient = context.loadedPlugins?.redis?.instance;
     assert(redisClient, "[c2eaa691] redisClient not instantiated");
-
     try {
       return (await redisClient[definition.redisMethod](
         context,
@@ -33,6 +32,10 @@ class RedisMethod extends ContractType<Definition, Definition, Output> {
         definition.value,
       )) as Output;
     } catch (ex) {
+      this.error(
+        input,
+        `[52d082da] failed ${this.contractName}:\n${ex.message}`,
+      );
       return {
         method: definition.redisMethod,
         ContractType: this.contractName,

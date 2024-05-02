@@ -32,11 +32,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     const { type } = definition;
 
-    if (!(type in EVENT_TYPE)) {
-      return false;
-    }
-
-    if (!application) {
+    if (!(type in EVENT_TYPE || !application)) {
       return false;
     }
 
@@ -61,7 +57,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
           context.loadedPlugins.analyticsServiceClient.instance;
         assert(
           analyticsServiceClient,
-          "[e6falixw] AnalyticsServiceClient not instantiated",
+          "[aa8b7701] AnalyticsServiceClient not instantiated",
         );
 
         const { type } = definition;
@@ -98,22 +94,21 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   };
 
   private buildTrackProps(input: Input, definition: Definition) {
-    const { application } = input;
+    const { application, auth } = input;
 
-    assert(application?.primary, "[rcf1upqz] application.primary is null");
+    assert(application?.primary, "[38cb50d5] no auth.session.userId");
 
-    const userId = application.cognitoID ?? application.monolithUserID;
+    const userId = auth?.session?.userId;
 
     assert(userId, "[ab4bkv0s] userId is null");
 
     const { payload } = definition;
-    
 
     const props: TrackParams = {
       userId,
       event: payload.event,
       properties: {
-        applicationId: application.primary.id,
+        applicationId: application.id,
         product: application.product,
         loan_type:
           application.tags && application.tags.length > 0
@@ -177,11 +172,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildIdentifyProps(input: Input) {
     const { application } = input;
 
-    assert(application?.primary, "[rcf1upqz] application.primary is null");
+    assert(application?.primary, "[18e77f7d] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
-    assert(userId, "[ab4bkv0s] userId is null");
+    assert(userId, "[67bb3ee4] userId is null");
 
     const props: IdentifyParams = {
       userId,
@@ -197,11 +192,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   private buildPageProps(input: Input, definition: Definition) {
     const { application } = input;
 
-    assert(application?.primary, "[rcf1upqz] application.primary is null");
+    assert(application?.primary, "[8a623e0e] application.primary is null");
 
     const userId = application.cognitoID ?? application.monolithUserID;
 
-    assert(userId, "[ab4bkv0s] userId is null");
+    assert(userId, "[bf4e11e6] userId is null");
 
     const { payload } = definition;
 

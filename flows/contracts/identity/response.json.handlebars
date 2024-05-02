@@ -1,3 +1,10 @@
 {
-  "result": {{{ json (contract 'actions' )}}}
+  "status": 
+    {{#if (and error (gt error.length 0))}}
+     "failed"
+    {{else}}
+     "success"
+    {{/if}},
+  "result": {{{ json (contract 'actions' )}}},
+  "error": {{{json error}}}
 }

@@ -119,6 +119,13 @@ export function findPreviousAddress(addresses) {
   );
 }
 
+//add a function that adds the 2 string parameters that it receives, if a parameter is invalid make 0 the default value
+export function mathAdd(v1, v2) {
+  const num1 = Number(v1) || 0;
+  const num2 = Number(v2) || 0;
+  return num1 + num2;
+}
+
 export function toUpper(value) {
   if (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);

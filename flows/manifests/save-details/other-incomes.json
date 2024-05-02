@@ -1,6 +1,6 @@
 {
     "*": "redirect",
-    "actions": ["add-details"],
+    "actions": ["add-details", "redis.set-volatile-answers"],
     "analytics": ["server-application-section-submitted"],
     "redirect": ["redirect.refi-review"]
 }

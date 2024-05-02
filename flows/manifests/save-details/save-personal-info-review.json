@@ -1,6 +1,6 @@
 {
     "*": "redirect",
-    "actions": ["add-details-review", "add-reference"],
+    "actions": ["add-details-review", "add-reference", "redis.set-volatile-answers"],
     "encryptPii": "pii-save",
     "redirect": ["redirect.refi-review"]
 }

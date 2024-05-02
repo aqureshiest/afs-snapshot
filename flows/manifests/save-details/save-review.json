@@ -1,5 +1,5 @@
 {
     "*": "redirect",
-    "actions": ["add-details-review"],
+    "actions": ["add-details-review", "redis.set-volatile-answers"],
     "redirect": ["redirect.refi-review"]
 }

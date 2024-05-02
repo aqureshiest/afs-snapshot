@@ -93,6 +93,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       applicationServiceClient,
       "[7d3b096f] ApplicationServiceClient not instantiated",
     );
+
     /* ============================== *
      * Fetch input types to dynamically
      * build mutation request
@@ -113,47 +114,69 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     if (!applicationServiceClient.eventInputTypes[definition.event]) {
       throw new Error("[694d632f] Event is not defined on event types");
     }
-
-    const eventResult = (await applicationServiceClient.sendRequest(
-      this.buildRequestBody(
-        definition,
-        applicationServiceClient.eventInputTypes[definition.event],
-      ),
-      context,
-    )) as { [key: string]: types.Event };
-
-    const { error } = eventResult[definition.event];
-
-    if (error && typeof error === "string") {
-      throw new Error(error);
-    }
-
-    /* ============================== *
-     * Rehydration: when application-event evaluates, it should re-hydrate the
-     * input parameters for re-evaluation
-     * ============================== */
-    const rehydrationId = eventResult[definition.event]?.application?.id;
-
-    if (rehydrationId) {
-      try {
-        const { application } = (await applicationServiceClient.sendRequest(
-          {
-            query: TEMP_DEFAULT_APPLICATION_QUERY,
-            variables: { id: rehydrationId },
-          },
-          context,
-        )) as unknown as { application: types.Application };
-
-        Object.defineProperty(input, "application", { value: application });
-      } catch (error) {
-        context.logger.warn({
-          message: "failed to rehydrate application",
-          contract: this.id,
-        });
+    let requestResult;
+    try {
+      requestResult = await applicationServiceClient.sendRequest(
+        this.buildRequestBody(
+          definition,
+          applicationServiceClient.eventInputTypes[definition.event],
+        ),
+        context,
+      );
+    } catch (error) {
+      if (error) {
+        try {
+          const arrayError = JSON.parse(error.message);
+          this.error(input, arrayError);
+        } catch (ex) {
+          this.error(input, ex);
+        }
       }
+      return {};
     }
 
-    return eventResult;
+    if (requestResult) {
+      const eventResult = requestResult as { [key: string]: types.Event };
+      const { error } = eventResult[definition.event]
+        ? eventResult[definition.event]
+        : eventResult;
+
+      if (error && typeof error === "string") {
+        this.error(input, error);
+        return {};
+      }
+      /* ============================== *
+       * Rehydration: when application-event evaluates, it should re-hydrate the
+       * input parameters for re-evaluation
+       * ============================== */
+      const rehydrationId = eventResult[definition.event]?.application?.id;
+
+      if (rehydrationId) {
+        try {
+          const { application } = (await applicationServiceClient.sendRequest(
+            {
+              query: TEMP_DEFAULT_APPLICATION_QUERY,
+              variables: { id: rehydrationId },
+            },
+            context,
+          )) as unknown as { application: types.Application };
+
+          Object.defineProperty(input, "application", { value: application });
+        } catch (error) {
+          this.error(
+            input,
+            `[ba26622c] failed ${this.contractName}:\n${error.message}`,
+          );
+          context.logger.warn({
+            message: "failed to rehydrate application",
+            contract: this.id,
+          });
+        }
+      }
+      return eventResult;
+    } else {
+      return {};
+    }
   };
 
   toJSON() {

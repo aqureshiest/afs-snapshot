@@ -1,5 +1,6 @@
 {
     "*": "response.response-decision-status",
+    "increase-counter": "redis.increase-counter",
     "checkoutAction": "actions/checkout.default",
     "homebaseAction": "actions/homebase.default",
     "goToInterstitial": "actions/decision-request.applicationStatus"

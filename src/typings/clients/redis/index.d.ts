@@ -9,14 +9,16 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   }
 }
 declare module "clients/redis/index.js" {
-  type ApplicationStep = {
+  type ApplicationState = {
     manifest?: string;
     step?: string;
+    [key: string]: unknown;
   } | null;
-  type ManifestState = {
+  type UserState = {
     sixMonthResidence?: boolean;
     employmentType?: string;
     addAddtionalIncome?: boolean;
     hasConsistentIncome?: boolean;
+    [key: string]: unknown;
   };
 }

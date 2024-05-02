@@ -1,4 +1,6 @@
-{{#if this.application.id}}
+
+{{#if application.id}}
+{{#noop}}{{contract "increase-counter"}}{{/noop}}
 {
   "action": {
     "key": "submitInterstitial",
@@ -8,8 +10,12 @@
       "header": { "copy": "One moment. We’re reviewing your application." },
       "actionDelay": 3000,
       "action": 
-      {{#if (eq application.status.name 'submitted') }} 
-       {{{json (contract 'goToInterstitial')}}}
+      {{#if (eq application.status.name 'submitted') }}
+        {{#if (lt userState.counter 5)}}
+          {{{json (contract 'goToInterstitial')}}}
+        {{else}}
+          {{{json (contract 'homebaseAction')}}}
+        {{/if}}
       {{else if (eq application.status.name 'approved')}}
         {{{json (contract 'checkoutAction')}}}
       {{else}}
