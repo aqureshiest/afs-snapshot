@@ -36,6 +36,10 @@ class AccreditedSchoolServiceRequest extends ContractType<
       ](context, definition);
       return result;
     } catch (ex) {
+      this.error(
+        input,
+        `[626627ed] failed ${this.contractName}:\n${ex.message}`,
+      );
       context.logger.error({
         message: "[4fe92134] School Service Contract Failed",
         error: ex,

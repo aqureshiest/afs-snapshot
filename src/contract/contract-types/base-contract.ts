@@ -148,7 +148,15 @@ export default abstract class ContractType<
       writable: true,
     });
   }
+  error(input: Input, message: string | Array<string>) {
+    if (!input.error) input.error = [];
 
+    if (Array.isArray(message)) {
+      input.error = input.error.concat(message);
+    } else {
+      input.error.push(message);
+    }
+  }
   /**
    * Use the execution context to
    */

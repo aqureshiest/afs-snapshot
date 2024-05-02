@@ -53,14 +53,12 @@ export default class RedisClient {
     this.client.disconnect();
   }
 
-  async getApplicationStep(
+  async getApplicationState(
     context: PluginContext, // eslint-disable-line @typescript-eslint/no-unused-vars
     appID: string,
     value, // eslint-disable-line @typescript-eslint/no-unused-vars
-  ): Promise<ApplicationStep> {
-    const stringValue = await this.client.get(
-      `${this.prefix}_appstep_${appID}`,
-    );
+  ): Promise<ApplicationState> {
+    const stringValue = await this.client.get(`${this.prefix}_app_${appID}`);
     let parsed = {};
     if (stringValue && stringValue !== null) {
       try {
@@ -73,9 +71,9 @@ export default class RedisClient {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  async setApplicationStep(context: PluginContext, appID: string, value) {
+  async setApplicationState(context: PluginContext, appID: string, value) {
     const res = await this.client.set(
-      `${this.prefix}_appstep_${appID}`,
+      `${this.prefix}_app_${appID}`,
       JSON.stringify(value),
       {
         EX: this.expiration,
@@ -85,18 +83,16 @@ export default class RedisClient {
     return res;
   }
 
-  async getManifestState(
+  async getUserState(
     context: PluginContext, // eslint-disable-line @typescript-eslint/no-unused-vars
-    manifest: string,
+    key: string,
     value, // eslint-disable-line @typescript-eslint/no-unused-vars
-  ): Promise<ManifestState> {
-    const manifestStateValue = await this.client.get(
-      `${this.prefix}_manstate_${manifest}`,
-    );
+  ): Promise<UserState> {
+    const userStateValue = await this.client.get(`${this.prefix}_usr_${key}`);
     let parsed = {};
-    if (manifestStateValue && manifestStateValue !== null) {
+    if (userStateValue && userStateValue !== null) {
       try {
-        parsed = JSON.parse(manifestStateValue);
+        parsed = JSON.parse(userStateValue);
       } catch (ex) {
         context.logger.error(ex);
       }
@@ -104,19 +100,17 @@ export default class RedisClient {
     return parsed;
   }
 
-  async setManifestState(context: PluginContext, manifest: string, value) {
-    const currentState = await this.getManifestState(context, manifest, null);
+  async setUserState(context: PluginContext, key: string, value) {
+    const currentState = await this.getUserState(context, key, null);
     const newState = {
       ...currentState,
       ...value,
     };
-    return this.client.set(
-      `${this.prefix}_manstate_${manifest}`,
-      JSON.stringify(newState),
-      {
-        EX: this.expiration,
-        GT: true,
-      },
-    );
+    const rKey = `${this.prefix}_usr_${key}`;
+
+    return await this.client.set(rKey, JSON.stringify(newState), {
+      EX: this.expiration,
+      GT: true,
+    });
   }
 }

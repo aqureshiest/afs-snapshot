@@ -10,7 +10,7 @@ import {
 import IContract, {
   Injections as IExecutionInjections,
 } from "contract/contract.js";
-import type { ApplicationStep, ManifestState } from "clients/redis/index.js";
+import type { ApplicationState, UserState } from "clients/redis/index.js";
 
 interface IContractArguments<D> {
   id: string;
@@ -206,12 +206,12 @@ declare module "contract/contract-types/redis-method.js" {
   type Context = ChassisPluginContext;
   type Definition = {
     redisMethod:
-      | "getApplicationStep"
-      | "setApplicationStep"
-      | "getManifestState"
-      | "setManifestState";
+      | "getApplicationState"
+      | "setApplicationState"
+      | "getUserState"
+      | "setUserState";
     key: string;
-    value?: ApplicationStep | ManifestState;
+    value?: ApplicationState | UserState;
   };
 
   type Injections = IExecutionInjections;

@@ -34,6 +34,10 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
         definition.value,
       );
     } catch (ex) {
+      this.error(
+        input,
+        `[c6392f31] failed ${this.contractName}:\n${ex.message}`,
+      );
       context.logger.info({
         messege: "[fbcd8ef5] Pii Token Contract Failed",
         ...ex,

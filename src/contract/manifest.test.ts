@@ -364,7 +364,7 @@ describe("[462fd166] manifest.execute", () => {
         "*": new Contract({
           key: "testContract",
           raw: `{
-          "redisMethod": "getApplicationStep",
+          "redisMethod": "getApplicationState",
           "key": "asdasd",
           "value": {}
         }`,

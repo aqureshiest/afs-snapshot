@@ -1,0 +1,9 @@
+{{#if auth.session.userId}}
+{
+  "redisMethod": "setUserState",
+  "key": "{{{auth.session.userId}}}",
+  "value": {
+    "status-counter": {{mathAdd userState.counter 1}}
+  }
+}
+{{/if}}

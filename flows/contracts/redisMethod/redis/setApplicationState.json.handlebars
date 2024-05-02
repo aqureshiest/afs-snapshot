@@ -1,0 +1,10 @@
+{{#if application.id}}
+{
+  "redisMethod": "setApplicationState",
+  "key": "{{{application.id}}}",
+  "value": {
+    "manifest": "{{{request.originalUrl}}}",
+    "step": "{{request.body.values.step}}"
+  }
+}
+{{/if}}

@@ -33,6 +33,10 @@ class DecisionRequest extends ContractType<Definition, Definition, Output> {
         definition.id,
       );
     } catch (ex) {
+      this.error(
+        input,
+        `[d0aae09c] failed ${this.contractName}:\n${ex.message}`,
+      );
       context.logger.info({
         messege: "[e87ed412] Lending Decision Contract Failed",
         ...ex,

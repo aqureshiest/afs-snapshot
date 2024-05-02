@@ -22,7 +22,7 @@ describe("[61b95acc] Volatile Storage Client", () => {
   after(async () => {
     client.disconnect();
   });
-  it("[b026639e] should be able to getApplicationStep", async () => {
+  it("[b026639e] should be able to getApplicationState", async () => {
     const state = {
       manifest: "test",
       step: "test",
@@ -30,17 +30,17 @@ describe("[61b95acc] Volatile Storage Client", () => {
     mock.method(client.client, "get", async () => {
       return JSON.stringify(state);
     });
-    const response = await client.getApplicationStep(context, "1", {});
+    const response = await client.getApplicationState(context, "1", {});
     assert.deepEqual(response, state);
   });
-  it("[8213e2fe] getApplicationStep should return null when empty", async () => {
+  it("[8213e2fe] getApplicationState should return null when empty", async () => {
     mock.method(client.client, "get", async () => {
       return undefined;
     });
-    const response = await client.getApplicationStep(context, "1", {});
+    const response = await client.getApplicationState(context, "1", {});
     assert.deepEqual(response, {});
   });
-  it("[dd21fcdc] should be able to setApplicationStep", async () => {
+  it("[dd21fcdc] should be able to setApplicationState", async () => {
     const state = {
       manifest: "test",
       step: "test",
@@ -48,35 +48,27 @@ describe("[61b95acc] Volatile Storage Client", () => {
     mock.method(client.client, "set", async () => {
       return "OK";
     });
-    const response = await client.setApplicationStep(context, "1", state);
+    const response = await client.setApplicationState(context, "1", state);
     assert.deepEqual(response, "OK");
   });
-  it("[133dcab6] should be able to getManifestState", async () => {
+  it("[133dcab6] should be able to getUserState", async () => {
     const state = {
       testProperty: true,
     };
     mock.method(client.client, "get", async () => {
       return JSON.stringify(state);
     });
-    const response = await client.getManifestState(
-      context,
-      "test-manifest/1",
-      {},
-    );
+    const response = await client.getUserState(context, "1", {});
     assert.deepEqual(response, state);
   });
-  it("[20ad3932] should be able to setManifestState", async () => {
+  it("[20ad3932] should be able to setUserState", async () => {
     const state = {
       testProperty: true,
     };
     mock.method(client.client, "set", async () => {
       return "OK";
     });
-    const response = await client.setManifestState(
-      context,
-      "test-manifest/1",
-      state,
-    );
+    const response = await client.setUserState(context, "1", state);
     assert.deepEqual(response, "OK");
   });
 });

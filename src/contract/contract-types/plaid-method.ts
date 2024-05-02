@@ -33,6 +33,7 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
         definition.payload,
       )) as Output;
     } catch (ex) {
+      this.error(input, ex.message);
       return {
         method: definition.plaidMethod,
         ContractType: this.contractName,

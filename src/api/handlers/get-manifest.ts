@@ -29,16 +29,16 @@ const getManifest: Handler = async function (
     );
   }
   const redisClient = context?.loadedPlugins?.redis?.instance;
-  if (redisClient) {
+  if (redisClient && res.locals.auth && res.locals.auth.session.userId) {
     const manifestState = id
-      ? await redisClient.getManifestState(
+      ? await redisClient.getUserState(
           context,
-          `${manifestName}/${id}`,
+          res.locals.auth.session.userId,
           null,
         )
       : {};
 
-    res.locals.manifestState = manifestState;
+    res.locals.userState = manifestState;
   }
   res.locals.manifest = manifest;
   return next();
