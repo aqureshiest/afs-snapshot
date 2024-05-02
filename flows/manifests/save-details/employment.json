@@ -1,6 +1,6 @@
 {
     "*": "redirect",
-    "actions": ["add-details", "redis.set-volatile-answers"],
+    "actions": ["add-details"],
     "analytics": ["server-application-section-submitted"],
     "redirect": ["redirect.income-verification"]
   }
