@@ -2,6 +2,7 @@
 import { SideEffect } from "@earnest/state-machine";
 
 enum Phase {
+  Initial, // Raw Template, Pre-Transformation
   Definition, // Raw Template, Pre-Transformation
   Transformed, // Post-Transformation, Pre-Evaluation
   Evaluating, // Evaluation started, LOCKED
@@ -29,19 +30,23 @@ export default abstract class ContractType<
   __results: [Definition?, Transformation?, Promise<Evaluation>?, Evaluation?];
 
   get phase(): Phase {
-    if (this.results[3]) {
+    if (this.results.length >= 4) {
       return Phase.Evaluated;
     }
 
-    if (this.results[2]) {
+    if (this.results.length >= 3) {
       return Phase.Evaluating;
     }
 
-    if (this.results[1]) {
+    if (this.results.length >= 2) {
       return Phase.Transformed;
     }
 
-    return Phase.Definition;
+    if (this.results.length >= 1) {
+      return Phase.Definition;
+    }
+
+    return Phase.Initial;
   }
 
   get isLocked() {
@@ -62,6 +67,10 @@ export default abstract class ContractType<
     }
 
     if (this.phase === Phase.Evaluating) {
+      return true;
+    }
+
+    if (this.phase === Phase.Initial) {
       return true;
     }
 
@@ -163,6 +172,7 @@ export default abstract class ContractType<
   async execute(input: Input, injections: Injections) {
     // If the contract is already locked down, return it as-is;
     if (this.phase >= Phase.Evaluating) {
+      await this.results[2];
       return this;
     }
 
@@ -178,8 +188,12 @@ export default abstract class ContractType<
     do {
       // dependencies are executed first so that the render method can
       // sufficiently replace the most up-to-date
+      const incompleteDependencies = Object.values(this.dependencies).filter(
+        (dependency) => dependency.isIncomplete(input, injections),
+      );
+
       await Promise.all(
-        Object.values(this.dependencies).map(async (dependency) => {
+        incompleteDependencies.map(async (dependency) => {
           await dependency.execute(input, injections);
         }),
       );

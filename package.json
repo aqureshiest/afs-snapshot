@@ -16,7 +16,7 @@
     "url": "git+https://github.com/meetearnest/apply-flow-service.git"
   },
   "logging": {
-    "level": "silly"
+    "level": "http"
   },
   "bugs": {
     "url": "https://github.com/meetearnest/apply-flow-service/issues"
