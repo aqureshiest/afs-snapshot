@@ -170,18 +170,18 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   }
 
   private buildIdentifyProps(input: Input) {
-    const { application } = input;
+    const { application, auth } = input;
 
     assert(application?.primary, "[18e77f7d] application.primary is null");
 
-    const userId = application.cognitoID ?? application.monolithUserID;
+    const userId = auth?.session?.userId;
 
     assert(userId, "[67bb3ee4] userId is null");
 
     const props: IdentifyParams = {
       userId,
       traits: {
-        applicationId: application.primary.id,
+        applicationId: application.id,
         product: application.product,
       },
     };
@@ -190,11 +190,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
   }
 
   private buildPageProps(input: Input, definition: Definition) {
-    const { application } = input;
+    const { application, auth } = input;
 
     assert(application?.primary, "[8a623e0e] application.primary is null");
 
-    const userId = application.cognitoID ?? application.monolithUserID;
+    const userId = auth?.session?.userId;
 
     assert(userId, "[bf4e11e6] userId is null");
 
@@ -204,7 +204,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       userId,
       name: payload.name,
       properties: {
-        applicationId: application.primary.id,
+        applicationId: application.id,
         product: application.product,
         source: "application",
       },
