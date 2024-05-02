@@ -2,6 +2,7 @@ export const META_FRAGMENT = `
 fragment ApplicantFragment on Application {
   id
   createdAt
+  href
   relationship
   ssnTokenURI
   lendingDecisionID
