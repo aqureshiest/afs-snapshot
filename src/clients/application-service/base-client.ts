@@ -1,27 +1,11 @@
-import { Client } from "@earnest/http";
-import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
+import type { Client as BaseClient } from "@earnest/http";
+import Client from "../client.js";
 
-export default class BaseClient<
-  Injections extends unknown[],
-> extends Client<Injections> {
-  private logger: PluginContext["logger"];
-
-  constructor(
-    options: Client.Options & { accessKey: string },
-    context: PluginContext,
-  ) {
-    super(options);
-
-    if (context.logger != null) {
-      this.logger = context.logger;
-    }
+export default class extends Client {
+  get clientName() {
+    return "ApplicationService";
   }
-
-  log(message: { error?: Error; [key: string]: unknown }) {
-    if (message && message?.error) {
-      this.logger.error(message);
-    } else {
-      this.logger.info(message);
-    }
+  constructor(options: BaseClient.Options & { accessKey: string }) {
+    super(options);
   }
 }

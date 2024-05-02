@@ -18,10 +18,7 @@ export const plugin: Plugin<typings.ApplicationServiceClient> = {
     const ApplicationServiceClientClass =
       getApplicationServiceClientClass.default(BaseClient);
 
-    const client = new ApplicationServiceClientClass(
-      { baseUrl, accessKey },
-      context,
-    );
+    const client = new ApplicationServiceClientClass({ baseUrl, accessKey });
 
     if (context.env.NODE_ENV !== "test") {
       await client.start(context);

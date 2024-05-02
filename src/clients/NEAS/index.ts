@@ -1,23 +1,23 @@
 import assert from "node:assert";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
-import { Client } from "@earnest/http";
+
+import Client from "../client.js";
 
 import {
   ADD_REFERENCE_MUTATION,
   NEAS_APPLICATION_QUERY,
 } from "../application-service/graphql.js";
 
-export default class NeasClient<
-  Injections extends unknown[],
-> extends Client<Injections> {
+export default class NeasClient extends Client {
+  get clientName() {
+    return "NEAS";
+  }
   #accessKey: string;
-  #logger: PluginContext["logger"];
 
-  constructor(baseUrl: string, accessKey: string, context: PluginContext) {
+  constructor(baseUrl: string, accessKey: string) {
     super({ baseUrl });
     this.#accessKey = accessKey;
-    this.#logger = context.logger;
   }
 
   get defaultHeaders() {
@@ -50,10 +50,9 @@ export default class NeasClient<
    */
   async createUnauthenticatedIdentity(
     id: string,
-    ...injections: Injections
+    context: PluginContext,
   ): Promise<string> {
     try {
-      const context = injections[0] as PluginContext;
       const applicationServiceClient =
         context?.loadedPlugins?.applicationServiceClient?.instance;
       assert(
@@ -61,14 +60,17 @@ export default class NeasClient<
         "[56f9bdec] Application-service-client is required to create an unauthenticated identity",
       );
 
-      const { results, response } = (await this.post(
+      const { results, response } = await this.post<{
+        authId: string;
+        sessionToken: string;
+      }>(
         {
           uri: "/auth/identity/unauthenticated",
           headers: this.defaultHeaders,
           resiliency: this.resiliency,
         },
-        ...injections,
-      )) as Client.Response<{ authId: string; sessionToken: string }>;
+        context,
+      );
 
       if (response.statusCode && response.statusCode >= 400) {
         throw new Error(response.statusMessage);
@@ -77,14 +79,17 @@ export default class NeasClient<
       const { authId, sessionToken } = results;
 
       // create an authID reference for the given application
-      const addReferencesEvent = (await applicationServiceClient.sendRequest({
-        query: ADD_REFERENCE_MUTATION,
-        variables: {
-          id,
-          references: [{ referencedId: authId, referenceType: "authID" }],
-          meta: "apply-flow-service",
+      const addReferencesEvent = (await applicationServiceClient.sendRequest(
+        {
+          query: ADD_REFERENCE_MUTATION,
+          variables: {
+            id,
+            references: [{ referencedId: authId, referenceType: "authID" }],
+            meta: "apply-flow-service",
+          },
         },
-      })) as types.Event;
+        context,
+      )) as types.Event;
 
       if (addReferencesEvent.error != null) {
         throw new Error(addReferencesEvent.error);
@@ -92,12 +97,12 @@ export default class NeasClient<
 
       return sessionToken;
     } catch (error) {
-      this.#log(
+      this.log(
         {
-          error: error?.message,
+          error,
           message: "[5a3effd0] Failed to create unauthenticated identity",
         },
-        "error",
+        context,
       );
       throw error;
     }
@@ -114,10 +119,9 @@ export default class NeasClient<
   async createAuthId(
     id: string,
     token: string,
-    ...injections: Injections
+    context: PluginContext,
   ): Promise<string> {
     try {
-      const context = injections[0] as PluginContext;
       const applicationServiceClient =
         context?.loadedPlugins?.applicationServiceClient?.instance;
       assert(
@@ -137,7 +141,10 @@ export default class NeasClient<
         "[55858b44] An email address is required to create an authId",
       );
 
-      const { results, response } = (await this.post(
+      const { results, response } = await this.post<{
+        authId: string;
+        sessionToken: string;
+      }>(
         {
           uri: "/auth/identity/authId",
           headers: {
@@ -149,8 +156,8 @@ export default class NeasClient<
           },
           resiliency: this.resiliency,
         },
-        ...injections,
-      )) as Client.Response<{ authId: string; sessionToken: string }>;
+        context,
+      );
 
       if (response.statusCode && response.statusCode >= 400) {
         throw new Error(response.statusMessage);
@@ -159,14 +166,17 @@ export default class NeasClient<
       const { authId, sessionToken } = results;
 
       // create an authId reference for the given application
-      const addReferencesEvent = (await applicationServiceClient.sendRequest({
-        query: ADD_REFERENCE_MUTATION,
-        variables: {
-          id,
-          references: [{ referencedId: authId, referenceType: "authID" }],
-          meta: "apply-flow-service",
+      const addReferencesEvent = (await applicationServiceClient.sendRequest(
+        {
+          query: ADD_REFERENCE_MUTATION,
+          variables: {
+            id,
+            references: [{ referencedId: authId, referenceType: "authID" }],
+            meta: "apply-flow-service",
+          },
         },
-      })) as types.Event;
+        context,
+      )) as types.Event;
 
       if (addReferencesEvent.error !== null) {
         throw new Error(addReferencesEvent.error);
@@ -174,12 +184,12 @@ export default class NeasClient<
 
       return sessionToken;
     } catch (error) {
-      this.#log(
+      this.log(
         {
-          error: error.message,
+          error,
           message: "[fdcb97cb] Failed to create authId",
         },
-        "error",
+        context,
       );
       throw error;
     }
@@ -195,10 +205,9 @@ export default class NeasClient<
   async sendEmailLink(
     id: string,
     token: string,
-    ...injections: Injections
+    context: PluginContext,
   ): Promise<void> {
     try {
-      const context = injections[0] as PluginContext;
       const applicationServiceClient =
         context?.loadedPlugins?.applicationServiceClient?.instance;
       assert(
@@ -206,10 +215,13 @@ export default class NeasClient<
         "[a9050dc4] Application-service-client is not instantiated and required to send users an email link",
       );
 
-      const { application } = (await applicationServiceClient.sendRequest({
-        query: NEAS_APPLICATION_QUERY,
-        variables: { id },
-      })) as { application: types.Application };
+      const { application } = (await applicationServiceClient.sendRequest(
+        {
+          query: NEAS_APPLICATION_QUERY,
+          variables: { id },
+        },
+        context,
+      )) as { application: types.Application };
       assert(application, "[b2ca51ed] Application does not exist");
 
       const { authID, details } = application;
@@ -219,7 +231,7 @@ export default class NeasClient<
         "[028aa77f] An email address is required to send an email link",
       );
 
-      const { response } = (await this.post(
+      const { response } = await this.post<void>(
         {
           uri: "/auth/identity/access-code/send",
           headers: {
@@ -244,19 +256,19 @@ export default class NeasClient<
           },
           resiliency: this.resiliency,
         },
-        ...injections,
-      )) as Client.Response<void>;
+        context,
+      );
 
       if (response.statusCode && response.statusCode >= 400) {
         throw new Error(response.statusMessage);
       }
     } catch (error) {
-      this.#log(
+      this.log(
         {
-          error: error.message,
+          error,
           message: "[2a7945e5] Failed to send email link",
         },
-        "error",
+        context,
       );
       throw error;
     }
@@ -270,39 +282,19 @@ export default class NeasClient<
    */
   async verifyToken(
     token: string,
-    ...injections: Injections
-  ): Promise<Client.Response<Claims>> {
-    try {
-      const result = (await this.post(
-        {
-          uri: "/auth/interservice/verify",
-          headers: this.defaultHeaders,
-          body: {
-            token,
-          },
-          resiliency: this.resiliency,
+    context: PluginContext,
+  ): Promise<ClientResponse<Claims>> {
+    return this.post<Claims>(
+      {
+        uri: "/auth/interservice/verify",
+        headers: this.defaultHeaders,
+        body: {
+          token,
         },
-        ...injections,
-      )) as Client.Response<Claims>;
-
-      return result;
-    } catch (error) {
-      this.#log({
-        message: error.message,
-        statusCode: error.statusCode,
-      });
-      throw error;
-    }
-  }
-
-  /* ============================== *
-   * Private Methods
-   * ============================== */
-  #log(message: unknown, level?: string) {
-    if (level && this.#logger[level]) {
-      this.#logger[level](message);
-    } else {
-      this.#logger.info(message);
-    }
+        resiliency: this.resiliency,
+      },
+      context,
+      context,
+    );
   }
 }

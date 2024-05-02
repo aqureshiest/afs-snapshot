@@ -25,7 +25,7 @@ describe("[d7c20b00] base-client for application-service-client", () => {
     accessKey = Buffer.from(key).toString("base64");
     baseUrl =
       SensitiveString.ExtractValue(context.env.APPLICATION_SERVICE_URL) || "";
-    client = new BaseClient({ baseUrl, accessKey }, context);
+    client = new BaseClient({ baseUrl, accessKey });
   });
 
   it("[28e9dd46] should instantiate the BaseClient", async () => {
@@ -33,10 +33,12 @@ describe("[d7c20b00] base-client for application-service-client", () => {
   });
 
   it("[b707124d] should log at a given logging level", () => {
-    assert.doesNotThrow(() => client.log("message", "error"));
+    const error = new Error("test error");
+    assert.doesNotThrow(() => client.log({ error }, context));
   });
 
   it("[d6a8429b] should log at the info level by default", () => {
-    assert.doesNotThrow(() => client.log("message"));
+    const message = "test message";
+    assert.doesNotThrow(() => client.log({ message }, context));
   });
 });

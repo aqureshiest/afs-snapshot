@@ -8,15 +8,14 @@ export default async function (
   context: Context,
   req: Request,
 ): Promise<Strategy> {
-  const NeasClient = context.loadedPlugins.NeasClient?.instance as NeasClient<
-    unknown[]
-  >;
+  const NeasClient = context.loadedPlugins.NeasClient?.instance as NeasClient;
   assert(NeasClient, "[de7f7d6c] NeasClient is not instantiated");
 
   const strategy: Strategy = { artifacts: null, error: null };
 
   const idToken =
     (req.headers?.idToken as string) || (req.headers?.idtoken as string);
+
   assert(
     idToken,
     createError.Unauthorized(

@@ -1,21 +1,16 @@
-import { Client } from "@earnest/http";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
-import { HttpRequest } from "@earnest/http";
+import Client from "../client.js";
+
 export default class PiiTokenServiceClient extends Client {
+  get clientName() {
+    return "PiiTokenService";
+  }
   private accessKey: string;
   constructor(accessKey: string, baseUrl: string) {
     const options = { baseUrl };
 
     super(options);
     this.accessKey = accessKey;
-  }
-
-  get headers() {
-    return {
-      ...super.headers,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
   }
 
   /**
@@ -28,8 +23,7 @@ export default class PiiTokenServiceClient extends Client {
       throw new Error("[9cfa7507] Token is required.");
     }
     const encodedURI = encodeURIComponent(token);
-    const { results, response } = await this.request<{ value: string }>(
-      HttpRequest.Method.Get,
+    const { results, response } = await this.get<{ value: string }>(
       {
         uri: "/tokens?uri=" + encodedURI,
         headers: {
@@ -42,12 +36,23 @@ export default class PiiTokenServiceClient extends Client {
           timeout: 100000,
         },
       },
+      context,
     );
 
     if (response.statusCode == null || response.statusCode >= 400) {
-      throw new Error(
+      const error = new Error(
         `[6d12a0cf] getTokenValue failed with response code: ${response.statusCode}`,
       );
+
+      this.log(
+        {
+          error,
+          results,
+        },
+        context,
+      );
+
+      throw error;
     }
 
     return results ? results.value : "";
@@ -63,15 +68,28 @@ export default class PiiTokenServiceClient extends Client {
       throw new Error("[7adfc728] Value is required.");
     }
 
-    const { results, response } = await this.post<{ uri: string }>({
-      uri: "/tokens",
-      body: { value },
-    });
+    const { results, response } = await this.post<{ uri: string }>(
+      {
+        uri: "/tokens",
+        body: { value },
+      },
+      context,
+    );
 
     if (response.statusCode == null || response.statusCode >= 400) {
-      throw new Error(
+      const error = new Error(
         `[ec3424f2] saveToken failed with response code: ${response.statusCode}`,
       );
+
+      this.log(
+        {
+          error,
+          results,
+        },
+        context,
+      );
+
+      throw error;
     }
 
     return results.uri;

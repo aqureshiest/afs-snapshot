@@ -76,14 +76,13 @@ describe("[cd30d05c] session auth strategy", () => {
         },
       };
     });
-    assert.rejects(
-      async () =>
-        await authMiddleware(
-          context,
-          req as unknown as Request,
-          res as Response,
-          () => {},
-        ),
+    await assert.rejects(
+      authMiddleware(
+        context,
+        req as unknown as Request,
+        res as Response,
+        () => {},
+      ),
       (error: Error) => {
         assert.equal(
           error.message,
@@ -99,14 +98,13 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {},
     };
     const res = { locals: {} };
-    assert.rejects(
-      async () =>
-        await authMiddleware(
-          context,
-          req as unknown as Request,
-          res as Response,
-          () => {},
-        ),
+    await assert.rejects(
+      authMiddleware(
+        context,
+        req as unknown as Request,
+        res as Response,
+        () => {},
+      ),
       (error: Error) => {
         assert.equal(
           error.message,
@@ -132,14 +130,13 @@ describe("[cd30d05c] session auth strategy", () => {
         },
       };
     });
-    assert.rejects(
-      async () =>
-        await authMiddleware(
-          context,
-          req as unknown as Request,
-          res as Response,
-          () => {},
-        ),
+    await assert.rejects(
+      authMiddleware(
+        context,
+        req as unknown as Request,
+        res as Response,
+        () => {},
+      ),
       (error: Error) => {
         assert.equal(
           error.message,

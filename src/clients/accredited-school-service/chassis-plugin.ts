@@ -13,7 +13,7 @@ export const plugin: Plugin<AccreditedSchoolServiceClient> = {
         context.env.ACCREDITED_SCHOOL_SERVICE_BASEURL,
       ) || "";
 
-    const client = new AccreditedSchoolServiceClient(context, baseUrl);
+    const client = new AccreditedSchoolServiceClient({ baseUrl });
 
     plugin.instance = client;
   },
