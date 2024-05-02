@@ -1,7 +1,8 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { default as NeasClient } from "clients/NEAS/index.js";
+import type { Client } from "@earnest/http";
 
-type NeasClientPlugin = ChassisPlugin<NeasClient<unknown[]>>;
+type NeasClientPlugin = ChassisPlugin<NeasClient>;
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
@@ -17,4 +18,5 @@ export type NeasClaims = {
 
 declare module "clients/NEAS/index.js" {
   type Claims = NeasClaims;
+  type ClientResponse<T> = Client.Response<T>;
 }

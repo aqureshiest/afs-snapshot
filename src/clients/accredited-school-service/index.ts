@@ -1,17 +1,10 @@
-import { Client } from "@earnest/http";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 
+import Client from "../client.js";
+
 export default class AccreditedSchoolServiceClient extends Client {
-  constructor(context: PluginContext, baseUrl: string) {
-    const options = { baseUrl };
-    super(options);
-  }
-  get headers() {
-    return {
-      ...super.headers,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
+  get clientName() {
+    return "AccreditedSchoolService";
   }
   async getSchoolName(context: PluginContext, payload): Promise<string | null> {
     const school = await this.getSchool(context, payload);
@@ -26,26 +19,33 @@ export default class AccreditedSchoolServiceClient extends Client {
     context: PluginContext,
     payload,
   ): Promise<SchoolDetails | null> {
-    const { results, response } = await this.get<SchoolDetails>({
-      uri: `/schools/${String(payload.id)}`,
-      headers: this.headers,
-    });
+    const { results, response } = await this.get<SchoolDetails>(
+      {
+        uri: `/schools/${String(payload.id)}`,
+        headers: this.headers,
+      },
+      context,
+    );
 
     if (response.statusCode === 404) {
       return null;
     }
 
     if (response.statusCode && response.statusCode >= 400) {
-      context.logger.error({
-        message: response.statusMessage,
-        statusCode: response.statusCode,
-      });
-      throw new Error(
-        `[29b9ae42] Failed to get school information:  ${response.statusCode}, ${response.statusMessage}`,
+      const error = new Error(`[29b9ae42] Failed to get school information`);
+
+      this.log(
+        {
+          error,
+          results,
+        },
+        context,
       );
-    } else {
-      return results;
+
+      throw error;
     }
+
+    return results;
   }
 
   async getSchools(
@@ -54,22 +54,29 @@ export default class AccreditedSchoolServiceClient extends Client {
   ): Promise<Array<School>> {
     const { results, response } = await this.get<{
       schools: Array<School>;
-    }>({
-      uri: `/schools`,
-      headers: this.headers,
-      query: payload,
-    });
+    }>(
+      {
+        uri: `/schools`,
+        headers: this.headers,
+        query: payload,
+      },
+      context,
+    );
 
     if (response.statusCode && response.statusCode >= 400) {
-      context.logger.error({
-        message: response.statusMessage,
-        statusCode: response.statusCode,
-      });
-      throw new Error(
-        `[730f8ada] Failed to get schools:  ${response.statusCode}, ${response.statusMessage} - ${response}`,
+      const error = new Error(`[730f8ada] Failed to get schools`);
+
+      this.log(
+        {
+          error,
+          message: response.statusMessage,
+        },
+        context,
       );
-    } else {
-      return results.schools;
+
+      throw error;
     }
+
+    return results.schools;
   }
 }

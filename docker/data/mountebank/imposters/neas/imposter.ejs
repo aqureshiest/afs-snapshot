@@ -1,0 +1,34 @@
+{
+  "port": 3007,
+  "protocol": "http",
+  "name": "neas",
+  "allowCors": true,
+  "defaultResponse": {
+    "statusCode": 404
+  },
+  "stubs": [
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:4000",
+              "Content-Type": "application/json"
+            },
+            "body": { "userId": 1, "exp": 9999999999, "isValid": true }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/auth/interservice/verify"
+          }
+        }
+      ]
+    }
+  ]
+}

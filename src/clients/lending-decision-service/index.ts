@@ -1,24 +1,20 @@
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
-import { Client } from "@earnest/http";
 import flattenApplication from "../../api/helpers.js";
 
+import Client from "../client.js";
+
 export default class LendingDecisionServiceClient extends Client {
+  get clientName() {
+    return "LendingDecisionService";
+  }
   private accessKey: string;
 
   constructor(accessKey: string, baseUrl: string) {
     const options = { baseUrl };
     super(options);
     this.accessKey = accessKey;
-  }
-
-  get headers() {
-    return {
-      ...super.headers,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
   }
 
   /**
@@ -35,9 +31,12 @@ export default class LendingDecisionServiceClient extends Client {
       throw new Error("[3144deaa] missing lending decision id");
     }
 
-    const { results, response } = await this.get<DecisionGetResponse>({
-      uri: `/v1/decision/${lendingDecisionId}`,
-    });
+    const { results, response } = await this.get<DecisionGetResponse>(
+      {
+        uri: `/v1/decision/${lendingDecisionId}`,
+      },
+      context,
+    );
 
     if (response.statusCode && response.statusCode >= 400) {
       const error = new Error(
@@ -85,11 +84,13 @@ export default class LendingDecisionServiceClient extends Client {
         })) as unknown as { application: typings.Application };
       application = foundApp;
     } catch (error) {
-      context.logger.error({
-        error,
-        message: `[6d352332] error while retrieving application`,
-        stack: error.stack,
-      });
+      this.log(
+        {
+          error,
+          message: `[6d352332] error while retrieving application`,
+        },
+        context,
+      );
       throw error;
     }
     application = flattenApplication(application);
@@ -122,31 +123,37 @@ export default class LendingDecisionServiceClient extends Client {
       appInfo: applicationDecisionDetails,
     } as unknown as DecisionRequestDetails;
 
-    const { results, response } = await this.post<DecisionPostResponse>({
-      uri: "/v2/decision",
-      headers: {
-        ...this.headers,
-        Authorization: `Bearer ${this.accessKey}`,
+    const { results, response } = await this.post<DecisionPostResponse>(
+      {
+        uri: "/v2/decision",
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+        body: payload,
+        resiliency: {
+          attempts: 3,
+          delay: 1000,
+          timeout: 20000,
+          test: ({ response }) =>
+            Boolean(response.statusCode && response.statusCode <= 500),
+        },
       },
-      body: payload,
-      resiliency: {
-        attempts: 3,
-        delay: 1000,
-        timeout: 20000,
-        test: ({ response }) =>
-          Boolean(response.statusCode && response.statusCode <= 500),
-      },
-    });
+      context,
+    );
 
     if (response.statusCode && response.statusCode >= 400) {
       const error = new Error(
         `[a571403f] Failed to post decision: ${response.statusMessage}`,
       );
-      context.logger.error({
-        error,
-        message: response.statusMessage, // Log the actual status message from LDS
-        statusCode: response.statusCode,
-      });
+      this.log(
+        {
+          error,
+          message: response.statusMessage, // Log the actual status message from LDS
+          statusCode: response.statusCode,
+        },
+        context,
+      );
       throw error;
     }
 
@@ -195,11 +202,14 @@ export default class LendingDecisionServiceClient extends Client {
         },
       });
     } catch (error) {
-      context.logger.error({
-        error,
-        message: `[6a91cce5] error while retrieving application`,
-        stack: error.stack,
-      });
+      this.log(
+        {
+          error,
+          message: `[6a91cce5] error while retrieving application`,
+          stack: error.stack,
+        },
+        context,
+      );
       throw error;
     }
     return results;

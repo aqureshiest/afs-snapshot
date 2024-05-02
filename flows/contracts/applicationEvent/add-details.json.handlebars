@@ -4,9 +4,8 @@
     "event": "addDetails",
     "payload": {
       "id": "{{request.params.id}}",
-      {{#with request.body.values}}
-      "details": 
-        {{#obj}} {{! make sure to flatten each element into a single line}}
+      "details": {{#obj}} {{! make sure to flatten each element into a single line}}
+        {{#with request.body.values}}
           {{#if loanAmount}}
             {"amount": {"requested": {{{formatDollarsToCents loanAmount}}} } }
           {{/if}}
@@ -47,8 +46,8 @@
           {{#if financialAccounts}}
             {"financialAccounts": {{{json financialAccounts}}} }
           {{/if}}
-        {{/obj}}
-    {{/with}}
+        {{/with}}
+      {{/obj}}
     },
     "fields": "application { id }"
   }
