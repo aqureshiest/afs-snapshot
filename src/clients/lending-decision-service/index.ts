@@ -80,6 +80,7 @@ export default class LendingDecisionServiceClient extends Client {
           query: TEMP_DEFAULT_APPLICATION_QUERY,
           variables: {
             id: applicationId,
+            root: true,
           },
         })) as unknown as { application: typings.Application };
       application = foundApp;
