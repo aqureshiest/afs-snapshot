@@ -18,6 +18,91 @@ export default class LendingDecisionServiceClient extends Client {
   }
 
   /**
+   * TODO save decision via webhook
+   */
+  // async saveDecision(context: PluginContext, payload) {
+  //   const applicationServiceClient =
+  //     context.loadedPlugins.applicationServiceClient?.instance;
+
+  //   if (!applicationServiceClient)
+  //     throw new Error(
+  //       "[88379256] Application Service client instance not found",
+  //     );
+  //   let application;
+  //   /**
+  //    * Find an application by the monolith application id
+  //    */
+  //   try {
+  //     const { application: foundApp } =
+  //       (await applicationServiceClient.sendRequest({
+  //         query: String.raw`query Applications($criteria: [ApplicationSearchCriteria]!) {
+  //           applications(criteria: $criteria) {
+  //             id
+  //             root {
+  //               id
+  //             }
+  //             primary {
+  //               id
+  //             }
+  //           }
+  //         }
+  //         `,
+  //         variables: {
+  //           criteria: [
+  //             {
+  //               monolithApplicationID: payload.monolithApplicationID,
+  //             },
+  //           ],
+  //         },
+  //       })) as unknown as { application: typings.Application };
+  //     application = foundApp;
+  //   } catch (error) {
+  //     this.log(
+  //       {
+  //         error,
+  //         message: `[415e1534] error while retrieving application`,
+  //         stack: error.stack,
+  //       },
+  //       context,
+  //     );
+  //     throw error;
+  //   }
+  //   /**
+  //    * Now set status of the found root application
+  //    */
+  //   try {
+  //     await applicationServiceClient.sendRequest({
+  //       query: String.raw`mutation (
+  //             $id: UUID!
+  //             $meta: EventMeta
+  //             $status: ApplicationStatusName!
+  //           ) {
+  //             setStatus(id: $id, meta: $meta, status: $status) {
+  //               id
+  //               application {
+  //                 id
+  //               }
+  //             }
+  //           }`,
+  //       variables: {
+  //         id: application.id,
+  //         status: payload.decisionStatus,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     this.log(
+  //       {
+  //         error,
+  //         message: `[8e1d8731] Updating Status of Application`,
+  //         stack: error.stack,
+  //       },
+  //       context,
+  //     );
+  //     throw error;
+  //   }
+  // }
+
+  /**
    * Fetches a decision status from Lending Decision Service
    * @param context PluginContext
    * @param lendingDecisionId string
@@ -115,7 +200,7 @@ export default class LendingDecisionServiceClient extends Client {
       decisionSource: "apply-flow-service",
       applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
       requestMetadata: {
-        applicationId,
+        applicationId: application.monolithLoanID, // TODO: LA-562 Temporarily pass the monolithLoanId to Decision
         userId: application[APPLICANT_TYPES.Primary]?.monolithUserID
           ? application[APPLICANT_TYPES.Primary].monolithUserID
           : application?.monolithUserID,

@@ -6,6 +6,8 @@ fragment ApplicantFragment on Application {
   relationship
   ssnTokenURI
   lendingDecisionID
+  monolithLoanID
+  monolithApplicationID
   relationships {
     id
     relationship

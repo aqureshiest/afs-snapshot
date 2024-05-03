@@ -1,8 +1,10 @@
+{{#with application}}
 {
     "key": "checkout",
     "type": "navigate",
     "properties": {
-        "goTo": "https://www.staging.earnest.com/_/lending-checkout-ui/congratulations?brand=Earnest&product=SLR&referenceLoanId={{application.id}}",
+        "goTo": "https://www.staging.earnest.com/_/lending-checkout-ui/congratulations?brand=Earnest&product=SLR&referenceLoanId={{application.monolithLoanID}}",
         "external": true
     }
 }
+{{/with}}
