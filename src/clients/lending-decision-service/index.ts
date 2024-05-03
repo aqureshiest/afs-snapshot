@@ -247,8 +247,12 @@ export default class LendingDecisionServiceClient extends Client {
     if (results && results.data.decisionOutcome) {
       if (results.data.decisionOutcome === "Application Review") {
         applicationStatus = "submitted"; // TODO: Inititial status of application until response from LDS
+      } else if (results.data.decisionOutcome === "Denied") {
+        applicationStatus = "declined";
+      } else if (results.data.decisionOutcome === "Approved") {
+        applicationStatus = "approved";
       } else {
-        applicationStatus = results.data.decisionOutcome;
+        applicationStatus = "review";
       }
     }
 
