@@ -252,7 +252,7 @@ export default class LendingDecisionServiceClient extends Client {
       }
       return {
         addressLine1: location.street1,
-        addressLine2: location.street2,
+        addressLine2: location.street2 ? location.street2 : "",
         city: location.city,
         state: location.state,
         zip: location.zip,

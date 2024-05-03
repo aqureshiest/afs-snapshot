@@ -22,10 +22,10 @@
             {"phone": [{"index": 0, "number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
           {{#if currentAddress }}
-            {"location": [{"index": 0, "street1": "{{currentAddress.street}}", "street2": "{{currentAddress.apt}}", "city": "{{currentAddress.city}}", "state": "{{currentAddress.state}}", "zip": "{{currentAddress.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
+            {"location": [{"index": 0, "street1": "{{currentAddress.street}}", {{#if (ne currentAddress.apt "") }} "street2": "{{currentAddress.apt}}", {{/if}} "city": "{{currentAddress.city}}", "state": "{{currentAddress.state}}", "zip": "{{currentAddress.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
           {{#if previousAddress }} 
-            {"location": [{"index": 1, "street1": "{{previousAddress.street}}", "street2": "{{previousAddress.apt}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
+            {"location": [{"index": 1, "street1": "{{previousAddress.street}}", {{#if (ne previousAddress.apt "") }} "street2": "{{previousAddress.apt}}", {{/if}} "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
           {{#if employmentType }}
             {"income": [{"index": 0, "type": "{{employmentType}}"}]}
