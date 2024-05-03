@@ -238,7 +238,7 @@ export default class PlaidClient extends Client {
             type: faccount.subtype,
             selected: true,
             account_last4: faccount.mask,
-            balance: faccount.balances.current,
+            balance: (faccount.balances.current || 0) * 100,
             plaidItemID: plaidResponse.item.item_id,
             plaidAccessToken: accessToken.access_token,
           };
