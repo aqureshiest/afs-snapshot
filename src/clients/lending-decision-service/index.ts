@@ -200,7 +200,8 @@ export default class LendingDecisionServiceClient extends Client {
       decisionSource: "apply-flow-service",
       applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
       requestMetadata: {
-        applicationId: application.monolithLoanID, // TODO: LA-562 Temporarily pass the monolithLoanId to Decision
+        applicationId:
+          application[APPLICANT_TYPES.Primary]?.monolithApplicationID, // TODO: LA-562 Temporarily pass the monolithApplicationId to Decision
         userId: application[APPLICANT_TYPES.Primary]?.monolithUserID
           ? application[APPLICANT_TYPES.Primary].monolithUserID
           : application?.monolithUserID,
