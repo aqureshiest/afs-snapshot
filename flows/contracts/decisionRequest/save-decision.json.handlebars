@@ -1,11 +1,11 @@
-{{#if request.params.id}}
-{{#noop}}{{ contract 'analytics' }}{{/noop}}
+{{! we should get decision status, but we're just trying to get lendingDecisionID of application from application service }}
+
   {
-    "event": "setStatus",
+    "decisionRequestMethod": "saveDecision",
+    "id": "{{{request.body.id}}}",
     "payload": {
-      "id": "{{request.params.id}}",
+      "decisionOutcome":
       {{#with request.body}}
-      "status":
       {{#if (eq decisionOutcome 'Approved')}}
          "approved"
       {{else if (eq decisionOutcome 'Denied')}}
@@ -13,10 +13,6 @@
       {{else if (eq decisionOutcome 'Application Review')}}
         "review"
       {{/if}}
-    },
-    {{/with}}
-    "fields": "application { id }"
+      {{/with}}
+    }
   }
-{{else}}
-  null
-{{/if}}
