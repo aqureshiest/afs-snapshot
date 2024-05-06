@@ -132,6 +132,18 @@ export function toUpper(value) {
   }
 }
 
+export function toNeutralize(value) {
+  if (value) {
+    return value.replace(/_/g, " ");
+  }
+}
+
+export function toNeutralizeAndUpper(value) {
+  if (value) {
+    return toNeutralize(toUpper(value));
+  }
+}
+
 export function getSchoolName(school) {
   return school?.name;
 }
