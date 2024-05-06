@@ -6,16 +6,18 @@ declare module "api/auth/index.ts" {
   type Context = PluginContext;
 }
 
-type NeasArtifacts = NeasClaims;
-
 type StrategyResponse = {
-  artifacts: {
-    session: NeasArtifacts;
-  } | null;
-  error: HttpError | Error | null;
+  strategy: string;
+  claims: NeasClaims | unknown | null;
+  error: HttpError[];
 };
 
 declare module "api/auth/strategies/session.js" {
   type Context = PluginContext;
   type Strategy = StrategyResponse;
+}
+
+declare module "api/auth/strategies/internal.js" {
+  type Context = PluginContext;
+  type Strategy = StrategyResponse
 }
