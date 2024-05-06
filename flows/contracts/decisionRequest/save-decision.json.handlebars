@@ -2,15 +2,15 @@
 
   {
     "decisionRequestMethod": "saveDecision",
-    "id": "{{{request.body.id}}}",
+    "id": "{{{request.body.data.applicationId}}}",
     "payload": {
       "decisionOutcome":
-      {{#with request.body}}
-      {{#if (eq decisionOutcome 'Approved')}}
+      {{#with request.body.data}}
+      {{#if (eq decision 'Approved')}}
          "approved"
-      {{else if (eq decisionOutcome 'Denied')}}
+      {{else if (eq decision 'Denied')}}
         "declined"
-      {{else if (eq decisionOutcome 'Application Review')}}
+      {{else if (eq decision 'Application Review')}}
         "review"
       {{/if}}
       {{/with}}
