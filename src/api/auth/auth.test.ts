@@ -204,4 +204,30 @@ describe("[cd30d05c] session auth strategy", () => {
       },
     );
   });
+
+  it("[06cbfb66] should not throw for internal requests that pass an invalid token", async () => {
+    const req = {
+      url: "lending-decisioning-service.earnest.com",
+      headers: {
+        authorization: `Bearer fake`,
+      },
+    };
+    const res = { locals: {} };
+
+    await assert.rejects(
+      authMiddleware(
+        context,
+        req as unknown as Request,
+        res as Response,
+        () => {},
+      ),
+      (error: HttpError) => {
+        assert.equal(
+          error.message,
+          "[9736e5c6] Unauthorized - invalid key",
+        );
+        return true;
+      },
+    );
+  });
 });

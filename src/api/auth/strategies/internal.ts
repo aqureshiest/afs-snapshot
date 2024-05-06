@@ -12,12 +12,6 @@ export default function (context: Context, req: Request): void {
    * ============================== */
   const authorization = req.headers.authorization || "";
 
-  if (!authorization) {
-    throw createError.BadRequest(
-      "[6d5eafb7] Bad Request - missing authorization headers",
-    );
-  }
-
   const regex = /^Bearer\s+(\S+)$/;
   const matchedAuthHeader = authorization.match(regex) || [];
 
