@@ -109,7 +109,9 @@ export function findCurrentAddress(addresses) {
 
 export function formatAddress(address) {
   if (address) {
-    return `${address.street1} ${address.street2} ${address.city} ${address.state} ${address.zip}`;
+    return address.street2
+      ? `${address.street1}, ${address.street2}, ${address.city}, ${address.state} ${address.zip}`
+      : `${address.street1}, ${address.city}, ${address.state} ${address.zip}`;
   }
 }
 
