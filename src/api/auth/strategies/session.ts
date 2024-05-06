@@ -31,7 +31,7 @@ export default async function (
   const { exp } = results;
   const now = Math.floor(Date.now() / 1000);
 
-  if (exp && (now > exp)) {
+  if (exp && now > exp) {
     throw new createError.Unauthorized(
       "[0963fa22] Unauthorized - session expired",
     );
@@ -41,7 +41,7 @@ export default async function (
     strategy.claims = {
       session: {
         ...results,
-      }
+      },
     };
   }
 

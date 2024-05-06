@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { HttpError } from "http-errors";
 import session from "./strategies/session.js";
 import internal from "./strategies/internal.js";
 
@@ -14,12 +13,6 @@ const authMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const results: Promise<{
-    strategy: string;
-    claims: unknown;
-    error: HttpError[];
-  }>[] = [];
-
   const idToken =
     (req.headers?.idToken as string) || (req.headers?.idtoken as string);
 
@@ -33,14 +26,11 @@ const authMiddleware = async (
   }
 
   const authorizationHeader =
-    (req.headers?.authorization as string) || (req.headers?.Authorization as string);
+    (req.headers?.authorization as string) ||
+    (req.headers?.Authorization as string);
 
   if (authorizationHeader) {
-    const internalResults = internal(context, req);
-
-    if (internalResults.error && internalResults.error.length) {
-      throw internalResults.error.shift();
-    }
+    internal(context, req);
   }
 
   return next();

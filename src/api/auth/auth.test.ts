@@ -23,7 +23,10 @@ describe("[cd30d05c] session auth strategy", () => {
     context.env.NEAS_BASE_URL = "neas-api.earnest.com";
     await registerChassisPlugins(context);
     NeasClient = context.loadedPlugins.NeasClient?.instance;
-    accessKey = SensitiveString.ExtractValue(context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE) || "";
+    accessKey =
+      SensitiveString.ExtractValue(
+        context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE,
+      ) || "";
   });
 
   it("[955ce279] should set returned claims on res.locals if an idToken exists", async () => {
@@ -145,8 +148,9 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ));
+        () => {},
+      ),
+    );
   });
 
   it("[679ed8be] should throw for internal requests that are missing a Bearer token", async () => {
@@ -163,15 +167,16 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ),
-    (error: HttpError) => {
-      assert.equal(
-        error.message,
-        "[0f415288] Bad Request - request did not match required auth scheme"
-      )
-      return true;
-    });
+        () => {},
+      ),
+      (error: HttpError) => {
+        assert.equal(
+          error.message,
+          "[0f415288] Bad Request - request did not match required auth scheme",
+        );
+        return true;
+      },
+    );
   });
 
   it("[499166b9] should throw for internal requests that do not conform to a Bearer auth scheme", async () => {
@@ -188,14 +193,15 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ),
-    (error: HttpError) => {
-      assert.equal(
-        error.message,
-        "[0f415288] Bad Request - request did not match required auth scheme"
-      )
-      return true;
-    });
+        () => {},
+      ),
+      (error: HttpError) => {
+        assert.equal(
+          error.message,
+          "[0f415288] Bad Request - request did not match required auth scheme",
+        );
+        return true;
+      },
+    );
   });
 });
