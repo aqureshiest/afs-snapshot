@@ -28,7 +28,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[955ce279] should set returned claims on res.locals if an idToken exists", async () => {
     const req = {
-      hostname: "neas-api.earnest.com",
+      url: "neas-api.earnest.com",
       headers: {
         idToken: "idToken",
       },
@@ -65,7 +65,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[19cd0178] should throw an error when a session has expired", async () => {
     const req = {
-      hostname: "neas-api.earnest.com",
+      url: "neas-api.earnest.com",
       headers: {
         idToken: "idToken",
       },
@@ -102,7 +102,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[e359c9ea] should throw when an idToken does not exist in the request headers", async () => {
     const req = {
-      hostname: "neas-api.earnest.com",
+      url: "neas-api.earnest.com",
       headers: {},
     };
     const res = { locals: {} };
@@ -125,7 +125,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[d389ea54] should throw an error if the returned response.statusCode is 400", async () => {
     const req = {
-      hostname: "neas-api.earnest.com",
+      url: "neas-api.earnest.com",
       headers: {
         idToken: "idToken",
       },
@@ -158,7 +158,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[85332d62] should not throw for internal requests that pass a valid access key", async () => {
     const req = {
-      hostname: "lending-decisioning-service.earnest.com",
+      url: "lending-decisioning-service.earnest.com",
       headers: {
         authorization: `Bearer ${accessKey}`,
       },
@@ -176,7 +176,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[679ed8be] should throw for internal requests that are missing a Bearer token", async () => {
     const req = {
-      hostname: "lending-decisioning-service.earnest.com",
+      url: "lending-decisioning-service.earnest.com",
       headers: {
         authorization: `Bearer`,
       },
@@ -226,7 +226,7 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[99f6cb10] should throw for internal requests that are missing an authorization header", async () => {
     const req = {
-      hostname: "lending-decisioning-service.earnest.com",
+      url: "lending-decisioning-service.earnest.com",
       headers: {},
     };
     const res = { locals: {} };
