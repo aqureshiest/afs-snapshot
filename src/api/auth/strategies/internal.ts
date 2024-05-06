@@ -46,7 +46,6 @@ export default async function (
     const accessKeys = [
       LDS_S2S_KEY
     ];
-    console.log("efe394b1 accessKeys", accessKeys)
 
     const isAuthorized = accessKeys.includes(matchedAuthHeader[1]);
 
