@@ -72,7 +72,7 @@ const getInputs: Handler = async function (
      */
     assert(
       isAuthorized,
-      new createError.Unauthorized(
+      new createError.Forbidden(
         "[dfbaf766] Unauthorized - applicants lack permissions for this session",
       ),
     );

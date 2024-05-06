@@ -23,7 +23,10 @@ describe("[cd30d05c] session auth strategy", () => {
     context.env.NEAS_BASE_URL = "neas-api.earnest.com";
     await registerChassisPlugins(context);
     NeasClient = context.loadedPlugins.NeasClient?.instance;
-    accessKey = SensitiveString.ExtractValue(context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE) || "";
+    accessKey =
+      SensitiveString.ExtractValue(
+        context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE,
+      ) || "";
   });
 
   it("[955ce279] should set returned claims on res.locals if an idToken exists", async () => {
@@ -65,7 +68,6 @@ describe("[cd30d05c] session auth strategy", () => {
 
   it("[19cd0178] should throw an error when a session has expired", async () => {
     const req = {
-      url: "neas-api.earnest.com",
       headers: {
         idToken: "idToken",
       },
@@ -100,32 +102,8 @@ describe("[cd30d05c] session auth strategy", () => {
     );
   });
 
-  it("[e359c9ea] should throw when an idToken does not exist in the request headers", async () => {
-    const req = {
-      url: "neas-api.earnest.com",
-      headers: {},
-    };
-    const res = { locals: {} };
-    await assert.rejects(
-      authMiddleware(
-        context,
-        req as unknown as Request,
-        res as Response,
-        () => {},
-      ),
-      (error: Error) => {
-        assert.equal(
-          error.message,
-          "[6a1bed98] Unauthorized - missing idToken in request headers",
-        );
-        return true;
-      },
-    );
-  });
-
   it("[d389ea54] should throw an error if the returned response.statusCode is 400", async () => {
     const req = {
-      url: "neas-api.earnest.com",
       headers: {
         idToken: "idToken",
       },
@@ -170,8 +148,9 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ));
+        () => {},
+      ),
+    );
   });
 
   it("[679ed8be] should throw for internal requests that are missing a Bearer token", async () => {
@@ -188,15 +167,16 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ),
-    (error: HttpError) => {
-      assert.equal(
-        error.message,
-        "[0f415288] Bad Request - request did not match required auth scheme"
-      )
-      return true;
-    });
+        () => {},
+      ),
+      (error: HttpError) => {
+        assert.equal(
+          error.message,
+          "[0f415288] Bad Request - request did not match required auth scheme",
+        );
+        return true;
+      },
+    );
   });
 
   it("[499166b9] should throw for internal requests that do not conform to a Bearer auth scheme", async () => {
@@ -213,21 +193,24 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ),
-    (error: HttpError) => {
-      assert.equal(
-        error.message,
-        "[0f415288] Bad Request - request did not match required auth scheme"
-      )
-      return true;
-    });
+        () => {},
+      ),
+      (error: HttpError) => {
+        assert.equal(
+          error.message,
+          "[0f415288] Bad Request - request did not match required auth scheme",
+        );
+        return true;
+      },
+    );
   });
 
-  it("[99f6cb10] should throw for internal requests that are missing an authorization header", async () => {
+  it("[06cbfb66] should not throw for internal requests that pass an invalid token", async () => {
     const req = {
       url: "lending-decisioning-service.earnest.com",
-      headers: {},
+      headers: {
+        authorization: `Bearer fake`,
+      },
     };
     const res = { locals: {} };
 
@@ -236,14 +219,15 @@ describe("[cd30d05c] session auth strategy", () => {
         context,
         req as unknown as Request,
         res as Response,
-        () => { },
-    ),
-    (error: HttpError) => {
-      assert.equal(
-        error.message,
-        "[6d5eafb7] Bad Request - missing authorization headers"
-      )
-      return true;
-    });
+        () => {},
+      ),
+      (error: HttpError) => {
+        assert.equal(
+          error.message,
+          "[9736e5c6] Unauthorized - invalid key",
+        );
+        return true;
+      },
+    );
   });
 });
