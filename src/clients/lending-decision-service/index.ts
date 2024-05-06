@@ -18,9 +18,13 @@ export default class LendingDecisionServiceClient extends Client {
   }
 
   /**
-   * TODO save decision via webhook
+   * Saves any updated application statuses to the Application Database
+   * that we recieve from Lending Decision Service via the webhook interface
+   * they interact with.
+   * @param context PluginContext
+   * @param id string - Monolith Application ID
    */
-  async saveDecision(context: PluginContext, id, payload) {
+  async saveDecision(context: PluginContext, id, payload): Promise<void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
@@ -29,8 +33,12 @@ export default class LendingDecisionServiceClient extends Client {
         "[88379256] Application Service client instance not found",
       );
     let application;
+
     /**
      * Find an application by the monolith application id
+     * This search via the monolith application id would return
+     * the primary application. Query with root field key to obtain
+     * the root application id of primary application
      */
     try {
       const result = (await applicationServiceClient.sendRequest({
@@ -49,11 +57,12 @@ export default class LendingDecisionServiceClient extends Client {
         variables: {
           criteria: [
             {
-              monolithLoanID: id,
+              monolithApplicationID: id,
             },
           ],
         },
       })) as unknown as { applications: Array<typings.Application> };
+
       application = result["applications"][0];
     } catch (error) {
       this.log(
@@ -66,8 +75,10 @@ export default class LendingDecisionServiceClient extends Client {
       );
       throw error;
     }
+
     /**
-     * Now set status of the found root application
+     * Now set status of the root application that we found via
+     * the search criteria MonolithApplicationID
      */
     try {
       await applicationServiceClient.sendRequest({
@@ -84,7 +95,7 @@ export default class LendingDecisionServiceClient extends Client {
               }
             }`,
         variables: {
-          id: application.id,
+          id: application.root.id,
           status: payload.decisionOutcome,
         },
       });
