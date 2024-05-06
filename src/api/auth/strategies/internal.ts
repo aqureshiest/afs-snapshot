@@ -5,16 +5,10 @@ import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 import { STRATEGIES } from "../index.js";
 
-export default function (context: Context, req: Request): Strategy {
+export default function (context: Context, req: Request): void {
   const LDS_S2S_KEY =
     SensitiveString.ExtractValue(context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE) ||
     "";
-
-  const strategy: Strategy = {
-    strategy: STRATEGIES.INTERNAL,
-    claims: null,
-  };
-
   /* ============================== *
    * I. Validate Auth Scheme
    * ============================== */
@@ -46,6 +40,4 @@ export default function (context: Context, req: Request): Strategy {
       throw createError.Unauthorized("[9736e5c6] Unauthorized - invalid key");
     }
   }
-
-  return strategy;
 }
