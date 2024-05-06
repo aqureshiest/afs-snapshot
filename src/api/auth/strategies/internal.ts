@@ -1,4 +1,3 @@
-import assert from "node:assert";
 import { Request } from "express";
 import createError from "http-errors";
 

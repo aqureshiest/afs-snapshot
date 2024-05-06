@@ -5,7 +5,7 @@ import { HttpError } from "http-errors";
 export enum STRATEGIES {
   SESSION = "session",
   INTERNAL = "internal",
-};
+}
 
 const authMiddleware = async (
   context: Context,
