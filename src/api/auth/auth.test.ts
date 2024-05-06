@@ -222,10 +222,7 @@ describe("[cd30d05c] session auth strategy", () => {
         () => {},
       ),
       (error: HttpError) => {
-        assert.equal(
-          error.message,
-          "[9736e5c6] Unauthorized - invalid key",
-        );
+        assert.equal(error.message, "[9736e5c6] Unauthorized - invalid key");
         return true;
       },
     );
