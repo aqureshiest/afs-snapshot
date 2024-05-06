@@ -31,6 +31,7 @@ class DecisionRequest extends ContractType<Definition, Definition, Output> {
       result = await lendingDecisionService[definition.decisionRequestMethod](
         context,
         definition.id,
+        definition.payload,
       );
     } catch (ex) {
       this.error(

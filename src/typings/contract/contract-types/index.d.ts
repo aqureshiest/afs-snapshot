@@ -189,8 +189,12 @@ declare module "contract/contract-types/decision-request.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
-    decisionRequestMethod: "postDecisionRequest";
-    id: string;
+    decisionRequestMethod:
+      | "postDecisionRequest"
+      | "saveDecision"
+      | "getDecision";
+    id?: string;
+    payload?: { [key: string]: string };
   };
   type Injections = IExecutionInjections;
 

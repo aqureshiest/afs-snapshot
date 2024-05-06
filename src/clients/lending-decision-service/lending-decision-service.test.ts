@@ -39,6 +39,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
             relationship: "root",
           },
         ],
+        monolithApplicationID: "576326",
         details: {
           name: {
             first: "Nancy",
@@ -499,5 +500,35 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.message, "Decisioning Request is processed.");
     assert.deepEqual(results.data.decisionOutcome, "Application Review");
     assert.deepEqual(results.data.status, "completed");
+  });
+
+  it("[3229903b] Should updated status on application from saveDecision", async () => {
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              applications: [
+                {
+                  id: primary,
+                  root: {
+                    id: root,
+                  },
+                  primary: null,
+                },
+              ],
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+    await client.saveDecision(context, "576326", {
+      decisionOutcome: "Approved",
+    });
   });
 });

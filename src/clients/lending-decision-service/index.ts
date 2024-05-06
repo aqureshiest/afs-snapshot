@@ -18,89 +18,99 @@ export default class LendingDecisionServiceClient extends Client {
   }
 
   /**
-   * TODO save decision via webhook
+   * Saves any updated application statuses to the Application Database
+   * that we recieve from Lending Decision Service via the webhook interface
+   * they interact with.
+   * @param context PluginContext
+   * @param id string - Monolith Application ID
    */
-  // async saveDecision(context: PluginContext, payload) {
-  //   const applicationServiceClient =
-  //     context.loadedPlugins.applicationServiceClient?.instance;
+  async saveDecision(context: PluginContext, id, payload): Promise<void> {
+    const applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient?.instance;
 
-  //   if (!applicationServiceClient)
-  //     throw new Error(
-  //       "[88379256] Application Service client instance not found",
-  //     );
-  //   let application;
-  //   /**
-  //    * Find an application by the monolith application id
-  //    */
-  //   try {
-  //     const { application: foundApp } =
-  //       (await applicationServiceClient.sendRequest({
-  //         query: String.raw`query Applications($criteria: [ApplicationSearchCriteria]!) {
-  //           applications(criteria: $criteria) {
-  //             id
-  //             root {
-  //               id
-  //             }
-  //             primary {
-  //               id
-  //             }
-  //           }
-  //         }
-  //         `,
-  //         variables: {
-  //           criteria: [
-  //             {
-  //               monolithApplicationID: payload.monolithApplicationID,
-  //             },
-  //           ],
-  //         },
-  //       })) as unknown as { application: typings.Application };
-  //     application = foundApp;
-  //   } catch (error) {
-  //     this.log(
-  //       {
-  //         error,
-  //         message: `[415e1534] error while retrieving application`,
-  //         stack: error.stack,
-  //       },
-  //       context,
-  //     );
-  //     throw error;
-  //   }
-  //   /**
-  //    * Now set status of the found root application
-  //    */
-  //   try {
-  //     await applicationServiceClient.sendRequest({
-  //       query: String.raw`mutation (
-  //             $id: UUID!
-  //             $meta: EventMeta
-  //             $status: ApplicationStatusName!
-  //           ) {
-  //             setStatus(id: $id, meta: $meta, status: $status) {
-  //               id
-  //               application {
-  //                 id
-  //               }
-  //             }
-  //           }`,
-  //       variables: {
-  //         id: application.id,
-  //         status: payload.decisionStatus,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     this.log(
-  //       {
-  //         error,
-  //         message: `[8e1d8731] Updating Status of Application`,
-  //         stack: error.stack,
-  //       },
-  //       context,
-  //     );
-  //     throw error;
-  //   }
-  // }
+    if (!applicationServiceClient)
+      throw new Error(
+        "[88379256] Application Service client instance not found",
+      );
+    let application;
+
+    /**
+     * Find an application by the monolith application id
+     * This search via the monolith application id would return
+     * the primary application. Query with root field key to obtain
+     * the root application id of primary application
+     */
+    try {
+      const result = (await applicationServiceClient.sendRequest({
+        query: String.raw`query Applications($criteria: [ApplicationSearchCriteria]!) {
+            applications(criteria: $criteria) {
+              id
+              root {
+                id
+              }
+              primary {
+                id
+              }
+            }
+          }
+          `,
+        variables: {
+          criteria: [
+            {
+              monolithApplicationID: id,
+            },
+          ],
+        },
+      })) as unknown as { applications: Array<typings.Application> };
+
+      application = result["applications"][0];
+    } catch (error) {
+      this.log(
+        {
+          error,
+          message: `[415e1534] error while retrieving application`,
+          stack: error.stack,
+        },
+        context,
+      );
+      throw error;
+    }
+
+    /**
+     * Now set status of the root application that we found via
+     * the search criteria MonolithApplicationID
+     */
+    try {
+      await applicationServiceClient.sendRequest({
+        query: String.raw`mutation (
+              $id: UUID!
+              $meta: EventMeta
+              $status: ApplicationStatusName!
+            ) {
+              setStatus(id: $id, meta: $meta, status: $status) {
+                id
+                application {
+                  id
+                }
+              }
+            }`,
+        variables: {
+          id: application.root.id,
+          status: payload.decisionOutcome,
+        },
+      });
+    } catch (error) {
+      this.log(
+        {
+          error,
+          message: `[8e1d8731] Updating Status of Application`,
+          stack: error.stack,
+        },
+        context,
+      );
+      throw error;
+    }
+  }
 
   /**
    * Fetches a decision status from Lending Decision Service
@@ -111,6 +121,7 @@ export default class LendingDecisionServiceClient extends Client {
   async getDecision(
     context: PluginContext,
     lendingDecisionId: string,
+    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
   ): Promise<DecisionGetResponse> {
     if (!lendingDecisionId) {
       throw new Error("[3144deaa] missing lending decision id");
@@ -147,6 +158,7 @@ export default class LendingDecisionServiceClient extends Client {
   async postDecisionRequest(
     context: PluginContext,
     applicationId: string, // Assuming root app ID
+    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
   ): Promise<DecisionPostResponse> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
@@ -194,7 +206,7 @@ export default class LendingDecisionServiceClient extends Client {
       }
     }
 
-    const payload = {
+    const decisionPayload = {
       product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
       decisioningWorkflowName: "AUTO_APPROVAL",
       decisionSource: "apply-flow-service",
@@ -217,7 +229,7 @@ export default class LendingDecisionServiceClient extends Client {
           ...this.headers,
           Authorization: `Bearer ${this.accessKey}`,
         },
-        body: payload,
+        body: decisionPayload,
         resiliency: {
           attempts: 3,
           delay: 1000,
@@ -246,7 +258,10 @@ export default class LendingDecisionServiceClient extends Client {
 
     let applicationStatus;
     if (results && results.data.decisionOutcome) {
-      if (results.data.decisionOutcome === "Application Review") {
+      if (
+        results.data.decisionOutcome === "Application Review" ||
+        results.data.decisionOutcome === "Pending"
+      ) {
         applicationStatus = "submitted"; // TODO: Inititial status of application until response from LDS
       } else if (results.data.decisionOutcome === "Denied") {
         applicationStatus = "declined";

@@ -1,4 +1,4 @@
 {
     "*": "response",
-    "actions": ["set-decision-status"]
+    "actions": ["save-decision"]
 }
