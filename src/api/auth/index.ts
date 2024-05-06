@@ -30,7 +30,7 @@ const authMiddleware = async (
 
   const regEx = new RegExp(`${context.env.NEAS_BASE_URL}`);
 
-  const publicRequest = regEx.test(req.hostname);
+  const publicRequest = regEx.test(req.url);
   const internalRequest = !publicRequest;
 
   resolvedStrategies.forEach((strat) => {
