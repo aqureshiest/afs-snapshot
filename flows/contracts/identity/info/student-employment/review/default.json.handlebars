@@ -8,7 +8,7 @@
         "items": 
         {{#list}}
             {{#if details.income.0.type}} 
-                {"id": "employmentStatus", "label": "Employment Status", "value": "{{toUpper details.income.0.type}}"}
+                {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper details.income.0.type}}"}
             {{/if}}
             {{#if details.income.0.employer}} 
                 {"id": "employerName", "label": "Employer name", "value": "{{details.income.0.employer}}"}
