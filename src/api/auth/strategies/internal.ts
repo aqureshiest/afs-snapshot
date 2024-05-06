@@ -5,10 +5,10 @@ import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 import { STRATEGIES } from "../index.js";
 
-export default async function (
+export default function (
   context: Context,
   req: Request,
-): Promise<Strategy> {
+): Strategy {
   const LDS_S2S_KEY = SensitiveString.ExtractValue(
     context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE,
   ) || "";
@@ -25,19 +25,18 @@ export default async function (
   const authorization = req.headers.authorization || "";
 
   if (!authorization) {
-    strategy.error.push(createError.BadRequest(
+    throw createError.BadRequest(
       "[6d5eafb7] Bad Request - missing authorization headers"
-    ));
+    );
   }
 
   const regex = /^Bearer\s+(\S+)$/;
   const matchedAuthHeader = authorization.match(regex) || [];
 
   if (!matchedAuthHeader.length || !matchedAuthHeader[1]) {
-    console.log("f4adbdf9 are we in here")
-    strategy.error.push(createError.BadRequest(
+    throw createError.BadRequest(
       "[0f415288] Bad Request - request did not match required auth scheme"
-    ));
+    );
   }
   /* ============================== *
    * II. Access Key Verification
@@ -50,9 +49,9 @@ export default async function (
     const isAuthorized = accessKeys.includes(matchedAuthHeader[1]);
 
     if (!isAuthorized) {
-      strategy.error.push(createError.Unauthorized(
+      throw createError.Unauthorized(
         "[9736e5c6] Unauthorized - invalid key"
-      ));
+      );
     }
   }
 

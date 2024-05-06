@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import strategies from "./strategies/index.js";
 import { HttpError } from "http-errors";
+import session from "./strategies/session.js";
+import internal from "./strategies/internal.js";
 
 export enum STRATEGIES {
   SESSION = "session",
@@ -19,49 +20,28 @@ const authMiddleware = async (
     error: HttpError[];
   }>[] = [];
 
-  /* ============================== *
-   * I. Auth Strategy Execution
-   * ============================== */
-  for (const strategy of strategies) {
-    results.push(strategy(context, req));
-  }
+  const idToken =
+    (req.headers?.idToken as string) || (req.headers?.idtoken as string);
 
-  const resolvedStrategies = (await Promise.all(results));
+  if (idToken) {
+    const sessionResults = await session(context, req);
 
-  const regEx = new RegExp(`${context.env.NEAS_BASE_URL}`);
-
-  const publicRequest = regEx.test(req.url);
-  const internalRequest = !publicRequest;
-
-  resolvedStrategies.forEach((strat) => {
-  /* ============================== *
-   * II. Public Authorization
-   * ============================== */
-    if (publicRequest && strat.strategy === STRATEGIES.SESSION && strat.error.length) {
-      // throw the first session error encountered
-      throw strat.error.shift();
-    }
-
-  /* ============================== *
-   * III. Internal Authorization
-   * ============================== */
-    if (
-      internalRequest &&
-      strat.strategy === STRATEGIES.INTERNAL &&
-      strat.error.length
-    ) {
-      // throw the first internal error encountered
-      throw strat.error.shift();
-    }
-
-  /* ============================== *
-   * IV. Assign Claims
-   * ============================== */
     res.locals.auth = {
       ...(res.locals?.auth ?? {}),
-      ...(strat?.claims ?? {}),
+      ...(sessionResults?.claims ?? {}),
     };
-  });
+  }
+
+  const authorizationHeader =
+    (req.headers?.authorization as string) || (req.headers?.Authorization as string);
+
+  if (authorizationHeader) {
+    const internalResults = internal(context, req);
+
+    if (internalResults.error && internalResults.error.length) {
+      throw internalResults.error.shift();
+    }
+  }
 
   return next();
 };

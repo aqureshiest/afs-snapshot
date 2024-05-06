@@ -9,7 +9,6 @@ declare module "api/auth/index.ts" {
 type StrategyResponse = {
   strategy: string;
   claims: NeasClaims | unknown | null;
-  error: HttpError[];
 };
 
 declare module "api/auth/strategies/session.js" {
