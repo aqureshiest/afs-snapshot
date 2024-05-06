@@ -3,8 +3,6 @@ import createError from "http-errors";
 
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
-import { STRATEGIES } from "../index.js";
-
 export default function (context: Context, req: Request): void {
   const LDS_S2S_KEY =
     SensitiveString.ExtractValue(context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE) ||
