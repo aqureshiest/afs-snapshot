@@ -29,7 +29,31 @@
       "disclosure": "`{\"component\":\"ActionButton\",\"props\":{\"button\":{\"copy\":\"How does income verification work?\",\"action\":{\"type\":\"modal\",\"properties\":{\"type\":\"disclosure\",\"definition\":{\"copy\":\"## How does income verification work?\\n\\nEarnest verifies your income by analyzing your direct deposits from your employer. We'll use your income verification to calculate repayment eligibility.\\n\\nEarnest uses plaid as a trusted partner to connect your external accounts. Any bank account data provided is encrypted and follows our Privacy Policy.\"}}}},\"styleAsLink\":true}}`",
       "plaidOptions": {
         "linkToken": {{{ json (contract 'method' )}}},
-        "exchangeUrl": "plaid/exchange/{{{request.params.id}}}"
+        "exchangeUrl": "plaid/exchange/{{{request.params.id}}}",
+        "onError": [
+          {
+            "codes": ["loan-accounts-error"],
+            "action" :{
+              "type": "toast",
+              "definition": {
+                "type": "error",
+                "copy": "Please select Savings or Checking accounts.",
+                "icon": "icon-error" 
+              }
+            }
+          },
+          {
+            "codes": ["application-service-error"],
+            "action":{
+              "type": "toast",
+              "definition": {
+                "type": "error",
+                "copy": "An error ocurred while saving this, please try again.",
+                "icon": "icon-error" 
+              }
+            }
+          }
+        ]
       },
       "primaryAction": {
         "copy": "Move to review",
@@ -38,6 +62,17 @@
           "type": "request",
           "properties": {
             "manifest": "save-details/financials/{{{request.params.id}}}"
+          },
+          "onError": {
+            "codes": ["application-service-error"],
+            "action": {
+              "type": "toast",
+              "definition": {
+                "type": "error",
+                "copy": "An error ocurred while saving financial Accounts, please try again.",
+                "icon": "icon-error" 
+              }
+            }
           }
         }
       },

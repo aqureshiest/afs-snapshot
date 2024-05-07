@@ -27,11 +27,13 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
     assert(plaidClient, "[3eac36d3] plaidClient not instantiated");
 
     try {
-      return (await plaidClient[definition.plaidMethod](
+      const result = (await plaidClient[definition.plaidMethod](
         context,
+        input,
         definition.id,
         definition.payload,
       )) as Output;
+      return result;
     } catch (ex) {
       this.error(input, ex.message);
       return {
@@ -41,15 +43,6 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
       };
     }
   };
-
-  // toJSON() {
-  //   if (!this.result) return null;
-  //   return {
-  //     event: this.result?.event,
-  //     id: this.result?.id,
-  //     createdAt: this.result?.createdAt,
-  //   };
-  // }
 }
 
 export default PlaidMethod;

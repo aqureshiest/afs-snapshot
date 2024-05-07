@@ -6,6 +6,7 @@ import type {
   Institution as IInstitution,
 } from "plaid";
 import PlaidClient from "clients/plaid/index.js";
+import { Input as IContractInput } from "contract/manifest.js";
 type PlaidChassisPlugn = ChassisPlugin<PlaidClient>;
 
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
@@ -49,4 +50,5 @@ declare module "clients/plaid/index.js" {
   type Institutions = Array<IInstitution>;
   type Institution = IInstitution;
   type InstitutionsResponse = { institutions: Institutions };
+  type Input = IContractInput;
 }
