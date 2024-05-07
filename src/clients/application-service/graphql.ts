@@ -75,6 +75,10 @@ fragment ApplicantFragment on Application {
   cognitoID
   monolithUserID
   monolithLoanID
+  status {
+    name
+    asOf
+  }
 }
 
 fragment ApplicationFragment on Application {
