@@ -8,10 +8,12 @@
     "properties": {
       "showSpinner": true,
       "header": { "copy": "One moment. We’re reviewing your application." },
-      "action": {{{json (contract 'statusAction')}}}
+      "action": {{{json (contract 'statusAction')}}},
+      "actionDelay": 3000
     }
   },
-  "result": {{{json (contract 'actions')}}}
+  "result": {{{json (contract 'actions')}}},
+  "error": {{{json error}}}
 }
 {{else}}
   null

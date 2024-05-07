@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import strategies from "./strategies/index.js";
-import { HttpError } from "http-errors";
+import session from "./strategies/session.js";
+import internal from "./strategies/internal.js";
+
+export enum STRATEGIES {
+  SESSION = "session",
+  INTERNAL = "internal",
+}
 
 const authMiddleware = async (
   context: Context,
@@ -8,38 +13,27 @@ const authMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const claims: Promise<{
-    artifacts: unknown;
-    error: HttpError | Error | null;
-  }>[] = [];
+  const idToken =
+    (req.headers?.idToken as string) || (req.headers?.idtoken as string);
 
-  for (const strategy of strategies) {
-    claims.push(strategy(context, req));
-  }
-
-  const resolvedClaims = (await Promise.all(claims)).sort(byStatusCode);
-
-  resolvedClaims.forEach((claim) => {
-    if (claim.error) {
-      // sorting guarantees the most severe error is thrown first
-      throw claim.error;
-    }
+  if (idToken) {
+    const sessionResults = await session(context, req);
 
     res.locals.auth = {
       ...(res.locals?.auth ?? {}),
-      ...(claim?.artifacts ?? {}),
+      ...(sessionResults?.claims ?? {}),
     };
-  });
+  }
+
+  const authorizationHeader =
+    (req.headers?.authorization as string) ||
+    (req.headers?.Authorization as string);
+
+  if (authorizationHeader) {
+    internal(context, req);
+  }
 
   return next();
 };
 
 export default authMiddleware;
-
-const byStatusCode = (a, b) => {
-  const defaultStatusCode = 200; // assumption if an error doesn't exist
-  const aStatusCode = a?.error ? a.error.statusCode : defaultStatusCode;
-  const bStatusCode = b?.error ? b.error.statusCode : defaultStatusCode;
-
-  return bStatusCode - aStatusCode;
-};

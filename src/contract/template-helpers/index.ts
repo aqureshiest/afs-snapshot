@@ -109,7 +109,9 @@ export function findCurrentAddress(addresses) {
 
 export function formatAddress(address) {
   if (address) {
-    return `${address.street1} ${address.street2} ${address.city} ${address.state} ${address.zip}`;
+    return address.street2
+      ? `${address.street1}, ${address.street2}, ${address.city}, ${address.state} ${address.zip}`
+      : `${address.street1}, ${address.city}, ${address.state} ${address.zip}`;
   }
 }
 
@@ -129,6 +131,18 @@ export function mathAdd(v1, v2) {
 export function toUpper(value) {
   if (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+}
+
+export function toNeutralize(value) {
+  if (value) {
+    return value.replace(/_/g, " ");
+  }
+}
+
+export function toNeutralizeAndUpper(value) {
+  if (value) {
+    return toNeutralize(toUpper(value));
   }
 }
 

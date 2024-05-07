@@ -1,0 +1,18 @@
+{{! we should get decision status, but we're just trying to get lendingDecisionID of application from application service }}
+
+  {
+    "decisionRequestMethod": "saveDecision",
+    "id": "{{{request.body.data.applicationId}}}",
+    "payload": {
+      "decisionOutcome":
+      {{#with request.body.data}}
+      {{#if (eq decision 'Approved')}}
+         "approved"
+      {{else if (eq decision 'Denied')}}
+        "declined"
+      {{else if (eq decision 'Application Review')}}
+        "review"
+      {{/if}}
+      {{/with}}
+    }
+  }

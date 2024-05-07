@@ -6,6 +6,8 @@ fragment ApplicantFragment on Application {
   relationship
   ssnTokenURI
   lendingDecisionID
+  monolithLoanID
+  monolithApplicationID
   relationships {
     id
     relationship
@@ -74,6 +76,10 @@ fragment ApplicantFragment on Application {
   cognitoID
   monolithUserID
   monolithLoanID
+  status {
+    name
+    asOf
+  }
 }
 
 fragment ApplicationFragment on Application {
