@@ -362,7 +362,16 @@ export default class PlaidClient extends Client {
                   );
               });
 
-              return result;
+              return result?.map((account) => {
+                return {
+                  index: account?.index,
+                  name: account?.name,
+                  type: account?.type,
+                  selected: account?.selected,
+                  account_last4: account?.account_last4,
+                  balance: account?.balance,
+                };
+              });
             } else {
               return [];
             }
