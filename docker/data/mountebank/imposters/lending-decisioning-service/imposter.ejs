@@ -1,0 +1,47 @@
+{
+  "port": 3017,
+  "protocol": "http",
+  "name": "lending-decisioning-service",
+  "allowCors": true,
+  "defaultResponse": {
+    "statusCode": 404
+  },
+  "stubs": [
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'lending-decisioning-service/post-response.json') %>"
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/v2/decision"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'lending-decisioning-service/post-response.json') %>"
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "startsWith": {
+            "method": "GET",
+            "path": "/v1/decision"
+          }
+        }
+      ]
+    }
+  ]
+}

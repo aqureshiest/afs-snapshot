@@ -1,0 +1,12 @@
+{
+  "message": "Decisioning Request is processed.",
+  "data": {
+    "decisioningToken": "dd057169-6923-45b9-956b-4b8aea9662d7",
+    "seedId": "73513033993143542020180441430816",
+    "status": "completed",
+    "journeyApplicationStatus": "waiting_review",
+    "decisionOutcome": "Application Review",
+    "journeyToken": "J-DHy7fAj0lVLlZ1mDqOuh",
+    "journeyApplicationToken": "JA-XeJrpLbxxRz6JyLkfQmh"
+  }
+}

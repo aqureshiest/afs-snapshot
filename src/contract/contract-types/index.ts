@@ -38,3 +38,5 @@ export { default as accreditedSchoolRequest } from "./accredited-school-service-
  * Redis - volatile state storage
  * ============================== */
 export { default as redisMethod } from "./redis-method.js";
+
+export { default as clientMethod } from "./client-method.js";

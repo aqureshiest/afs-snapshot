@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import assert from "node:assert";
 
-const ajvHelper: TemplateHelper = function (action, schema, data, ...args) {
+const ajvHelper: TemplateHelper = function (action, schema, data, options) {
   assert(typeof action === "string");
-
-  const options = args[args.length - 1];
 
   assert(typeof options !== "string", "[170caf61] Invalid template options");
 
