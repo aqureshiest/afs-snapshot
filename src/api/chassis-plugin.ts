@@ -74,5 +74,14 @@ export const plugin: Plugin = {
 
     context.application.use(handlers.error.bind(null, context));
     context.application.use(cookieParser());
+
+    /**
+     * WEBHOOKS
+     * TODO
+     */
+    // context.application.use(
+    //   "/webhooks/*",
+
+    // )
   },
 };

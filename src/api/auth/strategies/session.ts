@@ -3,6 +3,7 @@ import { Request } from "express";
 import createError from "http-errors";
 
 import type NeasClient from "clients/NEAS/index.js";
+import { STRATEGIES } from "../index.js";
 
 export default async function (
   context: Context,
@@ -11,38 +12,33 @@ export default async function (
   const NeasClient = context.loadedPlugins.NeasClient?.instance as NeasClient;
   assert(NeasClient, "[de7f7d6c] NeasClient is not instantiated");
 
-  const strategy: Strategy = { artifacts: null, error: null };
+  const strategy: Strategy = {
+    strategy: STRATEGIES.SESSION,
+    claims: null,
+  };
 
   const idToken =
     (req.headers?.idToken as string) || (req.headers?.idtoken as string);
 
-  assert(
-    idToken,
-    createError.Unauthorized(
-      "[6a1bed98] Unauthorized - missing idToken in request headers",
-    ),
-  );
-
   const { results, response } = await NeasClient.verifyToken(idToken, context);
 
   if (response.statusCode === 400) {
-    strategy.error = createError.Unauthorized(
-      "[a6b44191] Unauthorized - invalid session",
+    throw new createError.Unauthorized(
+      "[a6b44191] Unauthorized - invalid idToken",
     );
   }
 
   const { exp } = results;
-
   const now = Math.floor(Date.now() / 1000);
 
-  if (now > exp) {
-    strategy.error = createError.Unauthorized(
+  if (exp && now > exp) {
+    throw new createError.Unauthorized(
       "[0963fa22] Unauthorized - session expired",
     );
   }
 
   if (results) {
-    strategy.artifacts = {
+    strategy.claims = {
       session: {
         ...results,
       },

@@ -5,16 +5,16 @@
     "payload": {
       "id": "{{request.params.id}}",
       {{#with request.body}}
-      "status": 
-      {{#if (eq decisionOutcome 'Approved'}}
-        "approved"
-      {{else if (eq decisionOutcome 'Denied')}}
-        "declined"
-      {{else if (eq decisionOutcome 'Application Review')}}
-        "review"
-      {{/if}}
+        "status":
+        {{#if (eq decisionOutcome 'Approved')}}
+          "approved"
+        {{else if (eq decisionOutcome 'Denied')}}
+          "declined"
+        {{else if (eq decisionOutcome 'Application Review')}}
+          "review"
+        {{/if}}
+      {{/with}}
     },
-    {{/with}}
     "fields": "application { id }"
   }
 {{else}}

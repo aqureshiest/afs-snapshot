@@ -16,7 +16,6 @@ const getInputs: Handler = async function (
   next: NextFunction,
 ) {
   const applicationId = res?.locals?.application?.id;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userId = res?.locals?.auth?.session?.userId;
 
   const ASclient = context?.loadedPlugins?.applicationServiceClient?.instance;
@@ -50,7 +49,6 @@ const getInputs: Handler = async function (
 
     const { primary, cosigner } = application;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const applicants = [
       ...(primary ? [primary] : []),
       ...(cosigner ? [cosigner] : []),
@@ -59,7 +57,6 @@ const getInputs: Handler = async function (
     /* ============================== *
      * III. Session Authorization
      * ============================== */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const isAuthorized = applicants.reduce((authorized, applicant) => {
       const { monolithUserID } = applicant;
 
@@ -75,42 +72,12 @@ const getInputs: Handler = async function (
      */
     assert(
       isAuthorized,
-      new createError.Unauthorized(
+      new createError.Forbidden(
         "[dfbaf766] Unauthorized - applicants lack permissions for this session",
       ),
     );
-
-    if (application !== null && application?.applicants?.length) {
-      // flatten application
-      if (application.applicants.length == 1) {
-        application.primary = application.applicants[0];
-      } else {
-        application.applicants.forEach((applicant) => {
-          const relationshipNotRoot =
-            applicant?.relationships?.filter(
-              (r) => r?.relationship !== "root",
-            ) || [];
-
-          if (relationshipNotRoot.length) {
-            relationshipNotRoot.forEach((relationship) => {
-              const app = application?.applicants?.find(
-                (a) => a?.id === relationship?.id,
-              );
-
-              if (
-                app &&
-                application &&
-                relationship &&
-                relationship.relationship
-              ) {
-                application[relationship.relationship] = app;
-              }
-            });
-          }
-        });
-      }
-    }
   }
+
   const redisClient = context?.loadedPlugins?.redis?.instance;
   let applicationStep;
   if (redisClient && application) {
