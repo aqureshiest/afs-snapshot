@@ -14,6 +14,7 @@ describe("[f8395630] Plaid Client", () => {
     application: null,
     request: {},
   } as IContractInput;
+
   const financialAccountsMock = [
     {
       name: "Houndstooth Bank",
@@ -46,6 +47,7 @@ describe("[f8395630] Plaid Client", () => {
       plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
     },
   ];
+
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
@@ -190,6 +192,7 @@ describe("[f8395630] Plaid Client", () => {
         };
       },
     );
+
     const response = await client.exchangePublicTokenAndGetAccounts(
       context,
       input,
