@@ -261,6 +261,9 @@ export default class PlaidClient extends Client {
       id,
       payload,
     );
+    const application = input.application?.applicants?.find(
+      (app) => app?.id === id,
+    );
     if (accessToken) {
       const plaidResponse = await this.getAccounts(
         context,
@@ -272,20 +275,37 @@ export default class PlaidClient extends Client {
         const institution = await this.getInstitution(context, input, id, {
           institution_id: plaidResponse.item.institution_id,
         });
-
+        const plaidAccountIDsAdded: Array<string> = [];
         const financialAccounts = plaidResponse.accounts?.map((faccount) => {
           if (Number(faccount.type === "loan")) {
             this.error(input, "loan-accounts-error");
           } else {
-            return {
-              name: institution.name,
-              type: faccount.subtype,
-              selected: true,
-              account_last4: faccount.mask,
-              balance: (faccount.balances.current || 0) * 100,
-              plaidItemID: plaidResponse.item.item_id,
-              plaidAccessToken: accessToken.access_token,
-            };
+            // this was first though as using the plaid Account ID as to check if the account already exists,
+            //  but plaid returns a new account ID every time the public token is exchanged.
+            // instead we are using a combination of the institution name, account type, account number and balance to check if the account already exists
+            const existingAccount =
+              application?.details?.financialAccounts?.find(
+                (account) =>
+                  account?.name === institution.name &&
+                  account?.type === faccount.subtype &&
+                  account?.account_last4 === faccount.mask &&
+                  account?.balance === (faccount.balances.current || 0) * 100,
+              );
+            if (!existingAccount) {
+              plaidAccountIDsAdded.push(faccount.account_id);
+              return {
+                name: institution.name,
+                type: faccount.subtype,
+                selected: true,
+                account_last4: faccount.mask,
+                balance: (faccount.balances.current || 0) * 100,
+                plaidAccountID: faccount.account_id,
+                plaidItemID: plaidResponse.item.item_id,
+                plaidAccessToken: accessToken.access_token,
+              };
+            } else {
+              this.error(input, "duplicated-account-error");
+            }
           }
         });
 
@@ -309,6 +329,7 @@ export default class PlaidClient extends Client {
                             name
                             type
                             selected
+                            plaidAccountID
                             account_last4
                             balance
                           }
@@ -332,8 +353,15 @@ export default class PlaidClient extends Client {
               this.error(input, ASresponse.addDetails.error);
             }
             if (ASresponse.addDetails.application.details) {
-              const { financialAccounts: result } =
+              const { financialAccounts: resultAccounts } =
                 ASresponse.addDetails.application.details;
+              const result = resultAccounts?.filter((graphqlAccount) => {
+                if (graphqlAccount?.plaidAccountID)
+                  return plaidAccountIDsAdded.includes(
+                    graphqlAccount?.plaidAccountID,
+                  );
+              });
+
               return result;
             } else {
               return [];

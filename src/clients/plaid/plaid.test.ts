@@ -14,6 +14,40 @@ describe("[f8395630] Plaid Client", () => {
     application: null,
     request: {},
   } as IContractInput;
+
+  const financialAccountsMock = [
+    {
+      name: "Houndstooth Bank",
+      type: "checking",
+      selected: true,
+      account_last4: "0000",
+      balance: 11000,
+      plaidAccountID: "A3wenK5EQRfKlnxlBbVXtPw9gyazDWu1EdaZD",
+      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    },
+    {
+      name: "Houndstooth Bank",
+      type: "savings",
+      selected: true,
+      account_last4: "1111",
+      balance: 21000,
+      plaidAccountID: "GPnpQdbD35uKdxndAwmbt6aRXryj4AC1yQqmd",
+      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    },
+    {
+      name: "Houndstooth Bank",
+      type: "cd",
+      selected: true,
+      account_last4: "2222",
+      balance: 100000,
+      plaidAccountID: "nVRK5AmnpzFGv6LvpEoRivjk9p7N16F6wnZrX",
+      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    },
+  ];
+
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
@@ -139,21 +173,27 @@ describe("[f8395630] Plaid Client", () => {
     });
     assert.rejects(request);
   });
-  it.skip("[9a3872eb] should be able to exchangePublicTokenAndGetAccounts()", async () => {
+
+  it("[9a3872eb] should be able to exchangePublicTokenAndGetAccounts()", async () => {
     mock.reset();
     mock.method(
       context.loadedPlugins.applicationServiceClient.instance,
-      "post",
+      "sendRequest",
       async () => {
         return {
-          response: {
-            statusCode: 400,
-            statusMessage: "invalid request",
+          addDetails: {
+            application: {
+              details: {
+                financialAccounts: financialAccountsMock,
+              },
+            },
+            error: null,
           },
         };
       },
     );
-    const response = client.exchangePublicTokenAndGetAccounts(
+
+    const response = await client.exchangePublicTokenAndGetAccounts(
       context,
       input,
       "123",
@@ -162,6 +202,48 @@ describe("[f8395630] Plaid Client", () => {
       },
     );
 
-    assert.rejects(response);
+    assert.deepEqual(response, financialAccountsMock);
+  });
+  it("[bd4ff0b3] should be able to handle duplications", async () => {
+    mock.reset();
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      async () => {
+        return {
+          addDetails: {
+            application: {
+              details: {
+                financialAccounts: financialAccountsMock,
+              },
+            },
+            error: null,
+          },
+        };
+      },
+    );
+    const errors: string[] = [];
+    const input = {
+      application: {
+        id: "root-123",
+        applicants: [
+          { id: "123", details: { financialAccounts: financialAccountsMock } },
+        ],
+      },
+      error: errors,
+      applicationState: {},
+      request: {},
+    };
+    const response = await client.exchangePublicTokenAndGetAccounts(
+      context,
+      input,
+      "123",
+      {
+        public_token: "asdasdasdasd",
+      },
+    );
+
+    assert.deepEqual(response, []);
+    assert(input.error?.includes("duplicated-account-error"));
   });
 });
