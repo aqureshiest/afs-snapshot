@@ -39,6 +39,7 @@ fragment ApplicantFragment on Application {
       institution_name
       monolithFinancialAccountID
       balance
+      plaidAccountID
       plaidItemID
       plaidAccessToken
     }
