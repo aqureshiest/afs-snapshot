@@ -37,8 +37,6 @@
             {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncomeFuture}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
           {{else if (and jobTitle annualIncome)}}
             {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
-          {{else if (and jobTitle annualIncomeFuture)}}
-            {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncomeFuture}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
           {{/if}}
           {{#if claimedAssets}}
             {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
