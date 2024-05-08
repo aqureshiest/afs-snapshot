@@ -13,14 +13,14 @@
 {{#if (and
   (contract 'actions' 0)
   (not (lookup (contract 'actions' 0) "decisionRequestMethod"))
-  application.applicants.[0].monolithLoanID
+  application.monolithLoanID
 )}}
   {
     "client": "internalRestServiceClient",
     "method": "POST",
     "uri": "/apply-flow-service/lending-decisioning",
     "body": {
-      "loan_id": {{{json application.applicants.[0].monolithLoanID}}}
+      "loan_id": {{{json application.monolithLoanID}}}
         {{#with (contract 'actions' 0) }}
           {{#spread}}
             {

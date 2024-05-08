@@ -268,7 +268,7 @@ export default class LendingDecisionServiceClient extends Client {
     const decisionPayload = {
       product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
       decisioningWorkflowName: "AUTO_APPROVAL",
-      decisionSource: "client-rest-service",
+      decisionSource: "apply-flow-service",
       applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
       requestMetadata: {
         applicationId:
