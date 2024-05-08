@@ -256,28 +256,19 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    let applicationStatus;
+    let decisioningStatus;
     if (results && results.data.decisionOutcome) {
-      if (
-        results.data.decisionOutcome === "Application Review" ||
-        results.data.decisionOutcome === "Pending"
-      ) {
-        applicationStatus = "submitted"; // TODO: Inititial status of application until response from LDS
-      } else if (results.data.decisionOutcome === "Denied") {
-        applicationStatus = "declined";
+      if (results.data.decisionOutcome === "Denied") {
+        decisioningStatus = "declined";
       } else if (results.data.decisionOutcome === "Approved") {
-        applicationStatus = "approved";
-      } else {
-        applicationStatus = "review";
+        decisioningStatus = "approved";
       }
     }
 
     try {
-      /**
-       * Store the lending decision token as a reference
-       */
-      await applicationServiceClient.sendRequest({
-        query: String.raw`mutation (
+      await applicationServiceClient.sendRequest(
+        {
+          query: String.raw`mutation (
             $id: UUID!
             $references: [ReferenceInput]
             $meta: EventMeta
@@ -296,17 +287,46 @@ export default class LendingDecisionServiceClient extends Client {
               }
             }
           }`,
-        variables: {
-          references: [
-            {
-              referenceType: "lendingDecisionID",
-              referenceId: results.data.decisioningToken,
-            },
-          ],
-          id: applicationId,
-          status: applicationStatus,
+          variables: {
+            references: [
+              {
+                referenceType: "lendingDecisionID",
+                referenceId: results.data.decisioningToken,
+              },
+            ],
+            id: applicationId,
+            status: "submitted",
+          },
         },
-      });
+        context,
+      );
+
+      if (decisioningStatus) {
+        await applicationServiceClient.sendRequest(
+          {
+            query: String.raw`mutation (
+            $id: UUID!
+            $meta: EventMeta
+            $status: ApplicationStatusName!
+          ) {
+            setStatus(id: $id, meta: $meta, status: $status) {
+              id
+              application {
+                id
+              }
+            }
+          }`,
+            variables: {
+              id: applicationId,
+              status: decisioningStatus,
+            },
+          },
+          context,
+        );
+      }
+      /**
+       * Store the lending decision token as a reference
+       */
     } catch (error) {
       this.log(
         {
