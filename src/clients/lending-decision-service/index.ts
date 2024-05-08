@@ -221,10 +221,17 @@ export default class LendingDecisionServiceClient extends Client {
   ): Promise<DecisionPostResponse> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
+    const internalRestServiceClient =
+      context.loadedPlugins.internalRestServiceClient.instance;
 
     if (!applicationServiceClient)
       throw new Error(
         "[45ff82b1] Application Service client instance not found",
+      );
+
+    if (!internalRestServiceClient)
+      throw new Error(
+        "[d78b6285] InternalRestServiceClient instance not found",
       );
 
     let application: typings.Application = {} as typings.Application;
@@ -232,13 +239,16 @@ export default class LendingDecisionServiceClient extends Client {
 
     try {
       const { application: foundApp } =
-        (await applicationServiceClient.sendRequest({
-          query: TEMP_DEFAULT_APPLICATION_QUERY,
-          variables: {
-            id: applicationId,
-            root: true,
+        (await applicationServiceClient.sendRequest(
+          {
+            query: TEMP_DEFAULT_APPLICATION_QUERY,
+            variables: {
+              id: applicationId,
+              root: true,
+            },
           },
-        })) as unknown as { application: typings.Application };
+          context,
+        )) as unknown as { application: typings.Application };
       application = foundApp;
     } catch (error) {
       this.log(
@@ -265,17 +275,51 @@ export default class LendingDecisionServiceClient extends Client {
       }
     }
 
+    /* ============================== *
+     * The monolith references have breached containment
+     * May god help us all
+     * ============================== */
+
+    const monolithUserID = application[APPLICANT_TYPES.Primary]?.monolithUserID
+      ? application[APPLICANT_TYPES.Primary].monolithUserID
+      : application?.monolithUserID;
+    const monolithApplicationID =
+      application[APPLICANT_TYPES.Primary]?.monolithApplicationID;
+    const monolithLoanID = application.monolithLoanID;
+
+    if (monolithLoanID && monolithUserID && monolithApplicationID) {
+      const { results, response } = await internalRestServiceClient.post(
+        {
+          uri: "/apply-flow-service/apply",
+          body: {
+            loan_id: monolithLoanID,
+            user_id: monolithUserID,
+            application_id: monolithApplicationID,
+          },
+        },
+        context,
+      );
+      if (!response.statusCode || response.statusCode >= 400) {
+        const error = new Error("Legacy data sync failed");
+        internalRestServiceClient.log(
+          {
+            error,
+            level: "warn",
+            results,
+          },
+          context,
+        );
+      }
+    }
+
     const decisionPayload = {
       product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
       decisioningWorkflowName: "AUTO_APPROVAL",
       decisionSource: "apply-flow-service",
       applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
       requestMetadata: {
-        applicationId:
-          application[APPLICANT_TYPES.Primary]?.monolithApplicationID, // TODO: LA-562 Temporarily pass the monolithApplicationId to Decision
-        userId: application[APPLICANT_TYPES.Primary]?.monolithUserID
-          ? application[APPLICANT_TYPES.Primary].monolithUserID
-          : application?.monolithUserID,
+        applicationId: monolithApplicationID,
+        userId: monolithUserID,
       },
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       appInfo: applicationDecisionDetails,
