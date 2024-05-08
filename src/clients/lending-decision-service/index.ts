@@ -312,6 +312,37 @@ export default class LendingDecisionServiceClient extends Client {
       }
     }
 
+    const setStatusResult = (await applicationServiceClient.sendRequest(
+      {
+        query: String.raw`mutation (
+        $id: UUID!
+        $meta: EventMeta
+        $status: ApplicationStatusName!
+      ) {
+        setStatus(id: $id, meta: $meta, status: $status) {
+          id,
+          error,
+        }
+      }`,
+        variables: {
+          id: applicationId,
+          status: "submitted",
+          meta: { service: "apply-flow-service" },
+        },
+      },
+      context,
+    )) as { setStatus: { error: string | null } };
+
+    const setStatusError = setStatusResult?.setStatus?.error;
+
+    if (setStatusError) {
+      const error = new Error("Failed to mark application as 'submitted'");
+      context.logger.warn({
+        message: setStatusError,
+      });
+      throw error;
+    }
+
     const decisionPayload = {
       product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
       decisioningWorkflowName: "AUTO_APPROVAL",
@@ -359,21 +390,6 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    let decisioningStatus;
-    if (results && results.data.decisionOutcome) {
-      const { decisionOutcome } = results.data;
-
-      switch (decisionOutcome) {
-        case AlloyDecision.DENIED:
-          decisioningStatus = DecisionStatusMapping.DECLINED;
-          break;
-
-        case AlloyDecision.APPROVED:
-          decisioningStatus = DecisionStatusMapping.APPROVED;
-          break;
-      }
-    }
-
     try {
       await applicationServiceClient.sendRequest(
         {
@@ -381,19 +397,9 @@ export default class LendingDecisionServiceClient extends Client {
             $id: UUID!
             $references: [ReferenceInput]
             $meta: EventMeta
-            $status: ApplicationStatusName!
           ) {
             addReferences(id: $id, references: $references, meta: $meta) {
               id
-              application {
-                id
-              }
-            }
-            setStatus(id: $id, meta: $meta, status: $status) {
-              id
-              application {
-                id
-              }
             }
           }`,
           variables: {
@@ -404,35 +410,11 @@ export default class LendingDecisionServiceClient extends Client {
               },
             ],
             id: applicationId,
-            status: "submitted",
           },
         },
         context,
       );
 
-      if (decisioningStatus) {
-        await applicationServiceClient.sendRequest(
-          {
-            query: String.raw`mutation (
-            $id: UUID!
-            $meta: EventMeta
-            $status: ApplicationStatusName!
-          ) {
-            setStatus(id: $id, meta: $meta, status: $status) {
-              id
-              application {
-                id
-              }
-            }
-          }`,
-            variables: {
-              id: applicationId,
-              status: decisioningStatus,
-            },
-          },
-          context,
-        );
-      }
       /**
        * Store the lending decision token as a reference
        */

@@ -457,7 +457,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.data.status, "completed");
   });
 
-  it("[36a5efe2] set the root application's status to 'approved' for 'Approved' decision outcomes when users are auto-approved", async () => {
+  it("[36a5efe2] set the root application's status to 'submitted'", async () => {
     const mockFn = mock.fn(() => {
       return {
         results: {
@@ -499,60 +499,12 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     await client.postDecisionRequest(context, root);
 
-    const { body } = mockFn.mock.calls[5].arguments.at(0) as unknown as {
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
       body: { variables: { id: string; status: string } };
     };
+
     assert.equal(body.variables.id, primaryAppData.id);
-    assert.equal(body.variables.status, "approved");
-  });
-
-  it("[a11a3b6d] set the root application's status to 'declined' for 'Denied' decision outcomes when users are auto-declined", async () => {
-    const mockFn = mock.fn(() => {
-      return {
-        results: {
-          data: {
-            application: primaryAppData,
-          },
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "post",
-      mockFn,
-    );
-
-    mock.method(client, "post", async () => {
-      return {
-        results: {
-          message: "Decisioning Request is processed.",
-          data: {
-            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
-            seedId: "12341234123412341234123421",
-            status: "completed",
-            journeyApplicationStatus: "waiting_review",
-            decisionOutcome: "Denied",
-            journeyToken: "J-w34tsdgae4541234d",
-            journeyApplicationToken: "JA-asdfasert45634",
-          },
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-
-    await client.postDecisionRequest(context, root);
-
-    const { body } = mockFn.mock.calls[5].arguments.at(0) as unknown as {
-      body: { variables: { id: string; status: string } };
-    };
-    assert.equal(body.variables.id, primaryAppData.id);
-    assert.equal(body.variables.status, "declined");
+    assert.equal(body.variables.status, "submitted");
   });
 
   it("[68361c40] should post a cosigned app decision", async () => {
