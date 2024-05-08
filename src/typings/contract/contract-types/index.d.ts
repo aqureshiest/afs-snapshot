@@ -185,6 +185,7 @@ declare module "contract/contract-types/analytics.js" {
 }
 
 import "contract/contract-types/decision-request.js";
+import { IWebhookEventPayload } from "../../clients/lending-decision-service/index.js";
 declare module "contract/contract-types/decision-request.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
@@ -193,8 +194,8 @@ declare module "contract/contract-types/decision-request.js" {
       | "postDecisionRequest"
       | "saveDecision"
       | "getDecision";
-    id?: string;
-    payload?: { [key: string]: string };
+    id: string;
+    payload: IWebhookEventPayload;
   };
   type Injections = IExecutionInjections;
 

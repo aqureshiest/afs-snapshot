@@ -4,57 +4,80 @@ import type { default as LendingDecisionServiceClient } from "clients/lending-de
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
 
 type LendingDecisionServicePlugin = ChassisPlugin<LendingDecisionServiceClient>;
+
+import { WebhookTypeEnum } from "clients/lending-decision-service/index.js";
+
+interface IEntityInfo {
+  firstName: typings.NameDetail["first"];
+  lastName: typings.NameDetail["last"];
+  dob: typings.Details["dateOfBirth"];
+  addresses: Array<{
+    addressLine1: typings.LocationDetail["street1"];
+    addressLine2?: typings.LocationDetail["street2"];
+    city: typings.LocationDetail["city"];
+    state: typings.LocationDetail["state"];
+    zip: typings.LocationDetail["zip"];
+    type?: typings.LocationDetail["type"];
+  }>;
+  ssn?: typings.Application["ssnTokenURI"];
+  email: typings.Details["email"];
+  phoneNumber?: typings.PhoneDetail["number"];
+  citizenshipStatus: typings.LocationDetail["citizenship"];
+}
+
+type IEducation = Array<{
+  degreeType: typings.EducationDetail["degree"];
+  endDate: typings.EducationDetail["termEnd"];
+  startDate: typings.EducationDetail["termStart"];
+  schoolName: string;
+  schoolType: string;
+  schoolCode: string;
+  opeid: typings.EducationDetail["opeid"];
+}>;
+
+type IEmployment = Array<{
+  employerName: typings.IncomeDetail["employer"];
+  jobTitle: typings.IncomeDetail["title"];
+  employmentStatus: typings.IncomeDetail["type"];
+  employmentStartDate: typings.IncomeDetail["start"];
+  employmentEndDate: typings.IncomeDetail["end"];
+  amount: typings.IncomeDetail["amount"];
+  salary: typings.IncomeDetail["amount"];
+  employmentType: typings.IncomeDetail["type"];
+  verifiedSalary?: null;
+  employmentEndingSoon?: boolean;
+}>;
+
+type IIncome = Array<{
+  incomeType: typings.IncomeDetail["type"];
+  value: typings.IncomeDetail["amount"];
+  verifiedValue?: boolean;
+}>;
+
+type IAssets = Array<{
+  assetType: typings.AssetDetail["type"];
+  value: typings.AssetDetail["amount"];
+  verifiedValue?: boolean;
+}>;
+
+type IFinancialDetails = {
+  hasPlaid: boolean;
+  plaidAccessTokens?: Array<string>;
+  financialAccounts?: Array<{
+    accountType: string;
+    accountSubType: typings.FinancialAccountsDetail["type"];
+    balance: typings.FinancialAccountsDetail["balance"];
+    accountInstitutionName: typings.FinancialAccountsDetail["institution_name"];
+  }>;
+};
+
 interface IDecisionEntity {
-  entityInfo: {
-    firstName: typings.NameDetail["first"];
-    lastName: typings.NameDetail["last"];
-    dob: typings.Details["dateOfBirth"];
-    addresses: Array<{
-      addressLine1: typings.LocationDetail["street1"];
-      addressLine2?: typings.LocationDetail["street2"];
-      city: typings.LocationDetail["city"];
-      state: typings.LocationDetail["state"];
-      zip: typings.LocationDetail["zip"];
-      type?: typings.LocationDetail["type"];
-    }>;
-    ssn?: typings.Application["ssnTokenURI"];
-    email: typings.Details["email"];
-    phoneNumber?: typings.PhoneDetail["number"];
-    citizenshipStatus: typings.LocationDetail["citizenship"];
-  };
-  educations: Array<{
-    degreeType: typings.EducationDetail["degree"];
-    endDate: typings.EducationDetail["termEnd"];
-    schoolName: string;
-    schoolType: string;
-    schoolCode: string;
-    opeid: typings.EducationDetail["opeid"];
-  }>;
-  employments: Array<{
-    employerName?: typings.IncomeDetail["employer"];
-    jobTitle: typings.IncomeDetail["title"];
-    employmentStatus: typings.IncomeDetail["type"];
-    employmentStartDate: typings.IncomeDetail["start"];
-    amount: typings.IncomeDetail["amount"];
-  }>;
-  incomes: Array<{
-    incomeType: typings.IncomeDetail["type"];
-    value: typings.IncomeDetail["amount"];
-  }>;
-  assets: Array<{
-    assetType: typings.AssetDetail["type"];
-    value: typings.AssetDetail["amount"];
-  }>;
-  financialInfo: {
-    hasPlaid: boolean;
-    plaidAccessTokens?: Array<string>;
-    financialAccounts?: Array<{
-      accountType: string;
-      accountSubType: typings.FinancialAccountsDetail["type"];
-      balance: typings.FinancialAccountsDetail["balance"];
-      accountInstitutionName: typings.FinancialAccountsDetail["institution_name"];
-    }>;
-  };
+  entityInfo: IEntityInfo;
+  educations: IEducation;
+  employments: IEmployment;
+  incomes: IIncome;
+  assets: IAssets;
+  financialInfo: IFinancialDetails;
   ratesInfo: {
     rateMapVersion: string;
     rateMapTag: string;
@@ -112,6 +135,45 @@ interface IDecisionGetResponse {
   };
 }
 
+export type IWebhookEventPayload = {
+  data: {
+    applicationId: string;
+    decision: string;
+    status?: string;
+    entity?: {
+      applicationRole: string;
+      entityToken: string;
+      status: string;
+    };
+    meta?: {
+      userData: {
+        primary: IEntityInfo & {
+          livingSituation: string;
+          claimedHousingPayment: number;
+        };
+        educationData: {
+          primary: Array<
+            IEducation & {
+              monthsSinceResidency?: number | null;
+              monthsSinceGraduation?: number;
+              educationBeingFinanced: boolean;
+              status: string;
+            }
+          >;
+        };
+        employmentData: IEmployment;
+        incomes: IIncome;
+        assets: IAssets;
+        financialDetails: IFinancialDetails;
+      };
+    };
+  };
+  decisioningToken: string;
+  webhookType: WebhookTypeEnum;
+  journeyToken: string;
+  journeyApplicationToken: string;
+};
+
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
     lendingDecisionServiceClient: LendingDecisionServicePlugin;
@@ -139,4 +201,5 @@ declare module "../../../clients/lending-decision-service/index.js" {
   type DecisionRequestDetails = IDecisionRequestDetails;
   type DecisionPostResponse = IDecisionPostResponse;
   type DecisionGetResponse = IDecisionGetResponse;
+  type WebhookEventPayload = IWebhookEventPayload;
 }
