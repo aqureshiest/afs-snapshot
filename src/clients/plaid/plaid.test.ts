@@ -17,6 +17,7 @@ describe("[f8395630] Plaid Client", () => {
 
   const financialAccountsMock = [
     {
+      index: 0,
       name: "Houndstooth Bank",
       type: "checking",
       selected: true,
@@ -27,6 +28,7 @@ describe("[f8395630] Plaid Client", () => {
       plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
     },
     {
+      index: 1,
       name: "Houndstooth Bank",
       type: "savings",
       selected: true,
@@ -37,6 +39,7 @@ describe("[f8395630] Plaid Client", () => {
       plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
     },
     {
+      index: 2,
       name: "Houndstooth Bank",
       type: "cd",
       selected: true,
@@ -202,7 +205,19 @@ describe("[f8395630] Plaid Client", () => {
       },
     );
 
-    assert.deepEqual(response, financialAccountsMock);
+    assert.deepEqual(
+      response,
+      financialAccountsMock.map((account) => {
+        return {
+          index: account?.index,
+          name: account?.name,
+          type: account?.type,
+          selected: account?.selected,
+          account_last4: account?.account_last4,
+          balance: account?.balance,
+        };
+      }),
+    );
   });
   it("[bd4ff0b3] should be able to handle duplications", async () => {
     mock.reset();
