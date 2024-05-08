@@ -5,6 +5,32 @@ import flattenApplication from "../../api/helpers.js";
 
 import Client from "../client.js";
 
+export enum WebhookTypeEnum {
+  APPLICATION_STATUS = "APPLICATION_STATUS",
+  APPLICATION_REVIEW = "APPLICATION_REVIEW",
+  APPLICATION_DOCUMENT_REQUEST = "APPLICATION_DOCUMENT_REQUEST",
+  APPLICATION_UPDATE = "APPLICATION_UPDATE",
+}
+enum EntityStatus {
+  PENDING_REVIEW = "pending_review",
+  PENDING_DOCUMENTS = "pending_documents",
+}
+
+enum EntityStatusMapping {
+  REVIEW = "review",
+  AI_REQUESTED = "ai_requested",
+}
+
+enum AlloyDecision {
+  APPROVED = "Approved",
+  DENIED = "Denied",
+}
+
+enum DecisionStatusMapping {
+  APPROVED = "approved",
+  DECLINED = "declined",
+}
+
 export default class LendingDecisionServiceClient extends Client {
   get clientName() {
     return "LendingDecisionService";
@@ -24,33 +50,59 @@ export default class LendingDecisionServiceClient extends Client {
    * @param context PluginContext
    * @param id string - Monolith Application ID
    */
-  async saveDecision(context: PluginContext, id, payload): Promise<void> {
+  async saveDecision(
+    context: PluginContext,
+    id: string,
+    payload: WebhookEventPayload,
+  ): Promise<void> {
+    const { data, webhookType } = payload;
+    const { decision, entity, status } = data;
+
+    /* ============================== *
+     * Log webhook event
+     * ============================== */
+    this.log({
+      event: webhookType,
+      decision,
+      ...(status ? { status } : {}),
+      id,
+    });
+
+    /* ============================== *
+     * Return immediately if the webhook is an APPLICATION_UPDATE event
+     * These event aren't actionable and should only be logged
+     * ============================== */
+    if (webhookType === WebhookTypeEnum.APPLICATION_UPDATE) {
+      return;
+    }
+
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
 
-    if (!applicationServiceClient)
+    if (!applicationServiceClient) {
       throw new Error(
         "[88379256] Application Service client instance not found",
       );
-    let application;
+    }
 
-    /**
+    /* ============================== *
      * Find an application by the monolith application id
      * This search via the monolith application id would return
      * the primary application. Query with root field key to obtain
      * the root application id of primary application
-     */
+     * ============================== */
+    let application;
     try {
       const result = (await applicationServiceClient.sendRequest({
         query: String.raw`query Applications($criteria: [ApplicationSearchCriteria]!) {
-            applications(criteria: $criteria) {
+          applications(criteria: $criteria) {
+            id
+            root {
               id
-              root {
-                id
-              }
-              primary {
-                id
-              }
+            }
+            primary {
+              id
+            }
             }
           }
           `,
@@ -76,29 +128,36 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    /**
-     * Now set status of the root application that we found via
-     * the search criteria MonolithApplicationID
-     */
     try {
-      await applicationServiceClient.sendRequest({
-        query: String.raw`mutation (
-              $id: UUID!
-              $meta: EventMeta
-              $status: ApplicationStatusName!
+      const status = this.deriveStatusFromEvent(payload);
+
+      if (status) {
+        await applicationServiceClient.sendRequest({
+          query: String.raw`mutation (
+            $id: UUID!
+            $meta: EventMeta
+            $status: ApplicationStatusName!
             ) {
               setStatus(id: $id, meta: $meta, status: $status) {
+              id
+              application {
                 id
-                application {
-                  id
-                }
               }
-            }`,
-        variables: {
-          id: application.root.id,
-          status: payload.decisionOutcome,
-        },
-      });
+            }
+          }`,
+          variables: {
+            ...(entity
+              ? {
+                  id: application.id, // update the applicant's status if an entity is passed
+                }
+              : {
+                  id: application.root.id, // otherwise, update the root application status
+                }),
+            status,
+            meta: { service: "apply-flow-service" },
+          },
+        });
+      }
     } catch (error) {
       this.log(
         {
@@ -258,10 +317,16 @@ export default class LendingDecisionServiceClient extends Client {
 
     let decisioningStatus;
     if (results && results.data.decisionOutcome) {
-      if (results.data.decisionOutcome === "Denied") {
-        decisioningStatus = "declined";
-      } else if (results.data.decisionOutcome === "Approved") {
-        decisioningStatus = "approved";
+      const { decisionOutcome } = results.data;
+
+      switch (decisionOutcome) {
+        case AlloyDecision.DENIED:
+          decisioningStatus = DecisionStatusMapping.DECLINED;
+          break;
+
+        case AlloyDecision.APPROVED:
+          decisioningStatus = DecisionStatusMapping.APPROVED;
+          break;
       }
     }
 
@@ -606,4 +671,73 @@ export default class LendingDecisionServiceClient extends Client {
     };
     return formattedPayload;
   }
+
+  private deriveStatusFromEvent = (payload: WebhookEventPayload) => {
+    const { data, webhookType } = payload;
+    const { decision, entity } = data;
+
+    let status;
+    switch (webhookType) {
+      /* ============================== *
+       * APPLICATION_STATUS events are specifically used
+       * to update the root application status
+       * ============================== */
+      case WebhookTypeEnum.APPLICATION_STATUS:
+        // use the decision to map to the correct root status
+        switch (decision) {
+          case AlloyDecision.APPROVED:
+            status = DecisionStatusMapping.APPROVED;
+            break;
+
+          case AlloyDecision.DENIED:
+            status = DecisionStatusMapping.DECLINED;
+            break;
+
+          default:
+            throw new Error("[4b0a0bd3] Unhandled APPLICATION_STATUS event");
+        }
+        break;
+      /* ============================== *
+       * APPLICATION_REVIEW && APPLICATION_DOCUMENT_REQUEST events
+       * signify that we need to update the applicant's status
+       * ============================== */
+      case WebhookTypeEnum.APPLICATION_REVIEW:
+        // use the entity's status to map to the correct applicant status
+        switch (entity && entity.status) {
+          case EntityStatus.PENDING_REVIEW:
+            status = EntityStatusMapping.REVIEW;
+            break;
+
+          default:
+            throw new Error("[31d7e02f] Unhandled APPLICATION_REVIEW event");
+        }
+        break;
+
+      case WebhookTypeEnum.APPLICATION_DOCUMENT_REQUEST:
+        switch (entity && entity.status) {
+          case EntityStatus.PENDING_DOCUMENTS:
+            status = EntityStatusMapping.AI_REQUESTED;
+            break;
+
+          default:
+            throw new Error(
+              "[94d72f20] Unhandled APPLICATION_DOCUMENT_REQUEST event",
+            );
+        }
+        break;
+      /* ============================== *
+       * APPLICATION_UPDATE events do not map to status updates
+       * ============================== */
+      case WebhookTypeEnum.APPLICATION_UPDATE:
+        status = null;
+        break;
+      /* ============================== *
+       * Throw for any unhandled webhook events
+       * ============================== */
+      default:
+        throw new Error("[3320c677] Unhandled webhook event");
+    }
+
+    return status;
+  };
 }

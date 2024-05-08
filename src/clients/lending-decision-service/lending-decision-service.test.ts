@@ -457,6 +457,104 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.data.status, "completed");
   });
 
+  it("[36a5efe2] set the root application's status to 'approved' for 'Approved' decision outcomes when users are auto-approved", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            application: primaryAppData,
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Approved",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    await client.postDecisionRequest(context, root);
+
+    const { body } = mockFn.mock.calls[5].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert.equal(body.variables.id, primaryAppData.id);
+    assert.equal(body.variables.status, "approved");
+  });
+
+  it("[a11a3b6d] set the root application's status to 'declined' for 'Denied' decision outcomes when users are auto-declined", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            application: primaryAppData,
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Denied",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    await client.postDecisionRequest(context, root);
+
+    const { body } = mockFn.mock.calls[5].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert.equal(body.variables.id, primaryAppData.id);
+    assert.equal(body.variables.status, "declined");
+  });
+
   it("[68361c40] should post a cosigned app decision", async () => {
     mock.method(
       context.loadedPlugins.applicationServiceClient.instance,
@@ -502,33 +600,360 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.data.status, "completed");
   });
 
-  it("[3229903b] Should updated status on application from saveDecision", async () => {
+  it("[f339b92e] should set a root application's status to 'approved' for APPLICATION_STATUS events with an 'Approved' decision", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
     mock.method(
       context.loadedPlugins.applicationServiceClient.instance,
       "post",
-      () => {
-        return {
-          results: {
-            data: {
-              applications: [
-                {
-                  id: primary,
-                  root: {
-                    id: root,
-                  },
-                  primary: null,
+      mockFn,
+    );
+
+    await client.saveDecision(context, "576326", {
+      data: {
+        decision: "Approved",
+      },
+      webhookType: "APPLICATION_STATUS",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert.equal(body.variables.id, root);
+    assert.equal(body.variables.status, "approved");
+  });
+
+  it("[182f16c7] should set a root application's status to 'declined' for APPLICATION_STATUS events with an 'Denied' decision", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
                 },
-              ],
-            },
+                primary: null,
+              },
+            ],
           },
-          response: {
-            statusCode: 200,
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await client.saveDecision(context, "576326", {
+      data: {
+        decision: "Approved",
+      },
+      webhookType: "APPLICATION_STATUS",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert(body.variables.id, root);
+    assert(body.variables.status, "declined");
+  });
+
+  it("[9cbd8c40] should throw for APPLICATION_STATUS events when an unknown decision is sent", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
           },
-        };
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await assert.rejects(
+      client.saveDecision(context, "576326", {
+        data: {
+          decision: "Unknown",
+        },
+        webhookType: "APPLICATION_STATUS",
+      }),
+      (error: Error) => {
+        assert.equal(
+          error.message,
+          "[4b0a0bd3] Unhandled APPLICATION_STATUS event",
+        );
+        return true;
       },
     );
-    await client.saveDecision(context, "576326", {
-      decisionOutcome: "Approved",
+  });
+
+  it("[79712798] should set an applicant's status to 'review' for APPLICATION_REVIEW events with an 'pending_review' entity status", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
     });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await client.saveDecision(context, "576326", {
+      data: {
+        decision: "Pending",
+        entity: {
+          status: "pending_review",
+        },
+      },
+      webhookType: "APPLICATION_REVIEW",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert(body.variables.id, primary);
+    assert(body.variables.status, "review");
+  });
+
+  it("[52f1ee94] should throw for APPLICATION_REVIEW events when an unknown entity status is sent", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await assert.rejects(
+      client.saveDecision(context, "576326", {
+        data: {
+          decision: "Pending",
+          entity: {
+            status: "Unknown",
+          },
+        },
+        webhookType: "APPLICATION_REVIEW",
+      }),
+      (error: Error) => {
+        assert.equal(
+          error.message,
+          "[31d7e02f] Unhandled APPLICATION_REVIEW event",
+        );
+        return true;
+      },
+    );
+  });
+
+  it("[40a0b2ce] should set an applicant's status to 'ai_requested' for APPLICATION_DOCUMENT_REQUEST events with a 'pending_documents' entity status", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await client.saveDecision(context, "576326", {
+      data: {
+        decision: "Pending",
+        entity: {
+          status: "pending_documents",
+        },
+      },
+      webhookType: "APPLICATION_DOCUMENT_REQUEST",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert(body.variables.id, primary);
+    assert(body.variables.status, "ai_requested");
+  });
+
+  it("[ffdeb465] should throw for APPLICATION_DOCUMENT_REQUEST events when an unknown entity status is sent", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await assert.rejects(
+      client.saveDecision(context, "576326", {
+        data: {
+          decision: "Pending",
+          entity: {
+            status: "Unknown",
+          },
+        },
+        webhookType: "APPLICATION_DOCUMENT_REQUEST",
+      }),
+      (error: Error) => {
+        assert.equal(
+          error.message,
+          "[94d72f20] Unhandled APPLICATION_DOCUMENT_REQUEST event",
+        );
+        return true;
+      },
+    );
+  });
+
+  it("[7e58cb91] should throw for unknown webhook events", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await assert.rejects(
+      client.saveDecision(context, "576326", {
+        data: {
+          decision: "Pending",
+        },
+        webhookType: "UNKNOWN",
+      }),
+      (error: Error) => {
+        assert.equal(error.message, "[3320c677] Unhandled webhook event");
+        return true;
+      },
+    );
   });
 });
