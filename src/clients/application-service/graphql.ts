@@ -8,6 +8,10 @@ fragment ApplicantFragment on Application {
   lendingDecisionID
   monolithLoanID
   monolithApplicationID
+  rateMapTag
+  rateMapVersion
+  partnerName
+  partnerDiscountAmount
   relationships {
     id
     relationship

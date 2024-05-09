@@ -269,8 +269,8 @@ export default class LendingDecisionServiceClient extends Client {
       if (application[applicant]) {
         applicationDecisionDetails[applicant] = await this.formatRequestPayload(
           context,
-          application[applicant] as typings.Application,
-          application.details?.amount?.requested,
+          application as typings.Application, // Pass full application. We need loan amount and rates details from root
+          applicant,
         );
       }
     }
@@ -442,9 +442,12 @@ export default class LendingDecisionServiceClient extends Client {
   private async formatRequestPayload(
     context: PluginContext,
     application: typings.Application,
-    loanAmount: typings.AmountDetail["requested"],
+    applicant: string,
   ) {
-    const { details } = application;
+    const { details } = application[applicant];
+    const applicantSSN = application[applicant].ssnTokenURI
+      ? application[applicant].ssnTokenURI
+      : "";
 
     const accreditedSchoolService =
       context.loadedPlugins.accreditedSchoolService?.instance;
@@ -500,7 +503,7 @@ export default class LendingDecisionServiceClient extends Client {
         ? new Date(details.dateOfBirth).toISOString()
         : "",
       addresses,
-      ssn: application.ssnTokenURI ? application.ssnTokenURI : "",
+      ssn: applicantSSN,
       email: details?.email || "",
       phoneNumber:
         details.phone?.find((phoneDetail) => phoneDetail && phoneDetail.number)
@@ -652,7 +655,9 @@ export default class LendingDecisionServiceClient extends Client {
           accountType: "banking",
           accountSubType: account?.type,
           balance: account?.balance,
-          accountInstitutionName: account?.institution_name,
+          accountInstitutionName: account?.institution_name
+            ? account.institution_name
+            : "",
         };
       });
     }
@@ -667,7 +672,7 @@ export default class LendingDecisionServiceClient extends Client {
       incomes: otherIncomeDetails ? otherIncomeDetails : [],
       assets: assetsDetails ? assetsDetails : [],
       loanInfo: {
-        claimedLoanAmount: loanAmount,
+        claimedLoanAmount: application.details?.amount?.requested,
       },
       financialInfo: {
         hasPlaid,
@@ -687,11 +692,17 @@ export default class LendingDecisionServiceClient extends Client {
        * Hard code for now:
        */
       ratesInfo: {
-        rateMapVersion: "188.1",
-        rateMapTag: "default",
+        rateMapVersion: application?.rateMapVersion
+          ? application.rateMapVersion
+          : "188.1",
+        rateMapTag: application?.rateMapTag
+          ? application.rateMapTag
+          : "default",
         rateAdjustmentData: {
-          name: "juno",
-          amount: 0,
+          name: application?.partnerName ? application.partnerName : "juno",
+          amount: application?.partnerDiscountAmount
+            ? application.partnerDiscountAmount
+            : 0,
         },
       },
     };
