@@ -110,6 +110,9 @@ fragment MetaFragment on Application {
   }
   root {
     ...ApplicantFragment
+    applicants {
+      ...ApplicantFragment
+    }
   }
   cosigner {
     ...ApplicantFragment
