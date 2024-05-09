@@ -9,7 +9,8 @@ interface ITemplateHelper<T extends unknown[] = []> {
     ...args: [
       ...T,
       Omit<HelperOptions, "data"> & { data: IExecutionInjections },
-    ]
+    ] &
+      unknown[]
   ): unknown;
 }
 

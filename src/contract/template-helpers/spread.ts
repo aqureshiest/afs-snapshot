@@ -10,7 +10,7 @@ const spread: TemplateHelper = function (context) {
       if (index <= Object.keys(definition).length) {
         spreadJson = `${spreadJson},`;
       }
-      if (definition[key]) {
+      if (definition[key] !== null) {
         spreadJson = `${spreadJson} "${key}": ${JSON.stringify(
           definition[key],
         )}`;

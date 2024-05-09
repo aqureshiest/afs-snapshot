@@ -1,4 +1,12 @@
+{{!
+  Analytics specifies all actions within a noop to ensure that it fires after
+  all portions of the contract have been completed succssfully
 
+  TODO: all evaluative contracts that can possibly fail due to downstream
+  effects should have a standardized error output that we should be able to
+  examine here in order to determine whether or not we submit it
+}}
+{{#noop}}{{ contract 'actions' }}{{/noop}}
   {
     "type": "track",
     "payload":{

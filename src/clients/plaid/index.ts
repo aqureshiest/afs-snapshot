@@ -40,7 +40,12 @@ export default class PlaidClient extends Client {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  async createLinkToken(context: PluginContext, id: string, payload) {
+  async createLinkToken(
+    context: PluginContext,
+    input: Input,
+    id: string,
+    payload,
+  ) {
     const request = {
       user: {
         // TODO: get userId from reference cognitoID
@@ -79,8 +84,18 @@ export default class PlaidClient extends Client {
 
     return results.link_token;
   }
+  error(input: Input, message: string | Array<string>) {
+    if (!input.error) input.error = [];
 
-  async getAccounts(context: PluginContext, id: string, payload) {
+    if (Array.isArray(message)) {
+      input.error = input.error.concat(message);
+    } else {
+      if (!input.error.includes(message)) {
+        input.error.push(message);
+      }
+    }
+  }
+  async getAccounts(context: PluginContext, input: Input, id: string, payload) {
     const request = {
       ...this.auth,
       access_token: payload.access_token,
@@ -113,7 +128,12 @@ export default class PlaidClient extends Client {
       return results;
     }
   }
-  async searchInstitutions(context: PluginContext, id: string, payload) {
+  async searchInstitutions(
+    context: PluginContext,
+    input: Input,
+    id: string,
+    payload,
+  ) {
     if (!payload.query) {
       throw new Error(`[49f71236] PLAID - query param is required.`);
     }
@@ -152,7 +172,12 @@ export default class PlaidClient extends Client {
     }));
   }
 
-  async getInstitution(context: PluginContext, id: string, payload) {
+  async getInstitution(
+    context: PluginContext,
+    input: Input,
+    id: string,
+    payload,
+  ) {
     const request = {
       institution_id: payload.institution_id,
       country_codes: ["US"],
@@ -187,7 +212,12 @@ export default class PlaidClient extends Client {
     return results.institution;
   }
   //exchanges a public token for a acces_token/itemId
-  async exchangePublicToken(context: PluginContext, id: string, payload) {
+  async exchangePublicToken(
+    context: PluginContext,
+    input: Input,
+    id: string,
+    payload,
+  ) {
     const request = {
       public_token: payload.public_token,
       ...this.auth,
@@ -217,6 +247,7 @@ export default class PlaidClient extends Client {
 
   async exchangePublicTokenAndGetAccounts(
     context: PluginContext,
+    input: Input,
     id: string,
     payload,
   ) {
@@ -224,79 +255,139 @@ export default class PlaidClient extends Client {
       context.loadedPlugins.applicationServiceClient.instance;
 
     context.logger.silly(`Plaid exchange Public Token requested.`);
-    const accessToken = await this.exchangePublicToken(context, id, payload);
+    const accessToken = await this.exchangePublicToken(
+      context,
+      input,
+      id,
+      payload,
+    );
+    const application = input.application?.applicants?.find(
+      (app) => app?.id === id,
+    );
     if (accessToken) {
-      const plaidResponse = await this.getAccounts(context, id, accessToken);
+      const plaidResponse = await this.getAccounts(
+        context,
+        input,
+        id,
+        accessToken,
+      );
       if (plaidResponse) {
-        const institution = await this.getInstitution(context, id, {
+        const institution = await this.getInstitution(context, input, id, {
           institution_id: plaidResponse.item.institution_id,
         });
-
+        const plaidAccountIDsAdded: Array<string> = [];
         const financialAccounts = plaidResponse.accounts?.map((faccount) => {
-          return {
-            name: institution.name,
-            type: faccount.subtype,
-            selected: true,
-            account_last4: faccount.mask,
-            balance: (faccount.balances.current || 0) * 100,
-            plaidItemID: plaidResponse.item.item_id,
-            plaidAccessToken: accessToken.access_token,
-          };
+          if (Number(faccount.type === "loan")) {
+            this.error(input, "loan-accounts-error");
+          } else {
+            // this was first though as using the plaid Account ID as to check if the account already exists,
+            //  but plaid returns a new account ID every time the public token is exchanged.
+            // instead we are using a combination of the institution name, account type, account number and balance to check if the account already exists
+            const existingAccount =
+              application?.details?.financialAccounts?.find(
+                (account) =>
+                  account?.name === institution.name &&
+                  account?.type === faccount.subtype &&
+                  account?.account_last4 === faccount.mask &&
+                  account?.balance === (faccount.balances.current || 0) * 100,
+              );
+            if (!existingAccount) {
+              plaidAccountIDsAdded.push(faccount.account_id);
+              return {
+                name: institution.name,
+                type: faccount.subtype,
+                selected: true,
+                account_last4: faccount.mask,
+                balance: (faccount.balances.current || 0) * 100,
+                plaidAccountID: faccount.account_id,
+                plaidItemID: plaidResponse.item.item_id,
+                plaidAccessToken: accessToken.access_token,
+              };
+            } else {
+              this.error(input, "duplicated-account-error");
+            }
+          }
         });
-        try {
-          const ASresponse = (await applicationService?.sendRequest(
-            {
-              query: gql`
-                mutation (
-                  $id: UUID!
-                  $details: AddDetailInput
-                  $meta: EventMeta
-                ) {
-                  addDetails(id: $id, details: $details, meta: $meta) {
-                    id
-                    application {
-                      details {
-                        financialAccounts {
-                          index
-                          name
-                          type
-                          selected
-                          account_last4
-                          balance
+
+        if (financialAccounts.length > 0) {
+          try {
+            const ASresponse = (await applicationService?.sendRequest(
+              {
+                query: gql`
+                  mutation (
+                    $id: UUID!
+                    $details: AddDetailInput
+                    $meta: EventMeta
+                  ) {
+                    addDetails(id: $id, details: $details, meta: $meta) {
+                      id
+                      error
+                      application {
+                        details {
+                          financialAccounts {
+                            index
+                            name
+                            type
+                            selected
+                            plaidAccountID
+                            account_last4
+                            balance
+                          }
                         }
                       }
                     }
                   }
-                }
-              `,
-              variables: {
-                id,
-                details: {
-                  financialAccounts,
+                `,
+                variables: {
+                  id,
+                  details: {
+                    financialAccounts,
+                  },
+                  meta: { service: "apply-flow-service" },
                 },
-                meta: { service: "apply-flow-service" },
               },
-            },
-            context,
-          )) as unknown as { addDetails: Event };
+              context,
+            )) as unknown as { addDetails: Event };
+            if (ASresponse.addDetails.error) {
+              this.error(input, "application-service-error");
+              this.error(input, ASresponse.addDetails.error);
+            }
+            if (ASresponse.addDetails.application.details) {
+              const { financialAccounts: resultAccounts } =
+                ASresponse.addDetails.application.details;
+              const result = resultAccounts?.filter((graphqlAccount) => {
+                if (graphqlAccount?.plaidAccountID)
+                  return plaidAccountIDsAdded.includes(
+                    graphqlAccount?.plaidAccountID,
+                  );
+              });
 
-          if (ASresponse.addDetails.application.details) {
-            const { financialAccounts: result } =
-              ASresponse.addDetails.application.details;
-            return result;
+              return result?.map((account) => {
+                return {
+                  index: account?.index,
+                  name: account?.name,
+                  type: account?.type,
+                  selected: account?.selected,
+                  account_last4: account?.account_last4,
+                  balance: account?.balance,
+                };
+              });
+            } else {
+              return [];
+            }
+          } catch (ex) {
+            this.log(
+              {
+                error: ex,
+              },
+              context,
+            );
+
+            return {
+              statusCode: 500,
+              message: ex.errorMessage,
+            };
           }
-        } catch (ex) {
-          this.log(
-            {
-              error: ex,
-            },
-            context,
-          );
-
-          return {
-            statusCode: 500,
-            message: ex.errorMessage,
-          };
         }
 
         return {};

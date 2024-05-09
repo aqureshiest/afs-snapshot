@@ -216,12 +216,12 @@ export default abstract class ContractType<
       // are met. As soon as a contract has its condition met, it will begin
       // async evaluation and will no longer be triggered or re-evaluated
       if (
-        this.results[1] &&
+        this.results[1] !== undefined &&
         this.evaluate &&
         this.condition(input, injections, this.results[1])
       ) {
         const promise =
-          this.results[2] || this.evaluate(input, injections, this.results[1]);
+          this.results[2] ?? this.evaluate(input, injections, this.results[1]);
         this.results[2] = promise;
         this.results[3] = await promise;
 

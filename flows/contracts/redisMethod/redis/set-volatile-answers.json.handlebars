@@ -2,7 +2,6 @@
 
 {{#if (and auth.session.userId (or request.body.values.employmentType request.body.values.hasConsistentIncome request.body.values.addAddtionalIncome request.body.values.sixMonthResidence))}}
   {
-    {{log auth}}
     "redisMethod": "setUserState",
     "key": "{{auth.session.userId}}",
     "value": 

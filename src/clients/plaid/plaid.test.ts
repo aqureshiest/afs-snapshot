@@ -5,10 +5,51 @@ import createPluginContext from "@earnest-labs/microservice-chassis/createPlugin
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 import PlaidClient from "./index.js";
+import { Input as IContractInput } from "contract/manifest.js";
 
 describe("[f8395630] Plaid Client", () => {
   let context;
   let client: PlaidClient;
+  const input = {
+    application: null,
+    request: {},
+  } as IContractInput;
+
+  const financialAccountsMock = [
+    {
+      index: 0,
+      name: "Houndstooth Bank",
+      type: "checking",
+      selected: true,
+      account_last4: "0000",
+      balance: 11000,
+      plaidAccountID: "A3wenK5EQRfKlnxlBbVXtPw9gyazDWu1EdaZD",
+      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    },
+    {
+      index: 1,
+      name: "Houndstooth Bank",
+      type: "savings",
+      selected: true,
+      account_last4: "1111",
+      balance: 21000,
+      plaidAccountID: "GPnpQdbD35uKdxndAwmbt6aRXryj4AC1yQqmd",
+      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    },
+    {
+      index: 2,
+      name: "Houndstooth Bank",
+      type: "cd",
+      selected: true,
+      account_last4: "2222",
+      balance: 100000,
+      plaidAccountID: "nVRK5AmnpzFGv6LvpEoRivjk9p7N16F6wnZrX",
+      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
+    },
+  ];
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -20,7 +61,7 @@ describe("[f8395630] Plaid Client", () => {
   });
 
   it("[a99b44e4] should be able get a list of institutions", async () => {
-    const response = await client.searchInstitutions(context, "123", {
+    const response = await client.searchInstitutions(context, input, "123", {
       query: "chase",
     });
     assert.deepStrictEqual(
@@ -29,7 +70,7 @@ describe("[f8395630] Plaid Client", () => {
     );
   });
   it("[a99b44e4] should thow if no query params provided", async () => {
-    const request = client.searchInstitutions(context, "123", {});
+    const request = client.searchInstitutions(context, input, "123", {});
     assert.rejects(request);
   });
   it("[a99b44e4] should thow if request to plaid fails", async () => {
@@ -41,14 +82,14 @@ describe("[f8395630] Plaid Client", () => {
         },
       };
     });
-    const request = client.searchInstitutions(context, "123", {
+    const request = client.searchInstitutions(context, input, "123", {
       query: "chase",
     });
     assert.rejects(request);
   });
   it("[560375ed] should be able get link token", async () => {
     mock.reset();
-    const response = await client.createLinkToken(context, "123", {});
+    const response = await client.createLinkToken(context, input, "123", {});
 
     assert.equal(response, "link-sandbox-33792986-2b9c-4b80-b1f2-518caaac6183");
   });
@@ -62,12 +103,12 @@ describe("[f8395630] Plaid Client", () => {
         },
       };
     });
-    const request = client.createLinkToken(context, "123", {});
+    const request = client.createLinkToken(context, input, "123", {});
     assert.rejects(request);
   });
   it("[38a27b34] should be able get accounts from an access token", async () => {
     mock.reset();
-    const response = await client.getAccounts(context, "123", {
+    const response = await client.getAccounts(context, input, "123", {
       access_token: "asasdasdasd",
     });
 
@@ -82,14 +123,14 @@ describe("[f8395630] Plaid Client", () => {
         },
       };
     });
-    const request = client.getAccounts(context, "123", {
+    const request = client.getAccounts(context, input, "123", {
       access_token: "asdasdasdasd",
     });
     assert.rejects(request);
   });
   it("[933e422b] should be able to get an insitution from plaid by id", async () => {
     mock.reset();
-    const response = await client.getInstitution(context, "123", {
+    const response = await client.getInstitution(context, input, "123", {
       institution_id: "ins_1",
     });
 
@@ -104,14 +145,14 @@ describe("[f8395630] Plaid Client", () => {
         },
       };
     });
-    const request = client.getInstitution(context, "123", {
+    const request = client.getInstitution(context, input, "123", {
       institution_id: "ins_1",
     });
     assert.rejects(request);
   });
   it("[9a3872eb] should be able to exchange public_token for access_token", async () => {
     mock.reset();
-    const response = await client.exchangePublicToken(context, "123", {
+    const response = await client.exchangePublicToken(context, input, "123", {
       public_token: "asdasdasdasd",
     });
 
@@ -130,29 +171,94 @@ describe("[f8395630] Plaid Client", () => {
         },
       };
     });
-    const request = client.exchangePublicToken(context, "123", {
+    const request = client.exchangePublicToken(context, input, "123", {
       public_token: "asdasdasdasd",
     });
     assert.rejects(request);
   });
-  it.skip("[9a3872eb] should be able to exchangePublicTokenAndGetAccounts()", async () => {
+
+  it("[9a3872eb] should be able to exchangePublicTokenAndGetAccounts()", async () => {
     mock.reset();
     mock.method(
       context.loadedPlugins.applicationServiceClient.instance,
-      "post",
+      "sendRequest",
       async () => {
         return {
-          response: {
-            statusCode: 400,
-            statusMessage: "invalid request",
+          addDetails: {
+            application: {
+              details: {
+                financialAccounts: financialAccountsMock,
+              },
+            },
+            error: null,
           },
         };
       },
     );
-    const response = client.exchangePublicTokenAndGetAccounts(context, "123", {
-      public_token: "asdasdasdasd",
-    });
 
-    assert.rejects(response);
+    const response = await client.exchangePublicTokenAndGetAccounts(
+      context,
+      input,
+      "123",
+      {
+        public_token: "asdasdasdasd",
+      },
+    );
+
+    assert.deepEqual(
+      response,
+      financialAccountsMock.map((account) => {
+        return {
+          index: account?.index,
+          name: account?.name,
+          type: account?.type,
+          selected: account?.selected,
+          account_last4: account?.account_last4,
+          balance: account?.balance,
+        };
+      }),
+    );
+  });
+  it("[bd4ff0b3] should be able to handle duplications", async () => {
+    mock.reset();
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      async () => {
+        return {
+          addDetails: {
+            application: {
+              details: {
+                financialAccounts: financialAccountsMock,
+              },
+            },
+            error: null,
+          },
+        };
+      },
+    );
+    const errors: string[] = [];
+    const input = {
+      application: {
+        id: "root-123",
+        applicants: [
+          { id: "123", details: { financialAccounts: financialAccountsMock } },
+        ],
+      },
+      error: errors,
+      applicationState: {},
+      request: {},
+    };
+    const response = await client.exchangePublicTokenAndGetAccounts(
+      context,
+      input,
+      "123",
+      {
+        public_token: "asdasdasdasd",
+      },
+    );
+
+    assert.deepEqual(response, []);
+    assert(input.error?.includes("duplicated-account-error"));
   });
 });

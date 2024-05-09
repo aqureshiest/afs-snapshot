@@ -8,6 +8,10 @@ fragment ApplicantFragment on Application {
   lendingDecisionID
   monolithLoanID
   monolithApplicationID
+  rateMapTag
+  rateMapVersion
+  partnerName
+  partnerDiscountAmount
   relationships {
     id
     relationship
@@ -41,6 +45,7 @@ fragment ApplicantFragment on Application {
       institution_name
       monolithFinancialAccountID
       balance
+      plaidAccountID
       plaidItemID
       plaidAccessToken
     }
@@ -75,6 +80,10 @@ fragment ApplicantFragment on Application {
   cognitoID
   monolithUserID
   monolithLoanID
+  status {
+    name
+    asOf
+  }
 }
 
 fragment ApplicationFragment on Application {
@@ -101,6 +110,9 @@ fragment MetaFragment on Application {
   }
   root {
     ...ApplicantFragment
+    applicants {
+      ...ApplicantFragment
+    }
   }
   cosigner {
     ...ApplicantFragment

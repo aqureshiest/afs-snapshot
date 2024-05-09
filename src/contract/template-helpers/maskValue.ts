@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import assert from "node:assert";
 
-const maskValue: TemplateHelper = function (type, data) {
+const maskValue: TemplateHelper = function (...args) {
+  const [type, data] = args;
   assert(typeof type === "string");
 
   if (data && type === "ssn") {

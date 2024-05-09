@@ -41,8 +41,8 @@ class Client extends BaseClient<[Context | void]> {
   }
 
   private logLevelFromMessage(message: Message): string {
-    if ("error" in message) return "error";
     if (message.level) return message.level;
+    if ("error" in message) return "error";
     if (
       (typeof message.statusCode === "number" && message.statusCode >= 500) ||
       message.statusCode === null
