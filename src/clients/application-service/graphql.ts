@@ -8,10 +8,6 @@ fragment ApplicantFragment on Application {
   lendingDecisionID
   monolithLoanID
   monolithApplicationID
-  rateMapTag
-  rateMapVersion
-  partnerName
-  partnerDiscountAmount
   relationships {
     id
     relationship
@@ -110,6 +106,9 @@ fragment MetaFragment on Application {
   }
   root {
     ...ApplicantFragment
+    applicants {
+      ...ApplicantFragment
+    }
   }
   cosigner {
     ...ApplicantFragment
