@@ -3,110 +3,28 @@
   "type": "input",
   "definition": {
       "key": "degree",
-      "type": "inputRadio",
-      "layout": "bubble",
-      "direction": "column",
+      "type": "inputSelect",
       "items": [
-        {
-            "id": "high_school",
-            "value": "high_school",
-            "label": "High School Diploma"
-        },
-        {
-            "id": "incomplete_grads",
-            "value": "incomplete_grads",
-            "label": "Incomplete Bachelor's/Associate's"
-        },
-        {
-            "id": "associates",
-            "value": "associates",
-            "label": "Associate's"
-        },
-        {
-            "id": "bachelors",
-            "value": "bachelors",
-            "label": "Bachelor's"
-        },
-        {
-            "id": "masters_arts",
-            "value": "masters_arts",
-            "label": "Master's of Arts"
-        },
-        {
-            "id": "masters_engineering",
-            "value": "masters_engineering",
-            "label": "Master's of Science or Engineering"
-        },
-        {
-            "id": "masters_other",
-            "value": "masters_other",
-            "label": "Other Master's (e.g. MPP, MPG)"
-        },
-        {
-            "id": "medical_other",
-            "value": "medical_other",
-            "label": "Other Medical (e.g. RN, DPT, OD)"
-        },
-        {
-            "id": "jd",
-            "value": "jd",
-            "label": "JD"
-        },
-        {
-            "id": "md",
-            "value": "md",
-            "label": "MD"
-        },
-        {
-            "id": "dds",
-            "value": "dds",
-            "label": "DDS or DMD"
-        },
-        {
-            "id": "do",
-            "value": "do",
-            "label": "DO"
-        },
-        {
-            "id": "dvm",
-            "value": "dvm",
-            "label": "DVM"
-        },
-        {
-            "id": "mba",
-            "value": "mba",
-            "label": "MBA"
-        },
-        {
-            "id": "phd",
-            "value": "phd",
-            "label": "PhD"
-        },
-        {
-            "id": "pharmd",
-            "value": "pharmd",
-            "label": "Pharm.D"
-        },
-        {
-            "id": "other",
-            "value": "other",
-            "label": "Other Professional Degree/Certification"
-        },
-        {
-            "id": "none",
-            "value": "none",
-            "label": "None"
-        },
-        {
-            "id": "undergrad",
-            "value": "undergrad",
-            "label": "Undergraduate"
-        },
-        {
-            "id": "grad",
-            "value": "grad",
-            "label": "Graduate"
-        }
+        { "id": "high_school", "value": "high_school", "label": "High School Diploma" },
+        { "id": "incomplete_grads", "value": "incomplete_grads", "label": "Incomplete Bachelor's/Associate's" },
+        { "id": "associates", "value": "associates", "label": "Associate's" },
+        { "id": "bachelors",  "value": "bachelors", "label": "Bachelor's" },
+        { "id": "masters_arts", "value": "masters_arts", "label": "Master's of Arts" },
+        { "id": "masters_engineering", "value": "masters_engineering", "label": "Master's of Science or Engineering" },
+        { "id": "masters_other", "value": "masters_other", "label": "Other Master's (e.g. MPP, MPG)" },
+        { "id": "medical_other", "value": "medical_other", "label": "Other Medical (e.g. RN, DPT, OD)" },
+        { "id": "jd", "value": "jd", "label": "JD" },
+        { "id": "md", "value": "md", "label": "MD" },
+        { "id": "dds", "value": "dds", "label": "DDS or DMD" },
+        { "id": "do", "value": "do", "label": "DO" },
+        { "id": "dvm", "value": "dvm", "label": "DVM" },
+        { "id": "mba", "value": "mba", "label": "MBA" },
+        { "id": "phd", "value": "phd", "label": "PhD" },
+        { "id": "pharmd", "value": "pharmd", "label": "Pharm.D" },
+        { "id": "other", "value": "other", "label": "Other Professional Degree/Certification" },
+        { "id": "none", "value": "none", "label": "None" },
+        { "id": "undergrad", "value": "undergrad", "label": "Undergraduate" },
+        { "id": "grad", "value": "grad", "label": "Graduate" }
       ],
       "status": {{{json (contract 'primary_degree_input_status')}}},
       "value": "{{details.education.0.degree}}",
