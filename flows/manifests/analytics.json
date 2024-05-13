@@ -1,3 +1,4 @@
 {
-  "*": "track-event"
+  "*": "response",
+  "actions": ["track-event", "redis.setApplicationState"]
 }
