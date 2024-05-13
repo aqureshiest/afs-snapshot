@@ -294,7 +294,6 @@ export default class NeasClient extends Client {
         resiliency: this.resiliency,
       },
       context,
-      context,
     );
   }
 }
