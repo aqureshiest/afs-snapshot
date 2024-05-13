@@ -29,6 +29,10 @@ export function and(...args) {
 export function or(...args) {
   return Array.prototype.slice.call(args, 0, -1).some(Boolean);
 }
+
+export function boolean(v1) {
+  return Boolean(v1);
+}
 export function number(v1) {
   return Number(String(v1).replace(/[^0-9.]/g, ""));
 }
