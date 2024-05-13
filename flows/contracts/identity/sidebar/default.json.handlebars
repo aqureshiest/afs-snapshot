@@ -1,0 +1,28 @@
+{
+  "header": [
+    {
+      "logo": true
+    },
+    {
+      "icon": "HamburgerMenuIcon",
+      "action": {
+        "type": "sidebar",
+        "properties": {
+          "items": [
+            {
+              "key": "logOutKey",
+              "copy": "Log Out",
+              "action": {
+                "type": "logout",
+                "properties": {
+                  {{!-- TODO: once env variables are passed, dynamically set goTo--}}
+                  "goTo": "staging.earnest.com"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

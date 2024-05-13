@@ -1,6 +1,7 @@
 {
     "*": "refi-student-info",
     "stage": "student-info-stage.refi-edit",
+    "pageLayout": "sidebar",
     "steps": [
       "student-info-form/loan.refi-edit"
     ],

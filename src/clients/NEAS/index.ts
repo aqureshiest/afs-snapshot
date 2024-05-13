@@ -8,6 +8,7 @@ import {
   ADD_REFERENCE_MUTATION,
   NEAS_APPLICATION_QUERY,
 } from "../application-service/graphql.js";
+import { Plugin } from "ajv";
 
 export default class NeasClient extends Client {
   get clientName() {
@@ -293,7 +294,6 @@ export default class NeasClient extends Client {
         },
         resiliency: this.resiliency,
       },
-      context,
       context,
     );
   }

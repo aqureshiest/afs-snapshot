@@ -1,6 +1,7 @@
 {
     "*": "refi-review",
     "stage": "review.refi",
+    "pageLayout": "sidebar",
     "steps": [
         "student-info-form/review.refi"
     ],
