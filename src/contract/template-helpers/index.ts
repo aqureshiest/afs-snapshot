@@ -29,6 +29,10 @@ export function and(...args) {
 export function or(...args) {
   return Array.prototype.slice.call(args, 0, -1).some(Boolean);
 }
+
+export function boolean(v1) {
+  return Boolean(v1);
+}
 export function number(v1) {
   return Number(String(v1).replace(/[^0-9.]/g, ""));
 }
@@ -157,4 +161,20 @@ export function hasValues(value) {
     );
   }
   return false;
+}
+
+export function stateMinLoan(addresses) {
+  const minLoanCA = "$10,000";
+  const minLoanNM = "$10,001";
+  const minLoan = "$5,000";
+  if (addresses) {
+    const primaryAddress = findCurrentAddress(addresses);
+    switch (primaryAddress.state) {
+      case "CA":
+        return minLoanCA;
+      case "NM":
+        return minLoanNM;
+    }
+  }
+  return minLoan;
 }
