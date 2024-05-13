@@ -277,7 +277,7 @@ export default class PlaidClient extends Client {
         });
         const plaidAccountIDsAdded: Array<string> = [];
         const financialAccounts = plaidResponse.accounts?.map((faccount) => {
-          if (Number(faccount.type === "loan")) {
+          if (faccount.type === "loan") {
             this.error(input, "loan-accounts-error");
           } else {
             // this was first though as using the plaid Account ID as to check if the account already exists,
