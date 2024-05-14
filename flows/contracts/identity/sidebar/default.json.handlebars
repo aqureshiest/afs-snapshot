@@ -6,21 +6,25 @@
     {
       "icon": "HamburgerMenuIcon",
       "action": {
+        "key": "sidebar",
         "type": "sidebar",
         "properties": {
-          "items": [
-            {
-              "key": "logOutKey",
-              "copy": "Log Out",
-              "action": {
-                "type": "logout",
-                "properties": {
-                  {{!-- TODO: once env variables are passed, dynamically set goTo--}}
-                  "goTo": "staging.earnest.com"
+          "type": "navigation",
+          "properties": {
+            "dark": true,
+            "items": [
+              {
+                "copy": "Sign Out",
+                "action": {
+                  "type": "logout",
+                  "properties": {
+                    {{!-- TODO: once env variables are passed, dynamically set goTo--}}
+                    "goTo": "staging.earnest.com"
+                  }
                 }
               }
-            }
-          ]
+            ]
+          }
         }
       }
     }
