@@ -178,3 +178,16 @@ export function stateMinLoan(addresses) {
   }
   return minLoan;
 }
+
+export function sumIncomeAmountRange(...args) {
+  const [values, start, end] = args;
+  let sum = 0;
+  if (values) {
+    for (let i = start; i <= end; i += 1) {
+      if (values[i] && values[i].amount) {
+        sum += values[i].amount;
+      }
+    }
+  }
+  return sum;
+}
