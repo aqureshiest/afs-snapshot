@@ -1,5 +1,5 @@
 {{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/income/consistent-income' hasConsistentIncome) }}
+  {{#if (ajv 'validate' 'questions/primary/income/consistent-income' incomeIsConsistent) }}
      "completed"
   {{else}} 
      "incomplete"

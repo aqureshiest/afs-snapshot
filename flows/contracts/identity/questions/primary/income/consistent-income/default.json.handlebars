@@ -1,11 +1,11 @@
 {
     "type": "input",
     "definition": {
-        "key": "hasConsistentIncome",
+        "key": "incomeIsConsistent",
         "type": "inputRadio",
         "layout": "copyWithIcon",
         "direction": "row",
-        "value": "",
+        "value": "{{{userState.incomeIsConsistent}}}",
         "items": [
             {
                 "id": "yes",
@@ -19,6 +19,6 @@
             }
         ],
         "status": {{{json (contract 'primary_consistent_income_input_status')}}},
-        "error": "{{{ ajv 'errors' 'questions/primary/income/consistent-income' hasConsistentIncome }}}"
+        "error": "{{{ ajv 'errors' 'questions/primary/income/consistent-income' incomeIsConsistent }}}"
     }
 }

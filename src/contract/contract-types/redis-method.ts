@@ -8,7 +8,8 @@ class RedisMethod extends ContractType<Definition, Definition, Output> {
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   condition = (input: Input, context: Injections, definition: Definition) => {
-    return Boolean(definition.key);
+    if (definition?.key) return true;
+    return false;
   };
 
   /**
