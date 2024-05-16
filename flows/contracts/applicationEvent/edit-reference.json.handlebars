@@ -1,0 +1,16 @@
+{{#if request.params.id}}
+  {
+    "event": "reference",
+    "payload": {
+      "id": "{{request.params.id}}",
+      {{#with request.body.values}}
+        {{#if ssn}}
+            "references": [{"referenceId": "{{{contract "encryptPii"}}}", "referenceType": "ssnTokenURI"}] 
+        {{/if}}
+    },
+    {{/with}}
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}
