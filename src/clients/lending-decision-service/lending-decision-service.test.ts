@@ -35,7 +35,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       {
         id: primary,
         createdAt: "2024-02-22T20:24:10.140Z",
-        ssn: "pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3",
+        ssnTokenURI: "pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3",
         relationships: [
           {
             id: root,
@@ -92,11 +92,32 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
               type: "retirement",
             },
           ],
+          financialAccounts: [
+            {
+              index: 0,
+              name: "Chase",
+              type: "checking",
+              selected: true,
+              account_last4: "0000",
+              institution_name: null,
+              monolithFinancialAccountID: "2177229",
+              balance: 1100000,
+              plaidItemID: "yG9aZ7ngMDua9ZWLrX8wIKVW1Wql3lIyVX5X9",
+              plaidAccessToken:
+                "access-sandbox-33ce1168-f5d1-44df-b31d-4f1ceaee748a",
+            },
+          ],
           amount: {
             requested: 1000000,
             approved: null,
             certified: null,
           },
+          asset: [
+            {
+              type: "claimed_total_assets",
+              amount: 2000000,
+            },
+          ],
         },
       },
     ],
@@ -132,7 +153,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         id: cosigner,
         createdAt: "2024-02-27T22:19:48.567Z",
         relationship: "applicant",
-        ssn: "pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3",
+        ssnTokenURI: "pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3",
         relationships: [
           {
             id: root,
@@ -180,12 +201,12 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
           income: [
             {
               amount: 2000000,
-              type: "employment",
-              employer: "company",
+              type: "unspecified",
+              employer: null,
               name: null,
-              title: "employee",
-              start: "2020-01-01",
-              end: "2050-01-01",
+              title: null,
+              start: null,
+              end: null,
             },
           ],
           amount: {

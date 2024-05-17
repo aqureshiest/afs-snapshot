@@ -17,10 +17,7 @@
         }
       },
       "value": {
-        "type": "number",
-        "errorMessage": {
-          "type": "Enter a valid number"
-        }
+        "type": "number"
       }
     },
     "required": ["type", "value"]

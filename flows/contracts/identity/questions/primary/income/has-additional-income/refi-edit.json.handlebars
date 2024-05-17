@@ -6,8 +6,8 @@
         "type": "inputRadio",
         "layout": "copyWithIcon",
         "direction": "row",
-        {{#if details.income.2.amount}}
-            "value": "true",
+        {{#if ../userState.addAddtionalIncome}}
+            "value": "{{{../userState.addAddtionalIncome}}}",
         {{else}}
             "value": "",
         {{/if}}

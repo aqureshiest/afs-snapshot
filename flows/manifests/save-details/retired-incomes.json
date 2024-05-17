@@ -1,0 +1,6 @@
+{
+    "*": "redirect",
+    "actions": ["add-retired-income-details"],
+    "analytics": ["server-application-section-submitted"],
+    "redirect": ["redirect.refi-review"]
+}
