@@ -1,5 +1,7 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import AccreditedSchoolServiceClient from "clients/accredited-school-service/index.js";
+import { Input as IContractInput } from "contract/manifest.js";
+
 type AccreditedSchoolServicePlugin =
   ChassisPlugin<AccreditedSchoolServiceClient>;
 type ILoanType = "slo" | "slr";
@@ -30,7 +32,7 @@ declare module "clients/accredited-school-service/index.js" {
   type LoanType = ILoanType;
 
   type School = ISchool;
-
+  type Input = IContractInput;
   type SchoolDetails = ISchool & {
     loanTypes: LoanType;
     costOfAttendance: {

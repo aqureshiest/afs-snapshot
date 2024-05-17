@@ -6,6 +6,9 @@ export { default as obj } from "./obj.js";
 export { default as spread } from "./spread.js";
 export { default as maskValue } from "./maskValue.js";
 export { default as getSchool } from "./getSchool.js";
+export { default as mapLoanType } from "./mapLoanType.js";
+export { default as mapProduct } from "./mapProduct.js";
+
 export const noop = function (v1) {
   v1.fn(this);
   return "";

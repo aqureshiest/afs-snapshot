@@ -107,7 +107,9 @@ export default class RedisClient {
       ...value,
     };
     const rKey = `${this.prefix}_usr_${key}`;
-
+    context.logger.debug(
+      `Setting user state: ${rKey}, expiration: ${this.expiration}`,
+    );
     return await this.client.set(rKey, JSON.stringify(newState), {
       EX: this.expiration,
       GT: true,

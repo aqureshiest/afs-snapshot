@@ -3,6 +3,15 @@
     "key": "save-details",
     "type": "request",
     "properties": {
+        "analytics": {
+            "name": "Application Section Submitted",
+            "product": "{{{mapProduct application.reference.product}}}",
+            "section": "employment type",
+            "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+            "formValue": [
+                {"key": "employment_type", "path": "employmentStatus.employmentType"}
+            ]
+        },
         "manifest": "save-details/employment/{{application.primary.id}}",
         "method": "POST"
     }

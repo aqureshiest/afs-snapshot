@@ -51,6 +51,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @param id string - Monolith Application ID
    */
   async saveDecision(
+    input: Input,
     context: PluginContext,
     id: string,
     payload: WebhookEventPayload,
@@ -178,6 +179,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {Promise<DecisionResponseDetails>}
    */
   async getDecision(
+    input: Input,
     context: PluginContext,
     lendingDecisionId: string,
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
@@ -215,6 +217,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {Promise<DecisionPostResponse>}
    */
   async postDecisionRequest(
+    input: Input,
     context: PluginContext,
     applicationId: string, // Assuming root app ID
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
@@ -268,6 +271,7 @@ export default class LendingDecisionServiceClient extends Client {
     ]) {
       if (application[applicant]) {
         applicationDecisionDetails[applicant] = await this.formatRequestPayload(
+          input,
           context,
           application as typings.Application, // Pass full application. We need loan amount and rates details from root
           applicant,
@@ -440,6 +444,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {DecisionEntity}
    */
   private async formatRequestPayload(
+    input: Input,
     context: PluginContext,
     application: typings.Application,
     applicant: string,
@@ -523,6 +528,7 @@ export default class LendingDecisionServiceClient extends Client {
         }
 
         const foundSchool = await accreditedSchoolService["getSchool"](
+          input,
           context,
           { id: education.opeid },
         );
@@ -646,7 +652,9 @@ export default class LendingDecisionServiceClient extends Client {
       financialAccountDetails = details.financialAccounts.map((account) => {
         if (account?.plaidAccessToken) {
           hasPlaid = true;
-          plaidTokens.push(account?.plaidAccessToken);
+          if (!plaidTokens.includes(account?.plaidAccessToken)) {
+            plaidTokens.push(account?.plaidAccessToken);
+          }
         }
         return {
           accountType: "banking",
