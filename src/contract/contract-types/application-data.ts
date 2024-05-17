@@ -33,26 +33,26 @@ class ApplicationData extends ContractType<
       applicationServiceClient,
       "[52fb1e44] ApplicationServiceClient not instantiated",
     );
-    if (definition?.id) {
+    if (definition["id"]) {
       const { application } = (await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATION_QUERY,
-          variables: { id: definition.id },
+          variables: { id: definition["id"] },
         },
         context,
       )) as unknown as { application: Application };
 
       return application;
     } else {
-      assert(definition.criteria, "[0afdb895] search criteria is undefined");
+      assert(definition["criteria"], "[0afdb895] search criteria is undefined");
 
       const { applications } = (await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATIONS_QUERY,
           variables: {
-            criteria: definition.criteria,
-            ...(definition?.limit ? { limit: definition?.limit } : {}),
-            ...(definition?.page ? { page: definition?.page } : {}),
+            criteria: definition["criteria"],
+            ...(definition["limit"] ? { limit: definition["limit"] } : {}),
+            ...(definition["page"] ? { page: definition["page"] } : {}),
           },
         },
         context,
