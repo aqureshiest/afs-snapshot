@@ -5,10 +5,15 @@ import createPluginContext from "@earnest-labs/microservice-chassis/createPlugin
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 import AccreditedSchoolServiceClient from "./index.js";
+import { Input as IContractInput } from "contract/manifest.js";
 
 describe("[f8395630] Application Service Client", () => {
   let context;
   let client: AccreditedSchoolServiceClient;
+  const input = {
+    application: null,
+    request: {},
+  } as IContractInput;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -20,7 +25,7 @@ describe("[f8395630] Application Service Client", () => {
   });
 
   it("[ad0e89fe] should be able to get a list of schools", async () => {
-    const response = await client.getSchools(context, {
+    const response = await client.getSchools(input, context, {
       loanType: "slo",
       name: "berkeley",
     });
@@ -31,7 +36,7 @@ describe("[f8395630] Application Service Client", () => {
   });
 
   it("[b6fa8369] should be able to get school data from id", async () => {
-    const response = await client.getSchool(context, { id: "00732978" });
+    const response = await client.getSchool(input, context, { id: "00732978" });
     assert(response);
     assert.deepStrictEqual(response.name, "ITT Technical Institute - Corona");
   });
@@ -44,7 +49,7 @@ describe("[f8395630] Application Service Client", () => {
         },
       };
     });
-    const request = client.getSchools(context, {
+    const request = client.getSchools(input, context, {
       name: "nada",
     });
     assert.rejects(request);
@@ -58,7 +63,7 @@ describe("[f8395630] Application Service Client", () => {
         },
       };
     });
-    const request = await client.getSchool(context, { id: "404" });
+    const request = await client.getSchool(input, context, { id: "404" });
     assert.equal(request, null);
   });
   it("[8a10561b] should get error when >=400", async () => {
@@ -70,7 +75,7 @@ describe("[f8395630] Application Service Client", () => {
         },
       };
     });
-    const request = client.getSchool(context, { id: "404" });
+    const request = client.getSchool(input, context, { id: "404" });
     assert.rejects(request);
   });
 });

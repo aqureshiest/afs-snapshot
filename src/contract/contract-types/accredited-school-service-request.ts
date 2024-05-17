@@ -33,7 +33,7 @@ class AccreditedSchoolServiceRequest extends ContractType<
     try {
       const result = await accreditedSchoolServiceClient[
         definition.accreditedSchoolServiceRequestMethod
-      ](context, definition);
+      ](input, context, definition);
       return result;
     } catch (ex) {
       this.error(

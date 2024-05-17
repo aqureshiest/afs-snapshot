@@ -3,10 +3,10 @@
   "plaidMethod": "createLinkToken",
   "id": "{{{request.params.id}}}",
   "payload": {
-    {{#if application.primary.cognitoID}}
-      "userId": "{{{application.primary.cognitoID}}}"
+    {{#if application.primary.reference.cognitoID}}
+      "userId": "{{{application.primary.reference.cognitoID}}}"
     {{else}}
-      "userId": "{{{application.primary.monolithUserID}}}"
+      "userId": "{{{application.primary.reference.monolithUserID}}}"
     {{/if}}
   }
 }

@@ -276,39 +276,43 @@ export default class PlaidClient extends Client {
           institution_id: plaidResponse.item.institution_id,
         });
         const plaidAccountIDsAdded: Array<string> = [];
-        const financialAccounts = plaidResponse.accounts?.map((faccount) => {
-          if (faccount.type === "loan") {
-            this.error(input, "loan-accounts-error");
-          } else {
-            // this was first though as using the plaid Account ID as to check if the account already exists,
-            //  but plaid returns a new account ID every time the public token is exchanged.
-            // instead we are using a combination of the institution name, account type, account number and balance to check if the account already exists
-            const existingAccount =
-              application?.details?.financialAccounts?.find(
-                (account) =>
-                  account?.name === institution.name &&
-                  account?.type === faccount.subtype &&
-                  account?.account_last4 === faccount.mask &&
-                  account?.balance === (faccount.balances.current || 0) * 100,
-              );
-            if (!existingAccount) {
-              plaidAccountIDsAdded.push(faccount.account_id);
-              return {
-                name: institution.name,
-                type: faccount.subtype,
-                selected: true,
-                account_last4: faccount.mask,
-                balance: (faccount.balances.current || 0) * 100,
-                plaidAccountID: faccount.account_id,
-                plaidItemID: plaidResponse.item.item_id,
-                plaidAccessToken: accessToken.access_token,
-              };
+        const financialAccounts = plaidResponse.accounts
+          ?.map((faccount) => {
+            if (
+              !["depository"].includes(faccount.type) ||
+              !["checking", "savings"].includes(String(faccount.subtype))
+            ) {
+              this.error(input, "loan-accounts-error");
             } else {
-              this.error(input, "duplicated-account-error");
+              // this was first though as using the plaid Account ID as to check if the account already exists,
+              //  but plaid returns a new account ID every time the public token is exchanged.
+              // instead we are using a combination of the institution name, account type, account number and balance to check if the account already exists
+              const existingAccount =
+                application?.details?.financialAccounts?.find(
+                  (account) =>
+                    account?.name === institution.name &&
+                    account?.type === faccount.subtype &&
+                    account?.account_last4 === faccount.mask &&
+                    account?.balance === (faccount.balances.current || 0) * 100,
+                );
+              if (!existingAccount) {
+                plaidAccountIDsAdded.push(faccount.account_id);
+                return {
+                  name: institution.name,
+                  type: faccount.subtype,
+                  selected: true,
+                  account_last4: faccount.mask,
+                  balance: (faccount.balances.current || 0) * 100,
+                  plaidAccountID: faccount.account_id,
+                  plaidItemID: plaidResponse.item.item_id,
+                  plaidAccessToken: accessToken.access_token,
+                };
+              } else {
+                this.error(input, "duplicated-account-error");
+              }
             }
-          }
-        });
-
+          })
+          .filter((account) => account);
         if (financialAccounts.length > 0) {
           try {
             const ASresponse = (await applicationService?.sendRequest(
@@ -361,7 +365,6 @@ export default class PlaidClient extends Client {
                     graphqlAccount?.plaidAccountID,
                   );
               });
-
               return result?.map((account) => {
                 return {
                   index: account?.index,
@@ -390,7 +393,7 @@ export default class PlaidClient extends Client {
           }
         }
 
-        return {};
+        return [];
       }
     }
   }

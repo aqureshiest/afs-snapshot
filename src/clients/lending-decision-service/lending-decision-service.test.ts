@@ -6,7 +6,7 @@ import createPluginContext from "@earnest-labs/microservice-chassis/createPlugin
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
-
+import { Input as IContractInput } from "contract/manifest.js";
 import LendingDecisionServiceClient from "./index.js";
 
 describe("[96aaf9c1] Lending Decision Service Client", () => {
@@ -15,7 +15,10 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   let context;
   let client;
   let key;
-
+  const input = {
+    application: null,
+    request: {},
+  } as IContractInput;
   const root = uuidv4();
   const primary = uuidv4();
   const cosigner = uuidv4();
@@ -249,6 +252,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
       try {
         await client.getDecision(
+          input,
           context,
           "721e917c-572c-4e81-b791-09c3bf1ea5c1",
         );
@@ -262,7 +266,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     it("[96553a76] Throw an error when no Lending Decision ID is given to get request", async () => {
       try {
-        await client.getDecision(context);
+        await client.getDecision(input, context);
       } catch (error) {
         assert.strictEqual(
           error.message,
@@ -312,6 +316,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
       try {
         await client.postDecisionRequest(
+          input,
           context,
           "12c7482c-7ec2-4513-b575-fa994f2adf88",
         );
@@ -332,7 +337,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         },
       };
       try {
-        await client.postDecisionRequest(missingASClientContext);
+        await client.postDecisionRequest(input, missingASClientContext);
       } catch (error) {
         assert.strictEqual(
           error.message,
@@ -365,7 +370,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       );
 
       try {
-        await client.postDecisionRequest(context, root);
+        await client.postDecisionRequest(input, context, root);
       } catch (error) {
         assert.strictEqual(
           error.message,
@@ -396,7 +401,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       );
 
       try {
-        await client.postDecisionRequest(context, root);
+        await client.postDecisionRequest(input, context, root);
       } catch (error) {
         assert.strictEqual(error.message, "Application not found");
       }
@@ -424,6 +429,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     });
 
     const results = await client.getDecision(
+      input,
       context,
       "16719670-a754-4719-a185-4f7e875bc04c",
     );
@@ -471,7 +477,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
     });
 
-    const results = await client.postDecisionRequest(context, root);
+    const results = await client.postDecisionRequest(input, context, root);
 
     assert.deepEqual(results.message, "Decisioning Request is processed.");
     assert.deepEqual(results.data.decisionOutcome, "Application Review");
@@ -518,7 +524,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
     });
 
-    await client.postDecisionRequest(context, root);
+    await client.postDecisionRequest(input, context, root);
 
     const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
       body: { variables: { id: string; status: string } };
@@ -566,7 +572,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
     });
 
-    const results = await client.postDecisionRequest(context, root);
+    const results = await client.postDecisionRequest(input, context, root);
 
     assert.deepEqual(results.message, "Decisioning Request is processed.");
     assert.deepEqual(results.data.decisionOutcome, "Application Review");
@@ -601,7 +607,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       mockFn,
     );
 
-    await client.saveDecision(context, "576326", {
+    await client.saveDecision(input, context, "576326", {
       data: {
         decision: "Approved",
       },
@@ -643,7 +649,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       mockFn,
     );
 
-    await client.saveDecision(context, "576326", {
+    await client.saveDecision(input, context, "576326", {
       data: {
         decision: "Approved",
       },
@@ -686,7 +692,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     );
 
     await assert.rejects(
-      client.saveDecision(context, "576326", {
+      client.saveDecision(input, context, "576326", {
         data: {
           decision: "Unknown",
         },
@@ -730,7 +736,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       mockFn,
     );
 
-    await client.saveDecision(context, "576326", {
+    await client.saveDecision(input, context, "576326", {
       data: {
         decision: "Pending",
         entity: {
@@ -776,7 +782,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     );
 
     await assert.rejects(
-      client.saveDecision(context, "576326", {
+      client.saveDecision(input, context, "576326", {
         data: {
           decision: "Pending",
           entity: {
@@ -823,7 +829,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       mockFn,
     );
 
-    await client.saveDecision(context, "576326", {
+    await client.saveDecision(input, context, "576326", {
       data: {
         decision: "Pending",
         entity: {
@@ -869,7 +875,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     );
 
     await assert.rejects(
-      client.saveDecision(context, "576326", {
+      client.saveDecision(input, context, "576326", {
         data: {
           decision: "Pending",
           entity: {
@@ -917,7 +923,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     );
 
     await assert.rejects(
-      client.saveDecision(context, "576326", {
+      client.saveDecision(input, context, "576326", {
         data: {
           decision: "Pending",
         },

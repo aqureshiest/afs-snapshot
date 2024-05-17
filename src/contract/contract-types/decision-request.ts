@@ -29,6 +29,7 @@ class DecisionRequest extends ContractType<Definition, Definition, Output> {
     let result;
     try {
       result = await lendingDecisionService[definition.decisionRequestMethod](
+        input,
         context,
         definition.id,
         definition.payload,

@@ -5,7 +5,9 @@ import { Request, Response, NextFunction } from "express";
 import { Application } from "../../typings/clients/application-service/index.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 import flattenApplication from "../helpers.js";
+import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
+const allowedEnvInjections = ["NEAS_BASE_URL", "BASE_URL"];
 /* ============================== *
  * Gather inputs for contract execution
  * ============================== */
@@ -88,7 +90,18 @@ const getInputs: Handler = async function (
     );
   }
 
+  // injects env variables to res.locals.input for contract execution
+  const env = {};
+  if (context.env) {
+    Object.keys(context.env).forEach((envKey) => {
+      if (allowedEnvInjections.includes(envKey)) {
+        env[envKey] = SensitiveString.ExtractValue(context.env[envKey]) || "";
+      }
+    });
+  }
+
   res.locals.input = {
+    env,
     applicationState: applicationStep,
     application: application,
     request: {

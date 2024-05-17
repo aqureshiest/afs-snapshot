@@ -52,20 +52,10 @@
                 "icon": "icon-error" 
               }
             }
-          },
-          {
-            "codes": ["duplicated-account-error"],
-            "action":{
-              "type": "toast",
-              "definition": {
-                "type": "error",
-                "copy": "Selected account already linked.",
-                "icon": "icon-error" 
-              }
-            }
           }
         ]
       },
+      "backAction": {{{ json (contract 'back-button') }}},
       "primaryAction": {
         "copy": "Move to review",
         "action": {
