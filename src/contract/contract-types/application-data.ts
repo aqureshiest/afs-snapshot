@@ -33,7 +33,7 @@ class ApplicationData extends ContractType<
       applicationServiceClient,
       "[52fb1e44] ApplicationServiceClient not instantiated",
     );
-    if ("id" in definition) {
+    if (definition?.id) {
       const { application } = (await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATION_QUERY,
