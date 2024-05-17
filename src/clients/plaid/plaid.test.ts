@@ -37,7 +37,7 @@ describe("[f8395630] Plaid Client", () => {
       plaidAccountID: "GPnpQdbD35uKdxndAwmbt6aRXryj4AC1yQqmd",
       plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
       plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
-    }
+    },
   ];
 
   before(async () => {

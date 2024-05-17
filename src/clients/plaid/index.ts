@@ -393,7 +393,7 @@ export default class PlaidClient extends Client {
           }
         }
 
-        return {};
+        return [];
       }
     }
   }

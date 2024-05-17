@@ -6,6 +6,7 @@ import * as typings from "@earnest/application-service-client/typings/codegen.js
 type LendingDecisionServicePlugin = ChassisPlugin<LendingDecisionServiceClient>;
 
 import { WebhookTypeEnum } from "clients/lending-decision-service/index.js";
+import { Input as IContractInput } from "contract/manifest.js";
 
 interface IEntityInfo {
   firstName: typings.NameDetail["first"];
@@ -202,4 +203,5 @@ declare module "../../../clients/lending-decision-service/index.js" {
   type DecisionPostResponse = IDecisionPostResponse;
   type DecisionGetResponse = IDecisionGetResponse;
   type WebhookEventPayload = IWebhookEventPayload;
+  type Input = IContractInput;
 }
