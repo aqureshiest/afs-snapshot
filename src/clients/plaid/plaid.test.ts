@@ -37,18 +37,7 @@ describe("[f8395630] Plaid Client", () => {
       plaidAccountID: "GPnpQdbD35uKdxndAwmbt6aRXryj4AC1yQqmd",
       plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
       plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
-    },
-    {
-      index: 2,
-      name: "Houndstooth Bank",
-      type: "cd",
-      selected: true,
-      account_last4: "2222",
-      balance: 100000,
-      plaidAccountID: "nVRK5AmnpzFGv6LvpEoRivjk9p7N16F6wnZrX",
-      plaidItemID: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
-      plaidAccessToken: "access-sandbox-de3ce8ef-33f8-452c-a685-8671031fc0f6",
-    },
+    }
   ];
 
   before(async () => {
@@ -150,7 +139,7 @@ describe("[f8395630] Plaid Client", () => {
     });
     assert.rejects(request);
   });
-  it("[9a3872eb] should be able to exchange public_token for access_token", async () => {
+  it("[6ec3a779] should be able to exchange public_token for access_token", async () => {
     mock.reset();
     const response = await client.exchangePublicToken(context, input, "123", {
       public_token: "asdasdasdasd",
