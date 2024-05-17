@@ -4,12 +4,12 @@
     "payload": {
       "id": "{{request.params.id}}",
       {{#with request.body.values}}
-      "details": 
+      "details":
         {{#obj}} {{! make sure to flatten each element into a single line}}
           {{#if loanAmount}}
             {"amount": {"requested": {{{formatDollarsToCents loanAmount}}} } }
           {{/if}}
-          {{#if dateOfBirth}} 
+          {{#if dateOfBirth}}
             {"dateOfBirth": "{{{dateObjToString dateOfBirth}}}"}
           {{/if}}
           {{#if name}}
@@ -21,32 +21,47 @@
           {{#if phone}}
             {"phone": [{"index": 0, "number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
-          {{#if currentAddress }}
-            {"location": [{"index": 0, "street1": "{{currentAddress.street}}", "street2": "{{currentAddress.apt}}", "city": "{{currentAddress.city}}", "state": "{{currentAddress.state}}", "zip": "{{currentAddress.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
-          {{/if}}
-          {{#if previousAddress }} 
-            {"location": [{"index": 1, "street1": "{{previousAddress.street}}", "street2": "{{previousAddress.apt}}", "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
+          {{#if (or currentAddress previousAddress) }}
+            {"location": {{#list}}
+              {{#if currentAddress}}
+                {"index": 0, "street1": "{{currentAddress.street}}", {{#if currentAddress.apt}} "street2": "{{currentAddress.apt}}", {{/if}} "city": "{{currentAddress.city}}", "state": "{{currentAddress.state}}", "zip": "{{currentAddress.zip}}" , "type": "primary" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }
+              {{/if}}
+              {{#if previousAddress }}
+                {"index": 1, "street1": "{{previousAddress.street}}", {{#if previousAddress.apt}} "street2": "{{previousAddress.apt}}", {{/if}} "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }
+              {{/if}}
+            {{/list}} }
           {{/if}}
           {{#if (or school degree graduationDate)}}
             {"education": [{"index": 0 {{#if school }}, "opeid": "{{school.opeid8}}" {{/if}} {{#if degree}}, "degree": "{{degree}}" {{/if}} {{#if graduationDate}}, "graduationDate": "{{dateObjToString graduationDate}}" {{/if}} }]}
           {{/if}}
           {{#if employmentType}}
-              {"income": [{"index": 0, "type": "{{employmentType}}", "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
-          {{/if}}
-          {{#if (and jobTitle annualIncomeFuture (eq employmentType 'future'))}}
-            {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncomeFuture}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
-          {{else if (and jobTitle annualIncome)}}
-            {"income": [{"index": 0, "title": "{{jobTitle}}", "amount": {{{formatDollarsToCents annualIncome}}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if startDate}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }]}
+              {"income": {{#list}}
+                {"index": 0, "type": "{{employmentType}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if (or annualIncome annualIncomeFuture)}}, "amount": {{#if annualIncome}} {{{formatDollarsToCents annualIncome}}} {{else if annualIncomeFuture}} {{{formatDollarsToCents annualIncomeFuture}}} {{/if}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                {{#if sourcesOfIncome}}
+                  {"index": 1, "type": "{{sourcesOfIncome}}" }
+                {{/if}}
+                {{#if additionalAmount}}
+                  {{#if additionalAmount.[0]}}
+                    {"index": 2, "type": "{{additionalAmount.0.type}}", "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[1]}}
+                      {"index": 3, "type": "{{additionalAmount.1.type}}", "amount": {{{formatDollarsToCents additionalAmount.1.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[2]}}
+                      {"index": 4, "type": "{{additionalAmount.2.type}}", "amount": {{{formatDollarsToCents additionalAmount.2.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[3]}}
+                      {"index": 5, "type": "{{additionalAmount.3.type}}", "amount": {{{formatDollarsToCents additionalAmount.3.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[4]}}
+                      {"index": 6, "type": "{{additionalAmount.4.type}}", "amount": {{{formatDollarsToCents additionalAmount.4.value}}} }
+                  {{/if}}
+                {{/if}}
+              {{/list}}
+              }
           {{/if}}
           {{#if claimedAssets}}
             {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
-          {{/if}}
-          {{#if additionalAmount}}
-            {{! until the additional amount ui component allows for checked box sources, hard code type to 'rental'}}
-            {"income": [{"index": 2, "type": "rental", "amount": {{{formatDollarsToCents additionalAmount}}} }]}
-          {{/if}}
-          {{#if sourcesOfIncome}}
-            {"income": [{"index": 1, "type": "{{sourcesOfIncome}}" }]}
           {{/if}}
           {{#if financialAccounts}}
             {"financialAccounts": {{{json financialAccounts}}} }

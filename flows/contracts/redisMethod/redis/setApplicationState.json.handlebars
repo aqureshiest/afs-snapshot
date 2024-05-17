@@ -1,10 +1,9 @@
-{{#if application.id}}
-{
-  "redisMethod": "setApplicationState",
-  "key": "{{{application.id}}}",
-  "value": {
-    "manifest": "{{{request.originalUrl}}}",
-    "step": "{{request.body.values.step}}"
+{{#if (and application.id (eq request.body.values.type "page"))}}
+  {
+    "redisMethod": "setApplicationState",
+    "key": "{{{application.id}}}",
+    "value": {{{json request.body.flow}}}
   }
-}
+  {{else}}
+    {}
 {{/if}}

@@ -5,12 +5,10 @@
     "incomplete_grads",
     "associates",
     "bachelors",
-    "undergraduate",
-    "graduate",
-    "masters_of_arts",
-    "masters_of_science_or_engineering",
-    "other_masters",
-    "other_medical",
+    "masters_arts",
+    "masters_engineering",
+    "masters_other",
+    "medical_other",
     "jd",
     "md",
     "dds",
@@ -20,7 +18,9 @@
     "phd",
     "pharmd",
     "other",
-    "none"
+    "none",
+    "undergrad",
+    "grad"
   ],
   "errorMessage": {
     "enum": "Please select your highest completed degree"

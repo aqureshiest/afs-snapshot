@@ -41,8 +41,7 @@
     "questions/primary/employment/job-title.default",
     "questions/primary/income/amount/annual-income.default",
     "questions/primary/income/amount/claimed-assets.default",
-    "questions/primary/income/amount/additional-income.default",
-    "info/student-income/additional-income-hint.default"
+    "questions/primary/income/amount/additional-income.default"
   ],
   "student-info-income-self-employed-rows": [      
     "info/student-income.default",
@@ -50,8 +49,7 @@
     "questions/primary/employment/start-date.default",
     "questions/primary/income/amount/annual-income.default",
     "questions/primary/income/amount/claimed-assets.default",
-    "questions/primary/income/amount/additional-income.default",
-    "info/student-income/additional-income-hint.default"
+    "questions/primary/income/amount/additional-income.default"
   ],
   "student-info-income-future-rows": [
     "info/student-income.default",
@@ -60,8 +58,7 @@
     "questions/primary/employment/start-date.default",
     "questions/primary/income/amount/annual-income.future",
     "questions/primary/income/amount/claimed-assets.default",
-    "questions/primary/income/amount/additional-income.default",
-    "info/student-income/additional-income-hint.default"
+    "questions/primary/income/amount/additional-income.default"
   ],
   "student-info-income-retired-rows": [
     "info/student-income/sources-of-income.default",
@@ -71,7 +68,7 @@
     "info/student-income/additional-income.default",
     "questions/primary/income/has-additional-income.default",
     "info/student-income/additional-income-hint.default",
-    "questions/primary/income/amount/additional-income.default"
+    "questions/primary/income/amount/additional-income.refi-retired"
   ],
   "student-info-unemployed-rows": [
     "info/student-consistent-income-source.default",
@@ -80,8 +77,7 @@
   "student-info-consistent-income-rows": [
     "info/student-income.default",
     "questions/primary/income/amount/annual-income.default",
-    "questions/primary/income/amount/additional-income.default",
-    "info/student-income/additional-income-hint.default"
+    "questions/primary/income/amount/additional-income.default"
   ],
 
   "noop_details_action": "actions/noop-details.primary",
