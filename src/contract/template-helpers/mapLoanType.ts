@@ -9,7 +9,7 @@ const mapLoanType = function (loanType) {
   if (loanTypeMap[loanType]) {
     return loanTypeMap[loanType];
   } else {
-    loanType;
+    return loanType;
   }
 };
 

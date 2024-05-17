@@ -8,7 +8,7 @@ const mapProduct = function (applyProduct) {
   if (productMap[applyProduct]) {
     return productMap[applyProduct];
   } else {
-    applyProduct;
+    return applyProduct;
   }
 };
 
