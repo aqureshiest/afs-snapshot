@@ -18,7 +18,7 @@ declare module "clients/redis/index.js" {
     sixMonthResidence?: boolean;
     employmentType?: string;
     addAddtionalIncome?: boolean;
-    hasConsistentIncome?: boolean;
+    incomeIsConsistent?: boolean;
     [key: string]: unknown;
   };
 }

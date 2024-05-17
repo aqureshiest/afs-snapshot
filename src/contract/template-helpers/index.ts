@@ -162,3 +162,32 @@ export function hasValues(value) {
   }
   return false;
 }
+
+export function stateMinLoan(addresses) {
+  const minLoanCA = "$10,000";
+  const minLoanNM = "$10,001";
+  const minLoan = "$5,000";
+  if (addresses) {
+    const primaryAddress = findCurrentAddress(addresses);
+    switch (primaryAddress.state) {
+      case "CA":
+        return minLoanCA;
+      case "NM":
+        return minLoanNM;
+    }
+  }
+  return minLoan;
+}
+
+export function sumIncomeAmountRange(...args) {
+  const [values, start, end] = args;
+  let sum = 0;
+  if (values) {
+    for (let i = start; i <= end; i += 1) {
+      if (values[i] && values[i].amount) {
+        sum += values[i].amount;
+      }
+    }
+  }
+  return sum;
+}

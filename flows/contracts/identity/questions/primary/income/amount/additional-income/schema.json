@@ -1,9 +1,32 @@
 {
-  "type": "string",
-  "nullable": true,
-  "pattern": "^$|^\\$?\\d+(,\\d{3})*(\\.[0-9]{2})?$",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "rental",
+          "k1",
+          "social_security_or_pension",
+          "child_support_or_alimony",
+          "non-disability"
+        ],
+        "errorMessage": {
+          "enum": "Please select a source of income"
+        }
+      },
+      "value": {
+        "type": "number",
+        "errorMessage": {
+          "type": "Enter a valid number"
+        }
+      }
+    },
+    "required": ["type", "value"]
+  },
   "errorMessage": {
-    "pattern": "Enter a valid amount",
-    "type": "Enter a valid number"
+    "type": "Amount and types are required",
+    "minItems": "Select at least one income type"
   }
 }

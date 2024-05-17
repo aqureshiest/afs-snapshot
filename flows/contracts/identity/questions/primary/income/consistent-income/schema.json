@@ -4,5 +4,5 @@
     "errorMessage": {
         "enum": "Please select Yes or No"
     },
-    "required": ["hasConsistentIncome"]
+    "required": ["incomeIsConsistent"]
 }

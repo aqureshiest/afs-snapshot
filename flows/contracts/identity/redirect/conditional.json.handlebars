@@ -1,4 +1,4 @@
-{{#if (eq request.body.values.hasConsistentIncome "false")}}
+{{#if (eq request.body.values.incomeIsConsistent "false")}}
 {
   "action": {
     "type": "navigate",
@@ -9,5 +9,7 @@
   "result": {{{ json (contract 'actions') }}}
 }
 {{else}}
-    null
+  {
+    "result": {{{ json (contract 'actions') }}}
+  }
 {{/if}}

@@ -1,6 +1,6 @@
 {
     "*": "redirect.conditional",
-    "actions": [],
+    "actions": ["redis.set-volatile-answers"],
     "redirect": "redirect.regret"
 }
   
