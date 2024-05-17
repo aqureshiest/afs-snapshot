@@ -10,8 +10,19 @@ fragment ApplicantFragment on Application {
     serialization
     status
   }
+  lenderId
+  lendingCheckoutID
+  lendingDecisionID
+  lookupHash
+  monolithApplicationID
+  monolithLoanID
   monolithUserID
-  cognitoID
+  partnerName
+  product
+  rateMapTag
+  rateMapVersion
+  referralProgramId
+  ssnTokenURI
   reference {
     authID
     brand
