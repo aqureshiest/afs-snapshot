@@ -584,7 +584,15 @@ describe("[462fd166] manifest.execute", () => {
             "notNull": {{{notNull null}}},
             "includes": {{{includes "1,2" "1"}}},
             "and": {{{and true true}}},
-            "or": {{{or true false}}}
+            "or": {{{or true false}}},
+            "boolean": {{{boolean true}}},
+            "number": {{{number "12345"}}},
+            "mathAdd": {{{mathAdd 1 2}}},
+            "toUpper": "{{{toUpper 'test'}}}",
+            "toNeutralize": "{{{toNeutralize 'self_employed'}}}",
+            "toNeutralizeAndUpper": "{{{toNeutralizeAndUpper 'self_employed'}}}",
+            "employedStatus": "{{{mapEmploymentStatusType 'self_employed'}}}",
+            "unspecifiedStatus": "{{{mapEmploymentStatusType 'unemployed'}}}"
           }
       `,
       }),
@@ -607,6 +615,14 @@ describe("[462fd166] manifest.execute", () => {
       includes: false,
       and: true,
       or: true,
+      boolean: true,
+      number: 12345,
+      mathAdd: 3,
+      toUpper: "Test",
+      toNeutralize: "self employed",
+      toNeutralizeAndUpper: "Self employed",
+      employedStatus: "employment",
+      unspecifiedStatus: "unspecified",
     });
   });
 });

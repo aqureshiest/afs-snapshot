@@ -475,7 +475,7 @@ export default class LendingDecisionServiceClient extends Client {
         city: location.city,
         state: location.state,
         zip: location.zip,
-        country: "US",
+        country: "US", // TODO: get country if/when we process International applicants
         type: location.type,
       };
     });
@@ -544,18 +544,16 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * Format the employment details
      */
-    const employmentStatuses = [
-      "employed",
-      "self_employed",
-      "future",
-      "retired",
-      "unemployed",
+    const otherIncomeTypes = [
+      "investment",
+      "social_security_or_pension",
+      "child_support_or_alimony",
+      "rental",
+      "k1",
+      "disability",
     ];
     const employmentDetails = details?.income
-      ?.filter((employment) => {
-        if (employmentStatuses.includes(employment?.type as string))
-          return employment;
-      })
+      .slice(0, 1) // Employment details are stored at incomes index 0
       .map((employment) => {
         if (
           !employment ||
@@ -564,37 +562,37 @@ export default class LendingDecisionServiceClient extends Client {
           return {};
         }
 
-        /**
-         * TODO: For v2 determine employment status. We'll be storing only 'employed' or 'misc' (for unemployed)
-         * need to determine if 'employed' is 'self-employed' or 'future'
-         * need to determine if 'retired'
-         */
-        // let status;
-        // const now = new Date()
-        // if (employment.type === 'employed') {
-        //   status = 'employed'
-        //   // For a 'Self Employed' status, we only collect a Job title and a Start Date and no Employer name
-        //   // If we have a start date that is in the past and a job title, user is self employed
-        //   if ((!employment.employer) && employment.title && (employment.start && ((new Date(employment.start)) < now))) {
-        //     status = 'self_employed'
-        //   }
-        //   // For a Future Employment, we collect Employer Name, Job Title, and start date
-        //   // If start date is in the future, user is Future employed
-        //   if((new Date(employment.start)) > now) {
-        //     status = 'future'
-        //   }
-        // }
-        // if (employment.type === 'misc') {
-        //   status = 'unemployed'
-        // }
-        // if (employment.type === 'social_security_or_pension') {
-        //   status = 'retired'
-        // }
+        let status;
+        const now = new Date();
+        if (employment.type === "employment") {
+          status = "employed";
+          // For a 'Self Employed' status, we only collect a Job title and a Start Date and no Employer name
+          // If we have a start date that is in the past and a job title, user is self employed
+          if (
+            !employment.employer &&
+            employment.title &&
+            employment.start &&
+            new Date(employment.start) < now
+          ) {
+            status = "self_employed";
+          }
+          // For a Future Employment, we collect Employer Name, Job Title, and start date
+          // If start date is in the future, user is Future employed
+          if (new Date(employment.start) > now) {
+            status = "future";
+          }
+        }
+        if (employment.type === "unspecified") {
+          status = "unemployed";
+        }
+        if (otherIncomeTypes.includes(employment.type)) {
+          status = "retired";
+        }
         return {
           employerName: employment.employer,
           jobTitle: employment.title,
-          employmentStatus: employment.type,
-          ...(["self_employed", "future"].includes(employment?.type as string)
+          employmentStatus: status,
+          ...(["self_employed", "future"].includes(status)
             ? {
                 employmentStartDate: employment.start
                   ? new Date(employment.start).toISOString()
@@ -612,8 +610,7 @@ export default class LendingDecisionServiceClient extends Client {
     if (details?.income) {
       otherIncomeDetails = details.income
         .filter((income) => {
-          if (!employmentStatuses.includes(income?.type as string))
-            return income;
+          if (otherIncomeTypes.includes(income?.type as string)) return income;
         })
         .map((income) => {
           if (!income || (income && Object.keys(income).length === 0)) {
