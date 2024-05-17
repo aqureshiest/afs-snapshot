@@ -6,11 +6,13 @@
     "type": "inputRadio",
     "layout": "copyWithIcon",
     "direction": "row",
-    {{#if (or details.location.0.type details.location.1.type)}}
-      "value": {{#if (and details.location.1.type (eq details.location.1.type "previous"))}} "false" 
-               {{else}} 
-                  {{#if (and details.location.0.type (eq details.location.0.type "primary")) }} "true"  
-                  {{/if}} 
+    {{#if ../userState.sixMonthResidence}}
+      "value": "{{{../userState.sixMonthResidence}}}",
+    {{else if (or details.location.0.type details.location.1.type)}}
+      "value": {{#if (and details.location.1.type (eq details.location.1.type "previous"))}} "false"
+               {{else}}
+                  {{#if (and details.location.0.type (eq details.location.0.type "primary")) }} "true"
+                  {{/if}}
                {{/if}},
     {{else}}
       "value": "",

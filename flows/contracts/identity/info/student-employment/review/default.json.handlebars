@@ -1,41 +1,47 @@
 {{#with application.primary}}
 {
-    "type": "info",
-    "definition": {
-        "key": "employmentInfoReview",
-        "type": "infoReview",
-        "label": "Employment Info",
-        "items": 
-        {{#list}}
-            {{#if details.income.0.type}} 
-                {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper details.income.0.type}}"}
-            {{/if}}
-            {{#if details.income.0.employer}} 
-                {"id": "employerName", "label": "Employer name", "value": "{{details.income.0.employer}}"}
-            {{/if}}
-            {{#if details.income.0.title}} 
-                {"id": "jobTitle", "label": "Job Title", "value": "{{details.income.0.title}}"}
-            {{/if}}
-            {{#if details.income.0.start}} 
-                {"id": "startDate", "label": "Start Date", "value": "{{reviewDateFormatter details.income.0.start}}"}
-            {{/if}}
-            {{#if details.income.0.amount}} 
-                {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
-            {{/if}}
-            {{#if details.asset.0.amount}} 
-                {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
-            {{/if}}
-            {{#if (or details.income.[2] details.income.[3] details.income.[4] details.income.[5] details.income.[6])}}
-                {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 2 6)}}"}
-            {{/if}}
-        {{/list}},
-        "editAction": {
-            "key": "",
-            "type": "navigate",
-            "properties": {
-                "goTo": "earnest/student-refi/edit/employment-info/{{id}}"
-            }
+  "type": "info",
+  "definition": {
+    "key": "employmentInfoReview",
+    "type": "infoReview",
+    "label": "Employment Info",
+    "items":
+    {{#list}}
+        {{#if ../userState.employmentType}}
+          {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper ../userState.employmentType}}"}
+        {{else if details.income.0.type}}
+          {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper details.income.0.type}}"}
+        {{/if}}
+        {{#if details.income.0.employer}}
+          {"id": "employerName", "label": "Employer name", "value": "{{details.income.0.employer}}"}
+        {{/if}}
+        {{#if details.income.0.title}}
+          {"id": "jobTitle", "label": "Job Title", "value": "{{details.income.0.title}}"}
+        {{/if}}
+        {{#if details.income.0.start}}
+          {"id": "startDate", "label": "Start Date", "value": "{{reviewDateFormatter details.income.0.start}}"}
+        {{/if}}
+        {{#if (or (eq ../userState.employmentType 'retired') (eq details.income.0.type 'retired'))}}
+          {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency 0}}"}
+        {{else if details.income.0.amount}}
+          {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+        {{/if}}
+        {{#if details.asset.0.amount}}
+          {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
+        {{/if}}
+        {{#if (or (eq ../userState.employmentType 'retired') (eq details.income.0.type 'retired'))}}
+          {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 0 4)}}"}
+        {{else if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
+          {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 1 5)}}"}
+        {{/if}}
+    {{/list}},
+    "editAction": {
+        "key": "",
+        "type": "navigate",
+        "properties": {
+            "goTo": "earnest/student-refi/edit/employment-info/{{id}}"
         }
     }
+  }
 }
 {{/with}}

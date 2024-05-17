@@ -35,30 +35,50 @@
             {"education": [{"index": 0 {{#if school }}, "opeid": "{{school.opeid8}}" {{/if}} {{#if degree}}, "degree": "{{degree}}" {{/if}} {{#if graduationDate}}, "graduationDate": "{{dateObjToString graduationDate}}" {{/if}} }]}
           {{/if}}
           {{#if employmentType}}
+            {{#if (eq employmentType 'retired')}}
               {"income": {{#list}}
-                {"index": 0, "type": "{{employmentType}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if (or annualIncome annualIncomeFuture)}}, "amount": {{#if annualIncome}} {{{formatDollarsToCents annualIncome}}} {{else if annualIncomeFuture}} {{{formatDollarsToCents annualIncomeFuture}}} {{/if}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
-                {{#if sourcesOfIncome}}
-                  {"index": 1, "type": "{{sourcesOfIncome}}" }
-                {{/if}}
                 {{#if additionalAmount}}
                   {{#if additionalAmount.[0]}}
-                    {"index": 2, "type": "{{additionalAmount.0.type}}", "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
+                    {"index": 0, "type": "{{additionalAmount.0.type}}", "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
                   {{/if}}
                   {{#if additionalAmount.[1]}}
-                      {"index": 3, "type": "{{additionalAmount.1.type}}", "amount": {{{formatDollarsToCents additionalAmount.1.value}}} }
+                    {"index": 1, "type": "{{additionalAmount.1.type}}", "amount": {{{formatDollarsToCents additionalAmount.1.value}}} }
                   {{/if}}
                   {{#if additionalAmount.[2]}}
-                      {"index": 4, "type": "{{additionalAmount.2.type}}", "amount": {{{formatDollarsToCents additionalAmount.2.value}}} }
+                    {"index": 2, "type": "{{additionalAmount.2.type}}", "amount": {{{formatDollarsToCents additionalAmount.2.value}}} }
                   {{/if}}
                   {{#if additionalAmount.[3]}}
-                      {"index": 5, "type": "{{additionalAmount.3.type}}", "amount": {{{formatDollarsToCents additionalAmount.3.value}}} }
+                    {"index": 3, "type": "{{additionalAmount.3.type}}", "amount": {{{formatDollarsToCents additionalAmount.3.value}}} }
                   {{/if}}
                   {{#if additionalAmount.[4]}}
-                      {"index": 6, "type": "{{additionalAmount.4.type}}", "amount": {{{formatDollarsToCents additionalAmount.4.value}}} }
+                    {"index": 4, "type": "{{additionalAmount.4.type}}", "amount": {{{formatDollarsToCents additionalAmount.4.value}}} }
                   {{/if}}
                 {{/if}}
               {{/list}}
               }
+            {{else}}
+              {"income": {{#list}}
+                {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if (or annualIncome annualIncomeFuture)}}, "amount": {{#if annualIncome}} {{{formatDollarsToCents annualIncome}}} {{else if annualIncomeFuture}} {{{formatDollarsToCents annualIncomeFuture}}} {{/if}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                {{#if additionalAmount}}
+                  {{#if additionalAmount.[0]}}
+                    {"index": 1, "type": "{{additionalAmount.0.type}}", "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[1]}}
+                    {"index": 2, "type": "{{additionalAmount.1.type}}", "amount": {{{formatDollarsToCents additionalAmount.1.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[2]}}
+                    {"index": 3, "type": "{{additionalAmount.2.type}}", "amount": {{{formatDollarsToCents additionalAmount.2.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[3]}}
+                    {"index": 4, "type": "{{additionalAmount.3.type}}", "amount": {{{formatDollarsToCents additionalAmount.3.value}}} }
+                  {{/if}}
+                  {{#if additionalAmount.[4]}}
+                    {"index": 5, "type": "{{additionalAmount.4.type}}", "amount": {{{formatDollarsToCents additionalAmount.4.value}}} }
+                  {{/if}}
+                {{/if}}
+              {{/list}}
+              }
+            {{/if}}
           {{/if}}
           {{#if claimedAssets}}
             {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}

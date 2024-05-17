@@ -4,8 +4,14 @@
   "definition": {
     "key": "additionalAmount",
     "type": "inputMoneyArray",
-    {{#if (or details.income.[2].amount details.income.[3].amount details.income.[4].amount details.income.[5].amount details.income.[6].amount)}}
-      "value":  {{#list}}
+    {{#if (or details.income.[0] details.income.[1] details.income.[2] details.income.[3] details.income.[4])}}
+      "value": {{#list}}
+        {{#if details.income.[0]}}
+          {"value": {{{formatCentsToDollars details.income.[0].amount}}}, "type": "{{details.income.[0].type}}"}
+        {{/if}}
+        {{#if details.income.[1]}}
+          {"value": {{{formatCentsToDollars details.income.[1].amount}}}, "type": "{{details.income.[1].type}}"}
+        {{/if}}
         {{#if details.income.[2]}}
           {"value": {{{formatCentsToDollars details.income.[2].amount}}}, "type": "{{details.income.[2].type}}"}
         {{/if}}
@@ -14,12 +20,6 @@
         {{/if}}
         {{#if details.income.[4]}}
           {"value": {{{formatCentsToDollars details.income.[4].amount}}}, "type": "{{details.income.[4].type}}"}
-        {{/if}}
-        {{#if details.income.[5]}}
-          {"value": {{{formatCentsToDollars details.income.[5].amount}}}, "type": "{{details.income.[5].type}}"}
-        {{/if}}
-        {{#if details.income.[6]}}
-          {"value": {{{formatCentsToDollars details.income.[6].amount}}}, "type": "{{details.income.[6].type}}"}
         {{/if}}
         {{/list}},
     {{else}}
@@ -48,11 +48,6 @@
           "field": "employmentStatus.employmentType",
           "op": "valueEquals",
           "value": "retired"
-        },
-        {
-          "field": "additionalIncome.addAddtionalIncome",
-          "op": "valueEquals",
-          "value": "true"
         }
       ],
       [
@@ -60,11 +55,6 @@
           "field": "editEmploymentInfo.employmentType",
           "op": "valueEquals",
           "value": "retired"
-        },
-        {
-          "field": "editEmploymentInfo.addAddtionalIncome",
-          "op": "valueEquals",
-          "value": "true"
         }
       ]
     ]

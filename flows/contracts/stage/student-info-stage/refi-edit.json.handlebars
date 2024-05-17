@@ -56,8 +56,8 @@
                                 "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
                                 "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
                                 "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}}
-                                {{! TODO: Add schema check for additional Income question}}
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                             }
                         }
                     },
@@ -72,8 +72,8 @@
                                 "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
                                 "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
                                 "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}}
-                                {{! TODO: Add schema check for additional Income question}}
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                             }
                         }
                     },
@@ -89,8 +89,8 @@
                                 "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
                                 "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
                                 "annualIncomeFuture": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}}
-                                {{! TODO: Add schema check for additional Income question}}
+                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                             }
                         }
                     },
@@ -102,21 +102,7 @@
                         },
                         "then": {
                             "properties": {
-                                "sourcesOfIncome": {
-                                    "type": "string",
-                                    "enum": ["social_security_or_pension", "investment"],
-                                    "errorMessage": {
-                                        "enum": "Please select a source of income"
-                                    }                    
-                                },
-                                "addAddtionalIncome": {
-                                    "type": "string",
-                                    "enum": ["true", "false"],
-                                    "errorMessage": {
-                                        "enum": "Please select Yes or No"
-                                    }    
-                                }
-                                {{! TODO: Add schema check for additional Income question}}
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                             }
                         }
                     },
@@ -135,8 +121,8 @@
                                         "enum": "Please select Yes or No"
                                     }
                                 },
-                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}}
-                                {{! TODO: Add schema check for additional Income question}}
+                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                             }
                         }
                     }

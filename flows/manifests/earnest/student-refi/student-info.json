@@ -11,7 +11,6 @@
     "student-info-form/income",
     "student-info-form/income-self-employed",
     "student-info-form/future-employment.refi",
-    "student-info-form/source-of-income",
     "student-info-form/additional-income",
     "student-info-form/consistent-income",
     "student-info-form/consistent-income/has-consistent-income"
@@ -60,13 +59,8 @@
     "questions/primary/income/amount/claimed-assets.default",
     "questions/primary/income/amount/additional-income.default"
   ],
-  "student-info-income-retired-rows": [
-    "info/student-income/sources-of-income.default",
-    "questions/primary/income/sources-of-income-retired.default"
-  ],
   "student-info-income-retired-additional-income-rows": [
-    "info/student-income/additional-income.default",
-    "questions/primary/income/has-additional-income.default",
+    "info/student-income/additional-income.refi-retired",
     "info/student-income/additional-income-hint.default",
     "questions/primary/income/amount/additional-income.refi-retired"
   ],
@@ -84,6 +78,7 @@
   "save_primary_details_action": "actions/save-details.primary",
   "save_primary_employment_details_action": "actions/save-details.employment",
   "save_primary_other_income_details_action": "actions/save-details.other-incomes",
+  "save_primary_retired_income_details_action": "actions/save-details.retired-incomes",
   "primary_dob_input_status": "questions/primary/dateOfBirth.status",
   "primary_phone_input_status": "questions/primary/phone.status",
   "primary_address_input_status": "questions/primary/address.status",

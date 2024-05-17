@@ -47,16 +47,19 @@ export function year(v1) {
 }
 /**
  * TODO: retirenment and unemployed income.type will be removed.
- * Determimne best way to save employment status type
+ * Determine best way to save employment status type
  */
-// export function employmentStatus(v1) {
-//   const employed = ["employed", "self_employed", "future"];
-//   if (employed.includes(v1)) {
-//     return "employed";
-//   } else {
-//     return v1;
-//   }
-// }
+export function mapEmploymentStatusType(v1) {
+  const employed = ["employed", "self_employed", "future"];
+  if (employed.includes(v1)) {
+    return "employment";
+  }
+  if (v1 === "unemployed") {
+    return "unspecified";
+  }
+  return "";
+}
+
 export function dateObjToString(v1) {
   if (v1) {
     const month = String(v1.month).padStart(2, "0");
