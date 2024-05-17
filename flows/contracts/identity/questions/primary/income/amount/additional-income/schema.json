@@ -10,7 +10,7 @@
           "k1",
           "social_security_or_pension",
           "child_support_or_alimony",
-          "non-disability"
+          "disability"
         ],
         "errorMessage": {
           "enum": "Please select a source of income"
