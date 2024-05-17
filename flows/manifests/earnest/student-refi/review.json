@@ -19,5 +19,11 @@
     "decryptPiiSsn": "pii-get-primary-ssn",
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
-    "actions": "actions/decision-request.primary"
+    "actions": "actions/decision-request.primary",
+    "disclosureLinks": ["questions/primary/consent/disclosure.terms-of-services",
+    "questions/primary/consent/disclosure.privacy-policy",
+    "questions/primary/consent/disclosure.privacy-notice",
+    "questions/primary/consent/disclosure.credit-report-policy",
+    "questions/primary/consent/disclosure.consent-electronic-communications",
+    "questions/primary/consent/disclosure.earnest-loan-application-solicitation"]
 }
