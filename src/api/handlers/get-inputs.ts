@@ -1,5 +1,5 @@
 import assert from "node:assert";
-// import createError from "http-errors";
+import createError from "http-errors";
 import { Request, Response, NextFunction } from "express";
 
 import { Application } from "../../typings/clients/application-service/index.js";
@@ -18,7 +18,7 @@ const getInputs: Handler = async function (
   next: NextFunction,
 ) {
   const applicationId = res?.locals?.application?.id;
-  // const userId = res?.locals?.auth?.session?.userId;
+  const userId = res?.locals?.auth?.session?.userId;
 
   const ASclient = context?.loadedPlugins?.applicationServiceClient?.instance;
   assert(
@@ -49,35 +49,35 @@ const getInputs: Handler = async function (
      * ============================== */
     application = flattenApplication(rootApplication);
 
-    // const { primary, cosigner } = application;
+    const { primary, cosigner } = application;
 
-    // const applicants = [
-    //   ...(primary ? [primary] : []),
-    //   ...(cosigner ? [cosigner] : []),
-    // ];
+    const applicants = [
+      ...(primary ? [primary] : []),
+      ...(cosigner ? [cosigner] : []),
+    ];
 
-    // /* ============================== *
-    //  * III. Session Authorization
-    //  * ============================== */
-    // const isAuthorized = applicants.reduce((authorized, applicant) => {
-    //   const { monolithUserID } = applicant;
+    /* ============================== *
+     * III. Session Authorization
+     * ============================== */
+    const isAuthorized = applicants.reduce((authorized, applicant) => {
+      const { monolithUserID } = applicant;
 
-    //   if (monolithUserID && userId && monolithUserID == userId) {
-    //     // for v1, at least one applicant has to be authorized
-    //     authorized = true;
-    //   }
-    //   return authorized;
-    // }, false);
-    // /**
-    //  * TODO: Temporarily comment out
-    //  * remove .skip from get-inputs.test.ts as well
-    //  */
-    // assert(
-    //   isAuthorized,
-    //   new createError.Forbidden(
-    //     "[dfbaf766] Unauthorized - applicants lack permissions for this session",
-    //   ),
-    // );
+      if (monolithUserID && userId && monolithUserID == userId) {
+        // for v1, at least one applicant has to be authorized
+        authorized = true;
+      }
+      return authorized;
+    }, false);
+    /**
+     * TODO: Temporarily comment out
+     * remove .skip from get-inputs.test.ts as well
+     */
+    assert(
+      isAuthorized,
+      new createError.Forbidden(
+        "[dfbaf766] Unauthorized - applicants lack permissions for this session",
+      ),
+    );
   }
 
   const redisClient = context?.loadedPlugins?.redis?.instance;
