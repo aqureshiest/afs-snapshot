@@ -649,7 +649,9 @@ export default class LendingDecisionServiceClient extends Client {
       financialAccountDetails = details.financialAccounts.map((account) => {
         if (account?.plaidAccessToken) {
           hasPlaid = true;
-          plaidTokens.push(account?.plaidAccessToken);
+          if (!plaidTokens.includes(account?.plaidAccessToken)) {
+            plaidTokens.push(account?.plaidAccessToken);
+          }
         }
         return {
           accountType: "banking",

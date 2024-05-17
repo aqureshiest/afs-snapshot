@@ -6,8 +6,12 @@ export default class AccreditedSchoolServiceClient extends Client {
   get clientName() {
     return "AccreditedSchoolService";
   }
-  async getSchoolName(context: PluginContext, payload): Promise<string | null> {
-    const school = await this.getSchool(context, payload);
+  async getSchoolName(
+    input: Input,
+    context: PluginContext,
+    payload,
+  ): Promise<string | null> {
+    const school = await this.getSchool(input, context, payload);
     if (school) {
       return school.name;
     } else {
@@ -16,6 +20,7 @@ export default class AccreditedSchoolServiceClient extends Client {
   }
 
   async getSchool(
+    input: Input,
     context: PluginContext,
     payload,
   ): Promise<SchoolDetails | null> {
@@ -49,9 +54,13 @@ export default class AccreditedSchoolServiceClient extends Client {
   }
 
   async getSchools(
+    input: Input,
     context: PluginContext,
     payload: { opeid?: string; name?: string; loanType?: LoanType },
   ): Promise<Array<School>> {
+    if (!payload.loanType && !payload.name && !payload.opeid) {
+      this.error(input, `[28bb0233] Missing required parameters`);
+    }
     const { results, response } = await this.get<{
       schools: Array<School>;
     }>(

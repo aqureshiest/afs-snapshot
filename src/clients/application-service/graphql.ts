@@ -4,14 +4,44 @@ fragment ApplicantFragment on Application {
   createdAt
   href
   relationship
-  ssnTokenURI
-  lendingDecisionID
-  monolithLoanID
-  monolithApplicationID
-  rateMapTag
-  rateMapVersion
-  partnerName
   partnerDiscountAmount
+  tag {
+    applicants
+    serialization
+    status
+  }
+  monolithUserID
+  cognitoID
+  reference {
+    authID
+    brand
+    cognitoID
+    lender {
+      canCapInterest
+      id
+      loanProgramCode
+      maximumLoanAmount
+      maxVariableRate
+      minimumLoanAmount
+      multiLoanRestrictions
+      name
+      navientLenderId
+      promissoryNoteId
+    }
+    lenderId
+    lendingCheckoutID
+    lendingDecisionID
+    lookupHash
+    monolithApplicationID
+    monolithLoanID
+    monolithUserID
+    partnerName
+    product
+    rateMapTag
+    rateMapVersion
+    referralProgramId
+    ssnTokenURI
+  }
   relationships {
     id
     relationship
@@ -77,9 +107,6 @@ fragment ApplicantFragment on Application {
       amount
     }
   }
-  cognitoID
-  monolithUserID
-  monolithLoanID
   status {
     name
     asOf
@@ -95,9 +122,9 @@ fragment ApplicationFragment on Application {
       certified
     }
   }
-  lendingDecisionID
-  product
   brand
+  product
+  lendingDecisionID
 }
 
 fragment MetaFragment on Application {

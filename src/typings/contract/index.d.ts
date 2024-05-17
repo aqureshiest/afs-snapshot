@@ -41,6 +41,8 @@ type IContractInput = {
     query?: { [key: string]: unknown };
     headers?: { [key: string]: unknown };
   };
+  env?: { [key: string]: string };
+  manifestName?: string;
   userState?: UserState;
   manifest?: Manifest;
   error?: Array<string>;

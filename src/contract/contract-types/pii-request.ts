@@ -11,7 +11,7 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
      * TODO: Add authentication checks
      */
 
-    return Boolean(definition.id);
+    return Boolean(definition && definition.id);
   };
 
   evaluate = async (

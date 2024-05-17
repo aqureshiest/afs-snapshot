@@ -20,7 +20,7 @@ const getManifest: Handler = async function (
   const { 0: manifestName, id } = req.params;
 
   res.locals.application = id ? { id } : null;
-
+  res.locals.manifestName = manifestName;
   const manifest = manifests[manifestName];
 
   if (!manifest) {

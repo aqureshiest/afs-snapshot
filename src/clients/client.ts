@@ -105,6 +105,17 @@ class Client extends BaseClient<[Context | void]> {
     delete this.healthDaemon;
     await super.stop();
   }
+  error(input: Input, message: string | Array<string>) {
+    if (!input.error) input.error = [];
+
+    if (Array.isArray(message)) {
+      input.error = input.error.concat(message);
+    } else {
+      if (!input.error.includes(message)) {
+        input.error.push(message);
+      }
+    }
+  }
 
   log(message: Message, context?: Context) {
     const level = this.logLevelFromMessage(message);
