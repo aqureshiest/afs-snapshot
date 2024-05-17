@@ -25,7 +25,7 @@ export default class RedisClient {
     this.type = redisType;
     this.baseUrl = redisBaseUrl;
     this.prefix = redisPrefix;
-    this.expiration = redisExpiration;
+    this.expiration = Number(redisExpiration);
   }
 
   async connect(context) {
@@ -72,14 +72,11 @@ export default class RedisClient {
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   async setApplicationState(context: PluginContext, appID: string, value) {
-    const res = await this.client.set(
-      `${this.prefix}_app_${appID}`,
-      JSON.stringify(value),
-      {
-        EX: this.expiration,
-        GT: true,
-      },
-    );
+    const rKey = `${this.prefix}_app_${appID}`;
+    const res = await this.client.set(rKey, JSON.stringify(value), {
+      EX: this.expiration,
+      GT: true,
+    });
     return res;
   }
 
@@ -107,9 +104,6 @@ export default class RedisClient {
       ...value,
     };
     const rKey = `${this.prefix}_usr_${key}`;
-    context.logger.info(
-      `Setting user state: ${rKey}, expiration: ${this.expiration}`,
-    );
     return await this.client.set(rKey, JSON.stringify(newState), {
       EX: this.expiration,
       GT: true,
