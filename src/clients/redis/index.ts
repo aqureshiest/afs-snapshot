@@ -25,6 +25,7 @@ export default class RedisClient {
     this.type = redisType;
     this.baseUrl = redisBaseUrl;
     this.prefix = redisPrefix;
+    context.logger.info(`Redis configuration: [expiration ${redisExpiration}]`);
     this.expiration = Number(redisExpiration);
   }
 
