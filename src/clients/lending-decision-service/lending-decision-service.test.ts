@@ -58,6 +58,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
               state: "CA",
               zip: "99999",
               citizenship: "citizen",
+              type: "primary",
             },
           ],
           phone: [
@@ -178,7 +179,8 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
               city: "Fake City",
               state: "CA",
               zip: "99999",
-              citizenship: "citizen",
+              citizenship: "non-resident",
+              type: "primary",
             },
           ],
           phone: [

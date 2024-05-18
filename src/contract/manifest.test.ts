@@ -568,7 +568,39 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
   it("[0cc7ae75] simple template helpers", async () => {
-    const input = {} as Input;
+    const input = {
+      request: {
+        body: {
+          values: {
+            dateOfBirth: {
+              month: "12",
+              day: "20",
+              year: "1950",
+            },
+            location: [
+              {
+                street1: "545 N 34TH ST",
+                street2: null,
+                city: "PADUCAH",
+                state: "CA",
+                zip: "42001",
+                citizenship: "citizen",
+                type: "primary",
+              },
+              {
+                street1: "789 6th Avenue",
+                street2: null,
+                city: "San Francisco",
+                state: "CA",
+                zip: "94118",
+                citizenship: null,
+                type: "previous",
+              },
+            ],
+          },
+        },
+      },
+    } as unknown as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
         raw: `
@@ -592,7 +624,15 @@ describe("[462fd166] manifest.execute", () => {
             "toNeutralize": "{{{toNeutralize 'self_employed'}}}",
             "toNeutralizeAndUpper": "{{{toNeutralizeAndUpper 'self_employed'}}}",
             "employedStatus": "{{{mapEmploymentStatusType 'self_employed'}}}",
-            "unspecifiedStatus": "{{{mapEmploymentStatusType 'unemployed'}}}"
+            "unspecifiedStatus": "{{{mapEmploymentStatusType 'unemployed'}}}",
+            "month": "{{{month '1988-10-14'}}}",
+            "day": "{{{day '1988-10-14'}}}",
+            "year": "{{{year '1988-10-14'}}}",
+            "formatPhoneNumber": "{{{formatPhoneNumber '5555555555'}}}",
+            "dateOfBirth": "{{{dateObjToString request.body.values.dateOfBirth}}}",
+            "formatToUSCurrency": "{{{formatToUSCurrency 1000000}}}",
+            "formatDollarsToCents": "{{{formatDollarsToCents '$12,3456.89'}}}",
+            "stateMinLoan": "{{{stateMinLoan request.body.values.location}}}"
           }
       `,
       }),
@@ -623,6 +663,73 @@ describe("[462fd166] manifest.execute", () => {
       toNeutralizeAndUpper: "Self employed",
       employedStatus: "employment",
       unspecifiedStatus: "unspecified",
+      month: "10",
+      day: "14",
+      year: "1988",
+      formatPhoneNumber: "555-555-5555",
+      dateOfBirth: "1950-12-20",
+      formatToUSCurrency: "$10,000.00",
+      formatDollarsToCents: "12345689",
+      stateMinLoan: "$10,000",
+    });
+  });
+
+  it("[6c19a4eb] mapIncomeType template helper", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            incomes: [
+              {
+                employer: "BigCompany",
+                type: "employment",
+              },
+              {
+                employer: "BigCompany",
+                type: "employment",
+                title: "title",
+                start: new Date().toISOString(),
+              },
+              {
+                type: "employment",
+                title: "title",
+                start: new Date().toISOString(),
+              },
+              {
+                type: "unspecified",
+              },
+              {
+                type: "social_security_or_pension",
+              },
+            ],
+          },
+        },
+      },
+    } as unknown as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+          {
+            "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[0]}}}",
+            "future": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[1]}}}",
+            "selfEmployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[2]}}}",
+            "unemployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[3]}}}",
+            "retired": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[4]}}}"
+          }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      employed: "employed",
+      future: "future",
+      selfEmployed: "self_employed",
+      unemployed: "unemployed",
+      retired: "retired",
     });
   });
 });

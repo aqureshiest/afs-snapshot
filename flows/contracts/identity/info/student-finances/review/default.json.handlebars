@@ -7,7 +7,7 @@
         "label": "Income Verification",
         "items": {{#list}}
             {{#each details.financialAccounts}}
-             {{#if (eq (boolean this.selected) true) }} {"id": "{{number this.index}}","label": "{{this.name}}", "value": "{{this.name}} - {{this.account_last4}}" }{{else}}{}{{/if}}
+             {{#if (eq (boolean this.selected) true) }} {"id": "{{number @index}}","label": "{{this.name}}", "value": "{{this.name}} - {{this.account_last4}}" }{{else}}{}{{/if}}
             {{/each}}
           {{/list}},
         "editAction": {
