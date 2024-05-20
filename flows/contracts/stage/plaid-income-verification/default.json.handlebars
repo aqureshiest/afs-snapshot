@@ -34,22 +34,28 @@
           {
             "codes": ["loan-accounts-error"],
             "action" :{
-              "type": "toast",
-              "definition": {
-                "type": "error",
-                "copy": "Please select Savings or Checking accounts.",
-                "icon": "icon-error" 
+              "key": "loan-accounts-error-toast"
+              "type": "error",
+              "properties": {
+                "type": "toast",
+                "definition": {
+                  "message": "Please select Savings or Checking accounts.",
+                  "icon": "WarningIcon" 
+                }
               }
             }
           },
           {
             "codes": ["application-service-error"],
             "action":{
-              "type": "toast",
-              "definition": {
-                "type": "error",
-                "copy": "An error ocurred while saving this, please try again.",
-                "icon": "icon-error" 
+              key: "application-service-error-toast"
+              "type": "error",
+              "properties": {
+                "type": "toast",
+                "definition": {
+                  "message": "An error ocurred while saving this, please try again.",
+                  "icon": "WarningIcon" 
+                }
               }
             }
           }
@@ -66,12 +72,15 @@
           },
           "onError": {
             "codes": ["application-service-error"],
-            "action": {
-              "type": "toast",
-              "definition": {
-                "type": "error",
-                "copy": "An error ocurred while saving financial Accounts, please try again.",
-                "icon": "icon-error" 
+            "action":{
+              key: "application-service-error-toast"
+              "type": "error",
+              "properties": {
+                "type": "toast",
+                "definition": {
+                  "message": "An error ocurred while saving this, please try again.",
+                  "icon": "WarningIcon" 
+                }
               }
             }
           }

@@ -87,6 +87,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
           error,
           message: `[sc44e9r3] Failed to track Segment event. ${error?.message}`,
         });
+        this.error(input, error.message);
       }
     });
 

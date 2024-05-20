@@ -60,7 +60,7 @@ const errorHandler: Handler = async function (
       if (errorPageManifest) {
         res.locals.manifest = errorPageManifest;
         const { contract } = await errorPageManifest.execute(
-          { ...input, manifest, auth, userState, error },
+          { ...input, manifest: errorPageManifest, auth, userState, error },
           { context, ...input },
         );
         return res.status(convertedError.statusCode).send(contract);
