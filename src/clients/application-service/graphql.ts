@@ -117,6 +117,9 @@ fragment ApplicantFragment on Application {
       type
       amount
     }
+    consent {
+      disclosure
+    }
   }
   status {
     name
@@ -131,6 +134,9 @@ fragment ApplicationFragment on Application {
       requested
       approved
       certified
+    }
+    consent {
+      disclosure
     }
   }
   brand
