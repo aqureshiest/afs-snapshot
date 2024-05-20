@@ -1,4 +1,5 @@
 {
     "*": "landing-students",
-    "landing_stage": "landing.refi"
+    "landing_stage": "landing.refi",
+    "layout": "sidebar"
 }
