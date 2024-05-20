@@ -569,23 +569,22 @@ export default class LendingDecisionServiceClient extends Client {
         }
 
         let status;
-        const now = new Date();
         if (employment.type === "employment") {
           status = "employed";
-          // For a 'Self Employed' status, we only collect a Job title and a Start Date and no Employer name
-          // If we have a start date that is in the past and a job title, user is self employed
-          if (
-            !employment.employer &&
-            employment.title &&
-            employment.start &&
-            new Date(employment.start) < now
-          ) {
-            status = "self_employed";
-          }
-          // For a Future Employment, we collect Employer Name, Job Title, and start date
-          // If start date is in the future, user is Future employed
-          if (new Date(employment.start) > now) {
-            status = "future";
+          /**
+           * ================================================
+           * For a Future Employment, we collect Employer Name,
+           * Job Title, and start date
+           * =========================
+           * For 'Self Employed', we only collect Job title,
+           * Start Date and no Employer name
+           */
+          if (employment.title && employment.start) {
+            if (employment.employer) {
+              status = "future";
+            } else {
+              status = "self_employed";
+            }
           }
         }
         if (employment.type === "unspecified") {
@@ -605,7 +604,7 @@ export default class LendingDecisionServiceClient extends Client {
                   : "",
               }
             : {}),
-          amount: employment.amount,
+          amount: status === "retired" ? 0 : employment.amount,
         };
       });
 
@@ -649,22 +648,26 @@ export default class LendingDecisionServiceClient extends Client {
     let financialAccountDetails;
 
     if (details?.financialAccounts) {
-      financialAccountDetails = details.financialAccounts.map((account) => {
-        if (account?.plaidAccessToken) {
-          hasPlaid = true;
-          if (!plaidTokens.includes(account?.plaidAccessToken)) {
-            plaidTokens.push(account?.plaidAccessToken);
+      financialAccountDetails = details.financialAccounts
+        .filter((finAccount) => {
+          if (finAccount?.selected) return finAccount;
+        })
+        .map((account) => {
+          if (account?.plaidAccessToken) {
+            hasPlaid = true;
+            if (!plaidTokens.includes(account?.plaidAccessToken)) {
+              plaidTokens.push(account?.plaidAccessToken);
+            }
           }
-        }
-        return {
-          accountType: "banking",
-          accountSubType: account?.type,
-          balance: account?.balance,
-          accountInstitutionName: account?.institution_name
-            ? account.institution_name
-            : "",
-        };
-      });
+          return {
+            accountType: "banking",
+            accountSubType: account?.type,
+            balance: account?.balance,
+            accountInstitutionName: account?.institution_name
+              ? account.institution_name
+              : "",
+          };
+        });
     }
 
     /**

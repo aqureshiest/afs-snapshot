@@ -8,8 +8,8 @@
       "direction": "column",
       {{#if ../userState.employmentType }}
         "value": "{{{../userState.employmentType}}}",
-      {{else if details.income.0.type }}
-        "value": "{{details.income.0.type}}",
+      {{else if details.income.[0] }}
+        "value": "{{{mapIncomeTypeToEmplStatus details.income.[0]}}}",
       {{else}}
         "value": "",
       {{/if}}
@@ -41,7 +41,7 @@
         }
       ],
       "status": {{{json (contract 'primary_employment_input_status')}}},
-      "error": "{{{ ajv 'errors' 'questions/primary/employment' details.income.0.type }}}",
+      "error": "{{{ ajv 'errors' 'questions/primary/employment' employmentType }}}",
       "label": {
         "copy": "Employment Status"
       }
