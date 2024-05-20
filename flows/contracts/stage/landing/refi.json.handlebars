@@ -7,7 +7,7 @@
   },
   "pageLayout": {{{json (contract 'layout')}}},
   "analytics": {
-    "product": "slr",
+    "product": "{{{mapProduct application.primary.reference.product}}}",
     "loan_type": "{{{mapLoanType application.tag.applicants}}}"
   },
   "definition": {
@@ -40,9 +40,10 @@
           "type": "navigate",
           "properties": {
             "analytics": {
-              "name": "Application Started",
-              "product": "slr",
-              "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+                "name": "Application Started"
+                "product": "{{{mapProduct application.primary.reference.product}}}",
+                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+                "application_id": {{{application.id}}}
             },
             "goTo": "earnest/student-refi/student-info/{{application.primary.id}}"
           }
