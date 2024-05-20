@@ -1,5 +1,5 @@
 {{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/employment' details.income.0.type) }}
+  {{#if (ajv 'validate' 'questions/primary/employment' employmentType) }}
      "completed"
   {{else}} 
      "incomplete"

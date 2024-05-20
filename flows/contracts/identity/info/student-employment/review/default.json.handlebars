@@ -10,7 +10,7 @@
         {{#if ../userState.employmentType}}
           {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper ../userState.employmentType}}"}
         {{else if details.income.0.type}}
-          {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper details.income.0.type}}"}
+          {"id": "employmentStatus", "label": "Employment Status", "value": "{{{toNeutralizeAndUpper ( mapIncomeTypeToEmplStatus details.income.[0] )}}}"}
         {{/if}}
         {{#if details.income.0.employer}}
           {"id": "employerName", "label": "Employer name", "value": "{{details.income.0.employer}}"}
@@ -21,7 +21,7 @@
         {{#if details.income.0.start}}
           {"id": "startDate", "label": "Start Date", "value": "{{reviewDateFormatter details.income.0.start}}"}
         {{/if}}
-        {{#if (or (eq ../userState.employmentType 'retired') (eq details.income.0.type 'retired'))}}
+        {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income.[0] )))}}
           {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency 0}}"}
         {{else if details.income.0.amount}}
           {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
@@ -29,7 +29,7 @@
         {{#if details.asset.0.amount}}
           {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
         {{/if}}
-        {{#if (or (eq ../userState.employmentType 'retired') (eq details.income.0.type 'retired'))}}
+        {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income.[0] )))}}
           {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 0 4)}}"}
         {{else if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
           {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 1 5)}}"}

@@ -8,6 +8,7 @@ export { default as maskValue } from "./maskValue.js";
 export { default as getSchool } from "./getSchool.js";
 export { default as mapLoanType } from "./mapLoanType.js";
 export { default as mapProduct } from "./mapProduct.js";
+export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
 
 export const noop = function (v1) {
   v1.fn(this);
