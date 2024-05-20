@@ -40,10 +40,10 @@
           "type": "navigate",
           "properties": {
             "analytics": {
-                "name": "Application Started"
+                "name": "Application Started",
                 "product": "{{{mapProduct application.primary.reference.product}}}",
                 "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-                "application_id": {{{application.id}}}
+                "application_id": "{{{application.id}}}"
             },
             "goTo": "earnest/student-refi/student-info/{{application.primary.id}}"
           }

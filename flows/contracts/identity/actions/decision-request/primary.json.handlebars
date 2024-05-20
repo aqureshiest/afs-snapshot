@@ -4,11 +4,11 @@
     "properties": {
         "manifest": "decision/decision-request/{{application.id}}",
         "analytics": {
-            "name": "Application Submitted"
+            "name": "Application Submitted",
             "product": "{{{mapProduct application.primary.reference.product}}}",
             "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-            "application_id": {{{application.id}}}
-        }
+            "application_id": "{{{application.id}}}"
+        },
         "method": "POST"
     }
 }
