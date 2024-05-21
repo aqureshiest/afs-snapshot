@@ -1,22 +1,36 @@
 {
-  "type": "view",
-  "definition": {
-    "key": "error-401",
-    "type": "landing",
-    "label": "Unauthorized",
-    "image": "illustrations.lp",
-    "header": {
-      "copy": "Unauthorized."
+    "key": "401-page",
+    "type": "view",
+    "label": "401 Page",
+    "definition": {
+      "type": "landing",
+      "definition": {
+        "key": "401-landing",
+        "centered": true,
+        "header": {
+          "centered": true,
+          "asset": {
+            "type": "LocalAsset",
+            "center": true,
+            "name": "illustrations.warning",
+          },
+          "copy": "Page Not Found",
+        },
+        "primaryAction": {
+          "copy": "Go back to application",
+          "action": {
+            "key": "404-resume",
+            "type": "navigate",
+            "properties": {
+              {{#if application.id}}
+                "goTo": "/earnest/refi/student-loan/{{application.id}}",
+              {{else}}
+                "goTo": "staging.earnest.com",
+              {{/if}}
+            },
+          },
+        },
+      },
     },
-    "primaryAction": {
-      "copy": "Go back to the home page",
-      "action": {
-        "type": "navigate",
-        "properties": {
-          "goTo": "earnest.com",
-          "external": true
-        }
-      }
-    }
   }
-}
+
