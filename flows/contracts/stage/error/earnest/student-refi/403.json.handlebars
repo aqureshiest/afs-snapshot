@@ -1,11 +1,11 @@
 {
-    "key": "404-page",
+    "key": "403-page",
     "type": "view",
-    "label": "404 Page",
+    "label": "403 Page",
     "definition": {
       "type": "landing",
       "definition": {
-        "key": "404-landing",
+        "key": "403-landing",
         "centered": true,
         "header": {
           "centered": true,
@@ -14,23 +14,20 @@
             "center": true,
             "name": "illustrations.warning"
           },
-          "copy": "Page Not Found"
+          "copy": "Unahthorized."
         },
         "primaryAction": {
-          "copy": "Go back to Home page",
+          "copy": "Log back in",
           "action": {
-            "key": "404-resume",
+            "key": "403-resume",
             "type": "navigate",
             "properties": {
-              {{#if application.id}}
-                "goTo": "/resume/{{application.id}}"
-              {{else}}
-                "goTo": "https://staging.earnest.com",
-                "external": true
-              {{/if}}
+              "goTo": "https://staging.earnest.com/_/auth/login",
+              "external": true
             }
           }
         }
       }
     }
   }
+

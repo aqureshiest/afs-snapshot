@@ -22,11 +22,8 @@
             "key": "401-resume",
             "type": "navigate",
             "properties": {
-              {{#if application.id}}
-                "goTo": "/resume/{{application.id}}"
-              {{else}}
-                "goTo": "staging.earnest.com"
-              {{/if}}
+              "goTo": "https://staging.earnest.com/_/auth/login",
+              "external": true
             }
           }
         }
