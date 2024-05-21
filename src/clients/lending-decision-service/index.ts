@@ -527,11 +527,17 @@ export default class LendingDecisionServiceClient extends Client {
           return {};
         }
 
-        const foundSchool = await accreditedSchoolService["getSchool"](
-          input,
-          context,
-          { id: education.opeid },
-        );
+        const foundSchool = (
+          await accreditedSchoolService["getSchools"](input, context, {
+            opeid: education.opeid,
+          })
+        )?.[0];
+
+        if (!foundSchool) {
+          throw new Error(
+            `[97816200] failed to get School with id ${education.opeid}`,
+          );
+        }
 
         return {
           degreeType: education.degree ? education.degree : "none",
