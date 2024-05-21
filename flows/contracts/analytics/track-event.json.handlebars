@@ -3,7 +3,7 @@
   {{#with request.body}}
     {
       "type": "{{type}}",
-      "payload": {{values}}
+      "payload": {{{json values}}}
     }
   {{/with}}
 {{else}}
