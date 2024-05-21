@@ -11,7 +11,12 @@ export default class AccreditedSchoolServiceClient extends Client {
     context: PluginContext,
     payload,
   ): Promise<string | null> {
-    const school = await this.getSchool(input, context, payload);
+    let school;
+    if (payload?.opeid || payload?.name) {
+      school = (await this.getSchools(input, context, payload))?.[0];
+    } else {
+      school = await this.getSchool(input, context, payload);
+    }
     if (school) {
       return school.name;
     } else {
