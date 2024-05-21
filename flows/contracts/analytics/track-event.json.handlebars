@@ -1,9 +1,9 @@
 
 {{#if request.body.values}}
-  {{#with request.body}}
+  {{#with request.body.values}}
     {
       "type": "{{type}}",
-      "payload": {{{json values}}}
+      "payload": {{{json properties}}}
     }
   {{/with}}
 {{else}}
