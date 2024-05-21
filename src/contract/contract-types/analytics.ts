@@ -12,13 +12,13 @@ enum EVENT_TYPE {
   page,
 }
 
-const enum FIELDS {
-  primary_info = "primary_info",
-  employment = "employment",
-  employment_type = "employment_type",
-  income = "income",
-  income_verification_method = "income_verification_method",
-}
+// const enum FIELDS {
+//   primary_info = "primary_info",
+//   employment = "employment",
+//   employment_type = "employment_type",
+//   income = "income",
+//   income_verification_method = "income_verification_method",
+// }
 
 class Analytics extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
@@ -104,68 +104,60 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     assert(userId, "[ab4bkv0s] userId is null");
 
     const { payload } = definition;
-
+    const { event, ...eventProps } = payload;
     const props: TrackParams = {
       userId,
-      event: payload.event,
-      properties: {
-        applicationId: application.id,
-        product: application.product,
-        loan_type:
-          application.tags && application.tags.length > 0
-            ? application.tags[0]
-            : null,
-        source: "application",
-      },
+      event: event,
+      properties: eventProps,
     };
 
-    //employment_type
-    if (payload.employment_type) {
-      props.properties = {
-        ...props.properties,
-        employment_type: payload.employment_type,
-      };
-    } else if (
-      Array.isArray(payload.fields) &&
-      payload.fields.includes(FIELDS.employment_type) &&
-      application?.primary?.details?.income &&
-      application.primary.details.income.length > 0
-    ) {
-      props.properties = {
-        ...props.properties,
-        employment_type: application.primary.details.income[0]?.type,
-      };
-    }
+    // //employment_type
+    // if (payload.employment_type) {
+    //   props.properties = {
+    //     ...props.properties,
+    //     employment_type: payload.employment_type,
+    //   };
+    // } else if (
+    //   Array.isArray(payload.fields) &&
+    //   payload.fields.includes(FIELDS.employment_type) &&
+    //   application?.primary?.details?.income &&
+    //   application.primary.details.income.length > 0
+    // ) {
+    //   props.properties = {
+    //     ...props.properties,
+    //     employment_type: application.primary.details.income[0]?.type,
+    //   };
+    // }
 
-    //income_verification_method
-    if (payload.income_verification_method) {
-      props.properties = {
-        ...props.properties,
-        income_verification_method: payload.income_verification_method,
-      };
-    } else if (
-      Array.isArray(payload.fields) &&
-      payload.fields.includes(FIELDS.income_verification_method) &&
-      application?.primary?.details?.income &&
-      application.primary.details.income.length > 0
-    ) {
-      props.properties = {
-        ...props.properties,
-        employment_type: application.primary.details.income[0]?.type,
-      };
-    }
+    // //income_verification_method
+    // if (payload.income_verification_method) {
+    //   props.properties = {
+    //     ...props.properties,
+    //     income_verification_method: payload.income_verification_method,
+    //   };
+    // } else if (
+    //   Array.isArray(payload.fields) &&
+    //   payload.fields.includes(FIELDS.income_verification_method) &&
+    //   application?.primary?.details?.income &&
+    //   application.primary.details.income.length > 0
+    // ) {
+    //   props.properties = {
+    //     ...props.properties,
+    //     employment_type: application.primary.details.income[0]?.type,
+    //   };
+    // }
 
-    //decision
-    if (payload.decision) {
-      props.properties = {
-        ...props.properties,
-        decision: payload.decision,
-      };
-    }
+    // //decision
+    // if (payload.decision) {
+    //   props.properties = {
+    //     ...props.properties,
+    //     decision: payload.decision,
+    //   };
+    // }
 
-    if (payload.section) {
-      props.properties = { ...props.properties, section: payload.section };
-    }
+    // if (payload.section) {
+    //   props.properties = { ...props.properties, section: payload.section };
+    // }
 
     return props;
   }
