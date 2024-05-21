@@ -1,17 +1,9 @@
 
 {{#if request.body.values}}
-  {{#with request.body.values}}
+  {{#with request.body}}
     {
       "type": "{{type}}",
-      "payload": {
-        "event": "{{event}}",
-        "section": "{{section}}",
-        "name": "{{name}}",
-        "title": "{{title}}",
-        "source": "{{source}}",
-        "action": "{{action}}",
-        "text": "{{text}}"
-      }
+      "payload": {{values}}
     }
   {{/with}}
 {{else}}
