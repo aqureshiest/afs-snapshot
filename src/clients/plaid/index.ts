@@ -56,6 +56,11 @@ export default class PlaidClient extends Client {
       webhook: `${this.baseUrl}/webhooks/plaid/${id}`,
       country_codes: ["US"],
       language: "en",
+      account_filters: {
+        depository: {
+          account_subtypes: ["checking", "savings"],
+        },
+      },
       ...this.auth,
     };
 
