@@ -62,16 +62,6 @@ const errorHandler: Handler = async function (
             auth,
             userState,
             error,
-            input: {
-              request: {
-                originalUrl: req.originalUrl,
-                method: req.method,
-                params: req.params,
-                body: req.body,
-                query: req.query,
-                headers: req.headers,
-              },
-            },
           },
           { context, ...input },
         );
