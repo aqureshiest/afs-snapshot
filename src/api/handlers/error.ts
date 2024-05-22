@@ -47,20 +47,22 @@ const errorHandler: Handler = async function (
         res.locals;
 
       const splittedPath = manifestName.split("/");
-      let errorPageManifest;
-      switch (convertedError.statusCode) {
-        case 404:
-          errorPageManifest = getErrorPageManifest(
-            context,
-            splittedPath,
-            convertedError.statusCode,
-          );
-          break;
-      }
+      const errorPageManifest = getErrorPageManifest(
+        context,
+        splittedPath,
+        convertedError.statusCode,
+      );
+
       if (errorPageManifest) {
         res.locals.manifest = errorPageManifest;
         const { contract } = await errorPageManifest.execute(
-          { ...input, manifest: errorPageManifest, auth, userState, error },
+          {
+            ...input,
+            manifest: errorPageManifest,
+            auth,
+            userState,
+            error,
+          },
           { context, ...input },
         );
         return res.status(convertedError.statusCode).send(contract);
