@@ -29,7 +29,9 @@ export default class NeasClient extends Client {
       Accept: "application/json",
       Authorization: `${this.#accessKey}`,
       // [TODO: INF-8996] this is a temporary workaround until NEAS gets an internal api gateway
-      cf_neas_token: this.#TEMP_cloudflareKey as string,
+      ...(this.#TEMP_cloudflareKey
+        ? { cf_neas_token: this.#TEMP_cloudflareKey }
+        : {}),
     };
   }
 
