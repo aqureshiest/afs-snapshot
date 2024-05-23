@@ -1,19 +1,17 @@
-{{#if auth.session}}
-  {{#obj}}
+{
+  "criteria": {{#list}}
     {{#with auth.session}}
       {{#if userId}}
-        { "criteria": [{ "monolithUserID": "{{ userId }}" }] }
+      { "monolithUserID": "{{ userId }}" }
       {{/if}}
     {{/with}}
-    {{#with request.params}}
-      {{#if limit}}
-        { "limit": {{ limit }} }
-      {{/if}}
-      {{#if page}}
-        { "page": {{ page }} }
-      {{/if}}
-    {{/with}}
-  {{/obj}}
-{{else}}
-  {}
-{{/if}}
+  {{/list}}
+  {{#with request.query}}
+    {{#if limit}}
+      ,"limit": {{{json limit}}}
+    {{/if}}
+    {{#if page}}
+      ,"page": {{{json page}}}
+    {{/if}}
+  {{/with}}
+}

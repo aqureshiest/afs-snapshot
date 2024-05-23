@@ -185,8 +185,8 @@ query Application($id: String!, $root: Boolean = false) {
 
 export const TEMP_DEFAULT_APPLICATIONS_QUERY = `
 ${META_FRAGMENT}
-query Applications($criteria: [ApplicationSearchCriteria]!) {
-  applications(criteria: $criteria) {
+query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: Int) {
+  applications(criteria: $criteria, limit: $limit, page: $page) {
     ...MetaFragment
   }
 }
