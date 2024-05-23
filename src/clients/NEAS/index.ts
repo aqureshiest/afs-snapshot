@@ -39,7 +39,7 @@ export default class NeasClient extends Client {
     return {
       attempts: 3,
       delay: 100,
-      timeout: 10000,
+      timeout: 30000,
       test: ({ response }) =>
         Boolean(response.statusCode && response.statusCode <= 500),
     };
