@@ -93,10 +93,7 @@ describe("[cd30d05c] session auth strategy", () => {
         () => {},
       ),
       (error: Error) => {
-        assert.equal(
-          error.message,
-          "[0963fa22] Unauthorized - session expired",
-        );
+        assert.equal(error.message, "Session expired");
         return true;
       },
     );
@@ -125,10 +122,7 @@ describe("[cd30d05c] session auth strategy", () => {
         () => {},
       ),
       (error: Error) => {
-        assert.equal(
-          error.message,
-          "[a6b44191] Unauthorized - invalid idToken",
-        );
+        assert.equal(error.message, "Invalid idtoken");
         return true;
       },
     );

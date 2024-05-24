@@ -13,7 +13,12 @@ export const plugin: Plugin<NeasClient> = {
     const baseUrl =
       SensitiveString.ExtractValue(context.env.NEAS_BASE_URL) || "";
 
-    const client = new NeasClient(baseUrl, accessKey);
+    // [TODO: INF-8996] this is a temporary workaround until NEAS gets an internal api gateway
+    const TEMP_cloudflareKey = SensitiveString.ExtractValue(
+      context.env.TEMP_CLOUDFLARE_KEY,
+    );
+
+    const client = new NeasClient(baseUrl, accessKey, TEMP_cloudflareKey);
 
     plugin.instance = client;
   },

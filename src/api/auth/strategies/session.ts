@@ -22,19 +22,29 @@ export default async function (
 
   const { results, response } = await NeasClient.verifyToken(idToken, context);
 
-  if (response.statusCode === 400) {
-    throw new createError.Unauthorized(
-      "[a6b44191] Unauthorized - invalid idToken",
+  if (!response.statusCode || response.statusCode >= 400) {
+    NeasClient.log(
+      {
+        level: "warn",
+        results,
+      },
+      context,
     );
+
+    // 400,401; propagate to user as Unauthorized
+    if (response.statusCode === 400) {
+      throw new createError.Unauthorized("Invalid idtoken");
+    }
+
+    // All other 4xx,5xx status codes: internal server error
+    throw new createError.InternalServerError("Session authentication failed");
   }
 
   const { exp } = results;
   const now = Math.floor(Date.now() / 1000);
 
   if (exp && now > exp) {
-    throw new createError.Unauthorized(
-      "[0963fa22] Unauthorized - session expired",
-    );
+    throw new createError.Unauthorized("Session expired");
   }
 
   if (results) {
