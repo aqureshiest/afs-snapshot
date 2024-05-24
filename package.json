@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/meetearnest/apply-flow-service#readme",
   "dependencies": {
-    "@earnest-labs/microservice-chassis": "2.1.x",
+    "@earnest-labs/microservice-chassis": "4.3.463",
     "@earnest-labs/ts-sensitivestring": "^0.1.26",
     "@earnest/application-service-client": "^1.2.1",
     "@earnest/http": "^2.0.0",
