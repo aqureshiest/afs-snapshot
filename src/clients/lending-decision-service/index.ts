@@ -371,7 +371,7 @@ export default class LendingDecisionServiceClient extends Client {
         resiliency: {
           attempts: 3,
           delay: 1000,
-          timeout: 20000,
+          timeout: 30000,
           test: ({ response }) =>
             Boolean(response.statusCode && response.statusCode <= 500),
         },
