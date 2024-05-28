@@ -45,7 +45,6 @@ describe("[cd30d05c] session auth strategy", () => {
     const expected = {
       auth: {
         session: response,
-        isAuthorized: true,
       },
     };
     mock.method(NeasClient, "verifyToken", () => {
