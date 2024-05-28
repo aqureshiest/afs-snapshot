@@ -44,8 +44,24 @@ export default async function (
   const now = Math.floor(Date.now() / 1000);
 
   if (exp && now > exp) {
+    NeasClient.log(
+      {
+        level: "warn",
+        message: "Session expired",
+        exp,
+      },
+      context,
+    );
     throw new createError.Unauthorized("Session expired");
   }
+
+  NeasClient.log(
+    {
+      message: "Session expired",
+      claims: Object.keys(results),
+    },
+    context,
+  );
 
   if (results) {
     strategy.claims = {
