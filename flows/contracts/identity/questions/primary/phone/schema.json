@@ -2,10 +2,11 @@
   "type": "string",
   "minLength": 10,
   "maxLength": 10,
+  "pattern": "^[2-9]{1}[0-9]{9}$",
   "errorMessage": {
     "minLength": "Phone number is required",
     "maxLength": "Invalid phone number",
-    "pattern": "Invalid phone number",
+    "pattern": "Enter a valid 10 digit US phone number",
     "type": "Phone number is required"
   }
 }

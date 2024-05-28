@@ -20,6 +20,7 @@
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
     "actions": "actions/decision-request.primary",
+    "getDegrees": "questions/primary/degree.get-degrees",
     "disclosureLinks": ["questions/primary/disclosure/links.terms-of-services",
     "questions/primary/disclosure/links.privacy-policy",
     "questions/primary/disclosure/links.privacy-notice",

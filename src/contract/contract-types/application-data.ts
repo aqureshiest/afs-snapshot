@@ -9,7 +9,7 @@ import {
 class ApplicationData extends ContractType<
   Definition,
   Definition,
-  Application | [Application]
+  Application | Application[] | null
 > {
   get contractName(): string {
     return "ApplicationData";
@@ -43,16 +43,23 @@ class ApplicationData extends ContractType<
       )) as unknown as { application: Application };
 
       return application;
-    } else {
-      assert(definition["criteria"], "[0afdb895] search criteria is undefined");
+    } else if ("criteria" in definition) {
+      if (definition.criteria.length === 0) {
+        return [] as Application[];
+      }
+
+      const limit =
+        definition.limit != null ? Number(definition.limit) : undefined;
+      const page =
+        definition.page != null ? Number(definition.page) : undefined;
 
       const { applications } = (await applicationServiceClient.sendRequest(
         {
           query: TEMP_DEFAULT_APPLICATIONS_QUERY,
           variables: {
             criteria: definition["criteria"],
-            ...(definition["limit"] ? { limit: definition["limit"] } : {}),
-            ...(definition["page"] ? { page: definition["page"] } : {}),
+            limit: Number.isNaN(limit) ? undefined : limit,
+            page: Number.isNaN(page) ? undefined : page,
           },
         },
         context,
@@ -60,6 +67,7 @@ class ApplicationData extends ContractType<
 
       return applications;
     }
+    return null;
   };
 }
 
