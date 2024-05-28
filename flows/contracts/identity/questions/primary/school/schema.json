@@ -19,5 +19,6 @@
   },
   "required": [
       "opeid8"
-  ]
+  ],
+  "errorMessage": "College or school name is required"
 }
