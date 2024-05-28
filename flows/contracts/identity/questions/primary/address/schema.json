@@ -4,7 +4,7 @@
       "street": {
         "minLength": 1,
         "type": "string",
-        "pattern": "^[\\x00-\\x7F]*$",
+        "pattern": "^[a-zA-Z0-9\\s.'-]*$",
         "errorMessage": {
           "minLength": "Street is required",
           "pattern": "Invalid street"
@@ -13,7 +13,7 @@
       "apt": {
         "nullable": true,
         "type": "string",
-        "pattern": "^[\\x00-\\x7F]*$",
+        "pattern": "^[a-zA-Z0-9\\s.-#\\x00]*$",
         "errorMessage": {
           "pattern": "Invalid apartment"
         }
@@ -21,7 +21,7 @@
       "city": {
         "minLength": 1,
         "type": "string",
-        "pattern": "^[\\x00-\\x7F]*$",
+        "pattern": "^[a-zA-Z0-9\\s'-]*$",
         "errorMessage": {
           "minLength": "City is required",
           "pattern": "Invalid city"
