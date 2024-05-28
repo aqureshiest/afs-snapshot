@@ -59,6 +59,10 @@ export default class LendingDecisionServiceClient extends Client {
     const { data, webhookType } = payload;
     const { decision, entity, status } = data;
 
+    if (!input.auth?.internal?.isValid) {
+      this.error(input, "unauthorized");
+      return;
+    }
     /* ============================== *
      * Log webhook event
      * ============================== */

@@ -37,13 +37,20 @@ describe("[cd30d05c] session auth strategy", () => {
       },
     };
     const res = { locals: {} };
+    const response = {
+      userId: 1,
+      exp: Math.floor(Date.now() / 1000) + 1800,
+      isValid: true,
+    };
+    const expected = {
+      auth: {
+        session: response,
+        isAuthorized: true,
+      },
+    };
     mock.method(NeasClient, "verifyToken", () => {
       return {
-        results: {
-          userId: 1,
-          exp: Math.floor(Date.now() / 1000) + 1800,
-          isValid: true,
-        },
+        results: response,
         response: {
           statusCode: 200,
         },
@@ -55,15 +62,7 @@ describe("[cd30d05c] session auth strategy", () => {
       res as Response,
       () => {},
     );
-    assert.deepEqual(res.locals, {
-      auth: {
-        session: {
-          userId: 1,
-          exp: Math.floor(Date.now() / 1000) + 1800,
-          isValid: true,
-        },
-      },
-    });
+    assert.deepEqual(res.locals, expected);
   });
 
   it("[19cd0178] should throw an error when a session has expired", async () => {

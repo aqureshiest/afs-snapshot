@@ -17,7 +17,7 @@ const getInputs: Handler = async function (
   res: Response,
   next: NextFunction,
 ) {
-  const applicationId = res?.locals?.application?.id;
+  const applicationId = req.params.id;
   const userId = res?.locals?.auth?.session?.userId;
 
   const ASclient = context?.loadedPlugins?.applicationServiceClient?.instance;
@@ -30,6 +30,7 @@ const getInputs: Handler = async function (
    * I. Fetch Root Application
    * ============================== */
   let application;
+
   if (applicationId) {
     const { application: rootApplication } = (await ASclient.sendRequest(
       {

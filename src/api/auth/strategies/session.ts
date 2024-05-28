@@ -38,11 +38,7 @@ export default async function (
   }
 
   if (results) {
-    strategy.claims = {
-      session: {
-        ...results,
-      },
-    };
+    strategy.claims = results;
   }
 
   return strategy;

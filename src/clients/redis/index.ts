@@ -74,10 +74,15 @@ export default class RedisClient {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   async setApplicationState(context: PluginContext, appID: string, value) {
     const rKey = `${this.prefix}_app_${appID}`;
-    const res = await this.client.set(rKey, JSON.stringify(value), {
-      EX: this.expiration,
-      GT: true,
-    });
+    const current = this.getApplicationState(context, appID, null);
+    const res = await this.client.set(
+      rKey,
+      JSON.stringify({ ...value, previous: current }),
+      {
+        EX: this.expiration,
+        GT: true,
+      },
+    );
     return res;
   }
 

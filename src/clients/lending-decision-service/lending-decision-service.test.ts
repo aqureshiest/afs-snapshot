@@ -16,6 +16,11 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   let client;
   let key;
   const input = {
+    auth: {
+      internal: {
+        isValid: true,
+      },
+    },
     application: null,
     request: {},
   } as IContractInput;

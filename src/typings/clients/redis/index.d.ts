@@ -12,6 +12,7 @@ declare module "clients/redis/index.js" {
   type ApplicationState = {
     manifest?: string;
     step?: string;
+    previous?: ApplicationState;
     [key: string]: unknown;
   } | null;
   type UserState = {
