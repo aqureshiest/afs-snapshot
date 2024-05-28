@@ -19,5 +19,6 @@
   },
   "required": [
       "opeid8"
-  ]
+  ],
+  "errorMessage": "Please select a school from dropbox"
 }
