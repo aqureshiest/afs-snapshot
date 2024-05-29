@@ -4,7 +4,7 @@
       "street": {
         "minLength": 1,
         "type": "string",
-        "pattern": "^[a-zA-Z0-9\\s.'\\-]*$",
+        "pattern": "^[a-zA-Z0-9\\s.'-]*$",
         "errorMessage": {
           "minLength": "Street is required",
           "pattern": "Invalid street"
@@ -21,7 +21,7 @@
       "city": {
         "minLength": 1,
         "type": "string",
-        "pattern": "^[a-zA-Z\\s'\\-]*$",
+        "pattern": "^[a-zA-Z\\s'-]*$",
         "errorMessage": {
           "minLength": "City is required",
           "pattern": "Invalid city"
