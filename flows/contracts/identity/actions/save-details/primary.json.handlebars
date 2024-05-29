@@ -9,6 +9,16 @@
             "loan_type": "{{{mapLoanType application.tag.applicants}}}"
         },
         "manifest": "save-details/{{application.primary.id}}",
-        "method": "POST"
+        "method": "POST",
+        "onError": [{
+            "codes": ["unathorized"],
+            "action": {
+                "key": "unauthorized-error",
+                "type": "navigate",
+                "properties": {
+                    "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{request.params.id}}"
+                }
+            }
+        }]
     }
 }

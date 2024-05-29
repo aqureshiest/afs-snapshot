@@ -4,6 +4,16 @@
     "type": "request",
     "properties": {
         "manifest": "save-details/other-incomes/{{application.primary.id}}",
-        "method": "POST"
+        "method": "POST",
+        "onError": [{
+            "codes": ["unathorized"],
+            "action": {
+                "key": "unauthorized-error",
+                "type": "navigate",
+                "properties": {
+                    "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{request.params.id}}"
+                }
+            }
+        }]
     }
 }
