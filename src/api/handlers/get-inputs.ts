@@ -8,6 +8,21 @@ import flattenApplication from "../helpers.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 const allowedEnvInjections = ["NEAS_BASE_URL", "BASE_URL"];
+
+function error(res: Response, message: string | Array<string>) {
+  let input = res.locals.input;
+  if (!input) input = { application: null, applicationState: null, error: [] };
+  if (!input.error) input.error = [];
+
+  if (Array.isArray(message)) {
+    input.error = input.error.concat(message);
+  } else {
+    if (!input.error.includes(message)) {
+      input.error.push(message);
+    }
+  }
+}
+
 /* ============================== *
  * Gather inputs for contract execution
  * ============================== */
@@ -41,7 +56,7 @@ const getInputs: Handler = async function (
     )) as unknown as { application: Application };
 
     if (!rootApplication) {
-      res.locals.error.push("application-not-found");
+      error(res, "application-not-found");
       throw new Error("[fc867b3a] Root application does not exist");
     }
 
@@ -74,7 +89,7 @@ const getInputs: Handler = async function (
      * remove .skip from get-inputs.test.ts as well
      */
     if (!isAuthorized) {
-      res.locals.error.push("unauthorized");
+      error(res, "unauthorized");
       throw new createError.Forbidden(
         "[dfbaf766] Unauthorized - applicants lack permissions for this session",
       );
