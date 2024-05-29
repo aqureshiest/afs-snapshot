@@ -15,7 +15,7 @@
         "questions/primary/consent.default",
         "questions/primary/disclosure.default"
     ],
-
+    "back-button": "actions/back-buttons.review",
     "decryptPiiSsn": "pii-get-primary-ssn",
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",

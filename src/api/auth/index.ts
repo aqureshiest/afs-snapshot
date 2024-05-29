@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import session from "./strategies/session.js";
 import internal from "./strategies/internal.js";
+import { Strategy } from "plaid";
 
 export enum STRATEGIES {
   SESSION = "session",
@@ -15,14 +16,9 @@ const authMiddleware = async (
 ) => {
   const idToken =
     (req.headers?.idToken as string) || (req.headers?.idtoken as string);
-
+  const strategyResults: Array<Strategy | null> = [];
   if (idToken) {
-    const sessionResults = await session(context, req);
-
-    res.locals.auth = {
-      ...(res.locals?.auth ?? {}),
-      ...(sessionResults?.claims ?? {}),
-    };
+    strategyResults.push((await session(context, req)) as unknown as Strategy);
   }
 
   const authorizationHeader =
@@ -30,8 +26,16 @@ const authMiddleware = async (
     (req.headers?.Authorization as string);
 
   if (authorizationHeader) {
-    internal(context, req);
+    strategyResults.push((await internal(context, req)) as unknown as Strategy);
   }
+  strategyResults.forEach((strategy) => {
+    if (strategy) {
+      res.locals.auth = {
+        ...res.locals.auth,
+        [strategy["strategy"]]: strategy["claims"],
+      };
+    }
+  });
 
   return next();
 };

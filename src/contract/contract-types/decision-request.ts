@@ -10,7 +10,9 @@ class DecisionRequest extends ContractType<Definition, Definition, Output> {
     /**
      * TODO: Add authentication checks
      */
-
+    if (!definition.id) {
+      this.error(input, "Missing id on payload");
+    }
     return Boolean(definition.id);
   };
 

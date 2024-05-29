@@ -3,7 +3,10 @@ import createError from "http-errors";
 
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
-export default function (context: Context, req: Request): void {
+export default async function (
+  context: Context,
+  req: Request,
+): Promise<Strategy> {
   const LDS_S2S_KEY =
     SensitiveString.ExtractValue(context.env.S2S_KEY_LDS_APPLY_FLOW_SERVICE) ||
     "";
@@ -32,4 +35,10 @@ export default function (context: Context, req: Request): void {
       throw createError.Unauthorized("[9736e5c6] Unauthorized - invalid key");
     }
   }
+  return {
+    strategy: "internal",
+    claims: {
+      isValid: true,
+    },
+  };
 }

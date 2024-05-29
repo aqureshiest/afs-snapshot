@@ -47,6 +47,9 @@ type IContractInput = {
   manifest?: Manifest;
   error?: Array<string>;
   auth?: {
+    internal?: {
+      isValid: boolean;
+    };
     session?: {
       userId: string;
       exp: number;

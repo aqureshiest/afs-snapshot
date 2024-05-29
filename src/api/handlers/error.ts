@@ -43,8 +43,7 @@ const errorHandler: Handler = async function (
   // if it fails to find any, it will return the formated error as normal.
   if (req.method === "GET") {
     try {
-      const { manifest, input, auth, userState, errorRes, manifestName } =
-        res.locals;
+      const { input, auth, userState, manifestName } = res.locals;
 
       const splittedPath = manifestName.split("/");
       const errorPageManifest = getErrorPageManifest(
@@ -57,11 +56,11 @@ const errorHandler: Handler = async function (
         res.locals.manifest = errorPageManifest;
         const { contract } = await errorPageManifest.execute(
           {
-            ...input,
             manifest: errorPageManifest,
             auth,
             userState,
             error,
+            input,
           },
           { context, ...input },
         );
