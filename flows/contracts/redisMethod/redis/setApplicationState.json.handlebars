@@ -2,7 +2,11 @@
   {
     "redisMethod": "setApplicationState",
     "key": "{{{application.id}}}",
-    "value": {{{json request.body.flow}}}
+    "value": {
+      {{#if request.body.flow.manifest}}
+        "manifest": "{{{request.body.flow.manifest}}}/{{application.id}}",
+      {{/if}}
+        "step": {{{json request.body.flow.step}}}
   }
   {{else}}
     {}
