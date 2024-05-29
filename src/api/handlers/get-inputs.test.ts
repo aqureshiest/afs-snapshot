@@ -65,6 +65,7 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
       },
     };
+    req.params.id = "2";
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
         application: null,
@@ -148,7 +149,7 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
       },
     };
-
+    req.params.id = "2";
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
         application: {
@@ -186,7 +187,7 @@ describe("[d7c20b00] get-inputs handler", () => {
         },
       },
     };
-
+    req.params.id = "2";
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
         application: {
