@@ -79,7 +79,7 @@ export default class RedisClient {
       rKey,
       JSON.stringify({
         ...value,
-        previous: { manifest: current.manifest, step: current.step },
+        previous: { manifest: current?.manifest, step: current?.step },
       }),
       {
         EX: this.expiration,
