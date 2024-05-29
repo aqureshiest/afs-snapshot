@@ -40,10 +40,10 @@ const getInputs: Handler = async function (
       context,
     )) as unknown as { application: Application };
 
-    assert(
-      rootApplication,
-      new Error("[fc867b3a] Root application does not exist"),
-    );
+    if (!rootApplication) {
+      res.locals.error.push("application-not-found");
+      throw new Error("[fc867b3a] Root application does not exist");
+    }
 
     /* ============================== *
      * II. Flatten Root Application
@@ -73,12 +73,12 @@ const getInputs: Handler = async function (
      * TODO: Temporarily comment out
      * remove .skip from get-inputs.test.ts as well
      */
-    assert(
-      isAuthorized,
-      new createError.Forbidden(
+    if (!isAuthorized) {
+      res.locals.error.push("unauthorized");
+      throw new createError.Forbidden(
         "[dfbaf766] Unauthorized - applicants lack permissions for this session",
-      ),
-    );
+      );
+    }
   }
 
   const redisClient = context?.loadedPlugins?.redis?.instance;
