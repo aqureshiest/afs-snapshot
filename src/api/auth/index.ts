@@ -31,7 +31,7 @@ const authMiddleware = async (
   strategyResults.forEach((strategy) => {
     if (strategy) {
       res.locals.auth = {
-        ...res.locals.auth,
+        ...(res.locals?.auth || {}),
         [strategy["strategy"]]: strategy["claims"],
       };
     }

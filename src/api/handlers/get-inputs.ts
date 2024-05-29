@@ -8,6 +8,21 @@ import flattenApplication from "../helpers.js";
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 
 const allowedEnvInjections = ["NEAS_BASE_URL", "BASE_URL"];
+
+function error(res: Response, message: string | Array<string>) {
+  let input = res.locals.input;
+  if (!input) input = { application: null, applicationState: null, error: [] };
+  if (!input.error) input.error = [];
+
+  if (Array.isArray(message)) {
+    input.error = input.error.concat(message);
+  } else {
+    if (!input.error.includes(message)) {
+      input.error.push(message);
+    }
+  }
+}
+
 /* ============================== *
  * Gather inputs for contract execution
  * ============================== */
@@ -40,10 +55,10 @@ const getInputs: Handler = async function (
       context,
     )) as unknown as { application: Application };
 
-    assert(
-      rootApplication,
-      new Error("[fc867b3a] Root application does not exist"),
-    );
+    if (!rootApplication) {
+      error(res, "application-not-found");
+      throw new Error("[fc867b3a] Root application does not exist");
+    }
 
     /* ============================== *
      * II. Flatten Root Application
@@ -73,12 +88,12 @@ const getInputs: Handler = async function (
      * TODO: Temporarily comment out
      * remove .skip from get-inputs.test.ts as well
      */
-    assert(
-      isAuthorized,
-      new createError.Forbidden(
+    if (!isAuthorized) {
+      error(res, "unauthorized");
+      throw new createError.Forbidden(
         "[dfbaf766] Unauthorized - applicants lack permissions for this session",
-      ),
-    );
+      );
+    }
   }
 
   const redisClient = context?.loadedPlugins?.redis?.instance;
