@@ -287,6 +287,25 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
+  it("[d177ce53] it should execute an Error contract-type", async () => {
+    const input = {} as Input;
+
+    const manifest = new Manifest(context, "manifestError", {
+      key: "errorTestContract",
+      "*": new Contract({
+        key: "errorTestContract",
+        raw: `{
+          "error": "no-income-error"
+        }`,
+        type: "error",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+
   it("[9edd8cee] it should execute an ApplicationData contract-type when an id exists in the definition", async () => {
     const input = {} as Input;
 
@@ -388,6 +407,7 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+
   it("[5d6c5ca8] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestSyllabus", {
@@ -412,6 +432,7 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+
   it("[df40cd1a] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestSyllabus", {
@@ -632,7 +653,8 @@ describe("[462fd166] manifest.execute", () => {
             "dateOfBirth": "{{{dateObjToString request.body.values.dateOfBirth}}}",
             "formatToUSCurrency": "{{{formatToUSCurrency 1000000}}}",
             "formatDollarsToCents": "{{{formatDollarsToCents '$12,3456.89'}}}",
-            "stateMinLoan": "{{{stateMinLoan request.body.values.location}}}"
+            "stateMinLoan": "{{{stateMinLoan request.body.values.location}}}",
+            "hasValues": {{{hasValues request.body.values.dateOfBirth}}}
           }
       `,
       }),
@@ -671,6 +693,7 @@ describe("[462fd166] manifest.execute", () => {
       formatToUSCurrency: "$10,000.00",
       formatDollarsToCents: "12345689",
       stateMinLoan: "$10,000",
+      hasValues: true,
     });
   });
 
@@ -730,6 +753,57 @@ describe("[462fd166] manifest.execute", () => {
       selfEmployed: "self_employed",
       unemployed: "unemployed",
       retired: "retired",
+    });
+  });
+
+  it("[1bb916db] sumIncomeAmountRange and totalSum template helper", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            incomes: [
+              {
+                employer: "BigCompany",
+                type: "employment",
+                amount: 1000000,
+              },
+              {
+                type: "child_support_or_alimony",
+                amount: 1000000,
+              },
+              {
+                type: "social_security_or_pension",
+                amount: 1000000,
+              },
+            ],
+            asset: [
+              {
+                type: "claimed_total_assets",
+                amount: 5500000,
+              },
+            ],
+          },
+        },
+      },
+    } as unknown as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+          {
+            "sumRange": {{{sumIncomeAmountRange request.body.values.incomes 'amount' 0 2}}},
+            "totalSum": {{{totalSum request.body.values.asset.[0].amount (sumIncomeAmountRange request.body.values.incomes 'amount' 0 2)}}}
+          }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      sumRange: 3000000,
+      totalSum: 8500000,
     });
   });
 });

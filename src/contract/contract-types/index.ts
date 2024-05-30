@@ -40,3 +40,8 @@ export { default as accreditedSchoolRequest } from "./accredited-school-service-
 export { default as redisMethod } from "./redis-method.js";
 
 export { default as clientMethod } from "./client-method.js";
+
+/* ============================== *
+ * Errors
+ * ============================== */
+export { default as error } from "./error.js";

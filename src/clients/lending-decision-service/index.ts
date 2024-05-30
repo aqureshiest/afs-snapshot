@@ -531,17 +531,29 @@ export default class LendingDecisionServiceClient extends Client {
           return {};
         }
 
-        const foundSchool = (
+        const searchedSchool = (
           await accreditedSchoolService["getSchools"](input, context, {
             opeid: education.opeid,
           })
         )?.[0];
 
-        if (!foundSchool) {
+        if (!searchedSchool) {
           throw new Error(
             `[97816200] failed to get School with id ${education.opeid}`,
           );
         }
+        /**
+         * Found the school using the opeid, but now we need to query
+         * school service again with the schoolId to find the
+         * `forProfit` field....
+         */
+        const foundSchool = await accreditedSchoolService["getSchool"](
+          input,
+          context,
+          {
+            id: searchedSchool.id,
+          },
+        );
 
         return {
           degreeType: education.degree ? education.degree : "none",
@@ -579,6 +591,7 @@ export default class LendingDecisionServiceClient extends Client {
         }
 
         let status;
+        let amount = employment.amount;
         if (employment.type === "employment") {
           status = "employed";
           /**
@@ -599,9 +612,11 @@ export default class LendingDecisionServiceClient extends Client {
         }
         if (employment.type === "unspecified") {
           status = "unemployed";
+          amount = 0;
         }
         if (otherIncomeTypes.includes(employment.type)) {
           status = "retired";
+          amount = 0;
         }
         return {
           employerName: employment.employer,
@@ -614,7 +629,7 @@ export default class LendingDecisionServiceClient extends Client {
                   : "",
               }
             : {}),
-          amount: status === "retired" ? 0 : employment.amount,
+          amount: amount,
         };
       });
 
