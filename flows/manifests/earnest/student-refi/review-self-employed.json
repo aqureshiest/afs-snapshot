@@ -14,15 +14,17 @@
         "questions/primary/consent.default",
         "questions/primary/disclosure.default"
     ],
-
+    "back-button": "actions/back-buttons.default",
     "decryptPiiSsn": "pii-get-primary-ssn",
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
     "actions": "actions/decision-request.primary",
-    "disclosureLinks": ["questions/primary/disclosure/links.terms-of-services",
-    "questions/primary/disclosure/links.privacy-policy",
-    "questions/primary/disclosure/links.privacy-notice",
-    "questions/primary/disclosure/links.credit-report-policy",
-    "questions/primary/disclosure/links.consent-electronic-communications",
-    "questions/primary/disclosure/links.earnest-loan-application-solicitation"]
+    "disclosureLinks": [
+        "questions/primary/disclosure/links.terms-of-services",
+        "questions/primary/disclosure/links.privacy-policy",
+        "questions/primary/disclosure/links.privacy-notice",
+        "questions/primary/disclosure/links.credit-report-policy",
+        "questions/primary/disclosure/links.consent-electronic-communications",
+        "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+    ]
 }

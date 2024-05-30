@@ -21,7 +21,11 @@ const getErrorPageManifest = (context, splittedPath, statusCode) => {
     }
   }
 };
-
+const POSTerrorMap = {
+  401: "unauthorized",
+  404: "not-found",
+  403: "unauthorized",
+};
 const errorHandler: Handler = async function (
   context,
   error: Error,
@@ -72,6 +76,12 @@ const errorHandler: Handler = async function (
         stack: error.stack,
       });
     }
+  } else {
+    return res.status(convertedError.statusCode).send({
+      status: "failed",
+      results: [],
+      error: [POSTerrorMap[convertedError.statusCode]],
+    });
   }
   /////////////////////////////
 

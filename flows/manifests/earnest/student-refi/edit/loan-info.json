@@ -9,7 +9,7 @@
       "info/student-loan-amount/edit.default",
       "questions/primary/loan.default"
     ],
-  
+    "back-button": "actions/back-buttons.default",
     "save_edited_details_action": "actions/save-details.save-loan-review",
     "primary_loan_input_status": "questions/primary/loan.status"
   }
