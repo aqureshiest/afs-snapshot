@@ -591,6 +591,7 @@ export default class LendingDecisionServiceClient extends Client {
         }
 
         let status;
+        let amount = employment.amount;
         if (employment.type === "employment") {
           status = "employed";
           /**
@@ -611,9 +612,11 @@ export default class LendingDecisionServiceClient extends Client {
         }
         if (employment.type === "unspecified") {
           status = "unemployed";
+          amount = 0;
         }
         if (otherIncomeTypes.includes(employment.type)) {
           status = "retired";
+          amount = 0;
         }
         return {
           employerName: employment.employer,
@@ -626,7 +629,7 @@ export default class LendingDecisionServiceClient extends Client {
                   : "",
               }
             : {}),
-          amount: status === "retired" ? 0 : employment.amount,
+          amount: amount,
         };
       });
 

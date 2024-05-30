@@ -260,3 +260,14 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
   };
   type Output = { [key: string]: unknown };
 }
+
+import "contract/contract-types/error.js";
+declare module "contract/contract-types/error.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    error: string | string[];
+  };
+  type Injections = IExecutionInjections;
+  type Output = { [key: string]: unknown };
+}
