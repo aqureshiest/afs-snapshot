@@ -2,7 +2,7 @@
     "type": "string",
     "enum": ["employed", "self_employed", "future", "retired", "unemployed"],
     "errorMessage": {
-      "enum": "Please select an employment status"
+      "enum": "Employment status is required"
     },
     "required": ["employmentType"]
 }

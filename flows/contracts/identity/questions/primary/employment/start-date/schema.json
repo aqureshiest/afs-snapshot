@@ -7,10 +7,10 @@
       "maxLength": 2,
       "pattern": "^(1[012]|0?[1-9])$",
       "errorMessage": {
-        "minLength": "Month is required",
-        "maxLength": "Invalid month",
-        "pattern": "Invalid date",
-        "type": "Date is required"
+        "minLength": "Enter a valid month",
+        "maxLength": "Enter a valid month",
+        "pattern": "Enter a valid month",
+        "type": "Start date is required"
       }
     },
     "day": {
@@ -19,10 +19,10 @@
       "maxLength": 2,
       "pattern": "^(([0]?[1-9])|([1-2][0-9])|(3[01]))$",
       "errorMessage": {
-        "minLength": "Day is required",
-        "maxLength": "Invalid day",
-        "pattern": "Invalid date",
-        "type": "Date is required"
+        "minLength": "Enter a valid day",
+        "maxLength": "Enter a valid day",
+        "pattern": "Enter a valid day",
+        "type": "Start date is required"
       }
     },
     "year": {
@@ -31,12 +31,13 @@
       "maxLength": 4,
       "pattern": "^(19|20)\\d{2}$",
       "errorMessage": {
-        "minLength": "Year is required",
-        "maxLength": "Invalid year",
-        "pattern": "Invalid date",
-        "type": "Date is required"
+        "minLength": "Enter a valid year",
+        "maxLength": "Enter a valid year",
+        "pattern": "Enter a valid year",
+        "type": "Start date is required"
       }
     }
   },
-  "required": ["month", "day", "year"]
+  "required": ["month", "day", "year"],
+  "errorMessage": "Start date is required"
 }

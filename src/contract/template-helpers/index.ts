@@ -188,14 +188,38 @@ export function stateMinLoan(addresses) {
 }
 
 export function sumIncomeAmountRange(...args) {
-  const [values, start, end] = args;
+  const [values, key, start, end] = args;
+  /**
+   * 'values' can be an income detail from db with structure:
+   *    {
+   *       "amount": number,
+   *       "type": string,
+   *       "employer": string,
+   *       "name": string,
+   *       "title": string,
+   *       "start": date,
+   *       "end": date
+   *    }
+   * or an additionalIncomeSource type from UI with structure:
+   *    {
+   *       "type": string
+   *       "value": number
+   *    }
+   * use 'key' to access either 'amount' or 'value' depending on
+   * input value type
+   */
   let sum = 0;
   if (values) {
     for (let i = start; i <= end; i += 1) {
-      if (values[i] && values[i].amount) {
-        sum += values[i].amount;
+      if (values[i] && values[i][key]) {
+        sum += values[i][key];
       }
     }
   }
   return sum;
+}
+
+export function totalSum(...args) {
+  const numsArray = Array.prototype.slice.call(args, 0, -1);
+  return numsArray.reduce((acc, cur) => acc + cur);
 }
