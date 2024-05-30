@@ -90,6 +90,25 @@ const getInputs: Handler = async function (
      */
     if (!isAuthorized) {
       error(res, "unauthorized");
+      const { 0: manifestName, id } = req.params;
+      res.locals.manifestName = manifestName;
+      res.locals.input = {
+        env: {},
+        applicationState: null,
+        application: {
+          id: applicationId,
+        },
+        request: {
+          originalUrl: req.originalUrl,
+          method: req.method,
+          params: {
+            id,
+          },
+          body: req.body,
+          query: req.query,
+          headers: req.headers,
+        },
+      };
       throw new createError.Forbidden(
         "[dfbaf766] Unauthorized - applicants lack permissions for this session",
       );

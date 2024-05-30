@@ -104,12 +104,36 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     assert(userId, "[ab4bkv0s] userId is null");
 
     const { event, payload } = definition;
-
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    const { fields, ...properties } = payload;
     const props: TrackParams = {
       userId,
       event: event,
-      properties: payload,
+      properties,
     };
+
+    /// TODO: this must be refactored for v2, as is hardcoded to get primary info
+    // if (fields.includes("income_verification_method")) {
+    //   let income_verification_method;
+    //   const financialAccounts =
+    //     application?.primary?.details?.financialAccounts || [];
+    //   if (financialAccounts.length > 0) {
+    //     const plaidAccounts = financialAccounts.filter(
+    //       (fA) => fA && fA.plaidAccessToken !== null,
+    //     );
+    //     if (plaidAccounts.length > 0) {
+    //       income_verification_method = "plaid";
+    //     } else {
+    //       income_verification_method = "manual";
+    //     }
+    //   }
+    //   if (income_verification_method) {
+    //     props.properties = {
+    //       ...props.properties,
+    //       income_verification_method,
+    //     };
+    //   }
+    // }
 
     // //employment_type
     // if (payload.employment_type) {

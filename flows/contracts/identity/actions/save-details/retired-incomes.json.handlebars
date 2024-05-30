@@ -3,6 +3,7 @@
     "type": "request",
     "properties": {
         "manifest": "save-details/retired-incomes/{{application.primary.id}}",
-        "method": "POST"
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
     }
 }

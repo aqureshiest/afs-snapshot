@@ -9,6 +9,7 @@
             "loan_type": "{{{mapLoanType application.tag.applicants}}}",
             "application_id": "{{{application.id}}}"
         },
-        "method": "POST"
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
     }
 }

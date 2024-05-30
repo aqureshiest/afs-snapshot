@@ -1,0 +1,10 @@
+{
+  "codes": ["unauthorized"],
+  "action": {
+      "key": "unauthorized-error",
+      "type": "navigate",
+      "properties": {
+          "goTo": "/_/auth/login?targetUrl=/_/apply/resume/{{request.params.id}}"
+      }
+  }
+}

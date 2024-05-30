@@ -13,6 +13,7 @@
         {{else}}
           "type": "",
         {{/if}}
+        "event": "Server Application Section Submitted"
         "payload": {
           {{#if (or currentAddress previousAddress) }}
             "section": "primary-info",
@@ -29,7 +30,6 @@
             "section": "income verification",
             "income_verification_method": "manual",
           {{/if}}
-          "event": "Server Application Section Submitted"
         }
     {{/with}}
   }
