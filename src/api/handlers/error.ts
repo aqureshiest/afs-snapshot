@@ -76,7 +76,7 @@ const errorHandler: Handler = async function (
         stack: error.stack,
       });
     }
-  } else {
+  } else if (POSTerrorMap[convertedError.statusCode]) {
     return res.status(convertedError.statusCode).send({
       status: "failed",
       results: [],
