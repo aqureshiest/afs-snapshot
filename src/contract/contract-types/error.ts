@@ -1,4 +1,3 @@
-import assert from "node:assert";
 import ContractType from "./base-contract.js";
 class Error extends ContractType<Definition, Definition, Output> {
   get contractName(): string {
@@ -13,7 +12,6 @@ class Error extends ContractType<Definition, Definition, Output> {
     injections: Injections,
     definition: Definition,
   ) => {
-    const { context } = injections;
     this.error(input, definition.error);
     return {
       error: definition.error,
