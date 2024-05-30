@@ -59,6 +59,8 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     // 1. Any event that destroys data cannot be done with a request if it
     // isn't a DELETE request
     if (method && method !== "DELETE" && DESTRUCTIVE_EVENTS.includes(event)) {
+      console.log('[50e768] AJ DEBUG tried to delete ', event);
+      
       return false;
     }
 
@@ -115,12 +117,15 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       throw new Error("[694d632f] Event is not defined on event types");
     }
     let requestResult;
+    const requestBody = this.buildRequestBody(
+      definition,
+      applicationServiceClient.eventInputTypes[definition.event],
+    )
+    console.log('[42e8bc] AJ DEBUG requestBody', requestBody);
+    
     try {
       requestResult = await applicationServiceClient.sendRequest(
-        this.buildRequestBody(
-          definition,
-          applicationServiceClient.eventInputTypes[definition.event],
-        ),
+        requestBody,
         context,
       );
     } catch (error) {

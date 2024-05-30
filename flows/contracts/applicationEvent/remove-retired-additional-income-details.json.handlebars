@@ -1,0 +1,25 @@
+{{#if request.params.id}}
+  {
+    "event": "removeDetails",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "details": { {{! make sure to flatten each element into a single line}}
+        {{#with request.body.values}}
+        {{log '[12cdfc4e]' additionalAmountRetired}}
+          {{#if additionalAmountRetired}}
+            "income": [
+                {"index": 0, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
+                {"index": 1, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
+                {"index": 2, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
+                {"index": 3, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
+                {"index": 4, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] }
+              ]
+          {{/if}}
+        {{/with}}
+      }
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}
