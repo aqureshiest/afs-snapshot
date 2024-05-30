@@ -6,7 +6,7 @@
         "type": "string",
         "pattern": "^[a-zA-Z0-9\\s.'-]*$",
         "errorMessage": {
-          "minLength": "Street is required",
+          "minLength": "Street address is required",
           "pattern": "Invalid street"
         }
       },
@@ -83,7 +83,7 @@
           "WY"
         ],
         "errorMessage": {
-          "enum": "Invalid state"
+          "enum": "State is required"
         }
       },
       "zip": {
@@ -92,10 +92,11 @@
         "pattern": "^\\b\\d{5}(-\\d{4})?\\b$",
         "type": "string",
         "errorMessage": {
-          "minLength": "Zipcode is required",
-          "pattern": "Invalid zipcode"
+          "minLength": "Enter a valid 5 digit zip code. If your zip code is 3 digits prepend 00 to it.",
+          "pattern": "Enter a valid 5 digit zip code. If your zip code is 3 digits prepend 00 to it."
         }
       }
     },
-    "required": ["street", "city", "state", "zip"]
+    "required": ["street", "city", "state", "zip"],
+    "errorMessage": ""
 }
