@@ -3,7 +3,7 @@
     "pattern": "^[\\x00-\\x7F]*$",
     "minLength": 1,
     "errorMessage": {
-        "minLength": "Job title must be longer than 1 character",
+        "minLength": "Job title is required",
         "pattern": "Invalid Job title",
         "type": "Invalid Job title"
     }

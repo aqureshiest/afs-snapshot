@@ -3,7 +3,7 @@
     "minLength": 1,
     "pattern": "^\\$?\\d+(,\\d{3})*(\\.[0-9]{2})?$",
     "errorMessage": {
-      "minLength": "Amount is required",
+      "minLength": "Annual income before taxes is required",
       "pattern": "Enter a valid amount",
       "type": "Enter a valid number"
     }
