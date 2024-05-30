@@ -27,7 +27,7 @@
       "questions/primary/citizenship.refi",
       "questions/primary/ssn.default"
     ],
-  
+    "onError": ["onError.unauthorized"],
     "save_edited_details_action": "actions/save-details.save-personal-info-review",
     "primary_dob_input_status": "questions/primary/dateOfBirth.status",
     "primary_phone_input_status": "questions/primary/phone.status",

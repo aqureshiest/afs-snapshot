@@ -48,8 +48,12 @@ const errorHandler: Handler = async function (
   if (req.method === "GET") {
     try {
       const { input, auth, userState, manifestName } = res.locals;
-
-      const splittedPath = manifestName.split("/");
+      let failedManifestName = manifestName;
+      if (!failedManifestName) {
+        const { 0: reqManifestName } = req.params;
+        failedManifestName = reqManifestName;
+      }
+      const splittedPath = failedManifestName.split("/");
       const errorPageManifest = getErrorPageManifest(
         context,
         splittedPath,
@@ -64,7 +68,7 @@ const errorHandler: Handler = async function (
             auth,
             userState,
             error,
-            input,
+            ...input,
           },
           { context, ...input },
         );

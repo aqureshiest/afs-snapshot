@@ -5,16 +5,6 @@
     "properties": {
         "manifest": "save-details/save-personal-info-review/{{application.primary.id}}",
         "method": "POST",
-        "onError": [{
-            "codes": ["unauthorized"],
-            "action": {
-                "key": "unauthorized-error",
-                "type": "navigate",
-                "properties": {
-                    "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{request.params.id}}",
-                    "external": true
-                }
-            }
-        }]
+        "onError": {{{json (contract 'onError')}}}
     }
 }

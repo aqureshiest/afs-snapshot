@@ -15,6 +15,7 @@
         "questions/primary/disclosure.default"
     ],
     "back-button": "actions/back-buttons.default",
+    "onError": ["onError.unauthorized"],
     "decryptPiiSsn": "pii-get-primary-ssn",
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
