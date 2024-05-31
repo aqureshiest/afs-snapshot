@@ -65,11 +65,12 @@
     "questions/primary/income/amount/additional-income.refi-retired"
   ],
   "student-info-unemployed-rows": [
+    "info/student-income.unemployed",
     "info/student-consistent-income-source.default",
     "questions/primary/income/consistent-income.default"
   ],
   "student-info-consistent-income-rows": [
-    "info/student-income.default",
+    "info/student-income.confirm",
     "questions/primary/income/amount/annual-income.default",
     "questions/primary/income/amount/additional-income.default"
   ],
