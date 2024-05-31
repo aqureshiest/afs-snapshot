@@ -483,10 +483,17 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
-  it("[1b2bbdaa] it should execute an Analytics contract-type", async () => {
+  it("[1b2bbdaa] it should execute an Analytics contract-type income-verification-method plaid", async () => {
     const input = {
       request: {
         method: "POST",
+      },
+      auth: {
+        session: {
+          userId: "1234",
+          exp: 0,
+          isValid: true,
+        },
       },
       applicationState: null,
       application: {
@@ -494,7 +501,11 @@ describe("[462fd166] manifest.execute", () => {
         primary: {
           id: 2,
           details: {
-            financialAccounts: [],
+            financialAccounts: [
+              {
+                plaidAccessToken: "1234",
+              },
+            ],
           },
         },
       },
@@ -521,9 +532,61 @@ describe("[462fd166] manifest.execute", () => {
     });
 
     const { contract } = await manifest.execute(input, { context, ...input });
-
     assert(contract);
   });
+
+  it("[186c9bd5] it should execute an Analytics contract-type income-verification-method manual", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+      auth: {
+        session: {
+          userId: "1234",
+          exp: 0,
+          isValid: true,
+        },
+      },
+      applicationState: null,
+      application: {
+        id: 1,
+        primary: {
+          id: 2,
+          details: {
+            financialAccounts: [
+              {
+                plaidAccessToken: null,
+              },
+            ],
+          },
+        },
+      },
+    } as Input;
+
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "track",
+          "payload":{
+            "id":"9999",
+            "fields": ["income_verification_method"]
+          }
+        }`,
+        type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+    assert(contract);
+  });
+
   it("[73147945] it should execute an Analytics contract-type", async () => {
     const input = {
       request: {
