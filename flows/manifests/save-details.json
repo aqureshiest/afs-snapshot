@@ -1,5 +1,4 @@
 {
   "*": "response",
-  "actions": ["add-details", "redis.set-volatile-answers"],
-  "analytics": ["server-application-section-submitted"]
+  "actions": ["add-details", "redis.set-volatile-answers"]
 }
