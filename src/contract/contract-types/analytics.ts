@@ -106,10 +106,13 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     const { event, payload } = definition;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { fields, ...properties } = payload;
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    const { actionKey, formValue, ...payloadProps } = properties;
+
     const props: TrackParams = {
       userId,
       event: event,
-      properties,
+      properties: payloadProps,
     };
 
     /// TODO: this must be refactored for v2, as is hardcoded to get primary info
