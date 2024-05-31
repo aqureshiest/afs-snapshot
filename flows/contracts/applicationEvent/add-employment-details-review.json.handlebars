@@ -1,4 +1,8 @@
-{{#if request.params.id}}
+{{#if (and
+  (contract 'actions' 0)
+  (not (lookup (contract 'actions' 0) "clear-income-details"))
+  request.params.id
+)}}
   {
     "event": "addDetails",
     "payload": {
@@ -35,7 +39,7 @@
                 {{#noop}} {{{contract 'no-income-error'}}} {{/noop}}
               {{else}}
                 {"income": {{#list}}
-                  {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if (or annualIncome annualIncomeFuture)}}, "amount": {{#if annualIncome}} {{{formatDollarsToCents annualIncome}}} {{else if annualIncomeFuture}} {{{formatDollarsToCents annualIncomeFuture}}} {{/if}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                  {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}"}
                   {{#if additionalAmount}}
                     {{#if additionalAmount.[0]}}
                       {"index": 1, "type": "{{additionalAmount.0.type}}", "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
@@ -60,7 +64,13 @@
               {{/if}}
             {{else}}
               {"income": {{#list}}
-                  {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if (or annualIncome annualIncomeFuture)}}, "amount": {{#if annualIncome}} {{{formatDollarsToCents annualIncome}}} {{else if annualIncomeFuture}} {{{formatDollarsToCents annualIncomeFuture}}} {{/if}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                  {{#if (eq employmentType 'self_employed')}}
+                    {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if annualIncome}}, "amount": {{{formatDollarsToCents annualIncome}}} {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                  {{else if (eq employmentType 'future')}}
+                    {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if annualIncomeFuture}}, "amount": {{{formatDollarsToCents annualIncomeFuture}}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} {{#if (and startDate (hasValues startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                  {{else}}
+                    {"index": 0, "type": "{{{mapEmploymentStatusType employmentType}}}" {{#if jobTitle}}, "title": "{{jobTitle}}" {{/if}} {{#if annualIncome}}, "amount": {{{formatDollarsToCents annualIncome}}} {{/if}} {{#if employerName}}, "employer": "{{employerName}}" {{/if}} }
+                  {{/if}}
                   {{#if additionalAmount}}
                     {{#if additionalAmount.[0]}}
                       {"index": 1, "type": "{{additionalAmount.0.type}}", "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
@@ -78,11 +88,12 @@
                       {"index": 5, "type": "{{additionalAmount.4.type}}", "amount": {{{formatDollarsToCents additionalAmount.4.value}}} }
                     {{/if}}
                   {{/if}}
-                {{/list}} }
-                {{#if claimedAssets}}
-                  {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
-                {{/if}}
+                {{/list}} 
+              }
+              {{#if claimedAssets}}
+                {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
               {{/if}}
+            {{/if}}
           {{/if}}
         {{/with}}
       {{/obj}}

@@ -11,11 +11,11 @@ const MUTATIVE_EVENTS = Object.freeze([
   "createApplication",
   "createRelationship",
   "setStatus",
+  "removeDetails",
 ]);
 
 const DESTRUCTIVE_EVENTS = Object.freeze([
   "deleteRelationship",
-  "removeDetails",
   "removeReferences",
 ]);
 
@@ -59,7 +59,6 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
     // 1. Any event that destroys data cannot be done with a request if it
     // isn't a DELETE request
     if (method && method !== "DELETE" && DESTRUCTIVE_EVENTS.includes(event)) {
-      console.log('[50e768] AJ DEBUG tried to delete ', event);
       
       return false;
     }
@@ -95,7 +94,8 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       applicationServiceClient,
       "[7d3b096f] ApplicationServiceClient not instantiated",
     );
-
+    console.log('[80e26d] start AJ DEBUG definition', JSON.stringify(definition, null, 2));
+    
     /* ============================== *
      * Fetch input types to dynamically
      * build mutation request
@@ -121,7 +121,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       definition,
       applicationServiceClient.eventInputTypes[definition.event],
     )
-    console.log('[42e8bc] AJ DEBUG requestBody', requestBody);
+    // console.log('[42e8bc] AJ DEBUG requestBody', requestBody);
     
     try {
       requestResult = await applicationServiceClient.sendRequest(
@@ -178,6 +178,8 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
           });
         }
       }
+      console.log('[6e0793] end AJ DEBUG definition', JSON.stringify(definition, null, 2));
+      
       return eventResult;
     } else {
       return {};

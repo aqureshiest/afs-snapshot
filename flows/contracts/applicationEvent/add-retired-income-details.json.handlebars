@@ -1,4 +1,8 @@
-{{#if request.params.id}}
+{{#if (and
+  (contract 'actions' 0)
+  (not (lookup (contract 'actions' 0) "remove-additional-income-details"))
+  request.params.id
+)}}
   {
     "event": "addDetails",
     "payload": {

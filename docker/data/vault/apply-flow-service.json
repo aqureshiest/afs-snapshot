@@ -3,10 +3,13 @@
   "database_name": "applyflowservice",
   "database_password": "earnest",
   "database_username": "earnest",
-  "ACCESS_KEY": "accesskeyTEST-1",
-  "PII_TOKEN_SERVICE_KEY": "PII_TOKEN_SERVICE_KEY",
-  "S2S_KEY_LDS_APPLY_FLOW_SERVICE": "S2S_KEY_LDS_APPLY_FLOW_SERVICE",
+  "ACCESS_KEY": "da28a5c4-06a1-4e9f-96a2-e2902d656ec1",
+  "APPLICATION_SERVICE_URL": "https://application-service.staging.earnest.com",
+  "PII_TOKEN_SERVICE_BASEURL": "https://pii-token-service.staging.earnest.com",
+  "PII_TOKEN_SERVICE_KEY": "69CB5CF3-A211-4A82-ABF4-35A20CCF7397",
+  "LENDING_DECISION_SERVICE_URL": "https://lending-decisioning-service.staging.earnest.com",
+  "S2S_KEY_LDS_APPLY_FLOW_SERVICE": "Y2M3ZTMyMTMtZDJiYS00ZWJlLWJiNWEtNTJhYzkzNTQyNjdk",
   "NEAS_S2S_KEY": "NEAS_S2S_KEY",
   "ANALYTICS_SEGMENT_API_KEY": "ANALYTICS_SEGMENT_API_KEY",
-  "INTERNAL_REST_SERVICE_AUTH_KEY": "apply_flow_service_auth_key"
+  "INTERNAL_REST_SERVICE_AUTH_KEY": "7ecf2671-7113-4577-94de-16c88a7c122f"
 }

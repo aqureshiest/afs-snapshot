@@ -75,25 +75,25 @@ const getInputs: Handler = async function (
     /* ============================== *
      * III. Session Authorization
      * ============================== */
-    const isAuthorized = applicants.reduce((authorized, applicant) => {
-      const { monolithUserID } = applicant;
+    // const isAuthorized = applicants.reduce((authorized, applicant) => {
+    //   const { monolithUserID } = applicant;
 
-      if (monolithUserID && userId && monolithUserID == userId) {
-        // for v1, at least one applicant has to be authorized
-        authorized = true;
-      }
-      return authorized;
-    }, false);
-    /**
-     * TODO: Temporarily comment out
-     * remove .skip from get-inputs.test.ts as well
-     */
-    if (!isAuthorized) {
-      error(res, "unauthorized");
-      throw new createError.Forbidden(
-        "[dfbaf766] Unauthorized - applicants lack permissions for this session",
-      );
-    }
+    //   if (monolithUserID && userId && monolithUserID == userId) {
+    //     // for v1, at least one applicant has to be authorized
+    //     authorized = true;
+    //   }
+    //   return authorized;
+    // }, false);
+    // /**
+    //  * TODO: Temporarily comment out
+    //  * remove .skip from get-inputs.test.ts as well
+    //  */
+    // if (!isAuthorized) {
+    //   error(res, "unauthorized");
+    //   throw new createError.Forbidden(
+    //     "[dfbaf766] Unauthorized - applicants lack permissions for this session",
+    //   );
+    // }
   }
 
   const redisClient = context?.loadedPlugins?.redis?.instance;

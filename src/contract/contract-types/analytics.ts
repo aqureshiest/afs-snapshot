@@ -66,9 +66,9 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
         switch (eventType) {
           case EVENT_TYPE.track:
-            await analyticsServiceClient.track(
-              this.buildTrackProps(input, definition),
-            );
+            // await analyticsServiceClient.track(
+            //   this.buildTrackProps(input, definition),
+            // );
             break;
           case EVENT_TYPE.identify:
             await analyticsServiceClient.identify(
