@@ -59,7 +59,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
           analyticsServiceClient,
           "[aa8b7701] AnalyticsServiceClient not instantiated",
         );
-        console.log("======== input", input);
+
         const { type } = definition;
 
         const eventType = EVENT_TYPE[type as keyof typeof EVENT_TYPE];
