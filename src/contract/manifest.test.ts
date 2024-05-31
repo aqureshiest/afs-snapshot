@@ -653,7 +653,7 @@ describe("[462fd166] manifest.execute", () => {
             "dateOfBirth": "{{{dateObjToString request.body.values.dateOfBirth}}}",
             "formatToUSCurrency": "{{{formatToUSCurrency 1000000}}}",
             "formatDollarsToCents": "{{{formatDollarsToCents '$12,3456.89'}}}",
-            "stateMinLoan": "{{{stateMinLoan request.body.values.location}}}",
+            "stateMinLoan": {{{stateMinLoan request.body.values.location}}},
             "hasValues": {{{hasValues request.body.values.dateOfBirth}}}
           }
       `,
@@ -692,7 +692,7 @@ describe("[462fd166] manifest.execute", () => {
       dateOfBirth: "1950-12-20",
       formatToUSCurrency: "$10,000.00",
       formatDollarsToCents: "12345689",
-      stateMinLoan: "$10,000",
+      stateMinLoan: 1000000,
       hasValues: true,
     });
   });

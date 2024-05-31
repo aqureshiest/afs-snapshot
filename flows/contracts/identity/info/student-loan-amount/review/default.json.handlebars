@@ -8,7 +8,14 @@
         "label": "Loan Details",
         "items": [
             {"id": "refinanceAmount", "label": "Refinance amount", "value": "{{formatToUSCurrency details.amount.requested}}"}
-        ]
+        ],
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                "goTo": "earnest/student-refi/edit/loan-info/{{id}}"
+            }
+        }
     }
 }
 {{/with}}

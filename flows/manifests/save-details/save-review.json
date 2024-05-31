@@ -1,5 +1,6 @@
 {
     "*": "redirect",
     "actions": ["add-details-review"],
+    "min-refi-amount-error": "error.min-refi-amount",
     "redirect": ["redirect.refi-review"]
 }

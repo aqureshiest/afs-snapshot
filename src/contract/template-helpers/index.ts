@@ -89,10 +89,12 @@ export function formatCentsToDollars(v1) {
   return result ? result / 100 : 0;
 }
 
-export function formatToUSCurrency(v1) {
+export function formatToUSCurrency(...args) {
+  const [v1, noDecimal] = Array.prototype.slice.call(args, 0, -1);
   return formatCentsToDollars(v1).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    ...(noDecimal ? { minimumFractionDigits: 0 } : {}),
   });
 }
 
@@ -165,16 +167,16 @@ export function getSchoolName(school) {
 export function hasValues(value) {
   if (value) {
     return Object.values(value).some(
-      (v) => v !== null && typeof v !== "undefined",
+      (v) => v !== null && typeof v !== "undefined" && v !== "",
     );
   }
   return false;
 }
 
 export function stateMinLoan(addresses) {
-  const minLoanCA = "$10,000";
-  const minLoanNM = "$10,001";
-  const minLoan = "$5,000";
+  const minLoanCA = 1000000;
+  const minLoanNM = 1000100;
+  const minLoan = 500000;
   if (addresses) {
     const primaryAddress = findCurrentAddress(addresses);
     switch (primaryAddress.state) {

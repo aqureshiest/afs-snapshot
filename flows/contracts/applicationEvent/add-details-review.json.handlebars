@@ -7,7 +7,11 @@
         {{#with request.body.values}}
           {{! make sure to flatten each element into a single line}}
           {{#if loanAmount}}
-            {"amount": {"requested": {{{formatDollarsToCents loanAmount}}} } }
+            {{#if (lt (formatDollarsToCents loanAmount) (stateMinLoan ../application.primary.details.location))}}
+              {{#noop}} {{{contract 'min-refi-amount-error'}}} {{/noop}}
+            {{else}}
+              {"amount": {"requested": {{{formatDollarsToCents loanAmount}}} } }
+            {{/if}}
           {{/if}}
           {{#if dateOfBirth}}
             {"dateOfBirth": "{{{dateObjToString dateOfBirth}}}"}
