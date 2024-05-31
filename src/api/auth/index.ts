@@ -17,6 +17,25 @@ const authMiddleware = async (
   const idToken =
     (req.headers?.idToken as string) || (req.headers?.idtoken as string);
   const strategyResults: Array<Strategy | null> = [];
+  const { 0: manifestName, id } = req.params;
+  res.locals.manifestName = manifestName;
+  res.locals.input = {
+    env: {},
+    applicationState: null,
+    application: {
+      id,
+    },
+    request: {
+      originalUrl: req.originalUrl,
+      method: req.method,
+      params: {
+        id,
+      },
+      body: req.body,
+      query: req.query,
+      headers: req.headers,
+    },
+  };
   if (idToken) {
     strategyResults.push((await session(context, req)) as unknown as Strategy);
   }
