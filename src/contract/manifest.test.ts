@@ -488,6 +488,16 @@ describe("[462fd166] manifest.execute", () => {
       request: {
         method: "POST",
       },
+      applicationState: null,
+      application: {
+        id: 1,
+        primary: {
+          id: 2,
+          details: {
+            financialAccounts: [],
+          },
+        },
+      },
     } as Input;
 
     mock.method(analyticsServiceClient, "track", () => {
@@ -502,6 +512,37 @@ describe("[462fd166] manifest.execute", () => {
           "event": "Viewed rate test",
           "type": "track",
           "payload":{
+            "id":"9999",
+            "fields": ["income_verification_method"]
+          }
+        }`,
+        type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+  it("[73147945] it should execute an Analytics contract-type", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+    } as Input;
+
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "page",
+          "payload":{
             "id":"9999"
           }
         }`,
@@ -513,7 +554,36 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+  it("[5c3f53ea] it should execute an Analytics contract-type", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+    } as Input;
 
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "identify",
+          "payload":{
+            "id":"9999"
+          }
+        }`,
+        type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
   it("[ae226507] obj helper", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
