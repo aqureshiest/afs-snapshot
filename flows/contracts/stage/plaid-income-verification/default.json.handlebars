@@ -68,6 +68,15 @@
           "key": "landingViewed",
           "type": "request",
           "properties": {
+            "analytics": {
+                "name": "Application Section Submitted",
+                "product": "slr",
+                "section": "income verification",
+                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+                "fields": [
+                    "income_verification_method"
+                ]
+            },
             "manifest": "save-details/financials/{{{request.params.id}}}"
           },
           "onError": {
