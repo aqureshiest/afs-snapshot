@@ -107,36 +107,41 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { fields, ...properties } = payload;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const { actionKey, formValue, ...payloadProps } = properties;
+    const { actionKey, formValue, title, manifest, ...payloadProps } =
+      properties;
 
     const props: TrackParams = {
       userId,
       event: event,
-      properties: payloadProps,
+      properties: {
+        ...payloadProps,
+        section: title,
+        application_id: application?.id,
+      },
     };
 
     /// TODO: this must be refactored for v2, as is hardcoded to get primary info
-    // if (fields.includes("income_verification_method")) {
-    //   let income_verification_method;
-    //   const financialAccounts =
-    //     application?.primary?.details?.financialAccounts || [];
-    //   if (financialAccounts.length > 0) {
-    //     const plaidAccounts = financialAccounts.filter(
-    //       (fA) => fA && fA.plaidAccessToken !== null,
-    //     );
-    //     if (plaidAccounts.length > 0) {
-    //       income_verification_method = "plaid";
-    //     } else {
-    //       income_verification_method = "manual";
-    //     }
-    //   }
-    //   if (income_verification_method) {
-    //     props.properties = {
-    //       ...props.properties,
-    //       income_verification_method,
-    //     };
-    //   }
-    // }
+    if (fields && fields.includes("income_verification_method")) {
+      let income_verification_method;
+      const financialAccounts =
+        application?.primary?.details?.financialAccounts || [];
+      if (financialAccounts.length > 0) {
+        const plaidAccounts = financialAccounts.filter(
+          (fA) => fA && fA.plaidAccessToken !== null,
+        );
+        if (plaidAccounts.length > 0) {
+          income_verification_method = "plaid";
+        } else {
+          income_verification_method = "manual";
+        }
+      }
+      if (income_verification_method) {
+        props.properties = {
+          ...props.properties,
+          income_verification_method,
+        };
+      }
+    }
 
     // //employment_type
     // if (payload.employment_type) {
@@ -213,6 +218,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     const { application, auth } = input;
 
     assert(application?.primary, "[8a623e0e] application.primary is null");
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    const { fields, ...properties } = definition.payload;
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    const { actionKey, formValue, title, manifest, ...payloadProps } =
+      properties;
 
     const userId = auth?.session?.userId;
 
@@ -222,17 +232,13 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     const props: PageParams = {
       userId,
-      name: payload.name,
+      name: payload.title,
       properties: {
-        applicationId: application.id,
-        product: application.product,
-        source: "application",
+        ...payloadProps,
+        application_id: application.id,
+        name: payload.title,
       },
     };
-
-    if (payload.title) {
-      props.properties = { ...props.properties, title: payload.title };
-    }
 
     return props;
   }
