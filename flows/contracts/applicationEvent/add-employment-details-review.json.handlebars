@@ -13,19 +13,19 @@
             {"income": {{#list}}
               {{#if additionalAmountRetired}}
                 {{#if additionalAmountRetired.[0]}}
-                  {"index": 0, "type": "{{additionalAmountRetired.0.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.0.value}}} }
+                  {"index": 1, "type": "{{additionalAmountRetired.0.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.0.value}}} }
                 {{/if}}
                 {{#if additionalAmountRetired.[1]}}
-                  {"index": 1, "type": "{{additionalAmountRetired.1.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.1.value}}} }
+                  {"index": 2, "type": "{{additionalAmountRetired.1.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.1.value}}} }
                 {{/if}}
                 {{#if additionalAmountRetired.[2]}}
-                  {"index": 2, "type": "{{additionalAmountRetired.2.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.2.value}}} }
+                  {"index": 3, "type": "{{additionalAmountRetired.2.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.2.value}}} }
                 {{/if}}
                 {{#if additionalAmountRetired.[3]}}
-                  {"index": 3, "type": "{{additionalAmountRetired.3.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.3.value}}} }
+                  {"index": 4, "type": "{{additionalAmountRetired.3.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.3.value}}} }
                 {{/if}}
                 {{#if additionalAmountRetired.[4]}}
-                  {"index": 4, "type": "{{additionalAmountRetired.4.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.4.value}}} }
+                  {"index": 5, "type": "{{additionalAmountRetired.4.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.4.value}}} }
                 {{/if}}
               {{/if}}
             {{/list}}

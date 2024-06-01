@@ -227,5 +227,5 @@ export function totalSum(...args) {
 }
 
 export function testIsArray(v1) {
-  return  Array.isArray(v1)
+  return Array.isArray(v1);
 }

@@ -835,25 +835,33 @@ describe("[462fd166] manifest.execute", () => {
       request: {
         body: {
           values: {
-            incomes: [
+            EmployedIncomes: [
               {
                 employer: "BigCompany",
                 type: "employment",
               },
+            ],
+            FutureEmployedIncomes: [
               {
                 employer: "BigCompany",
                 type: "employment",
                 title: "title",
                 start: new Date().toISOString(),
               },
+            ],
+            SelfEmployedIncomes: [
               {
                 type: "employment",
                 title: "title",
                 start: new Date().toISOString(),
               },
+            ],
+            UnemployedIncomes: [
               {
                 type: "unspecified",
               },
+            ],
+            RetiredIncomes: [
               {
                 type: "social_security_or_pension",
               },
@@ -866,11 +874,11 @@ describe("[462fd166] manifest.execute", () => {
       "*": new Contract({
         raw: `
           {
-            "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[0]}}}",
-            "future": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[1]}}}",
-            "selfEmployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[2]}}}",
-            "unemployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[3]}}}",
-            "retired": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[4]}}}"
+            "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.EmployedIncomes}}}",
+            "future": "{{{mapIncomeTypeToEmplStatus request.body.values.FutureEmployedIncomes}}}",
+            "selfEmployed": "{{{mapIncomeTypeToEmplStatus request.body.values.SelfEmployedIncomes}}}",
+            "unemployed": "{{{mapIncomeTypeToEmplStatus request.body.values.UnemployedIncomes}}}",
+            "retired": "{{{mapIncomeTypeToEmplStatus request.body.values.RetiredIncomes}}}"
           }
       `,
       }),

@@ -6,16 +6,15 @@
       "details": { {{! make sure to flatten each element into a single line}}
         {{#with request.body.values}}
           {{#if (testIsArray additionalAmountRetired) }}
-            {{log '[12cdfc4e]' additionalAmountRetired}}
             "income": [
                 {"index": 0, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
                 {"index": 1, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
                 {"index": 2, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
                 {"index": 3, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
-                {"index": 4, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] }
+                {"index": 4, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
+                {"index": 5, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] }
               ]
           {{else if (testIsArray additionalAmount) }}
-            {{log '[3e975090]' additionalAmount}}
             "income": [
                 {"index": 1, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
                 {"index": 2, "keys": ["type", "amount", "employer", "name", "start", "end", "title"] },
