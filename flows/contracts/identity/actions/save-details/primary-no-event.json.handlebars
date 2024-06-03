@@ -2,11 +2,6 @@
     "key": "save-details",
     "type": "request",
     "properties": {
-        "analytics": {
-            "name": "Application Section Submitted",
-            "product": "slr",
-            "loan_type": "{{{mapLoanType application.tag.applicants}}}"
-        },
         "manifest": "save-details/{{application.primary.id}}",
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}

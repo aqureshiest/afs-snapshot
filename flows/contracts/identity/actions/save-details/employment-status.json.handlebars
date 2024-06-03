@@ -1,4 +1,3 @@
-{{! redirect to review}}
 {
     "key": "save-details",
     "type": "request",
@@ -6,14 +5,15 @@
         "analytics": {
             "name": "Application Section Submitted",
             "product": "slr",
-            "section": "income",
+            "section": "employment type",
             "loan_type": "{{{mapLoanType application.tag.applicants}}}",
             "formValues": [
                 {"key": "employment_type", "path": "employmentStatus.employmentType"}
             ]
         },
-        "manifest": "save-details/other-incomes/{{application.primary.id}}",
+        "manifest": "save-details/{{application.primary.id}}",
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}
-    }
+    },
+    
 }

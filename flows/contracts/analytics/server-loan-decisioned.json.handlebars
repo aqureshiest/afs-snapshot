@@ -1,7 +1,13 @@
 
   {
+    {{! temporarelly unused, since we are getting monolithLoanID as identifier, not the app UUID }}
+    {{! the logic of this segment event, lives on LDS client saveDecision for the moment.}}
     "type": "track",
     "event": "Server Loan Decisioned",
     "payload":{
+      "product": "slr",
+      "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+      "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income.[0]}}}",
+      "decision": "{{request.body.data.decision}}"
     }
   }

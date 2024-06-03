@@ -1,7 +1,6 @@
 {{#if request.params.id}}
 {
   "type": "view",
-  "id": "{{request.params.id}}",
   "definition": {
     "type": "bankAccounts",
     "definition": {
@@ -71,27 +70,27 @@
             "analytics": {
                 "name": "Application Section Submitted",
                 "product": "slr",
-                "section": "income verification",
+                "title": "income verification",
                 "loan_type": "{{{mapLoanType application.tag.applicants}}}",
                 "fields": [
                     "income_verification_method"
                 ]
             },
-            "manifest": "save-details/financials/{{{request.params.id}}}"
-          },
-          "onError": {
-            "codes": ["application-service-error"],
-            "action":{
-              "key": "application-service-error-toast",
-              "type": "error",
-              "properties": {
-                "type": "toast",
-                "definition": {
-                  "message": "An error ocurred while saving this, please try again.",
-                  "icon": "WarningIcon" 
+            "onError": {
+              "codes": ["application-service-error"],
+              "action":{
+                "key": "application-service-error-toast",
+                "type": "error",
+                "properties": {
+                  "type": "toast",
+                  "definition": {
+                    "message": "An error ocurred while saving this, please try again.",
+                    "icon": "WarningIcon" 
+                  }
                 }
               }
-            }
+            },
+            "manifest": "save-details/financials/{{{request.params.id}}}"
           }
         }
       },
