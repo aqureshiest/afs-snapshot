@@ -1,6 +1,5 @@
 {
     "*": "response.interstitial",
     "actions": ["decision-request", "decision-backfill"],
-    "statusAction": "actions/decision-request.applicationStatus",
-    "analytics": ["server-application-submitted"]
+    "statusAction": "actions/decision-request.applicationStatus"
 }

@@ -1,7 +1,6 @@
 {{#if request.params.id}}
 {
   "type": "view",
-  "id": "{{request.params.id}}",
   "definition": {
     "type": "bankAccounts",
     "definition": {
@@ -71,7 +70,7 @@
             "analytics": {
                 "name": "Application Section Submitted",
                 "product": "slr",
-                "section": "income verification",
+                "title": "income verification",
                 "loan_type": "{{{mapLoanType application.tag.applicants}}}",
                 "fields": [
                     "income_verification_method"
