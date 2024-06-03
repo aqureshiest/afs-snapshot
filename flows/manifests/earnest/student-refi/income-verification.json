@@ -4,5 +4,6 @@
   "method": "plaid.createLinkToken",
   "section": "refi-primary-only-section",
   "back-button": "actions/back-buttons.default",
+  "pageLayout": "sidebar",
   "onError": ["onError.unauthorized"]
 }
