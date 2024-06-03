@@ -11,11 +11,11 @@ const MUTATIVE_EVENTS = Object.freeze([
   "createApplication",
   "createRelationship",
   "setStatus",
+  "removeDetails",
 ]);
 
 const DESTRUCTIVE_EVENTS = Object.freeze([
   "deleteRelationship",
-  "removeDetails",
   "removeReferences",
 ]);
 

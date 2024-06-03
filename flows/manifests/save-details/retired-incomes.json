@@ -1,5 +1,5 @@
 {
     "*": "redirect",
-    "actions": ["add-retired-income-details"],
+    "actions": ["remove-additional-income-details", "add-retired-income-details"],
     "redirect": ["redirect.income-verification"]
 }

@@ -4,11 +4,8 @@
   "definition": {
     "key": "additionalAmountRetired",
     "type": "inputMoneyArray",
-    {{#if (or details.income.[0] details.income.[1] details.income.[2] details.income.[3] details.income.[4])}}
+    {{#if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
       "value": {{#list}}
-        {{#if details.income.[0]}}
-          {"value": {{{formatCentsToDollars details.income.[0].amount}}}, "type": "{{details.income.[0].type}}"}
-        {{/if}}
         {{#if details.income.[1]}}
           {"value": {{{formatCentsToDollars details.income.[1].amount}}}, "type": "{{details.income.[1].type}}"}
         {{/if}}
@@ -21,7 +18,12 @@
         {{#if details.income.[4]}}
           {"value": {{{formatCentsToDollars details.income.[4].amount}}}, "type": "{{details.income.[4].type}}"}
         {{/if}}
+        {{#if details.income.[5]}}
+          {"value": {{{formatCentsToDollars details.income.[5].amount}}}, "type": "{{details.income.[5].type}}"}
+        {{/if}}
         {{/list}},
+    {{else if details.income.[0]}}
+      "value": [{"value": {{{formatCentsToDollars details.income.[0].amount}}}, "type": "{{details.income.[0].type}}"}],
     {{else}}
       "value": "",
     {{/if}}
@@ -39,6 +41,7 @@
       }
     },
     "status": {{{json (contract 'primary_income_additional_income_input_status')}}},
+    "error": "{{{ ajv 'errors' 'questions/primary/income/amount/additional-income' additionalAmountRetired }}}",
     "label": {
       "copy": "Total annual additional income"
     },
