@@ -23,7 +23,7 @@
         {{/if}}
         {{/list}},
     {{else if details.income.[0]}}
-      "value": [{"value": {{{formatCentsToDollars details.income.[0].amount}}}, "type": "{{details.income.[0].type}}"}],
+      "value": [{"value": {{{formatCentsToDollars details.income.[0].amount}}}, "type": ""}],
     {{else}}
       "value": "",
     {{/if}}
