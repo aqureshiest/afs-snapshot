@@ -6,7 +6,15 @@
       "minLength": 2,
       "maxLength": 2,
       "pattern": "^(1[012]|0?[1-9])$",
+      "ageOfMajority": {
+        "MS": 21,
+        "NE": 19,
+        "base": 18,
+        "statePath": "address.currentAddress.state",
+        "stateValue": null
+      },
       "errorMessage": {
+        "ageOfMajority": "You are below the age of majority in your state of residence",
         "minLength": "Enter a valid month",
         "maxLength": "Enter a valid month",
         "pattern": "Enter a valid month",
