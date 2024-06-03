@@ -12,7 +12,8 @@
             ]
         },
         "manifest": "save-details/{{application.primary.id}}",
-        "method": "POST"
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
     },
-    "onError": {{{json (contract 'onError')}}}
+    
 }

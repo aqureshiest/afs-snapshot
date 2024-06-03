@@ -8,7 +8,7 @@
             "loan_type": "{{{mapLoanType application.tag.applicants}}}"
         },
         "manifest": "save-details/{{application.primary.id}}",
-        "method": "POST"
-    },
-    "onError": {{{json (contract 'onError')}}}
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
+    }
 }
