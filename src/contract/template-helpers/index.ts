@@ -225,3 +225,7 @@ export function totalSum(...args) {
   const numsArray = Array.prototype.slice.call(args, 0, -1);
   return numsArray.reduce((acc, cur) => acc + cur);
 }
+
+export function testIsArray(v1) {
+  return Array.isArray(v1);
+}

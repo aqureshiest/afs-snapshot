@@ -580,8 +580,11 @@ export default class LendingDecisionServiceClient extends Client {
       "k1",
       "disability",
     ];
-    const employmentDetails = details?.income
-      .slice(0, 1) // Employment details are stored at incomes index 0
+    const employmentTypes = ["employment", "unspecified"];
+    let employmentDetails = details?.income
+      .filter((income) => {
+        if (employmentTypes.includes(income?.type as string)) return income;
+      })
       .map((employment) => {
         if (
           !employment ||
@@ -612,10 +615,6 @@ export default class LendingDecisionServiceClient extends Client {
         }
         if (employment.type === "unspecified") {
           status = "unemployed";
-          amount = 0;
-        }
-        if (otherIncomeTypes.includes(employment.type)) {
-          status = "retired";
           amount = 0;
         }
         return {
@@ -653,6 +652,24 @@ export default class LendingDecisionServiceClient extends Client {
           };
         });
     }
+
+    /* ===============================
+     * Special case for Retired status
+     * ===============================
+     * If the `employmentDetails` is empty (income type != 'employment' or 'unspecified)
+     * AND `otherIncomeDetails` contains items, we assume user is `RETIRED`
+     */
+    if (employmentDetails.length <= 0 && otherIncomeDetails.length > 0) {
+      employmentDetails = [
+        {
+          employerName: null,
+          jobTitle: null,
+          employmentStatus: "retired",
+          amount: 0,
+        },
+      ];
+    }
+
     /**
      * Format assets
      */

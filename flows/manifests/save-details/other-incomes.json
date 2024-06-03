@@ -1,5 +1,5 @@
 {
     "*": "redirect",
-    "actions": ["add-details"],
+    "actions": ["remove-additional-income-details", "add-income-details"],
     "redirect": ["redirect.refi-review-self-employed"]
 }
