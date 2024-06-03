@@ -1,6 +1,6 @@
 {
     "*": "redirect",
-    "actions": ["add-employment-details-review"],
+    "actions": ["clear-income-details-review", "add-employment-details-review"],
     "no-income-error": "error.no-income",
     "redirect": ["redirect.refi-review"]
 }
