@@ -17,13 +17,18 @@
         }
       },
       "value": {
-        "type": "number"
+        "type": "number",
+        "minimum": 0.01,
+        "errorMessage": {
+          "minimum": "Please enter an amount greater than 0"
+        }
       }
     },
     "required": ["type", "value"]
   },
   "errorMessage": {
     "type": "Amount and types are required",
+    "minimum": "Please enter an amount greater than 0",
     "minItems": "Select at least one income type"
   }
 }
