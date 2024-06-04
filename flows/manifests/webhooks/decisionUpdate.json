@@ -1,4 +1,5 @@
 {
     "*": "response",
-    "actions": ["save-decision"]
+    "actions": ["save-decision"],
+    "analytics": ["server-loan-decisioned"]
 }
