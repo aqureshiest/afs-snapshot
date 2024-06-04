@@ -1,6 +1,15 @@
 {{#if request.params.id}}
 {
   "type": "view",
+  "label": "income verification",
+  "pageLayout":{{{json (contract 'pageLayout')}}},
+  "seo": {
+      "pageTitle": "Student Loan Refinance Application - Earnest"
+  },
+  "analytics": {
+      "product": "{{{mapProduct application.reference.product}}}",
+      "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+  },
   "definition": {
     "type": "bankAccounts",
     "definition": {
