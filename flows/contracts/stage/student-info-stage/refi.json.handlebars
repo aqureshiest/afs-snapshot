@@ -1,16 +1,12 @@
 {
     "key": "student-info",
     "type": "form",
-    "label": "Student Info",
+    "label": "Primary Info",
     "status": "notStarted",
     "showProgress": true,
     "pageLayout":{{{json (contract 'pageLayout')}}},
     "seo": {
         "pageTitle": "Student Loan Refinance Application - Earnest"
-    },
-    "analytics": {
-        "product": "{{{mapProduct application.reference.product}}}",
-        "loan_type": "{{{mapLoanType application.tag.applicants}}}"
     },
     "steps": {{{json (contract 'steps')}}},
     "validation": {

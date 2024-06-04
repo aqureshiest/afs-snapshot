@@ -8,13 +8,53 @@
   },
   "analytics": {
       "product": "{{{mapProduct application.reference.product}}}",
-      "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+      "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+      "name": "Income Verification",
+      "title": "Verification Method Selection"
   },
   "definition": {
     "type": "bankAccounts",
     "definition": {
       "progress": 90,
       "key": "bankAccounts",
+      "analyticsEvents": {
+        "plaidOpened": {
+          "name": "Modal Loaded",
+          "modal": "income verification",
+          "income_verification_method": "plaid",
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
+        "plaidClosed": {
+          "name": "Modal Dismissed",
+          "modal": "income verification",
+          "income_verification_method": "plaid",
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
+        "plaidSubmitted": {
+          "name": "Modal Completed",
+          "modal": "income verification",
+          "income_verification_method": "plaid",
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
+        "manualOpened": {
+          "name": "Modal Loaded",
+          "modal": "income verification",
+          "income_verification_method": "manual",
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
+        "manualClosed": {
+          "name": "Modal Dismissed",
+          "modal": "income verification",
+          "income_verification_method": "manual",
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
+        "manualSubmitted": {
+          "name": "Modal Completed",
+          "modal": "income verification",
+          "income_verification_method": "manual",
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        }
+      },
       "header": {
         "copy": "Let's verify your income.",
         "subCopy": "Link the account(s) where your paycheck is deposited for accurate eligibility and rates assessment."

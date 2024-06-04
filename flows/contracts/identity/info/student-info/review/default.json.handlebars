@@ -4,7 +4,7 @@
     "definition": {
         "key": "basicInfoReview",
         "type": "infoReview",
-        "label": "Personal Info",
+        "label": "Primary Info",
         "items": 
         {{#list}}
             {"id": "name", "label": "Full Name", "value": "{{details.name.first}} {{details.name.last}}"}
@@ -25,6 +25,7 @@
                  "analytics": {
                     "name": "Action clicked",
                     "action": "edit personal info",
+                    "title": "Review",
                     "product": "{{{mapProduct ../application.reference.product}}}",
                     "loan_type": "{{{mapLoanType ../application.tag.applicants}}}"
                 },
