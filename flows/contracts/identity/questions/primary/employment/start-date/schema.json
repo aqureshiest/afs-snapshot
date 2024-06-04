@@ -37,7 +37,5 @@
         "type": "Start date is required"
       }
     }
-  },
-  "required": ["month", "day", "year"],
-  "errorMessage": "Start date is required"
+  }
 }

@@ -1,0 +1,15 @@
+{
+  "minLength": 1,
+  "type": "string",
+  "pattern": "^[a-zA-Z0-9\\s.'-]*$",
+  "matches": {
+    "shouldMatch": false,
+    "useParentData": true,
+    "matchAgainstPath": "editPersonalInfo.currentAddress"
+  },
+  "errorMessage": {
+    "minLength": "Street is required",
+    "pattern": "Invalid street",
+    "matches": "Your previous address cannot match your current address"
+  }
+}
