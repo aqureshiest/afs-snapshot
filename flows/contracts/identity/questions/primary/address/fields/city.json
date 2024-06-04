@@ -1,0 +1,9 @@
+{
+  "minLength": 1,
+  "type": "string",
+  "pattern": "^[a-zA-Z\\s'-]*$",
+  "errorMessage": {
+    "minLength": "City is required",
+    "pattern": "Invalid city"
+  }
+}
