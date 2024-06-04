@@ -28,6 +28,15 @@ export const plugin: Plugin<unknown> = {
   register: async (context: PluginContext) => {
     const ajv = new Ajv.default({ allErrors: true, $data: true });
     ajv.addKeyword({
+      keyword: "allowFuture",
+    });
+    ajv.addKeyword({
+      keyword: "requiredParentFields",
+    });
+    ajv.addKeyword({
+      keyword: "requiredFields",
+    });
+    ajv.addKeyword({
       keyword: "matches",
     });
     ajv.addKeyword({
