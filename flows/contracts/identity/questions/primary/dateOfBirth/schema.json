@@ -45,7 +45,5 @@
         "type": "Date of birth is required"
       }
     }
-  },
-  "required": ["month", "day", "year"],
-  "errorMessage": "Date of birth is required"
+  }
 }
