@@ -1,0 +1,8 @@
+{
+  "nullable": true,
+  "type": "string",
+  "pattern": "^[a-zA-Z0-9\\s.\\-#\\x00]*$",
+  "errorMessage": {
+    "pattern": "Invalid apartment"
+  }
+}
