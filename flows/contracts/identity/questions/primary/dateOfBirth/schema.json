@@ -10,7 +10,7 @@
         "MS": 21,
         "NE": 19,
         "base": 18,
-        "statePath": "address.currentAddress.state",
+        "statePath": "currentAddress.currentAddress.state",
         "stateValue": null
       },
       "errorMessage": {
