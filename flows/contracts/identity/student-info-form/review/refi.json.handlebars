@@ -3,7 +3,7 @@
     "key": "refi-review",
     "label": "Student Refi Review",
     "submit": {
-        {{#if application.references.LendingDecisionID}}
+        {{#if reference.lendingDecisionID}}
             "copy": "Dashboard",
             "action": {{{ json (contract 'actionsDashboard') }}}
         {{else}}
