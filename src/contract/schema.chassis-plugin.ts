@@ -27,11 +27,12 @@ export const plugin: Plugin<unknown> = {
   registerOrder: -1,
   register: async (context: PluginContext) => {
     const ajv = new Ajv.default({ allErrors: true, $data: true });
-
+    ajv.addKeyword({
+      keyword: "matches",
+    });
     ajv.addKeyword({
       keyword: "ageOfMajority",
     });
-
     addFormats.default(ajv);
     ajvErrors.default(ajv);
     const definitions = await buildSchemas(context, SCHEMAS_PATH);

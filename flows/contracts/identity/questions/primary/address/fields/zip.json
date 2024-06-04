@@ -1,0 +1,10 @@
+{
+  "minLength": 5,
+  "maxLength": 10,
+  "pattern": "^\\b\\d{5}(-\\d{4})?\\b$",
+  "type": "string",
+  "errorMessage": {
+    "minLength": "Zipcode is required",
+    "pattern": "Invalid zipcode"
+  }
+}

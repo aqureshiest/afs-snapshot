@@ -35,5 +35,13 @@
     "primary_citizenship_input_status": "questions/primary/citizenship.status",
     "primary_name_input_status": "questions/primary/name.status",
     "primary_email_input_status": "questions/primary/email.status",
-    "decryptPiiSsn": "pii-get-primary-ssn"
+    "decryptPiiSsn": "pii-get-primary-ssn",
+    "address-field-current-address-street-edit": "questions/primary/address/fields.current-address-street-edit",
+    "address-field-previous-address-street-edit": "questions/primary/address/fields.previous-address-street-edit",
+    "address-field-apt": "questions/primary/address/fields.apt",
+    "address-field-city": "questions/primary/address/fields.city",
+    "address-field-state": "questions/primary/address/fields.state",
+    "address-field-zip": "questions/primary/address/fields.zip",
+    "refi-current-address-validation-edit": "questions/primary/address.refi-current-address-validation-edit",
+    "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit"
   }
