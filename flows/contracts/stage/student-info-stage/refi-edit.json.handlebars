@@ -114,14 +114,6 @@
                         },
                         "then": {
                             "properties": {
-                                "incomeIsConsistent": {
-                                    "type": "string",
-                                    "enum": ["true", "false"],
-                                    "errorMessage": {
-                                        "enum": "Please select Yes or No"
-                                    }
-                                },
-                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
                                 "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
                                 "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                             }

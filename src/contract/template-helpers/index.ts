@@ -89,10 +89,12 @@ export function formatCentsToDollars(v1) {
   return result ? result / 100 : 0;
 }
 
-export function formatToUSCurrency(v1) {
+export function formatToUSCurrency(...args) {
+  const [v1, noDecimal] = Array.prototype.slice.call(args, 0, -1);
   return formatCentsToDollars(v1).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    ...(noDecimal ? { minimumFractionDigits: 0 } : {}),
   });
 }
 
@@ -165,16 +167,16 @@ export function getSchoolName(school) {
 export function hasValues(value) {
   if (value) {
     return Object.values(value).some(
-      (v) => v !== null && typeof v !== "undefined",
+      (v) => v !== null && typeof v !== "undefined" && v !== "",
     );
   }
   return false;
 }
 
 export function stateMinLoan(addresses) {
-  const minLoanCA = "$10,000";
-  const minLoanNM = "$10,001";
-  const minLoan = "$5,000";
+  const minLoanCA = 1000000;
+  const minLoanNM = 1000100;
+  const minLoan = 500000;
   if (addresses) {
     const primaryAddress = findCurrentAddress(addresses);
     switch (primaryAddress.state) {
@@ -188,14 +190,42 @@ export function stateMinLoan(addresses) {
 }
 
 export function sumIncomeAmountRange(...args) {
-  const [values, start, end] = args;
+  const [values, key, start, end] = args;
+  /**
+   * 'values' can be an income detail from db with structure:
+   *    {
+   *       "amount": number,
+   *       "type": string,
+   *       "employer": string,
+   *       "name": string,
+   *       "title": string,
+   *       "start": date,
+   *       "end": date
+   *    }
+   * or an additionalIncomeSource type from UI with structure:
+   *    {
+   *       "type": string
+   *       "value": number
+   *    }
+   * use 'key' to access either 'amount' or 'value' depending on
+   * input value type
+   */
   let sum = 0;
   if (values) {
     for (let i = start; i <= end; i += 1) {
-      if (values[i] && values[i].amount) {
-        sum += values[i].amount;
+      if (values[i] && values[i][key]) {
+        sum += values[i][key];
       }
     }
   }
   return sum;
+}
+
+export function totalSum(...args) {
+  const numsArray = Array.prototype.slice.call(args, 0, -1);
+  return numsArray.reduce((acc, cur) => acc + cur);
+}
+
+export function testIsArray(v1) {
+  return Array.isArray(v1);
 }

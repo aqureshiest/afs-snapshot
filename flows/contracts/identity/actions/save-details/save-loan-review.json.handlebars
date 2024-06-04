@@ -4,6 +4,7 @@
     "type": "request",
     "properties": {
         "manifest": "save-details/save-review/{{application.id}}",
-        "method": "POST"
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
     }
 }

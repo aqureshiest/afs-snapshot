@@ -8,8 +8,8 @@
       "direction": "column",
       {{#if ../userState.employmentType }}
         "value": "{{{../userState.employmentType}}}",
-      {{else if details.income.[0] }}
-        "value": "{{{mapIncomeTypeToEmplStatus details.income.[0]}}}",
+      {{else if details.income }}
+        "value": "{{{mapIncomeTypeToEmplStatus details.income}}}",
       {{else}}
         "value": "",
       {{/if}}

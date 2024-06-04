@@ -13,20 +13,15 @@
       "questions/primary/employment/start-date.default",
       "info/student-income/additional-income-hint.default",
       "questions/primary/income/amount/additional-income.refi-retired",
-      "questions/primary/income/consistent-income.refi-edit",
       "questions/primary/income/amount/annual-income.default",
       "questions/primary/income/amount/annual-income.future",
       "questions/primary/income/amount/claimed-assets.default",
       "questions/primary/income/amount/additional-income.default"
     ],
-
+    "back-button": "actions/back-buttons.default",
     "save_edited_details_action": "actions/save-details.save-review",
-    "save_primary_employment_details_action": "actions/save-details.employment",
-    "save_primary_other_income_details_action": "actions/save-details.other-incomes",
-    "primary_dob_input_status": "questions/primary/dateOfBirth.status",
-    "primary_phone_input_status": "questions/primary/phone.status",
-    "primary_address_input_status": "questions/primary/address.status",
-    "primary_additional_address_input_status": "questions/primary/address/additional-address.status",
+    "onError": ["onError.unauthorized", "onError.no-income"],
+    "save_edited_employment_details_action": "actions/save-details.save-review-employment",
     "primary_employment_input_status": "questions/primary/employment.status",
     "primary_income_employer_name_input_status": "questions/primary/employment/employer-name.status",
     "primary_income_job_title_input_status": "questions/primary/employment/job-title.status",
@@ -36,5 +31,6 @@
     "primary_income_additional_income_input_status": "questions/primary/income/amount/additional-income.status",
     "primary_income_sources_of_income_input_status": "questions/primary/income/sources-of-income-retired.status",
     "primary_consistent_income_input_status": "questions/primary/income/consistent-income.status",
-    "primary_retired_has_additional_income_status": "questions/primary/income/has-additional-income.status"
+    "primary_retired_has_additional_income_status": "questions/primary/income/has-additional-income.status",
+    "primary_retired_additional_income_callout_header": "info/student-income/additional-income-hint.callout-header"
   }

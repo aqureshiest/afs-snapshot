@@ -35,6 +35,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         idToken: "idToken",
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
     const response = {
@@ -43,9 +44,7 @@ describe("[cd30d05c] session auth strategy", () => {
       isValid: true,
     };
     const expected = {
-      auth: {
-        session: response,
-      },
+      session: response,
     };
     mock.method(NeasClient, "verifyToken", () => {
       return {
@@ -61,7 +60,7 @@ describe("[cd30d05c] session auth strategy", () => {
       res as Response,
       () => {},
     );
-    assert.deepEqual(res.locals, expected);
+    assert.deepEqual(res.locals["auth"], expected);
   });
 
   it("[19cd0178] should throw an error when a session has expired", async () => {
@@ -69,6 +68,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         idToken: "idToken",
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
     mock.method(NeasClient, "verifyToken", () => {
@@ -102,6 +102,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         idToken: "idToken",
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
     mock.method(NeasClient, "verifyToken", () => {
@@ -132,6 +133,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         authorization: `Bearer ${accessKey}`,
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
 
@@ -151,6 +153,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         authorization: `Bearer`,
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
 
@@ -177,6 +180,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         authorization: `Basic`,
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
 
@@ -203,6 +207,7 @@ describe("[cd30d05c] session auth strategy", () => {
       headers: {
         authorization: `Bearer fake`,
       },
+      params: ["manifestName", "id"],
     };
     const res = { locals: {} };
 

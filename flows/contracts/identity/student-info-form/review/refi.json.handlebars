@@ -3,8 +3,16 @@
     "key": "refi-review",
     "label": "Student Refi Review",
     "submit": {
-        "copy": "Submit my application",
-        "action": {{{ json (contract 'actions') }}}
+        {{#if reference.lendingDecisionID}}
+            "copy": "Dashboard",
+            "action": {{{ json (contract 'actionsDashboard') }}}
+        {{else}}
+            "copy": "Submit my application",
+            "action": {{{ json (contract 'actions') }}}
+        {{/if}}
+    },
+    "back": {
+        "action": {{{ json (contract 'back-button') }}}
     },
     "progress": 100,
     "rows":  {{{ json (contract 'student-info-review-rows')}}}

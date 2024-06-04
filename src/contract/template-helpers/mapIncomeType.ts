@@ -7,15 +7,19 @@ const otherIncomeTypes = [
   "disability",
 ];
 
-const mapIncomeTypeToEmplStatus = function (income) {
-  if (income?.type === "employment") {
+const mapIncomeTypeToEmplStatus = function (incomes) {
+  const incomeEmployed = incomes.find(
+    (income) => income?.type === "employment",
+  );
+
+  if (incomeEmployed) {
     // Check if we need to return 'Employed', 'Self-Employed', or 'Future'
-    if (income?.employer) {
+    if (incomeEmployed?.employer) {
       /**
        * For a Future Employment we collect Employer Name,
        * Job Title, and start date
        */
-      if (income?.title && income?.start) {
+      if (incomeEmployed?.title && incomeEmployed?.start) {
         return "future";
       } else {
         return "employed";
@@ -27,13 +31,24 @@ const mapIncomeTypeToEmplStatus = function (income) {
        */
       return "self_employed";
     }
-  } else if (income?.type === "unspecified") {
-    return "unemployed";
-  } else if (otherIncomeTypes.includes(income?.type)) {
-    return "retired";
-  } else {
-    return "";
   }
+
+  const incomeUnemployed = incomes.find(
+    (income) => income?.type === "unspecified",
+  );
+
+  if (incomeUnemployed) {
+    return "unemployed";
+  }
+
+  const otherSourcesOfIncome = incomes.filter((income) => {
+    if (otherIncomeTypes.includes(income?.type as string)) return income;
+  });
+
+  if (otherSourcesOfIncome && otherSourcesOfIncome.length > 0) {
+    return "retired";
+  }
+  return "";
 };
 
 export default mapIncomeTypeToEmplStatus;

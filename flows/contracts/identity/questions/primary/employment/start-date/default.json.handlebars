@@ -5,17 +5,21 @@
       "key": "startDate",
       "type": "inputDate",
       "status": {{{json (contract 'primary_income_start_date_input_status')}}},
-      "value": {
+      "value": 
         {{#if details.income.0.start}}
+        {
           "month": "{{month details.income.0.start}}",
           "day": "{{day details.income.0.start}}",
           "year": "{{year details.income.0.start}}"
+        }
         {{else}}
+        {
           "month": "",
           "day": "",
           "year": ""
+        }
         {{/if}}
-      },
+      ,
       "label": {
         "copy": "Start date"
       },

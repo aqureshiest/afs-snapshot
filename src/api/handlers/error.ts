@@ -21,7 +21,11 @@ const getErrorPageManifest = (context, splittedPath, statusCode) => {
     }
   }
 };
-
+const POSTerrorMap = {
+  401: "unauthorized",
+  404: "not-found",
+  403: "unauthorized",
+};
 const errorHandler: Handler = async function (
   context,
   error: Error,
@@ -44,8 +48,12 @@ const errorHandler: Handler = async function (
   if (req.method === "GET") {
     try {
       const { input, auth, userState, manifestName } = res.locals;
-
-      const splittedPath = manifestName.split("/");
+      let failedManifestName = manifestName;
+      if (!failedManifestName) {
+        const { 0: reqManifestName } = req.params;
+        failedManifestName = reqManifestName;
+      }
+      const splittedPath = failedManifestName.split("/");
       const errorPageManifest = getErrorPageManifest(
         context,
         splittedPath,
@@ -60,7 +68,7 @@ const errorHandler: Handler = async function (
             auth,
             userState,
             error,
-            input,
+            ...input,
           },
           { context, ...input },
         );
@@ -72,6 +80,12 @@ const errorHandler: Handler = async function (
         stack: error.stack,
       });
     }
+  } else if (POSTerrorMap[convertedError.statusCode]) {
+    return res.status(convertedError.statusCode).send({
+      status: "failed",
+      results: [],
+      error: [POSTerrorMap[convertedError.statusCode]],
+    });
   }
   /////////////////////////////
 

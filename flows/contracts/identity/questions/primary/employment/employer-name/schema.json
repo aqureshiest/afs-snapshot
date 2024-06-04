@@ -3,7 +3,7 @@
     "pattern": "^[\\x00-\\x7F]*$",
     "minLength": 1,
     "errorMessage": {
-        "minLength": "Employer name must be longer than 1 character",
+        "minLength": "Employer name is required",
         "pattern": "Invalid employer name",
         "type": "Invalid employer name"
     }

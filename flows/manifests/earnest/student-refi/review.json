@@ -13,18 +13,23 @@
         "info/student-employment/review.default",
         "info/student-finances/review.default",
         "questions/primary/consent.default",
-        "questions/primary/disclosure.default"
+        "questions/primary/disclosure.default",
+        "questions/primary/disclosure.disclaimer"
     ],
-    "back-button": "actions/back-buttons.review",
+    "back-button": "actions/back-buttons.default",
     "decryptPiiSsn": "pii-get-primary-ssn",
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
     "actions": "actions/decision-request.primary",
+    "actionsDashboard": "actions/homebase.default",
+    "onError": ["onError.unauthorized"],
     "getDegrees": "questions/primary/degree.get-degrees",
-    "disclosureLinks": ["questions/primary/disclosure/links.terms-of-services",
-    "questions/primary/disclosure/links.privacy-policy",
-    "questions/primary/disclosure/links.privacy-notice",
-    "questions/primary/disclosure/links.credit-report-policy",
-    "questions/primary/disclosure/links.consent-electronic-communications",
-    "questions/primary/disclosure/links.earnest-loan-application-solicitation"]
+    "disclosureLinks": [
+        "questions/primary/disclosure/links.terms-of-services",
+        "questions/primary/disclosure/links.privacy-policy",
+        "questions/primary/disclosure/links.privacy-notice",
+        "questions/primary/disclosure/links.credit-report-policy",
+        "questions/primary/disclosure/links.consent-electronic-communications",
+        "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+    ]
 }

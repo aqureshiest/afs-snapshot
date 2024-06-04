@@ -287,6 +287,25 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
+  it("[d177ce53] it should execute an Error contract-type", async () => {
+    const input = {} as Input;
+
+    const manifest = new Manifest(context, "manifestError", {
+      key: "errorTestContract",
+      "*": new Contract({
+        key: "errorTestContract",
+        raw: `{
+          "error": "no-income-error"
+        }`,
+        type: "error",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
+
   it("[9edd8cee] it should execute an ApplicationData contract-type when an id exists in the definition", async () => {
     const input = {} as Input;
 
@@ -388,6 +407,7 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+
   it("[5d6c5ca8] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestSyllabus", {
@@ -412,6 +432,7 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+
   it("[df40cd1a] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestSyllabus", {
@@ -462,7 +483,111 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
-  it("[1b2bbdaa] it should execute an Analytics contract-type", async () => {
+  it("[1b2bbdaa] it should execute an Analytics contract-type income-verification-method plaid", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+      auth: {
+        session: {
+          userId: "1234",
+          exp: 0,
+          isValid: true,
+        },
+      },
+      applicationState: null,
+      application: {
+        id: 1,
+        primary: {
+          id: 2,
+          details: {
+            financialAccounts: [
+              {
+                plaidAccessToken: "1234",
+              },
+            ],
+          },
+        },
+      },
+    } as Input;
+
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "track",
+          "payload":{
+            "id":"9999",
+            "fields": ["income_verification_method"]
+          }
+        }`,
+        type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+    assert(contract);
+  });
+
+  it("[186c9bd5] it should execute an Analytics contract-type income-verification-method manual", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+      auth: {
+        session: {
+          userId: "1234",
+          exp: 0,
+          isValid: true,
+        },
+      },
+      applicationState: null,
+      application: {
+        id: 1,
+        primary: {
+          id: 2,
+          details: {
+            financialAccounts: [
+              {
+                plaidAccessToken: null,
+              },
+            ],
+          },
+        },
+      },
+    } as Input;
+
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "track",
+          "payload":{
+            "id":"9999",
+            "fields": ["income_verification_method"]
+          }
+        }`,
+        type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+    assert(contract);
+  });
+
+  it("[73147945] it should execute an Analytics contract-type", async () => {
     const input = {
       request: {
         method: "POST",
@@ -479,7 +604,7 @@ describe("[462fd166] manifest.execute", () => {
         key: "analytics",
         raw: `{
           "event": "Viewed rate test",
-          "type": "track",
+          "type": "page",
           "payload":{
             "id":"9999"
           }
@@ -492,7 +617,36 @@ describe("[462fd166] manifest.execute", () => {
 
     assert(contract);
   });
+  it("[5c3f53ea] it should execute an Analytics contract-type", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+    } as Input;
 
+    mock.method(analyticsServiceClient, "track", () => {
+      return true;
+    });
+
+    const manifest = new Manifest(context, "analytics", {
+      key: "analytics",
+      "*": new Contract({
+        key: "analytics",
+        raw: `{
+          "event": "Viewed rate test",
+          "type": "identify",
+          "payload":{
+            "id":"9999"
+          }
+        }`,
+        type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    assert(contract);
+  });
   it("[ae226507] obj helper", async () => {
     const input = {} as Input;
     const manifest = new Manifest(context, "manifestTest", {
@@ -632,7 +786,8 @@ describe("[462fd166] manifest.execute", () => {
             "dateOfBirth": "{{{dateObjToString request.body.values.dateOfBirth}}}",
             "formatToUSCurrency": "{{{formatToUSCurrency 1000000}}}",
             "formatDollarsToCents": "{{{formatDollarsToCents '$12,3456.89'}}}",
-            "stateMinLoan": "{{{stateMinLoan request.body.values.location}}}"
+            "stateMinLoan": {{{stateMinLoan request.body.values.location}}},
+            "hasValues": {{{hasValues request.body.values.dateOfBirth}}}
           }
       `,
       }),
@@ -670,7 +825,8 @@ describe("[462fd166] manifest.execute", () => {
       dateOfBirth: "1950-12-20",
       formatToUSCurrency: "$10,000.00",
       formatDollarsToCents: "12345689",
-      stateMinLoan: "$10,000",
+      stateMinLoan: 1000000,
+      hasValues: true,
     });
   });
 
@@ -679,25 +835,33 @@ describe("[462fd166] manifest.execute", () => {
       request: {
         body: {
           values: {
-            incomes: [
+            EmployedIncomes: [
               {
                 employer: "BigCompany",
                 type: "employment",
               },
+            ],
+            FutureEmployedIncomes: [
               {
                 employer: "BigCompany",
                 type: "employment",
                 title: "title",
                 start: new Date().toISOString(),
               },
+            ],
+            SelfEmployedIncomes: [
               {
                 type: "employment",
                 title: "title",
                 start: new Date().toISOString(),
               },
+            ],
+            UnemployedIncomes: [
               {
                 type: "unspecified",
               },
+            ],
+            RetiredIncomes: [
               {
                 type: "social_security_or_pension",
               },
@@ -710,11 +874,11 @@ describe("[462fd166] manifest.execute", () => {
       "*": new Contract({
         raw: `
           {
-            "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[0]}}}",
-            "future": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[1]}}}",
-            "selfEmployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[2]}}}",
-            "unemployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[3]}}}",
-            "retired": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[4]}}}"
+            "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.EmployedIncomes}}}",
+            "future": "{{{mapIncomeTypeToEmplStatus request.body.values.FutureEmployedIncomes}}}",
+            "selfEmployed": "{{{mapIncomeTypeToEmplStatus request.body.values.SelfEmployedIncomes}}}",
+            "unemployed": "{{{mapIncomeTypeToEmplStatus request.body.values.UnemployedIncomes}}}",
+            "retired": "{{{mapIncomeTypeToEmplStatus request.body.values.RetiredIncomes}}}"
           }
       `,
       }),
@@ -730,6 +894,57 @@ describe("[462fd166] manifest.execute", () => {
       selfEmployed: "self_employed",
       unemployed: "unemployed",
       retired: "retired",
+    });
+  });
+
+  it("[1bb916db] sumIncomeAmountRange and totalSum template helper", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            incomes: [
+              {
+                employer: "BigCompany",
+                type: "employment",
+                amount: 1000000,
+              },
+              {
+                type: "child_support_or_alimony",
+                amount: 1000000,
+              },
+              {
+                type: "social_security_or_pension",
+                amount: 1000000,
+              },
+            ],
+            asset: [
+              {
+                type: "claimed_total_assets",
+                amount: 5500000,
+              },
+            ],
+          },
+        },
+      },
+    } as unknown as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+          {
+            "sumRange": {{{sumIncomeAmountRange request.body.values.incomes 'amount' 0 2}}},
+            "totalSum": {{{totalSum request.body.values.asset.[0].amount (sumIncomeAmountRange request.body.values.incomes 'amount' 0 2)}}}
+          }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      sumRange: 3000000,
+      totalSum: 8500000,
     });
   });
 });
