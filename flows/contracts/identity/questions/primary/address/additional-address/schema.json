@@ -2,7 +2,7 @@
     "type": "string",
     "enum": ["true", "false"],
     "errorMessage": {
-        "enum": "Please select Yes or No"
+        "enum": "Have you been at your current address over 6 months? is required"
     },
     "required": ["sixMonthResidence"]
 }

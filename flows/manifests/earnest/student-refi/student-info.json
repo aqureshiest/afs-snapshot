@@ -1,6 +1,5 @@
 {
   "*": "refi-student-info",
-  "analytics": ["server-application-started"],
   "stage": "student-info-stage.refi",
   "pageLayout": "sidebar",
   "steps": [
@@ -65,17 +64,21 @@
     "questions/primary/income/amount/additional-income.refi-retired"
   ],
   "student-info-unemployed-rows": [
+    "info/student-income.unemployed",
     "info/student-consistent-income-source.default",
     "questions/primary/income/consistent-income.default"
   ],
   "student-info-consistent-income-rows": [
-    "info/student-income.default",
+    "info/student-income.confirm",
     "questions/primary/income/amount/annual-income.default",
     "questions/primary/income/amount/additional-income.default"
   ],
-  "back-button": "actions/back-buttons.basic-info",
+  "onError": ["onError.unauthorized"],
+  "back-button": "actions/back-buttons.default",
   "noop_details_action": "actions/noop-details.primary",
   "save_primary_details_action": "actions/save-details.primary",
+  "save_primary_details_action_no_event": "actions/save-details.primary-no-event",
+  "save_primary_employment_status_details_action": "actions/save-details.employment-status",
   "save_primary_employment_details_action": "actions/save-details.employment",
   "save_primary_other_income_details_action": "actions/save-details.other-incomes",
   "save_primary_retired_income_details_action": "actions/save-details.retired-incomes",
@@ -99,4 +102,5 @@
   "address-field-state": "questions/primary/address/fields.state",
   "address-field-zip": "questions/primary/address/fields.zip",
   "refi-previous-address-validation": "questions/primary/address.refi-previous-address-validation"
+  "primary_retired_additional_income_callout_header": "info/student-income/additional-income-hint.callout-header"
 }

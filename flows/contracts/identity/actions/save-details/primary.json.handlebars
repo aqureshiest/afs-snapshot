@@ -5,10 +5,10 @@
         "analytics": {
             "name": "Application Section Submitted",
             "product": "slr",
-            "section": "primary info",
             "loan_type": "{{{mapLoanType application.tag.applicants}}}"
         },
         "manifest": "save-details/{{application.primary.id}}",
-        "method": "POST"
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
     }
 }

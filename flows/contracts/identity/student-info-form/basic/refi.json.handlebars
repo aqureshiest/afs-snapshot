@@ -1,15 +1,16 @@
 {
     "key": "basic",
-    "label": "Primary Info",
+    "name": "Primary Info",
     "analitycs": {
-        "product": "slr"
+        "product": "slr",
+        "name": "Primary Info"
     },
     "back": {
         "action": {{{ json (contract 'back-button') }}}
     },
     "submit": {
         "copy": "Next Step",
-        "action": {{{json (contract 'save_primary_details_action')}}}
+        "action": {{{json (contract 'save_primary_details_action_no_event')}}}
     },
     "progress": 20,
     "rows": {{{json (contract 'student-info-basic-rows')}}}

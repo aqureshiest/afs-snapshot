@@ -1,6 +1,5 @@
 {
     "*": "redirect",
-    "actions": ["add-details"],
-    "analytics": ["server-application-section-submitted"],
+    "actions": ["remove-additional-income-details", "add-income-details"],
     "redirect": ["redirect.income-verification"]
   }

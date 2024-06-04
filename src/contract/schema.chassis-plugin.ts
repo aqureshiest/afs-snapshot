@@ -30,6 +30,9 @@ export const plugin: Plugin<unknown> = {
     ajv.addKeyword({
       keyword: "matches",
     });
+    ajv.addKeyword({
+      keyword: "ageOfMajority",
+    });
     addFormats.default(ajv);
     ajvErrors.default(ajv);
     const definitions = await buildSchemas(context, SCHEMAS_PATH);

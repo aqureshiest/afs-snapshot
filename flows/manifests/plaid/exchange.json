@@ -1,5 +1,4 @@
 {
   "*": "response",
-  "actions": "plaid.exchangePublicToken",
-  "analytics": ["server-application-section-submitted"]
+  "actions": "plaid.exchangePublicToken"
 }

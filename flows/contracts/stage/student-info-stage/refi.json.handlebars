@@ -9,8 +9,8 @@
         "pageTitle": "Student Loan Refinance Application - Earnest"
     },
     "analytics": {
-        "product": "slr",
-        "loan_type": "independent"
+        "product": "{{{mapProduct application.reference.product}}}",
+        "loan_type": "{{{mapLoanType application.tag.applicants}}}"
     },
     "steps": {{{json (contract 'steps')}}},
     "validation": {
@@ -88,7 +88,6 @@
             "hasConsistentIncome": {
                 "type": "object",
                 "properties": {
-                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
                     "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
                 }
             }

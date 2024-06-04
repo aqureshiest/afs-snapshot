@@ -6,6 +6,9 @@
         "copy": "Save",
         "action": {{{json (contract 'save_edited_details_action')}}}
     },
+    "back": {
+        "action": {{{ json (contract 'back-button') }}}
+    },
     {{#if (findPreviousAddress details.location)}}
         "rows": {{{json (contract 'student-info-basic-withprevAddress-rows')}}}
     {{else}}

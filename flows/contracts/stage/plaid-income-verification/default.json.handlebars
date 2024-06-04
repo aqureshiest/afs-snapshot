@@ -1,7 +1,15 @@
 {{#if request.params.id}}
 {
   "type": "view",
-  "id": "{{request.params.id}}",
+  "label": "income verification",
+  "pageLayout":{{{json (contract 'pageLayout')}}},
+  "seo": {
+      "pageTitle": "Student Loan Refinance Application - Earnest"
+  },
+  "analytics": {
+      "product": "{{{mapProduct application.reference.product}}}",
+      "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+  },
   "definition": {
     "type": "bankAccounts",
     "definition": {
@@ -68,21 +76,30 @@
           "key": "landingViewed",
           "type": "request",
           "properties": {
-            "manifest": "save-details/financials/{{{request.params.id}}}"
-          },
-          "onError": {
-            "codes": ["application-service-error"],
-            "action":{
-              "key": "application-service-error-toast",
-              "type": "error",
-              "properties": {
-                "type": "toast",
-                "definition": {
-                  "message": "An error ocurred while saving this, please try again.",
-                  "icon": "WarningIcon" 
+            "analytics": {
+                "name": "Application Section Submitted",
+                "product": "slr",
+                "title": "income verification",
+                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+                "fields": [
+                    "income_verification_method"
+                ]
+            },
+            "onError": {
+              "codes": ["application-service-error"],
+              "action":{
+                "key": "application-service-error-toast",
+                "type": "error",
+                "properties": {
+                  "type": "toast",
+                  "definition": {
+                    "message": "An error ocurred while saving this, please try again.",
+                    "icon": "WarningIcon" 
+                  }
                 }
               }
-            }
+            },
+            "manifest": "save-details/financials/{{{request.params.id}}}"
           }
         }
       },
