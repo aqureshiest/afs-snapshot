@@ -7,7 +7,12 @@
             "name": "Application Submitted",
             "product": "slr",
             "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-            "application_id": "{{{application.id}}}"
+            "application_id": "{{{application.id}}}",
+            "fields": [
+                "income_verification_method"
+            ],
+            {{log application.primary.details.income}}
+            "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income}}}"
         },
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}

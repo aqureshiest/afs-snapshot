@@ -120,6 +120,22 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       },
     };
 
+    // hacky thingy to get the employment_type without "_" in it
+    // if you wanna change this, talk to kelly first.
+    if (props?.event === "Server Application Submitted") {
+      delete props?.properties?.section;
+    }
+    if (props?.properties?.employment_type) {
+      props.properties.employment_type = payloadProps.employment_type.replace(
+        /_/g,
+        " ",
+      );
+      if (props.properties.employment_type === "future") {
+        props.properties.employment_type = "future employment";
+      }
+    }
+    // hacky thingys end
+
     /// TODO: this must be refactored for v2, as is hardcoded to get primary info
     if (fields && fields.includes("income_verification_method")) {
       let income_verification_method;
