@@ -1,20 +1,31 @@
 
 {{#if application}}
-{{#noop}}{{ contract 'analytics' }}{{/noop}}
-{
-  "action": {
-    "key": "submitInterstitial",
-    "type": "interstitial",
-    "properties": {
-      "showSpinner": true,
-      "header": { "copy": "One moment. We’re reviewing your application." },
-      "action": {{{json (contract 'statusAction')}}},
-      "actionDelay": 3000
+  {{#if application.reference.lendingDecisionID}}
+    {
+      "action": {
+        "type": "navigate",
+        "properties": {
+          "goTo": "/_/dashboard/"
+        }
+      }
     }
-  },
-  "result": {{{json (contract 'actions')}}},
-  "error": {{{json error}}}
-}
+  {{else}}
+    {{#noop}}{{ contract 'analytics' }}{{/noop}}
+    {
+      "action": {
+        "key": "submitInterstitial",
+        "type": "interstitial",
+        "properties": {
+          "showSpinner": true,
+          "header": { "copy": "One moment. We’re reviewing your application." },
+          "action": {{{json (contract 'statusAction')}}},
+          "actionDelay": 3000
+        }
+      },
+      "result": {{{json (contract 'actions')}}},
+      "error": {{{json error}}}
+    }
+  {{/if}}
 {{else}}
   null
 {{/if}}
