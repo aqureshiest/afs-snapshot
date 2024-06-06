@@ -177,7 +177,7 @@ declare module "contract/contract-types/analytics.js" {
   type Definition = {
     event: string;
     type: string;
-    payload: { server_properties: map } & map;
+    payload: { serverProperties: map } & map;
   };
 
   type Injections = IExecutionInjections;

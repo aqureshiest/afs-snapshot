@@ -106,7 +106,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     const { event, payload } = definition;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const { server_properties, ...properties } = payload;
+    const { serverProperties, ...properties } = payload;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { actionKey, formValue, title, manifest, ...payloadProps } =
       properties;
@@ -137,9 +137,9 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     /// TODO: this must be refactored for v2, as is hardcoded to get primary info
     if (
-      server_properties &&
-      server_properties.fields &&
-      server_properties.fields.includes("income_verification_method")
+      serverProperties &&
+      serverProperties.fields &&
+      serverProperties.fields.includes("income_verification_method")
     ) {
       let income_verification_method;
       const financialAccounts =
