@@ -6,13 +6,7 @@
     "matches": {
       "shouldMatch": false,
       "useParentData": true,
-      "matchAgainst": {
-        "street": "{{{ details.location.0.street1}}}",
-        "apt": "{{{ details.location.0.street2}}}",
-        "city": "{{{ details.location.0.city}}}",
-        "state": "{{{ details.location.0.state}}}",
-        "zip": "{{{ details.location.0.zip}}}"
-      }
+      "matchAgainstPath": "currentAddress.currentAddress"
     },
     "errorMessage": {
       "minLength": "Street is required",
