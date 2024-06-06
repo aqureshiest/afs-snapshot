@@ -121,9 +121,11 @@
                 "product": "slr",
                 "title": "income verification",
                 "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-                "fields": [
+                "serverProperties": {
+                  "fields": [
                     "income_verification_method"
-                ]
+                  ]
+                }
             },
             "onError": {
               "codes": ["application-service-error"],

@@ -173,10 +173,11 @@ import "contract/contract-types/analytics.js";
 declare module "contract/contract-types/analytics.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
+  type map = { [key: string]: string } & { [key: string]: Array<string> };
   type Definition = {
     event: string;
     type: string;
-    payload: { [key: string]: string };
+    payload: { serverProperties: map } & map;
   };
 
   type Injections = IExecutionInjections;

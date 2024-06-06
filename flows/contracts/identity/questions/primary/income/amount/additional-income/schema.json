@@ -24,7 +24,10 @@
         }
       }
     },
-    "required": ["type", "value"]
+    "required": ["type", "value"],
+    "errorMessage": {
+     "required": "Amount and types are required"
+    }
   },
   "errorMessage": {
     "type": "Amount and types are required",
