@@ -75,11 +75,12 @@ class Analytics extends ContractType<Definition, Definition, Output> {
               this.buildIdentifyProps(input),
             );
             break;
-          case EVENT_TYPE.page:
-            await analyticsServiceClient.page(
-              this.buildPageProps(input, definition),
-            );
-            break;
+          // not sending this type of events from the server side.
+          // case EVENT_TYPE.page:
+          //   await analyticsServiceClient.page(
+          //     this.buildPageProps(input, definition),
+          //   );
+          //   break;
           default:
         }
       } catch (error) {
@@ -105,7 +106,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     const { event, payload } = definition;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const { fields, ...properties } = payload;
+    const { serverProperties, ...properties } = payload;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { actionKey, formValue, title, manifest, ...payloadProps } =
       properties;
@@ -115,7 +116,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       event: event,
       properties: {
         ...payloadProps,
-        section: title,
         application_id: application?.id,
       },
     };
@@ -126,10 +126,9 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       delete props?.properties?.section;
     }
     if (props?.properties?.employment_type) {
-      props.properties.employment_type = payloadProps.employment_type.replace(
-        /_/g,
-        " ",
-      );
+      props.properties.employment_type = payloadProps.employment_type
+        .toString()
+        .replace(/_/g, " ");
       if (props.properties.employment_type === "future") {
         props.properties.employment_type = "future employment";
       }
@@ -137,7 +136,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     // hacky thingys end
 
     /// TODO: this must be refactored for v2, as is hardcoded to get primary info
-    if (fields && fields.includes("income_verification_method")) {
+    if (
+      serverProperties &&
+      serverProperties.fields &&
+      serverProperties.fields.includes("income_verification_method")
+    ) {
       let income_verification_method;
       const financialAccounts =
         application?.primary?.details?.financialAccounts || [];
