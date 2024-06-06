@@ -10,6 +10,7 @@ export { default as mapLoanType } from "./mapLoanType.js";
 export { default as mapProduct } from "./mapProduct.js";
 export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
 export { default as findInArray } from "./array.js";
+export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationMethod.js";
 
 export const noop = function (v1) {
   v1.fn(this);
