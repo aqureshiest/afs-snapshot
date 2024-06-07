@@ -72,6 +72,10 @@ const errorHandler: Handler = async function (
           },
           { context, ...input },
         );
+        if ([401, 403].includes(convertedError.statusCode)) {
+          res.clearCookie("session");
+          res.clearCookie("access_token");
+        }
         return res.status(convertedError.statusCode).send(contract);
       }
     } catch (error) {

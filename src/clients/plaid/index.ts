@@ -297,7 +297,9 @@ export default class PlaidClient extends Client {
                   (account) =>
                     account?.name === institution.name &&
                     account?.type === faccount.subtype &&
-                    account?.account_last4 === faccount.mask &&
+                    // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
+                    account?.account_last4 ===
+                      faccount.mask?.toString().padStart(4, "-") &&
                     account?.balance === (faccount.balances.current || 0) * 100,
                 );
               if (!existingAccount) {
@@ -306,7 +308,8 @@ export default class PlaidClient extends Client {
                   name: institution.name,
                   type: faccount.subtype,
                   selected: true,
-                  account_last4: faccount.mask,
+                  // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
+                  account_last4: faccount.mask?.toString().padStart(4, "-"),
                   balance: (faccount.balances.current || 0) * 100,
                   plaidAccountID: faccount.account_id,
                   plaidItemID: plaidResponse.item.item_id,
