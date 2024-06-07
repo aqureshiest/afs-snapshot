@@ -127,6 +127,7 @@ const getInputs: Handler = async function (
       body: req.body,
       query: req.query,
       headers: req.headers,
+      cookies: req.cookies,
     },
   };
 

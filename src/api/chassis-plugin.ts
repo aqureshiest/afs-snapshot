@@ -9,6 +9,8 @@ export const plugin: Plugin = {
   version: "1.0.0",
   registerOrder: 1,
   register: async (context: Context) => {
+    context.application.use(cookieParser());
+
     /* ============================== *
      * I. All contracts gather inputs and execute contracts
      * ============================== */
@@ -73,6 +75,5 @@ export const plugin: Plugin = {
     );
 
     context.application.use(handlers.error.bind(null, context));
-    context.application.use(cookieParser());
   },
 };

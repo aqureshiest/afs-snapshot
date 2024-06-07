@@ -40,6 +40,7 @@ type IContractInput = {
     body?: { [key: string]: unknown };
     query?: { [key: string]: unknown };
     headers?: { [key: string]: unknown };
+    cookies?: { [key: string]: string };
   };
   env?: { [key: string]: string };
   manifestName?: string;
