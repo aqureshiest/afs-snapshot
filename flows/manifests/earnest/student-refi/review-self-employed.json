@@ -21,6 +21,7 @@
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
     "actions": "actions/decision-request.primary",
+    "actionsDashboard": "actions/homebase.default",
     "disclosureLinks": [
         "questions/primary/disclosure/links.terms-of-services",
         "questions/primary/disclosure/links.privacy-policy",
