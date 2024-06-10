@@ -4,7 +4,7 @@
     "key": "{{{application.id}}}",
     "value": {
       {{#if request.body.flow.manifest}}
-        "manifest": "{{{request.body.flow.manifest}}}/{{application.id}}",
+        "manifest": "{{{request.body.flow.manifest}}}{{#if request.params.id}}/{{request.params.id}}{{/if}}",
       {{/if}}
         "step": {{{json request.body.flow.step}}}
     }
