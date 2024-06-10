@@ -3,6 +3,12 @@
     "key": "save-root-loan-details",
     "type": "request",
     "properties": {
+        "analytics": {
+            "name": "Application Section Submitted",
+            "product": "{{{mapProduct application.reference.product}}}",
+            "section": "Edit Loan Details",
+            "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
         "manifest": "save-details/save-review/{{application.id}}",
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}

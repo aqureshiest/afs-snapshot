@@ -3,6 +3,12 @@
     "key": "save-details",
     "type": "request",
     "properties": {
+        "analytics": {
+            "name": "Application Section Submitted",
+            "product": "{{{mapProduct application.reference.product}}}",
+            "section": "Edit Employment Info",
+            "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+        },
         "manifest": "save-details/save-employment-info-review/{{application.primary.id}}",
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}
