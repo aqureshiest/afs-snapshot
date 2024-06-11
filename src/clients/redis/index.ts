@@ -75,18 +75,26 @@ export default class RedisClient {
   async setApplicationState(context: PluginContext, appID: string, value) {
     const rKey = `${this.prefix}_app_${appID}`;
     const current = await this.getApplicationState(context, appID, null);
-    const res = await this.client.set(
-      rKey,
-      JSON.stringify({
-        ...value,
-        previous: { manifest: current?.manifest, step: current?.step },
-      }),
-      {
-        EX: this.expiration,
-        GT: true,
-      },
-    );
-    return res;
+
+    if (
+      !current ||
+      current.manifest !== value.manifest ||
+      current.step !== value.step
+    ) {
+      const res = await this.client.set(
+        rKey,
+        JSON.stringify({
+          ...value,
+          previous: { manifest: current?.manifest, step: current?.step },
+        }),
+        {
+          EX: this.expiration,
+          GT: true,
+        },
+      );
+      return res;
+    }
+    return null;
   }
 
   async getUserState(
