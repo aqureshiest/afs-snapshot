@@ -22,7 +22,11 @@
           {"id": "startDate", "label": "Start Date", "value": "{{reviewDateFormatter details.income.0.start}}"}
         {{/if}}
         {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income )))}}
-          {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency 0}}"}
+          {{#if details.income.0.amount}}
+            {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+          {{else}}
+            {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency 0}}"}
+          {{/if}}
         {{else if details.income.0.amount}}
           {{#if (and (ne ../userState.employmentType 'unemployed') (ne 'unemployed' ( mapIncomeTypeToEmplStatus details.income )))}}
             {"id": "annualIncome", "label": "Annual Income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}

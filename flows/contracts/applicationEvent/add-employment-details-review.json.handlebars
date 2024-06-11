@@ -11,6 +11,9 @@
         {{#with request.body.values}}
           {{#if (eq employmentType 'retired')}}
             {"income": {{#list}}
+              {{#if annualIncome}}
+                {"index": 0, "amount": {{{formatDollarsToCents annualIncome}}} }
+              {{/if}}
               {{#if additionalAmountRetired}}
                 {{#if additionalAmountRetired.[0]}}
                   {"index": 1, "type": "{{additionalAmountRetired.0.type}}", "amount": {{{formatDollarsToCents additionalAmountRetired.0.value}}} }
@@ -88,7 +91,7 @@
                       {"index": 5, "type": "{{additionalAmount.4.type}}", "amount": {{{formatDollarsToCents additionalAmount.4.value}}} }
                     {{/if}}
                   {{/if}}
-                {{/list}} 
+                {{/list}}
               }
               {{#if claimedAssets}}
                 {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
