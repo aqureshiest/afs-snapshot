@@ -5,7 +5,7 @@
       "key": "annualIncome",
       "type": "inputMoney",
       {{#if details.income.0.amount}}
-        "value": "{{{formatToUSCurrency details.income.0.amount}}}",
+        "value": {{formatCentsToDollars details.income.0.amount}},
       {{else}}
         "value": "",
       {{/if}}

@@ -1,10 +1,10 @@
 {
-    "type": "string",
-    "minLength": 1,
-    "pattern": "^\\$?\\d+(,\\d{3})*(\\.[0-9]{2})?$",
-    "errorMessage": {
-      "minLength": "Amount is required",
-      "pattern": "Enter a valid amount",
-      "type": "Enter a valid number"
-    }
+  "type": "number",
+  "minimum": 10000,
+  "maximum": 500000,
+  "errorMessage": {
+    "minimum": "The minimum amount to refinance is $10,000.",
+    "maximum": "The maximum amount to refinance is $500,000.",
+    "type": "The minimum amount to refinance is $10,000."
+  }
 }

@@ -5,7 +5,7 @@
       "key": "claimedAssets",
       "type": "inputMoney",
       {{#if details.asset.0.amount}}
-        "value":  "{{{formatToUSCurrency details.asset.0.amount}}}",
+        "value":  {{formatCentsToDollars details.asset.0.amount}},
       {{else}}
         "value": "",
       {{/if}}

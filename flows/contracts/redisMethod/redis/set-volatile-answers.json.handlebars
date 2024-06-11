@@ -1,6 +1,6 @@
 
 
-{{#if (and auth.session.userId (or request.body.values.employmentType request.body.values.incomeIsConsistent request.body.values.addAddtionalIncome request.body.values.sixMonthResidence))}}
+{{#if (and auth.session.userId (or request.body.values.employmentType request.body.values.incomeIsConsistent request.body.values.addAdditionalIncome request.body.values.sixMonthResidence))}}
   {
     "redisMethod": "setUserState",
     "key": "{{auth.session.userId}}",
@@ -13,8 +13,8 @@
           {{#if incomeIsConsistent}}
             {"incomeIsConsistent": "{{incomeIsConsistent}}"}
           {{/if}}
-          {{#if addAddtionalIncome}}
-            {"addAddtionalIncome": "{{addAddtionalIncome}}"}
+          {{#if addAdditionalIncome}}
+            {"addAdditionalIncome": "{{addAdditionalIncome}}"}
           {{/if}}
           {{#if sixMonthResidence}}
             {"sixMonthResidence": "{{sixMonthResidence}}"}

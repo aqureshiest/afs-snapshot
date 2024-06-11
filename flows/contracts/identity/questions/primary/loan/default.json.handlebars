@@ -5,7 +5,7 @@
       "key": "loanAmount",
       "type": "inputMoney",
       {{#if details.amount.requested}}
-        "value": "{{{formatToUSCurrency details.amount.requested}}}",
+        "value": {{formatCentsToDollars details.amount.requested}},
       {{else}}
         "value": "",
       {{/if}}

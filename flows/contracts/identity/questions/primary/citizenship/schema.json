@@ -9,7 +9,7 @@
     "h1_b"
   ],
   "errorMessage": {
-    "enum": "Please select a citizenship status"
+    "enum": "Please select a citizenship status."
   },
   "required": ["citizenship"]
 }

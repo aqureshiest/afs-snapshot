@@ -1,27 +1,37 @@
 {
-    "type": "object",
-    "properties": {
-        "first": {
-            "type": "string",
-            "pattern": "^[\\x00-\\x7F]*$",
-            "errorMessage": "First name is required."
-        },
-        "last": {
-            "type": "string",
-            "pattern": "^[\\x00-\\x7F]*$",
-            "errorMessage": "Last name is required."
-        },
-        "middle": {
-            "type": "string",
-            "pattern": "^[\\x00-\\x7F]*$"
-        },
-        "title": {
-            "type": "string",
-            "pattern": "^[\\x00-\\x7F]*$"
-        }
+  "type": "object",
+  "properties": {
+    "first": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s'-]*$",
+      "errorMessage": {
+        "pattern": "First name contains invalid characters."
+      }
     },
-    "required": [
-        "first",
-        "last"
-    ]
+    "last": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s'-]*$",
+      "errorMessage": {
+        "pattern": "Last name contains invalid characters."
+      }
+    },
+    "middle": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s'-]*$",
+      "errorMessage": {
+        "pattern": "Middle name contains invalid characters."
+      }
+    },
+    "title": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s.']*$",
+      "errorMessage": {
+        "pattern": "Title contains invalid characters."
+      }
+    }
+  },
+  "required": [
+    "first",
+    "last"
+  ]
 }

@@ -23,7 +23,7 @@
     "grad"
   ],
   "errorMessage": {
-    "enum": "Please select your highest completed degree"
+    "enum": "Please select your highest completed degree."
   },
   "required": ["degree"]
 }

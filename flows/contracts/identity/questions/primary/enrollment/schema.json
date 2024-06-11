@@ -3,8 +3,8 @@
   "pattern": "^[^@!¡¿?#$%^&*()_+]+$",
   "minLength": 1,
   "errorMessage": {
-      "minLength": "Enrollment must be longer than 1 character",
-      "pattern": "Invalid degree",
-      "type": "Invalid degree"
+    "minLength": "Enrollment is required.",
+    "pattern": "Enrollment contains invalid characters.",
+    "type": "Invalid degree."
   }
 }

@@ -1,24 +1,24 @@
 {
   "type": "object",
   "properties": {
-      "opeid8": {
-          "type": "string",
-          "minLength": 8,
-          "errorMessage": "Please select a school from dropbox"
-      }, 
-      "name": {
-        "type": "string",
-        "pattern": "^[\\x00-\\x7F]*$",
-        "minLength": 1,
-        "errorMessage": {
-            "minLength": "Please enter your school name",
-            "pattern": "Please select a school from dropdown",
-            "type": "Invalid school name"
-        }
+    "opeid8": {
+      "type": "string",
+      "minLength": 8,
+      "errorMessage": "Please select a school from the dropbox."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s.'-]*$",
+      "minLength": 1,
+      "errorMessage": {
+        "minLength": "Please enter your school name.",
+        "pattern": "School name contains invalid characters.",
+        "type": "Invalid school name."
       }
+    }
   },
   "required": [
-      "opeid8"
+    "opeid8"
   ],
   "errorMessage": "College or school name is required"
 }

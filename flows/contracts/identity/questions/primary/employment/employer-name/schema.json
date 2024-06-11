@@ -1,10 +1,10 @@
 {
-    "type": "string",
-    "pattern": "^[\\x00-\\x7F]*$",
-    "minLength": 1,
-    "errorMessage": {
-        "minLength": "Employer name is required",
-        "pattern": "Invalid employer name",
-        "type": "Invalid employer name"
-    }
+  "type": "string",
+  "pattern": "^[a-zA-Z0-9\\s.'-]*$",
+  "minLength": 1,
+  "errorMessage": {
+    "minLength": "Employer name is required.",
+    "pattern": "Employer name contains invalid characters.",
+    "type": "Invalid employer name."
+  }
 }
