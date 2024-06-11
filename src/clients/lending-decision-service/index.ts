@@ -303,7 +303,9 @@ export default class LendingDecisionServiceClient extends Client {
             loan_id: monolithLoanID,
             user_id: monolithUserID,
             application_id: monolithApplicationID,
-            ...(input.request?.cookies?.device_uuid ? { device_id: input.request?.cookies?.device_uuid } : {}),
+            ...(input.request?.cookies?.device_uuid
+              ? { device_id: input.request?.cookies?.device_uuid }
+              : {}),
           },
         },
         context,

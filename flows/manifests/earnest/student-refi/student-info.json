@@ -74,7 +74,7 @@
     "questions/primary/income/amount/additional-income.default"
   ],
   "onError": ["onError.unauthorized"],
-  "back-button": "actions/back-buttons.default",
+  "back-button": "actions/back-buttons.basic-info",
   "noop_details_action": "actions/noop-details.primary",
   "save_primary_details_action": "actions/save-details.primary",
   "save_primary_details_action_no_event": "actions/save-details.primary-no-event",

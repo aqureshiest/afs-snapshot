@@ -109,7 +109,15 @@
           }
         ]
       },
-      "backAction": {{{ json (contract 'back-button') }}},
+      {{#if (eq 'unemployed' ( mapIncomeTypeToEmplStatus application.primary.details.income ))}}
+        "backAction": {{{ json (contract 'back-button-unemployed') }}},
+      {{else if (eq 'retired' ( mapIncomeTypeToEmplStatus application.primary.details.income ))}}
+        "backAction": {{{ json (contract 'back-button-retired') }}},
+      {{else if (eq 'future' ( mapIncomeTypeToEmplStatus application.primary.details.income ))}}
+        "backAction": {{{ json (contract 'back-button-future') }}},
+      {{else}}
+        "backAction": {{{ json (contract 'back-button') }}},
+      {{/if}}
       "primaryAction": {
         "copy": "Move to review",
         "action": {
@@ -119,7 +127,7 @@
             "analytics": {
                 "name": "Application Section Submitted",
                 "product": "slr",
-                "title": "income verification",
+                "section": "income verification",
                 "loan_type": "{{{mapLoanType application.tag.applicants}}}",
                 "serverProperties": {
                   "fields": [

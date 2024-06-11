@@ -15,7 +15,7 @@
       "questions/primary/citizenship.refi",
       "questions/primary/ssn.default"
     ],
-    "back-button": "actions/back-buttons.default",
+    "back-button": "actions/back-buttons.review",
     "student-info-basic-withprevAddress-rows": [
       "info/student-info/edit.default",
       "questions/primary/name.default",
