@@ -12,7 +12,7 @@
       "questions/primary/graduationDate.default"
     ],
 
-    "back-button": "actions/back-buttons.default",
+    "back-button": "actions/back-buttons.review",
     "save_edited_details_action": "actions/save-details.save-review",
     "onError": ["onError.unauthorized"],
     "primary_school_input_status": "questions/primary/school.status",
