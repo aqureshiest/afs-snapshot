@@ -18,13 +18,13 @@
         "requiredFields": true
       },
       "errorMessage": {
-        "ageOfMajority": "You are below the age of majority in your state of residence",
-        "requiredParentFields": "Date of birth is required",
-        "allowFuture": "The date cannot be after {current date}",
-        "minLength": "Enter a valid month",
-        "maxLength": "Enter a valid month",
-        "pattern": "Enter a valid month",
-        "type": "Date of birth is required"
+        "ageOfMajority": "You are below the age of majority in your state of residence.",
+        "requiredParentFields": "Date of birth is required.",
+        "allowFuture": "The date cannot be after {current date}.",
+        "minLength": "Enter a valid month.",
+        "maxLength": "Enter a valid month.",
+        "pattern": "Enter a valid month.",
+        "type": "Date of birth is required."
       }
     },
     "day": {
@@ -36,11 +36,11 @@
         "requiredFields": true
       },
       "errorMessage": {
-        "requiredParentFields": "Date of birth is required",
-        "minLength": "Enter a valid day",
-        "maxLength": "Enter a valid day",
-        "pattern": "Enter a valid day",
-        "type": "Date of birth is required"
+        "requiredParentFields": "Date of birth is required.",
+        "minLength": "Enter a valid day.",
+        "maxLength": "Enter a valid day.",
+        "pattern": "Enter a valid day.",
+        "type": "Date of birth is required."
       }
     },
     "year": {
@@ -52,11 +52,11 @@
         "requiredFields": true
       },
       "errorMessage": {
-        "requiredParentFields": "Date of birth is required",
-        "minLength": "Enter a valid year",
-        "maxLength": "Enter a valid year",
-        "pattern": "Enter a valid year",
-        "type": "Date of birth is required"
+        "requiredParentFields": "Date of birth is required.",
+        "minLength": "Enter a valid year.",
+        "maxLength": "Enter a valid year.",
+        "pattern": "Enter a valid year.",
+        "type": "Date of birth is required."
       }
     }
   }

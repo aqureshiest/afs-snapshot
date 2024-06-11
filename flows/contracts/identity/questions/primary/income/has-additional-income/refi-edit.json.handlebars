@@ -2,12 +2,12 @@
 {
     "type": "input",
     "definition": {
-        "key": "addAddtionalIncome",
+        "key": "addAdditionalIncome",
         "type": "inputRadio",
         "layout": "copyWithIcon",
         "direction": "row",
-        {{#if ../userState.addAddtionalIncome}}
-            "value": "{{{../userState.addAddtionalIncome}}}",
+        {{#if ../userState.addAdditionalIncome}}
+            "value": "{{{../userState.addAdditionalIncome}}}",
         {{else}}
             "value": "",
         {{/if}}
@@ -34,7 +34,7 @@
 
         ],
         "status": {{{json (contract 'primary_retired_has_additional_income_status')}}},
-        "error": "{{{ ajv 'errors' 'questions/primary/income/has-additional-income' addAddtionalIncome }}}",
+        "error": "{{{ ajv 'errors' 'questions/primary/income/has-additional-income' addAdditionalIncome }}}",
         "label": {
             "copy": "Any additional income you'd like to include?"
         },

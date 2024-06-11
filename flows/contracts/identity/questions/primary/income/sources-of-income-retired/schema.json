@@ -1,8 +1,8 @@
 { 
-    "type": "string",
-    "enum": ["social_security_or_pension", "investment"],
-    "errorMessage": {
-        "enum": "Please select a source of income"
-    },
-    "required": ["sourcesOfIncome"]
+  "type": "string",
+  "enum": ["social_security_or_pension", "investment"],
+  "errorMessage": {
+    "enum": "Please select a source of income."
+  },
+  "required": ["sourcesOfIncome"]
 }

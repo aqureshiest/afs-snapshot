@@ -13,25 +13,25 @@
           "disability"
         ],
         "errorMessage": {
-          "enum": "Please select a source of income"
+          "enum": "Please select a source of income."
         }
       },
       "value": {
         "type": "number",
-        "minimum": 0.01,
+        "maximum": 9999999,
         "errorMessage": {
-          "minimum": "Please enter an amount greater than 0"
+          "maximum": "The maximum amount is $9,999,999."
         }
       }
     },
     "required": ["type", "value"],
     "errorMessage": {
-     "required": "Amount and types are required"
+     "required": "Amount and types are required."
     }
   },
   "errorMessage": {
-    "type": "Amount and types are required",
-    "minimum": "Please enter an amount greater than 0",
-    "minItems": "Select at least one income type"
+    "type": "Amount and types are required.",
+    "minimum": "Please enter an amount greater than 0.",
+    "minItems": "Select at least one income type."
   }
 }

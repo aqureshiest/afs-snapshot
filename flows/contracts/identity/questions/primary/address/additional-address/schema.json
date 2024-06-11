@@ -1,8 +1,8 @@
 { 
-    "type": "string",
-    "enum": ["true", "false"],
-    "errorMessage": {
-        "enum": "Have you been at your current address over 6 months? is required"
-    },
-    "required": ["sixMonthResidence"]
+  "type": "string",
+  "enum": ["true", "false"],
+  "errorMessage": {
+    "enum": "Have you been at your current address for over 6 months?"
+  },
+  "required": ["sixMonthResidence"]
 }

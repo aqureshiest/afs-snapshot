@@ -1,10 +1,10 @@
 {
-    "type": "string",
-    "pattern": "^[\\x00-\\x7F]*$",
-    "minLength": 1,
-    "errorMessage": {
-        "minLength": "Job title is required",
-        "pattern": "Invalid Job title",
-        "type": "Invalid Job title"
-    }
+  "type": "string",
+  "pattern": "^[a-zA-Z\\s.'-]*$",
+  "minLength": 1,
+  "errorMessage": {
+    "minLength": "Job title is required.",
+    "pattern": "Job title contains invalid characters.",
+    "type": "Invalid Job title."
   }
+}

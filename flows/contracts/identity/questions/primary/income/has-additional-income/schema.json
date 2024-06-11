@@ -1,8 +1,8 @@
 { 
-    "type": "string",
-    "enum": ["true", "false"],
-    "errorMessage": {
-        "enum": "Please select Yes or No"
-    },
-    "required": ["addAddtionalIncome"]
+  "type": "string",
+  "enum": ["true", "false"],
+  "errorMessage": {
+    "enum": "Please select Yes or No."
+  },
+  "required": ["addAdditionalIncome"]
 }

@@ -6,7 +6,7 @@
         previousAddress 
         employmentType
         annualIncome 
-        addAddtionalIncome 
+        addAdditionalIncome
         public_token 
         financialAccounts) }}
           "type": "track",
@@ -20,7 +20,7 @@
           {{else if employmentType }}
             "section": "employment type",
             "employment_type": "{{employmentType}}",
-          {{else if (or annualIncome addAddtionalIncome)}}
+          {{else if (or annualIncome addAdditionalIncome)}}
             "section": "income",
             "fields": ["employment_type"],
           {{else if public_token}}

@@ -1,10 +1,8 @@
 {
-    "type": "string",
-    "minLength": 1,
-    "pattern": "^\\$?\\d+(,\\d{3})*(\\.[0-9]{2})?$",
-    "errorMessage": {
-      "minLength": "Annual income before taxes is required",
-      "pattern": "Enter a valid amount",
-      "type": "Enter a valid number"
-    }
+  "type": "number",
+  "maximum": 9999999,
+  "errorMessage": {
+    "type": "Annual income before taxes is required.",
+    "maximum": "The maximum amount is $9,999,999."
+  }
 }

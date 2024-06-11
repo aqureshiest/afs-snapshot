@@ -1,8 +1,8 @@
 { 
-    "type": "string",
-    "enum": ["employed", "self_employed", "future", "retired", "unemployed"],
-    "errorMessage": {
-      "enum": "Employment status is required"
-    },
-    "required": ["employmentType"]
+  "type": "string",
+  "enum": ["employed", "self_employed", "future", "retired", "unemployed"],
+  "errorMessage": {
+    "enum": "Employment status is required."
+  },
+  "required": ["employmentType"]
 }
