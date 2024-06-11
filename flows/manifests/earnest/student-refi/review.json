@@ -16,7 +16,7 @@
         "questions/primary/disclosure.default",
         "questions/primary/disclosure.disclaimer"
     ],
-    "back-button": "actions/back-buttons.default",
+    "back-button": "actions/back-buttons.income-verification",
     "decryptPiiSsn": "pii-get-primary-ssn",
     "getSchools": "primary-get-school-name",
     "goToInterstitial": "actions/view-interstitial.primary",
