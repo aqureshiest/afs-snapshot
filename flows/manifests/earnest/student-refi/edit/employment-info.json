@@ -18,7 +18,7 @@
       "questions/primary/income/amount/claimed-assets.default",
       "questions/primary/income/amount/additional-income.default"
     ],
-    "back-button": "actions/back-buttons.default",
+    "back-button": "actions/back-buttons.review",
     "save_edited_details_action": "actions/save-details.save-review",
     "onError": ["onError.unauthorized", "onError.no-income"],
     "save_edited_employment_details_action": "actions/save-details.save-review-employment",
