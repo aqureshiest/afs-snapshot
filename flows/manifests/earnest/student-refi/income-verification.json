@@ -3,7 +3,10 @@
   "stage": "plaid-income-verification",
   "method": "plaid.createLinkToken",
   "section": "refi-primary-only-section",
-  "back-button": "actions/back-buttons.default",
+  "back-button": "actions/back-buttons.employed",
+  "back-button-unemployed": "actions/back-buttons.unemployed",
+  "back-button-retired": "actions/back-buttons.retired",
+  "back-button-future": "actions/back-buttons.future",
   "pageLayout": "sidebar",
   "onError": ["onError.unauthorized"]
 }
