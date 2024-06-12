@@ -4,7 +4,7 @@
   "pattern": "^\\b\\d{5}(-\\d{4})?\\b$",
   "type": "string",
   "errorMessage": {
-    "minLength": "Zipcode is required",
-    "pattern": "Invalid zipcode"
+    "minLength": "Enter a valid 5 digit zip code. If your zip code is 3 digits prepend 00 to it.",
+    "pattern": "Enter a valid 5 digit zip code. If your zip code is 3 digits prepend 00 to it."
   }
 }

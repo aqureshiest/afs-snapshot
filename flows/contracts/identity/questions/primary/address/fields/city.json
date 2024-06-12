@@ -3,7 +3,7 @@
   "type": "string",
   "pattern": "^[a-zA-Z\\s'-]*$",
   "errorMessage": {
-    "minLength": "City is required",
-    "pattern": "Invalid city"
+    "minLength": "City is required.",
+    "pattern": "City contains invalid characters."
   }
 }

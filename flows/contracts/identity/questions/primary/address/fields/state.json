@@ -54,6 +54,6 @@
     "WY"
   ],
   "errorMessage": {
-    "enum": "Invalid state"
+    "enum": "State is required."
   }
 }
