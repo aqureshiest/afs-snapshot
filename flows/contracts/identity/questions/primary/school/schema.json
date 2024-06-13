@@ -8,7 +8,7 @@
     },
     "name": {
       "type": "string",
-      "pattern": "^[a-zA-Z\\s.'-]*$",
+      "pattern": "^[a-zA-Z\\s.',-]*$",
       "minLength": 1,
       "errorMessage": {
         "minLength": "Please enter your school name.",
