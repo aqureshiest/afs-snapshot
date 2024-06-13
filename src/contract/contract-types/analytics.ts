@@ -134,14 +134,11 @@ class Analytics extends ContractType<Definition, Definition, Output> {
       }
     }
     if (props?.properties?.section) {
-      props.properties.section = payloadProps.section
-        .toString()
-        .toLowerCase()
-    } else if (props.properties){
-       props.properties.section = title.toString().toLowerCase();
+      props.properties.section = payloadProps.section.toString().toLowerCase();
+    } else if (props.properties) {
+      props.properties.section = title.toString().toLowerCase();
     }
     // hacky thingys end
-
 
     return props;
   }
