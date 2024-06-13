@@ -323,6 +323,11 @@ export default class LendingDecisionServiceClient extends Client {
       }
     }
 
+    /* ============================== *
+     * TODO: applications with multiple applicants will need more information
+     * to determine which applicants are submitted
+     * ============================== */
+
     const setStatusResult = (await applicationServiceClient.sendRequest(
       {
         query: String.raw`mutation (
@@ -333,6 +338,18 @@ export default class LendingDecisionServiceClient extends Client {
         setStatus(id: $id, meta: $meta, status: $status) {
           id,
           error,
+        }
+        ${
+          application?.applicants?.map((applicant, i) =>
+            applicant
+              ? `
+        setApplicantStatus_${i}: setStatus(id: "${applicant.id}", meta: $meta, status: $status) {
+          id,
+          error
+        }
+        `
+              : "",
+          ) || ""
         }
       }`,
         variables: {
