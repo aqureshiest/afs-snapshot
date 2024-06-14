@@ -775,9 +775,11 @@ export default class LendingDecisionServiceClient extends Client {
           : "default",
         rateAdjustmentData: {
           name: application?.partnerName ? application.partnerName : "juno",
-          amount: (application?.partnerDiscountAmount && !Number.isNaN(Number(application?.partnerDiscountAmount)))
-            ? Number(application.partnerDiscountAmount)
-            : 0,
+          amount:
+            application?.partnerDiscountAmount &&
+            !Number.isNaN(Number(application?.partnerDiscountAmount))
+              ? Number(application.partnerDiscountAmount)
+              : 0,
         },
       },
     };
