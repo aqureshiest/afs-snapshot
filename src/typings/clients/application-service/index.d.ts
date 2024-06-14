@@ -11,7 +11,7 @@ export interface ApplicationServiceClient {
     body: types.GqlRequestBody,
     ...injections: any[]
   ): Promise<unknown>;
-  getEventInputTypes(...injections: any[]): Promise<void>;
+  getEventInputTypes(query: string, ...injections: any[]): Promise<void>;
 }
 
 type ApplicationServicePlugin = ChassisPlugin<ApplicationServiceClient>;
