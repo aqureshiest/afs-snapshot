@@ -1,6 +1,15 @@
 {
-  {{!-- comments --}}
-  "manifest": "{{ manifest.name }}",
-  "id": "{{request.params.id}}",
-  "stage": {{{ json (contract 'landing_stage')}}}
+    {{#if application.reference.lendingDecisionID}}
+      "action": {
+        "type": "navigate",
+        "properties": {
+          "goTo": "/_/dashboard/"
+        }
+      }
+    {{else}}
+      {{!-- comments --}}
+      "manifest": "{{ manifest.name }}",
+      "id": "{{request.params.id}}",
+      "stage": {{{ json (contract 'landing_stage')}}}
+    {{/if}}
 }
