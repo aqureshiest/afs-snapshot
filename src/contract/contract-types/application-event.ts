@@ -4,6 +4,25 @@ import { Types as AStypes } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
 
+const mutationSchemaQuery = `query schema {
+  __type(name: "Mutation") {
+    name
+      fields {
+        name
+        args {
+          name
+          type {
+            name
+            kind
+            ofType {
+              name
+            }
+          }
+        }
+      }
+    }
+  }`;
+
 const MUTATIVE_EVENTS = Object.freeze([
   "addDetails",
   "addInformation",
@@ -100,7 +119,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
      * ============================== */
     try {
       if (!applicationServiceClient.eventInputTypes) {
-        await applicationServiceClient.getEventInputTypes(injections);
+        await applicationServiceClient.getEventInputTypes(mutationSchemaQuery, injections);
       }
     } catch (error) {
       context.logger.error({
