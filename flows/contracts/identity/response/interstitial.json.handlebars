@@ -2,12 +2,7 @@
 {{#if application}}
   {{#if application.reference.lendingDecisionID}}
     {
-      "action": {
-        "type": "navigate",
-        "properties": {
-          "goTo": "/_/dashboard/"
-        }
-      }
+      "action": {{{ json (contract 'redirect_homebase') }}}
     }
   {{else}}
     {{#noop}}{{ contract 'analytics' }}{{/noop}}
