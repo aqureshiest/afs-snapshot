@@ -1,5 +1,6 @@
 {
     "*": "response.interstitial",
     "actions": ["decision-request", "decision-backfill"],
-    "statusAction": "actions/decision-request.applicationStatus"
+    "statusAction": "actions/decision-request.applicationStatus",
+    "redirect_homebase": "actions/homebase.default"
 }
