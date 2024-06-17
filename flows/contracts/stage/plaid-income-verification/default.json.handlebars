@@ -138,20 +138,22 @@
                   ]
                 }
             },
-            "onError": {
-              "codes": ["application-service-error"],
-              "action":{
-                "key": "application-service-error-toast",
-                "type": "error",
-                "properties": {
-                  "type": "toast",
-                  "definition": {
-                    "message": "An error ocurred while saving this, please try again.",
-                    "icon": "WarningIcon" 
+            "onError": [
+              {
+                "codes": ["application-service-error"],
+                "action":{
+                  "key": "application-service-error-toast",
+                  "type": "error",
+                  "properties": {
+                    "type": "toast",
+                    "definition": {
+                      "message": "An error ocurred while saving this, please try again.",
+                      "icon": "WarningIcon" 
+                    }
                   }
                 }
               }
-            },
+            ],
             "manifest": "save-details/financials/{{{request.params.id}}}"
           }
         }
