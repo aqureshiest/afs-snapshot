@@ -199,13 +199,14 @@ export default class LendingDecisionServiceClient extends Client {
           );
           const trackProps = {
             userId: input.auth?.session?.userId,
-            event: "Loan Decisioned",
+            event: "Server Loan Decisioned",
             properties: {
               product: "slr",
               application_id: application.root.id,
               employment_type: mapIncomeTypeToEmplStatus(
                 application.details.income,
               ),
+              section: "income",
               source: "application",
               loan_type: mapLoanType(application.tag.applicants),
               decision: status,
@@ -518,6 +519,42 @@ export default class LendingDecisionServiceClient extends Client {
         context,
       );
       throw error;
+    }
+
+    try {
+      const analyticsServiceClient =
+        context?.loadedPlugins?.analyticsServiceClient?.instance;
+      assert(
+        analyticsServiceClient,
+        "[6658663e] AnalyticsServiceClient not instantiated",
+      );
+      const trackProps = {
+        userId: input.auth?.session?.userId,
+        event: "Server Loan Decisioned",
+        properties: {
+          product: "slr",
+          application_id: applicationId,
+          employment_type: mapIncomeTypeToEmplStatus(
+            application?.details?.income,
+          ),
+          section: "income",
+          source: "application",
+          loan_type: mapLoanType(application?.["tag"]?.applicants),
+          decision: results.data.status,
+        },
+      } as unknown as TrackParams;
+      setImmediate(async () => {
+        await analyticsServiceClient["track"](trackProps);
+      });
+    } catch (error) {
+      this.log(
+        {
+          error,
+          message: `[1659956d] Segment Event Loan Decisioned failed`,
+          stack: error.stack,
+        },
+        context,
+      );
     }
     return results;
   }
