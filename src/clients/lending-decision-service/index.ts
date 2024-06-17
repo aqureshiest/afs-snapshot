@@ -2,9 +2,13 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
 import flattenApplication from "../../api/helpers.js";
-
+import assert from "node:assert";
+import { TrackParams } from "@segment/analytics-node";
 import Client from "../client.js";
-
+import {
+  mapIncomeTypeToEmplStatus,
+  mapLoanType,
+} from "../../contract/template-helpers/index.js";
 export enum WebhookTypeEnum {
   APPLICATION_STATUS = "APPLICATION_STATUS",
   APPLICATION_REVIEW = "APPLICATION_REVIEW",
@@ -97,17 +101,39 @@ export default class LendingDecisionServiceClient extends Client {
      * the root application id of primary application
      * ============================== */
     let application;
+    const ApplicantFragment = `
+    fragment ApplicantFragment on Application {
+      id
+      details {
+        income {
+          amount
+          type
+          employer
+          name
+          title
+          start
+          end
+        }
+      }
+      tag {
+        applicants
+      }
+    }
+    `;
+
     try {
       const result = (await applicationServiceClient.sendRequest({
-        query: String.raw`query Applications($criteria: [ApplicationSearchCriteria]!) {
+        query: String.raw`
+        ${ApplicantFragment}
+        query Applications($criteria: [ApplicationSearchCriteria]!) {
           applications(criteria: $criteria) {
-            id
-            root {
-              id
-            }
-            primary {
-              id
-            }
+              ...ApplicantFragment
+              root {
+                ...ApplicantFragment
+              }
+              primary {
+                ...ApplicantFragment
+              }
             }
           }
           `,
@@ -135,7 +161,6 @@ export default class LendingDecisionServiceClient extends Client {
 
     try {
       const status = this.deriveStatusFromEvent(payload);
-
       if (status) {
         await applicationServiceClient.sendRequest({
           query: String.raw`mutation (
@@ -162,6 +187,43 @@ export default class LendingDecisionServiceClient extends Client {
             meta: { service: "apply-flow-service" },
           },
         });
+        /**
+         * Call analytics here to track app status
+         */
+        try {
+          const analyticsServiceClient =
+            context?.loadedPlugins?.analyticsServiceClient?.instance;
+          assert(
+            analyticsServiceClient,
+            "[c651a7e7] AnalyticsServiceClient not instantiated",
+          );
+          const trackProps = {
+            userId: input.auth?.session?.userId,
+            event: "Loan Decisioned",
+            properties: {
+              product: "slr",
+              application_id: application.root.id,
+              employment_type: mapIncomeTypeToEmplStatus(
+                application.details.income,
+              ),
+              source: "application",
+              loan_type: mapLoanType(application.tag.applicants),
+              decision: status,
+            },
+          } as unknown as TrackParams;
+          setImmediate(async () => {
+            await analyticsServiceClient["track"](trackProps);
+          });
+        } catch (error) {
+          this.log(
+            {
+              error,
+              message: `[1659956d] Segment Event Loan Decisioned failed`,
+              stack: error.stack,
+            },
+            context,
+          );
+        }
       }
     } catch (error) {
       this.log(
