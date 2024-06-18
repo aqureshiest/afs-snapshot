@@ -4,12 +4,9 @@
   "label": "Primer",
   "onLoadEvent": {
     "name": "Application Started",
-    "properties": {
-      "name": "Application Started",
-      "product": "{{{mapProduct application.reference.product}}}",
-      "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-      "application_id": "{{{application.id}}}"
-    }
+    "product": "{{{mapProduct application.reference.product}}}",
+    "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+    "application_id": "{{{application.id}}}"
   },
   "seo": {
     "pageTitle": "Student Loan Refinance Application - Earnest"
@@ -49,12 +46,6 @@
         "action": {
           "type": "navigate",
           "properties": {
-            "analytics": {
-                "name": "Application Started",
-                "product": "slr",
-                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-                "application_id": "{{{application.id}}}"
-            },
             "goTo": "earnest/student-refi/student-info/{{application.primary.id}}"
           }
         }
