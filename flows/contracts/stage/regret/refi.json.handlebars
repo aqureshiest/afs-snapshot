@@ -1,6 +1,16 @@
 {{#noop}}{{ contract 'analytics' }}{{/noop}}
 {
   "type": "view",
+  "onLoadEvent": {
+    "name": "Loan Decisioned",
+    "properties": {
+      "section": "income",
+      "decision": "ineligible",
+      "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+      "product": "{{{mapProduct application.reference.product}}}",
+      "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income}}}"
+    }
+  },
   "definition": {
     "type": "landing",
     "definition": {
