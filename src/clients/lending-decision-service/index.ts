@@ -213,7 +213,9 @@ export default class LendingDecisionServiceClient extends Client {
             },
           } as unknown as TrackParams;
           setImmediate(async () => {
-            await analyticsServiceClient["track"](trackProps);
+            await analyticsServiceClient["track"](trackProps).catch((error) => {
+              // noop
+            });
           });
         } catch (error) {
           this.log(
@@ -544,7 +546,9 @@ export default class LendingDecisionServiceClient extends Client {
         },
       } as unknown as TrackParams;
       setImmediate(async () => {
-        await analyticsServiceClient["track"](trackProps);
+        await analyticsServiceClient["track"](trackProps).catch((error) => {
+          // noop
+        });
       });
     } catch (error) {
       this.log(
