@@ -133,11 +133,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         props.properties.employment_type = "future employment";
       }
     }
-    if (props?.properties?.section) {
-      props.properties.section = payloadProps.section.toString().toLowerCase();
-    } else if (props.properties) {
-      props.properties.section = title.toString().toLowerCase();
-    }
     // hacky thingys end
 
     return props;
