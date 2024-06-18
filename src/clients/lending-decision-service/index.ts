@@ -104,6 +104,7 @@ export default class LendingDecisionServiceClient extends Client {
     const ApplicantFragment = `
     fragment ApplicantFragment on Application {
       id
+      monolithUserID
       details {
         income {
           amount
@@ -198,7 +199,7 @@ export default class LendingDecisionServiceClient extends Client {
             "[c651a7e7] AnalyticsServiceClient not instantiated",
           );
           const trackProps = {
-            userId: input.auth?.session?.userId,
+            userId: application.monolithUserID || input.auth?.session?.userId,
             event: "Server Loan Decisioned",
             properties: {
               product: "slr",
@@ -531,13 +532,13 @@ export default class LendingDecisionServiceClient extends Client {
         "[6658663e] AnalyticsServiceClient not instantiated",
       );
       const trackProps = {
-        userId: input.auth?.session?.userId,
+        userId: monolithUserID,
         event: "Server Loan Decisioned",
         properties: {
           product: "slr",
           application_id: applicationId,
           employment_type: mapIncomeTypeToEmplStatus(
-            application?.details?.income,
+            application[APPLICANT_TYPES.Primary]?.details?.income,
           ),
           section: "income",
           source: "application",
@@ -545,6 +546,7 @@ export default class LendingDecisionServiceClient extends Client {
           decision: results.data.status,
         },
       } as unknown as TrackParams;
+
       setImmediate(async () => {
         await analyticsServiceClient["track"](trackProps).catch((error) => {
           // noop
