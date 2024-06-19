@@ -14,8 +14,7 @@
       {{else if (eq application.status.name 'approved')}}
         {{{json (contract 'checkoutAction')}}}
       {{else}}
-        {{! use home base analytics redirect contract to track when status is something else besides submitted or approved}}
-        {{{json (contract 'homebaseActionAnalytics')}}}
+        {{{json (contract 'homebaseAction')}}}
       {{/if}}
     }
   }

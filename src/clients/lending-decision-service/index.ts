@@ -188,46 +188,6 @@ export default class LendingDecisionServiceClient extends Client {
             meta: { service: "apply-flow-service" },
           },
         });
-        /**
-         * Call analytics here to track app status
-         */
-        try {
-          const analyticsServiceClient =
-            context?.loadedPlugins?.analyticsServiceClient?.instance;
-          assert(
-            analyticsServiceClient,
-            "[c651a7e7] AnalyticsServiceClient not instantiated",
-          );
-          const trackProps = {
-            userId: application.monolithUserID || input.auth?.session?.userId,
-            event: "Server Loan Decisioned",
-            properties: {
-              product: "slr",
-              application_id: application.root.id,
-              employment_type: mapIncomeTypeToEmplStatus(
-                application.details.income,
-              ),
-              section: "income",
-              source: "application",
-              loan_type: mapLoanType(application.tag.applicants),
-              decision: status,
-            },
-          } as unknown as TrackParams;
-          setImmediate(async () => {
-            await analyticsServiceClient["track"](trackProps).catch((error) => {
-              // noop
-            });
-          });
-        } catch (error) {
-          this.log(
-            {
-              error,
-              message: `[1659956d] Segment Event Loan Decisioned failed`,
-              stack: error.stack,
-            },
-            context,
-          );
-        }
       }
     } catch (error) {
       this.log(
@@ -524,44 +484,6 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    try {
-      const analyticsServiceClient =
-        context?.loadedPlugins?.analyticsServiceClient?.instance;
-      assert(
-        analyticsServiceClient,
-        "[6658663e] AnalyticsServiceClient not instantiated",
-      );
-      const trackProps = {
-        userId: monolithUserID,
-        event: "Server Loan Decisioned",
-        properties: {
-          product: "slr",
-          application_id: applicationId,
-          employment_type: mapIncomeTypeToEmplStatus(
-            application[APPLICANT_TYPES.Primary]?.details?.income,
-          ),
-          section: "income",
-          source: "application",
-          loan_type: mapLoanType(application?.["tag"]?.applicants),
-          decision: results.data.status,
-        },
-      } as unknown as TrackParams;
-
-      setImmediate(async () => {
-        await analyticsServiceClient["track"](trackProps).catch((error) => {
-          // noop
-        });
-      });
-    } catch (error) {
-      this.log(
-        {
-          error,
-          message: `[1659956d] Segment Event Loan Decisioned failed`,
-          stack: error.stack,
-        },
-        context,
-      );
-    }
     return results;
   }
 

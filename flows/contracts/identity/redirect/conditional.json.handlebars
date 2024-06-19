@@ -5,14 +5,14 @@
     "properties": {
       "goTo": {{{ json (contract 'redirect') }}},
       "analytics": {
-            "name": "Loan Decisioned",
-            "product": "slr",
-            "section": "income",
-            "decision": "ineligible",
-            "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-            "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income}}}",
-            "application_id": "{{{application.id}}}"
-        }
+        "name": "Loan Decisioned",
+        "product": "slr",
+        "section": "income",
+        "decision": "ineligible",
+        "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+        "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income}}}",
+        "application_id": "{{{application.id}}}"
+      }
     }
   },
   "result": {{{ json (contract 'actions') }}}

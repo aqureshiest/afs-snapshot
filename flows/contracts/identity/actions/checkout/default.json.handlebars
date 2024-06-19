@@ -3,15 +3,6 @@
     "type": "navigate",
     "properties": {
         "goTo": "{{env.BASE_URL}}/_/lending-checkout-ui/congratulations?brand=Earnest&product=SLR&referenceLoanId={{this.application.monolithLoanID}}",
-        "external": true,
-        "analytics": {
-            "name": "Loan Decisioned",
-            "product": "slr",
-            "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-            "application_id": "{{{application.id}}}",
-            "section": "income",
-            "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income}}}",
-            "decision": "{{{application.status.name}}}"
-        }
+        "external": true
     }
 }
