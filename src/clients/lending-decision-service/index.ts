@@ -2,13 +2,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
 import flattenApplication from "../../api/helpers.js";
-import assert from "node:assert";
-import { TrackParams } from "@segment/analytics-node";
 import Client from "../client.js";
-import {
-  mapIncomeTypeToEmplStatus,
-  mapLoanType,
-} from "../../contract/template-helpers/index.js";
 export enum WebhookTypeEnum {
   APPLICATION_STATUS = "APPLICATION_STATUS",
   APPLICATION_REVIEW = "APPLICATION_REVIEW",
