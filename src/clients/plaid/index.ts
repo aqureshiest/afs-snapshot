@@ -302,7 +302,7 @@ export default class PlaidClient extends Client {
                     // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
                     account?.account_last4 ===
                       faccount.mask?.toString().padStart(4, "-") &&
-                    account?.balance === balanceInCents,
+                    Math.round(Number(account?.balance)) === balanceInCents,
                 );
               if (!existingAccount) {
                 plaidAccountIDsAdded.push(faccount.account_id);
