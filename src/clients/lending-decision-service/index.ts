@@ -2,9 +2,7 @@ import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
 import flattenApplication from "../../api/helpers.js";
-
 import Client from "../client.js";
-
 export enum WebhookTypeEnum {
   APPLICATION_STATUS = "APPLICATION_STATUS",
   APPLICATION_REVIEW = "APPLICATION_REVIEW",
@@ -97,17 +95,40 @@ export default class LendingDecisionServiceClient extends Client {
      * the root application id of primary application
      * ============================== */
     let application;
+    const ApplicantFragment = `
+    fragment ApplicantFragment on Application {
+      id
+      monolithUserID
+      details {
+        income {
+          amount
+          type
+          employer
+          name
+          title
+          start
+          end
+        }
+      }
+      tag {
+        applicants
+      }
+    }
+    `;
+
     try {
       const result = (await applicationServiceClient.sendRequest({
-        query: String.raw`query Applications($criteria: [ApplicationSearchCriteria]!) {
+        query: String.raw`
+        ${ApplicantFragment}
+        query Applications($criteria: [ApplicationSearchCriteria]!) {
           applications(criteria: $criteria) {
-            id
-            root {
-              id
-            }
-            primary {
-              id
-            }
+              ...ApplicantFragment
+              root {
+                ...ApplicantFragment
+              }
+              primary {
+                ...ApplicantFragment
+              }
             }
           }
           `,
@@ -135,7 +156,6 @@ export default class LendingDecisionServiceClient extends Client {
 
     try {
       const status = this.deriveStatusFromEvent(payload);
-
       if (status) {
         await applicationServiceClient.sendRequest({
           query: String.raw`mutation (
@@ -457,6 +477,7 @@ export default class LendingDecisionServiceClient extends Client {
       );
       throw error;
     }
+
     return results;
   }
 

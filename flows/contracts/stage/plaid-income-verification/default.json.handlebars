@@ -131,27 +131,24 @@
                 "name": "Application Section Submitted",
                 "product": "slr",
                 "section": "income verification",
-                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-                "serverProperties": {
-                  "fields": [
-                    "income_verification_method"
-                  ]
-                }
+                "loan_type": "{{{mapLoanType application.tag.applicants}}}"
             },
-            "onError": {
-              "codes": ["application-service-error"],
-              "action":{
-                "key": "application-service-error-toast",
-                "type": "error",
-                "properties": {
-                  "type": "toast",
-                  "definition": {
-                    "message": "An error ocurred while saving this, please try again.",
-                    "icon": "WarningIcon" 
+            "onError": [
+              {
+                "codes": ["application-service-error"],
+                "action":{
+                  "key": "application-service-error-toast",
+                  "type": "error",
+                  "properties": {
+                    "type": "toast",
+                    "definition": {
+                      "message": "An error ocurred while saving this, please try again.",
+                      "icon": "WarningIcon" 
+                    }
                   }
                 }
               }
-            },
+            ],
             "manifest": "save-details/financials/{{{request.params.id}}}"
           }
         }

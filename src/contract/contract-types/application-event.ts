@@ -119,7 +119,10 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
      * ============================== */
     try {
       if (!applicationServiceClient.eventInputTypes) {
-        await applicationServiceClient.getEventInputTypes(mutationSchemaQuery, injections);
+        await applicationServiceClient.getEventInputTypes(
+          mutationSchemaQuery,
+          injections,
+        );
       }
     } catch (error) {
       context.logger.error({
