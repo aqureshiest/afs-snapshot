@@ -1,5 +1,9 @@
 {
-  "manifest": "{{manifest.name}}",
-  "id": "{{application.id}}",
-  "stage": {{{ json (contract 'stage')}}}
+    {{#if application.reference.lendingDecisionID}}
+      "action": {{{ json (contract 'redirect_homebase') }}}
+    {{else}}
+        "manifest": "{{manifest.name}}",
+        "id": "{{application.id}}",
+        "stage": {{{ json (contract 'stage')}}}
+    {{/if}}
 }
