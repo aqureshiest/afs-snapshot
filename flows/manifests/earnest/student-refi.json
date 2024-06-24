@@ -1,5 +1,6 @@
 {
     "*": "landing-students",
     "landing_stage": "landing.refi",
-    "layout": "sidebar"
+    "layout": "sidebar",
+    "redirect_homebase": "actions/homebase.default"
 }
