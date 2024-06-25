@@ -289,6 +289,8 @@ export default class PlaidClient extends Client {
             ) {
               this.error(input, "loan-accounts-error");
             } else {
+              const balanceInCents =
+                Math.round(Number(faccount.balances.current || 0)) * 100;
               // this was first though as using the plaid Account ID as to check if the account already exists,
               //  but plaid returns a new account ID every time the public token is exchanged.
               // instead we are using a combination of the institution name, account type, account number and balance to check if the account already exists
@@ -300,7 +302,7 @@ export default class PlaidClient extends Client {
                     // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
                     account?.account_last4 ===
                       faccount.mask?.toString().padStart(4, "-") &&
-                    account?.balance === (faccount.balances.current || 0) * 100,
+                    Math.round(Number(account?.balance)) === balanceInCents,
                 );
               if (!existingAccount) {
                 plaidAccountIDsAdded.push(faccount.account_id);
@@ -310,7 +312,7 @@ export default class PlaidClient extends Client {
                   selected: true,
                   // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
                   account_last4: faccount.mask?.toString().padStart(4, "-"),
-                  balance: (faccount.balances.current || 0) * 100,
+                  balance: balanceInCents,
                   plaidAccountID: faccount.account_id,
                   plaidItemID: plaidResponse.item.item_id,
                   plaidAccessToken: accessToken.access_token,
