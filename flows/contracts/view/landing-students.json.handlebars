@@ -1,6 +1,10 @@
 {
-  {{!-- comments --}}
-  "manifest": "{{ manifest.name }}",
-  "id": "{{request.params.id}}",
-  "stage": {{{ json (contract 'landing_stage')}}}
+    {{#if application.reference.lendingDecisionID}}
+      "action": {{{ json (contract 'redirect_homebase') }}}
+    {{else}}
+      {{!-- comments --}}
+      "manifest": "{{ manifest.name }}",
+      "id": "{{request.params.id}}",
+      "stage": {{{ json (contract 'landing_stage')}}}
+    {{/if}}
 }
