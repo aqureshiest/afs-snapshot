@@ -1,6 +1,5 @@
 {
     "*": "regret-view",
     "stage": "regret.refi",
-    "analytics": ["server-loan-decisioned-regret"],
-    "redirect_homebase": "actions/homebase.default"
+    "analytics": ["server-loan-decisioned-regret"]
 }

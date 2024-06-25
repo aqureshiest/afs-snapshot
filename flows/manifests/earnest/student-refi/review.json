@@ -31,6 +31,5 @@
         "questions/primary/disclosure/links.credit-report-policy",
         "questions/primary/disclosure/links.consent-electronic-communications",
         "questions/primary/disclosure/links.earnest-loan-application-solicitation"
-    ],
-    "redirect_homebase": "actions/homebase.default"
+    ]
 }

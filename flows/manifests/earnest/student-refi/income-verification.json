@@ -8,6 +8,5 @@
   "back-button-retired": "actions/back-buttons.retired",
   "back-button-future": "actions/back-buttons.future",
   "pageLayout": "sidebar",
-  "onError": ["onError.unauthorized"],
-  "redirect_homebase": "actions/homebase.default"
+  "onError": ["onError.unauthorized"]
 }
