@@ -230,3 +230,17 @@ export function totalSum(...args) {
 export function testIsArray(v1) {
   return Array.isArray(v1);
 }
+
+export function someSelected(financialAccounts) {
+  /**
+   * Test if at least one financial account is selected
+   */
+  return financialAccounts.some((account) => account.selected === true);
+}
+
+export function selectedAccounts(financialAccounts) {
+  /**
+   * Get all selected financial accounts
+   */
+  return financialAccounts.filter((account) => account.selected === true);
+}
