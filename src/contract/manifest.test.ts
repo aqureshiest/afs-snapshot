@@ -988,4 +988,76 @@ describe("[462fd166] manifest.execute", () => {
       findInArray: "Incomplete Bachelor's/Associate's",
     });
   });
+
+  it("[4e3bcb19] someSelected and selectedAccounts financial account template helper", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            financialAccounts: [
+              {
+                index: 0,
+                name: "asdfk",
+                type: "checking",
+                selected: true,
+                account_last4: "3456",
+                institution_name: null,
+                monolithFinancialAccountID: "2214213",
+                balance: 1400000,
+                plaidAccountID: null,
+                plaidItemID: null,
+                plaidAccessToken: null,
+              },
+              {
+                index: 0,
+                name: "dfldkfd",
+                type: "checking",
+                selected: false,
+                account_last4: "6064",
+                institution_name: null,
+                monolithFinancialAccountID: "2214213",
+                balance: 1000000,
+                plaidAccountID: null,
+                plaidItemID: null,
+                plaidAccessToken: null,
+              },
+            ],
+          },
+        },
+      },
+    } as unknown as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+          {
+            "someSelected": {{{someSelected request.body.values.financialAccounts}}},
+            "selectedAccounts": {{{json (selectedAccounts request.body.values.financialAccounts)}}}
+          }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      someSelected: true,
+      selectedAccounts: [
+        {
+          index: 0,
+          name: "asdfk",
+          type: "checking",
+          selected: true,
+          account_last4: "3456",
+          institution_name: null,
+          monolithFinancialAccountID: "2214213",
+          balance: 1400000,
+          plaidAccountID: null,
+          plaidItemID: null,
+          plaidAccessToken: null,
+        },
+      ],
+    });
+  });
 });

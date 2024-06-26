@@ -15,6 +15,10 @@
         "action": {{{ json (contract 'back-button') }}}
     },
     "progress": 100,
-    "rows":  {{{ json (contract 'student-info-review-rows')}}}
+    {{#if (and primary.details.financialAccounts (someSelected primary.details.financialAccounts))}}
+        "rows":  {{{ json (contract 'student-info-review-rows')}}}
+    {{else}}
+        "rows":  {{{ json (contract 'student-info-review-noFinancialAccounts-rows')}}}
+    {{/if}}
 }
 {{/with}}
