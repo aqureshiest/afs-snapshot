@@ -103,5 +103,6 @@
   "address-field-zip": "questions/primary/address/fields.zip",
   "refi-previous-address-validation": "questions/primary/address.refi-previous-address-validation",
   "primary_retired_additional_income_callout_header": "info/student-income/additional-income-hint.callout-header",
-  "redirect_homebase": "actions/homebase.default"
+  "redirect_homebase": "actions/homebase.default",
+  "redirect_product_landing": "actions/product-landing.default"
 }

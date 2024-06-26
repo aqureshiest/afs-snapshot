@@ -40,5 +40,7 @@
     "address-field-state": "questions/primary/address/fields.state",
     "address-field-zip": "questions/primary/address/fields.zip",
     "refi-current-address-validation-edit": "questions/primary/address.refi-current-address-validation-edit",
-    "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit"
+    "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit",
+    "redirect_homebase": "actions/homebase.default",
+    "redirect_product_landing": "actions/product-landing.default"
   }
