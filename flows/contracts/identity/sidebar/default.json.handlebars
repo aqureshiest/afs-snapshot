@@ -2,7 +2,11 @@
   "header": [
     {
       "logo": true,
-      "action": {{{ json (contract 'redirect_homebase') }}}
+      {{#if auth?.session?.userId}}
+        "action": {{{ json (contract 'redirect_homebase') }}}
+      {{else}}
+        "action": {{{ json (contract 'redirect_product_landing') }}}
+      {{/if}}
     },
     {
       "icon": "HamburgerMenuIcon",
