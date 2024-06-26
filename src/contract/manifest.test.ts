@@ -947,4 +947,45 @@ describe("[462fd166] manifest.execute", () => {
       totalSum: 8500000,
     });
   });
+
+  it("[dead6a9a] findInArray helper", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            degrees: [
+              {
+                id: "high_school",
+                value: "high_school",
+                label: "High School Diploma",
+              },
+              {
+                id: "incomplete_grads",
+                value: "incomplete_grads",
+                label: "Incomplete Bachelor's/Associate's",
+              },
+              { id: "associates", value: "associates", label: "Associate's" },
+            ],
+          },
+        },
+      },
+    } as unknown as Input;
+    const manifest = new Manifest(context, "manifestTest", {
+      "*": new Contract({
+        raw: `
+          {
+            "findInArray": "{{{findInArray (json request.body.values.degrees) 'id' 'incomplete_grads' 'label'}}}"
+          }
+      `,
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, { context, ...input });
+
+    const parsed = JSON.parse(JSON.stringify(contract));
+
+    assert.deepEqual(parsed, {
+      findInArray: "Incomplete Bachelor's/Associate's",
+    });
+  });
 });

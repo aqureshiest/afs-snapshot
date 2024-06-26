@@ -20,7 +20,7 @@ export default class AccreditedSchoolServiceClient extends Client {
     if (school) {
       return school.name;
     } else {
-      return "[e4d2edad] failed to get School";
+      return null;
     }
   }
 
@@ -66,13 +66,20 @@ export default class AccreditedSchoolServiceClient extends Client {
     if (!payload.loanType && !payload.name && !payload.opeid) {
       this.error(input, `[28bb0233] Missing required parameters`);
     }
+
+    const queryPayload = {
+      ...(payload.loanType ? { loanType: payload.loanType } : {}),
+      ...(payload.name ? { name: payload.name } : {}),
+      ...(payload.opeid ? { opeid: payload.opeid } : {}),
+    };
+
     const { results, response } = await this.get<{
       schools: Array<School>;
     }>(
       {
         uri: `/schools`,
         headers: this.headers,
-        query: payload,
+        query: queryPayload,
       },
       context,
     );
