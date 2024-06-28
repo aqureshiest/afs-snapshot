@@ -5,11 +5,13 @@
         "key": "incomeInfoReview",
         "type": "infoReview",
         "label": "Income Verification",
-        "items": {{#list}}
-            {{#each (selectedAccounts details.financialAccounts)}}
-             {"id": "{{number @index}}","label": "{{this.name}}", "value": "{{this.name}} - {{this.account_last4}}" }
-            {{/each}}
-          {{/list}},
+        "items": [
+            {
+                "id": "myaccounts",
+                "label": "My accounts",
+                "value": "{{getFinancialAccountsAsString details.financialAccounts}}"
+            }
+        ],
         "editAction": {
             "key": "",
             "type": "navigate",
