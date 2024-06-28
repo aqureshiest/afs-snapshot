@@ -9,6 +9,5 @@
   "back-button-future": "actions/back-buttons.future",
   "pageLayout": "sidebar",
   "onError": ["onError.unauthorized"],
-  "redirect_homebase": "actions/homebase.default",
-  "redirect_product_landing": "actions/product-landing.default"
+  "redirect_homebase": "actions/homebase.default"
 }
