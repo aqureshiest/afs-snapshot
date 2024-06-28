@@ -244,3 +244,11 @@ export function selectedAccounts(financialAccounts) {
    */
   return financialAccounts.filter((account) => account.selected === true);
 }
+
+export function getFinancialAccountsAsString(financialAccounts) {
+  const selectedFinancialAccounts = selectedAccounts(financialAccounts);
+  return selectedFinancialAccounts.reduce(
+    (a, i) => `${a}${i.name} - ${i.account_last4}\n\n`,
+    "",
+  );
+}
