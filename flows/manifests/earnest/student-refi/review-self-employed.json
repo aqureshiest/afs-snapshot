@@ -40,6 +40,5 @@
         "questions/primary/disclosure/links.consent-electronic-communications",
         "questions/primary/disclosure/links.earnest-loan-application-solicitation"
     ],
-    "redirect_homebase": "actions/homebase.default",
-    "redirect_product_landing": "actions/product-landing.default"
+    "redirect_homebase": "actions/homebase.default"
 }
