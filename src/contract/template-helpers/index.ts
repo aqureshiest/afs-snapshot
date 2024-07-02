@@ -248,7 +248,7 @@ export function selectedAccounts(financialAccounts) {
 export function getFinancialAccountsAsString(financialAccounts) {
   const selectedFinancialAccounts = selectedAccounts(financialAccounts);
   return selectedFinancialAccounts.reduce(
-    (a, i) => `${a}${i.name} - ${i.account_last4}\n\n`,
+    (a, i) => `${a}\n${i.name} - ${i.account_last4}`,
     "",
   );
 }
