@@ -3,5 +3,6 @@
     "increase-counter": "redis.increase-counter",
     "checkoutAction": "actions/checkout.default",
     "homebaseAction": "actions/homebase.default",
+    "statusAction": "actions/decision-request.applicationStatus",
     "goToInterstitial": "actions/decision-request.applicationStatus"
 }

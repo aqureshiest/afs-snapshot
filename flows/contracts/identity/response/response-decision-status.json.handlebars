@@ -1,20 +1,23 @@
 
 {{#if application.id}}
+{{#noop }}{{{contract 'increase-counter'}}}{{/noop}}
 {
   "action": {
     "key": "submitInterstitial",
     "type": "interstitial",
     "properties": {
       "showSpinner": true,
-      "header": { "copy": "One moment. We’re reviewing your application." },
-      "actionDelay": 3000,
+      "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+      "actionDelay": 5000,
       "action": 
-      {{#if (eq application.status.name 'submitted') }}
+      {{#if (gt userState.status-counter 11) }}
         {{{json (contract 'homebaseAction')}}}
       {{else if (eq application.status.name 'approved')}}
         {{{json (contract 'checkoutAction')}}}
-      {{else}}
+      {{else if (ne application.status.name 'submitted')}}
         {{{json (contract 'homebaseAction')}}}
+      {{else}}
+        {{{json (contract 'statusAction')}}}
       {{/if}}
     }
   }
