@@ -12,9 +12,8 @@
         "type": "interstitial",
         "properties": {
           "showSpinner": true,
-          "header": { "copy": "One moment. We’re reviewing your application." },
-          "action": {{{json (contract 'statusAction')}}},
-          "actionDelay": 3000
+          "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+          "action": {{{json (contract 'statusAction')}}}
         }
       },
       "result": {{{json (contract 'actions')}}},
