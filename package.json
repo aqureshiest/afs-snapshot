@@ -9,7 +9,8 @@
     "build": "rm -rf ./dist && npx chassis-tsc",
     "lint": "npx chassis-lint && prettier --check '{src,test}/**/*.{js,ts}'",
     "test": "npx chassis-test",
-    "lint:prettify": "prettier --write '{src,test}/**/*.{js,ts}'"
+    "lint:prettify": "prettier --write '{src,test}/**/*.{js,ts}'",
+    "pact-test": "./scripts/pact.sh"
   },
   "repository": {
     "type": "git",
@@ -45,7 +46,8 @@
     "plaid": "^21.0.0",
     "redis": "^4.6.13",
     "uuid": "^9.0.0",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "@pact-foundation/pact": "^12.4.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

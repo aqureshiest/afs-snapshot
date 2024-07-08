@@ -94,6 +94,16 @@ services:
       - ./docker/data/redis:/usr/local/etc/redis
     ports:
       - 6379:6379
+  
+  pact:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: dev
+    env_file:
+      - ./test.env
+    volumes:
+      - ./src:/usr/src/app/src
 
 volumes:
   history:

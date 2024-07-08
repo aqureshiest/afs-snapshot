@@ -2,6 +2,17 @@
 def DeployEnv = library('jenkins-pipeline-library').com.earnest.jpl.DeploymentEnvironment
 def Strength = library('jenkins-pipeline-library').com.earnest.jpl.AccomplishmentStrength
 
+def updateAndValidateContracts() {
+  withCredentials([
+    string(credentialsId: 'PACT_BROKER_URL', variable: 'PACT_BROKER_URL'),
+    string(credentialsId: 'PACT_BROKER_TOKEN', variable: 'PACT_BROKER_TOKEN'),
+    string(credentialsId: 'AFS_BEARER_TOKEN', variable: 'AFS_BEARER_TOKEN')
+  ]) {
+    env.TRACESTATE = env.SIGNADOT_ROUTING_KEY
+    sh "./scripts/pact.sh"
+  }
+}
+
 pipeline {
   agent none
 
@@ -24,50 +35,143 @@ pipeline {
         script {
           env.VERSION = versionFromPackageJson()
           env.ARTIFACT_VERSION = "${env.VERSION}-${env.BUILD_ID}-${env.GIT_COMMIT}"
+          env.DOCKER_IMAGE_VERSION = "earnest/${env.SERVICE_NAME}:${env.VERSION}"
           currentBuild.description = "Artifact version: ${env.ARTIFACT_VERSION}"
         }
       }
     }
 
-    stage('Run all unit tests') {
-      agent {
-        label 'generic'
-      }
-      environment {
-        SERVICE_NAME = 'apply-flow-service'
-        scannerTool = tool name: 'SonarCloud', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-        SONAR_CLOUD_TOKEN = credentials('SONAR_CLOUD_TOKEN')
-        SCANNER_HOME = '/var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarCloud'
-      }
-      tools {
-        nodejs 'NodeJS-16'
-      }
-      steps {
-        printEnvSorted()
-        prepareDockerEnv(true)
-        prepareNpmEnv()
-        sh "docker-compose build --quiet ci"
-        sh "docker-compose run --quiet-pull ci npx chassis-lint"
-        script {
-          try {
-            sh "docker-compose run --quiet-pull ci npx chassis-test"
-          } finally {
-            uploadCodeMetricsToSonarCloud(env.GIT_BRANCH != "main")
+    stage('Run all unit and contract tests') {
+      parallel{
+        stage('Unit Test & code coverage') {
+          agent {
+            label 'generic'
+          }
+          environment {
+            SERVICE_NAME = 'apply-flow-service'
+            scannerTool = tool name: 'SonarCloud', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            SONAR_CLOUD_TOKEN = credentials('SONAR_CLOUD_TOKEN')
+            SCANNER_HOME = '/var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarCloud'
+          }
+          tools {
+            nodejs 'NodeJS-16'
+          }
+          steps {
+            printEnvSorted()
+            prepareDockerEnv(true)
+            prepareNpmEnv()
+            sh "docker-compose build --quiet ci"
+            sh "docker-compose run --quiet-pull ci npx chassis-lint"
+            script {
+              try {
+                sh "docker-compose run --quiet-pull ci npx chassis-test"
+              } finally {
+                uploadCodeMetricsToSonarCloud(env.GIT_BRANCH != "main")
+              }
+            }
+          }
+
+          post {
+            success {
+              createSplunkHttpEvent([serviceName: env.SERVICE_NAME, stepName: "ci-test", templateName: "microservice-chassis", result: "success"], [], env.SERVICE_NAME, versionFromPackageJson(), "service-template-event")
+            }
+            failure {
+              createSplunkHttpEvent([serviceName: env.SERVICE_NAME, stepName: "ci-test", templateName: "microservice-chassis", result: "failure"], [], env.SERVICE_NAME, versionFromPackageJson(), "service-template-event")
+            }
+            cleanup {
+              cleanAll()
+            }
           }
         }
-      }
 
-      post {
-        success {
-          createSplunkHttpEvent([serviceName: env.SERVICE_NAME, stepName: "ci-test", templateName: "microservice-chassis", result: "success"], [], env.SERVICE_NAME, versionFromPackageJson(), "service-template-event")
+        stage("PACT Contract tests") {
+          stages {
+            stage('Bypass this stage?') {
+              agent {
+                label 'generic'
+              }
+              when {
+                expression {
+                  return !hasChangesIn('schema/sql') && (env.BRANCH_NAME != 'main')
+                }
+              }
+              steps {
+                script {
+                  try {
+                    timeout(time: 30, unit: 'SECONDS') {
+                      env.BYPASS = input(
+                        message: 'Bypass this stage?',
+                        parameters: [
+                          choice(name: 'Bypass this stage', choices: 'Yes\nNo', description: 'Bypass signadot/contract tests steps'),
+                        ],
+                      )
+                    }
+                  } catch (e) {
+                    env.BYPASS = 'No'
+                  }
+                }
+              }
+            }
+            stage("Build and push docker image for signadot") {
+              agent {
+                label 'generic'
+              }
+              when {
+                expression {
+                  return (env.BYPASS != 'Yes') && !hasChangesIn('schema/sql') && (env.BRANCH_NAME != 'main')
+                }
+              }
+              steps {
+                printEnvSorted()
+                prepareDockerEnv()
+                prepareNpmEnv()
+                sh "docker-compose build prod"
+                dockerPushBranch(env.DOCKER_IMAGE_VERSION)
+              }
+              post {
+                always {
+                  cleanAll()
+                }
+              }
+            }
+            stage("Deploy to sandbox") {
+              agent {
+                label 'generic'
+              }
+              when {
+                expression {
+                  return (env.BYPASS != 'Yes') && !hasChangesIn('schema/sql') && (env.BRANCH_NAME != 'main')
+                }
+              }
+              steps {
+                printEnvSorted()
+                prepareDockerEnv(true)
+                sandboxDeploy(env.SERVICE_NAME)
+              }
+            }
+            stage("Update & validate contracts (in PR)") {
+              agent {
+                label 'generic'
+              }
+              when {
+                expression {
+                  return (env.BYPASS != 'Yes') && (env.BRANCH_NAME != 'main')
+                }
+              }
+              steps {
+                prepareDockerEnv()
+                prepareNpmEnv()
+                updateAndValidateContracts()
+              }
+              post {
+                cleanup {
+                  cleanAll()
+                }
+              }
+            }
+          }
         }
-        failure {
-          createSplunkHttpEvent([serviceName: env.SERVICE_NAME, stepName: "ci-test", templateName: "microservice-chassis", result: "failure"], [], env.SERVICE_NAME, versionFromPackageJson(), "service-template-event")
-        }
-        cleanup {
-          cleanAll()
-        }
-      }
+      } 
     }
 
     stage("Build Docker Images"){
