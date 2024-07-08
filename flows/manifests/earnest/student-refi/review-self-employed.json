@@ -5,7 +5,7 @@
     "steps": [
         "student-info-form/review.refi"
     ],
-    "student-info-review-rows": [
+    "student-info-review-noFinancialAccounts-rows": [
         "info/student-review.default",
         "info/student-info/review.default",
         "info/student-education/review.default",

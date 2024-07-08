@@ -1,0 +1,13 @@
+{
+  "*": "income-verification",
+  "stage": "plaid-income-verification",
+  "method": "plaid.createLinkToken",
+  "section": "refi-primary-only-section",
+  "back-button": "actions/back-buttons.review",
+  "back-button-unemployed": "actions/back-buttons.unemployed",
+  "back-button-retired": "actions/back-buttons.retired",
+  "back-button-future": "actions/back-buttons.future",
+  "pageLayout": "header/refi-edit.default",
+  "onError": ["onError.unauthorized"],
+  "redirect_homebase": "actions/homebase.default"
+}
