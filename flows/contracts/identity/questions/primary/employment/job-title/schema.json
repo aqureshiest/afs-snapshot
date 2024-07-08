@@ -1,6 +1,6 @@
 {
   "type": "string",
-  "pattern": "^[a-zA-Z\\s.'-]*$",
+  "pattern": "^[a-zA-Z\\d\\s.'-]*$",
   "minLength": 1,
   "errorMessage": {
     "minLength": "Job title is required.",
