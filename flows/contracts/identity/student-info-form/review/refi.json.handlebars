@@ -8,7 +8,15 @@
             "action": {{{ json (contract 'actionsDashboard') }}}
         {{else}}
             "copy": "Submit my application",
-            "action": {{{ json (contract 'actions') }}}
+            "action": {
+                "key": "submitInterstitial",
+                "type": "interstitial",
+                "properties": {
+                    "showSpinner": true,
+                    "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+                    "action": {{{ json (contract 'actions') }}}
+                }
+            }
         {{/if}}
     },
     "back": {
