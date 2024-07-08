@@ -22,11 +22,15 @@ enum EntityStatusMapping {
 enum AlloyDecision {
   APPROVED = "Approved",
   DENIED = "Denied",
+  TIMEOUT = "Time out",
+  WITHDRAWN = "Withdrawn",
 }
 
 enum DecisionStatusMapping {
   APPROVED = "approved",
   DECLINED = "declined",
+  EXPIRED = "expired",
+  WITHDRAWN = "withdrawn",
 }
 
 export default class LendingDecisionServiceClient extends Client {
@@ -827,7 +831,12 @@ export default class LendingDecisionServiceClient extends Client {
           case AlloyDecision.DENIED:
             status = DecisionStatusMapping.DECLINED;
             break;
-
+          case AlloyDecision.TIMEOUT:
+            status = DecisionStatusMapping.EXPIRED;
+            break;
+          case AlloyDecision.WITHDRAWN:
+            status = DecisionStatusMapping.WITHDRAWN;
+            break;
           default:
             throw new Error("[4b0a0bd3] Unhandled APPLICATION_STATUS event");
         }
