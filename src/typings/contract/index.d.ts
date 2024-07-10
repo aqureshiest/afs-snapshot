@@ -8,6 +8,7 @@ import * as contractTypes from "contract/contract-types/index.js";
 import type Contract from "contract/contract.js";
 import type Manifest from "contract/manifest.js";
 import type { ApplicationState, UserState } from "clients/redis/index.js";
+import { Response } from "express";
 
 type HandlebarsTemplate = ReturnType<
   ReturnType<typeof createJsonHandlebars>["compile"]
@@ -93,8 +94,9 @@ interface IDependencies {
   [key: string]: ContractType<unknown, unknown, unknown>;
 }
 
-interface IExecutionInjections extends IContractInput {
+export interface IExecutionInjections extends IContractInput {
   context: ChassisPluginContext;
+  res: Response;
   manifest: Manifest;
   contract: ContractType<unknown, unknown, unknown>;
   // All known contract instances by key

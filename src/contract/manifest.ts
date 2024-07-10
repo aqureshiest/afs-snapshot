@@ -48,6 +48,7 @@ export default class Manifest {
     input: Input,
     {
       context,
+      res,
       evaluations = {},
       ...assertions
     }: Omit<Injections, "manifest" | "contract" | "evaluations"> & {
@@ -65,6 +66,7 @@ export default class Manifest {
     const contract = await this.traverse(input, {
       manifest: this,
       context,
+      res,
       evaluations,
       ...assertions,
     });

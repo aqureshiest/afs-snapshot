@@ -56,9 +56,10 @@ export default class NeasClient extends Client {
    */
   async createAccountlessUser(
     application: types.Application,
-    context: PluginContext,
-  ): Promise<string> {
+    injections: Injections,
+  ): Promise<void> {
     const { id } = application;
+    const { context, res } = injections;
 
     const { results, response } = await this.post<{
       session: string,
@@ -71,7 +72,7 @@ export default class NeasClient extends Client {
           id,
         }
       },
-      context,
+      injections,
     );
 
     if (response.statusCode && response.statusCode >= 400) {
@@ -80,7 +81,7 @@ export default class NeasClient extends Client {
 
     const { session } = results;
 
-    return session;
+    res.cookie("session", session, { domain: ".earnest.com" });
   }
 
   /**
