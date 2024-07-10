@@ -51,7 +51,7 @@ export default class NeasClient extends Client {
   /**
    * Creates a new accountless user in Cognito and a session for a given application
    * @param application types.Application
-   * @param injections Injections
+   * @param context PluginContext
    * @returns Promise<string>
    */
   async createAccountlessUser(
