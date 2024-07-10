@@ -49,69 +49,38 @@ export default class NeasClient extends Client {
    * Public Methods
    * ============================== */
   /**
-   * Creates a new unauthenticated identity and session for a given application
-   * @param id string
+   * Creates a new accountless user in Cognito and a session for a given application
+   * @param application types.Application
    * @param injections Injections
    * @returns Promise<string>
    */
-  async createUnauthenticatedIdentity(
-    id: string,
+  async createAccountlessUser(
+    application: types.Application,
     context: PluginContext,
   ): Promise<string> {
-    try {
-      const applicationServiceClient =
-        context?.loadedPlugins?.applicationServiceClient?.instance;
-      assert(
-        applicationServiceClient,
-        "[56f9bdec] Application-service-client is required to create an unauthenticated identity",
-      );
+    const { id } = application;
 
-      const { results, response } = await this.post<{
-        authId: string;
-        sessionToken: string;
-      }>(
-        {
-          uri: "/auth/identity/unauthenticated",
-          headers: this.defaultHeaders,
-          resiliency: this.resiliency,
-        },
-        context,
-      );
+    const { results, response } = await this.post<{
+      session: string,
+    }>(
+      {
+        uri: "/auth/identity/unauthenticated",
+        headers: this.defaultHeaders,
+        resiliency: this.resiliency,
+        body: {
+          id,
+        }
+      },
+      context,
+    );
 
-      if (response.statusCode && response.statusCode >= 400) {
-        throw new Error(response.statusMessage);
-      }
-
-      const { authId, sessionToken } = results;
-
-      // create an authID reference for the given application
-      const addReferencesEvent = (await applicationServiceClient.sendRequest(
-        {
-          query: ADD_REFERENCE_MUTATION,
-          variables: {
-            id,
-            references: [{ referencedId: authId, referenceType: "authID" }],
-            meta: "apply-flow-service",
-          },
-        },
-        context,
-      )) as types.Event;
-
-      if (addReferencesEvent.error != null) {
-        throw new Error(addReferencesEvent.error);
-      }
-
-      return sessionToken;
-    } catch (error) {
-      this.log(
-        {
-          error,
-          message: "[5a3effd0] Failed to create unauthenticated identity",
-        },
-        context,
-      );
-      throw error;
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new Error(response.statusMessage);
     }
+
+    const { session } = results;
+
+    return session;
   }
 
   /**

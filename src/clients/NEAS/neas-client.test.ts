@@ -17,20 +17,7 @@ describe("[fab1071e] NeasClient", () => {
     client = context.loadedPlugins.NeasClient.instance;
   });
 
-  it("[d14f4e15] should throw when creating an unauthenticated identity and application-service-client is not instantiated", async () => {
-    assert.rejects(
-      async () =>
-        await client.createUnauthenticatedIdentity("1", {
-          loadedPlugins: {
-            applicationServiceClient: {
-              instance: null,
-            },
-          },
-        }),
-    );
-  });
-
-  it("[4fe613f4] should throw when creating an unauthenticated identity and the request to NEAS fails", async () => {
+  it("[4fe613f4] should throw when creating an accountless user and the request to NEAS fails", async () => {
     mock.method(client, "post", () => {
       return {
         response: {
@@ -40,42 +27,15 @@ describe("[fab1071e] NeasClient", () => {
       };
     });
     assert.rejects(
-      async () => await client.createUnauthenticatedIdentity("1", context),
+      async () => await client.createAccountlessUser({ id: "1" }, context),
     );
   });
 
-  it("[cac09811] should throw when creating an unauthenticated identity and an error is returned when creating an identityId reference", async () => {
+  it("[9c1dbc20] should return an NEAS session when an accountless user is successfully created", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
-          authId: "2",
-          sessionToken: "session",
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          error: "Bad request",
-        };
-      },
-    );
-    assert.rejects(
-      async () => await client.createUnauthenticatedIdentity("1", context),
-    );
-  });
-
-  it("[9c1dbc20] should return a session token", async () => {
-    mock.method(client, "post", () => {
-      return {
-        results: {
-          authId: "2",
-          sessionToken: "session",
+          session: "session",
         },
         response: {
           statusCode: 200,
@@ -91,7 +51,7 @@ describe("[fab1071e] NeasClient", () => {
         };
       },
     );
-    const result = await client.createUnauthenticatedIdentity("1", context);
+    const result = await client.createAccountlessUser({ id: "1" }, context);
     assert.equal(result, "session");
   });
 
