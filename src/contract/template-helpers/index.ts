@@ -51,6 +51,29 @@ export function day(v1) {
 export function year(v1) {
   return new Date(v1).getFullYear();
 }
+export function getCurrentTime() {
+  return new Date().toISOString();
+}
+
+/**
+ * Get the time delta between start time and now in milliseconds
+ * @param start ISO String representation of a date
+ * @returns time delta in milliseconds
+ */
+export function getTimeDelta(start) {
+  return Date.now() - Date.parse(start);
+}
+
+/**
+ * Check if we've reached the specified timeout
+ * @param start ISO String representation of a date
+ * @param timeout timeout in milliseconds
+ * @returns Boolean
+ */
+export function reachedTimeout(start, timeout) {
+  return getTimeDelta(start) > timeout;
+}
+
 /**
  * TODO: retirenment and unemployed income.type will be removed.
  * Determine best way to save employment status type

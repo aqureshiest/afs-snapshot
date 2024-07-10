@@ -5,7 +5,7 @@
 # | DO NOT PUBLISH THIS INTERIM TARGET     |
 # +----------------------------------------+
 
-ARG BASE_IMAGE=earnest/microservice-base:2.0-18a4c6e
+ARG BASE_IMAGE=earnest/microservice-base:2.2-6fbd2ab
 
 FROM $BASE_IMAGE AS dev-dependencies
 

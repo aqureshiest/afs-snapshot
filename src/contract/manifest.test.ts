@@ -726,6 +726,7 @@ describe("[462fd166] manifest.execute", () => {
       request: {
         body: {
           values: {
+            date: "2013-09-01T07:00:00.000Z",
             dateOfBirth: {
               month: "12",
               day: "20",
@@ -787,7 +788,8 @@ describe("[462fd166] manifest.execute", () => {
             "formatToUSCurrency": "{{{formatToUSCurrency 1000000}}}",
             "formatDollarsToCents": "{{{formatDollarsToCents '$12,3456.89'}}}",
             "stateMinLoan": {{{stateMinLoan request.body.values.location}}},
-            "hasValues": {{{hasValues request.body.values.dateOfBirth}}}
+            "hasValues": {{{hasValues request.body.values.dateOfBirth}}},
+            "reachedTimeout": {{{reachedTimeout request.body.values.date 60000}}}
           }
       `,
       }),
@@ -827,6 +829,7 @@ describe("[462fd166] manifest.execute", () => {
       formatDollarsToCents: "12345689",
       stateMinLoan: 1000000,
       hasValues: true,
+      reachedTimeout: true,
     });
   });
 

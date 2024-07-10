@@ -1,6 +1,7 @@
 {
     "*": "response.interstitial",
     "actions": ["decision-request", "decision-backfill"],
+    "set-timestamp": "redis.set-timestamp",
     "statusAction": "actions/decision-request.applicationStatus",
     "redirect_homebase": "actions/homebase.default"
 }

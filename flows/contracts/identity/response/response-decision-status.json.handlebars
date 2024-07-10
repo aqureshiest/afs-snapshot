@@ -1,6 +1,5 @@
 
 {{#if application.id}}
-{{#noop }}{{{contract 'increase-counter'}}}{{/noop}}
 {
   "action": {
     "key": "submitInterstitial",
@@ -9,12 +8,13 @@
       "showSpinner": true,
       "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
       "actionDelay": 5000,
-      "action": 
-      {{#if (gt userState.status-counter 11) }}
-        {{{json (contract 'homebaseAction')}}}
-      {{else if (eq application.status.name 'approved')}}
+      "action":
+      {{#if (eq application.status.name 'approved')}}
         {{{json (contract 'checkoutAction')}}}
       {{else if (ne application.status.name 'submitted')}}
+        {{{json (contract 'homebaseAction')}}}
+      {{else if (reachedTimeout userState.decision-requested-at 55000) }}
+        {{!-- Set timeout to 55 seconds, accounts for initial 5 second delay from initial Decision request post --}}
         {{{json (contract 'homebaseAction')}}}
       {{else}}
         {{{json (contract 'statusAction')}}}

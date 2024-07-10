@@ -6,6 +6,7 @@
     }
   {{else}}
     {{#noop}}{{ contract 'analytics' }}{{/noop}}
+    {{#noop }}{{{contract 'set-timestamp'}}}{{/noop}}
     {
       "action": {
         "key": "submitInterstitial",
