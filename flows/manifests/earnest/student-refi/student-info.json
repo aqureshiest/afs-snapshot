@@ -77,6 +77,7 @@
   "back-button": "actions/back-buttons.basic-info",
   "noop_details_action": "actions/noop-details.primary",
   "save_primary_details_action": "actions/save-details.primary",
+  "save_primary_details_prev_address_action": "actions/save-details.primary-prev-address",
   "save_primary_details_action_no_event": "actions/save-details.primary-no-event",
   "save_primary_employment_status_details_action": "actions/save-details.employment-status",
   "save_primary_employment_details_action": "actions/save-details.employment",
