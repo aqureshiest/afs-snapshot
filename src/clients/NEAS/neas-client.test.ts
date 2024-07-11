@@ -29,7 +29,7 @@ describe("[fab1071e] NeasClient", () => {
       };
     });
     assert.rejects(
-      async () => await client.createAccountlessUser({ id: "1" }, injections),
+      async () => await client.createAccountlessUser({ application: { id: "1" } }, injections),
     );
   });
 
@@ -54,7 +54,7 @@ describe("[fab1071e] NeasClient", () => {
       },
     );
     mock.method(injections.res, "cookie");
-    await client.createAccountlessUser({ id: "1" }, injections);
+    await client.createAccountlessUser({ application: { id: "1" }}, injections);
     assert.equal(injections.res.cookie.mock.calls.length, 1);
   });
 

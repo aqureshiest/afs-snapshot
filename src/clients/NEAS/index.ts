@@ -55,9 +55,12 @@ export default class NeasClient extends Client {
    * @returns Promise<string>
    */
   async createAccountlessUser(
-    application: types.Application,
+    input: Input,
     injections: Injections,
   ): Promise<void> {
+    const { application } = input;
+    assert(application, "[1c5d60f6] Missing application");
+
     const { id } = application;
     const { res } = injections;
 
