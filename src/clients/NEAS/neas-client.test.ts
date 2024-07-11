@@ -8,6 +8,7 @@ import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 describe("[fab1071e] NeasClient", () => {
   let context;
   let client;
+  let injections;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -15,6 +16,7 @@ describe("[fab1071e] NeasClient", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
     client = context.loadedPlugins.NeasClient.instance;
+    injections = { context, res: { cookie: () => true } };
   });
 
   it("[4fe613f4] should throw when creating an accountless user and the request to NEAS fails", async () => {
@@ -27,11 +29,11 @@ describe("[fab1071e] NeasClient", () => {
       };
     });
     assert.rejects(
-      async () => await client.createAccountlessUser({ id: "1" }, context),
+      async () => await client.createAccountlessUser({ id: "1" }, injections),
     );
   });
 
-  it("[9c1dbc20] should return an NEAS session when an accountless user is successfully created", async () => {
+  it("[9c1dbc20] should leverage the response objects cookie method to set a cookie when an accountless user is successfully created", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
@@ -51,8 +53,9 @@ describe("[fab1071e] NeasClient", () => {
         };
       },
     );
-    const result = await client.createAccountlessUser({ id: "1" }, context);
-    assert.equal(result, "session");
+    mock.method(injections.res, "cookie");
+    await client.createAccountlessUser({ id: "1" }, injections);
+    assert.equal(injections.res.cookie.mock.calls.length, 1);
   });
 
   it("[fdf93ed5] should throw when creating an auth id and application-service-client is not instantiated", () => {

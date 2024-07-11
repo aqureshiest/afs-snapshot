@@ -59,7 +59,7 @@ export default class NeasClient extends Client {
     injections: Injections,
   ): Promise<void> {
     const { id } = application;
-    const { context, res } = injections;
+    const { res } = injections;
 
     const { results, response } = await this.post<{
       session: string,
