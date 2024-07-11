@@ -16,7 +16,7 @@ describe("[fab1071e] NeasClient", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
     client = context.loadedPlugins.NeasClient.instance;
-    injections = { application: { id: "1" }, context, res: { cookie: () => true } };
+    injections = { request: { params: { id: "1" } }, context, res: { cookie: () => true } };
   });
 
   it("[4fe613f4] should throw when creating an accountless user and the request to NEAS fails", async () => {

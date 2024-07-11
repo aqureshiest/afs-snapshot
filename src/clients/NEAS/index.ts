@@ -50,18 +50,15 @@ export default class NeasClient extends Client {
    * ============================== */
   /**
    * Creates a new accountless user in Cognito and a session for a given application
-   * @param application types.Application
-   * @param context PluginContext
-   * @returns Promise<string>
+   * @param injections Injections
+   * @returns Promise<void>
    */
   async createAccountlessUser(injections: Injections,): Promise<void> {
     const {
-      application,
       context,
-      res
+      request,
+      res,
     } = injections;
-
-    assert(application, "[1c5d60f6] An application is required to create an accountless user");
 
     const { results, response } = await this.post<{
       session: string,
@@ -71,7 +68,7 @@ export default class NeasClient extends Client {
         headers: this.defaultHeaders,
         resiliency: this.resiliency,
         body: {
-          applicationId: application.id,
+          applicationId: request?.params?.id,
         }
       },
       context,
