@@ -16,7 +16,7 @@ describe("[fab1071e] NeasClient", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
     client = context.loadedPlugins.NeasClient.instance;
-    injections = { context, res: { cookie: () => true } };
+    injections = { application: { id: "1" }, context, res: { cookie: () => true } };
   });
 
   it("[4fe613f4] should throw when creating an accountless user and the request to NEAS fails", async () => {
@@ -29,7 +29,7 @@ describe("[fab1071e] NeasClient", () => {
       };
     });
     assert.rejects(
-      async () => await client.createAccountlessUser({ application: { id: "1" } }, injections),
+      async () => await client.createAccountlessUser(injections),
     );
   });
 
@@ -54,7 +54,7 @@ describe("[fab1071e] NeasClient", () => {
       },
     );
     mock.method(injections.res, "cookie");
-    await client.createAccountlessUser({ application: { id: "1" }}, injections);
+    await client.createAccountlessUser(injections);
     assert.equal(injections.res.cookie.mock.calls.length, 1);
   });
 

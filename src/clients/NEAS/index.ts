@@ -54,15 +54,14 @@ export default class NeasClient extends Client {
    * @param context PluginContext
    * @returns Promise<string>
    */
-  async createAccountlessUser(
-    input: Input,
-    injections: Injections,
-  ): Promise<void> {
-    const { application } = input;
-    assert(application, "[1c5d60f6] Missing application");
+  async createAccountlessUser(injections: Injections,): Promise<void> {
+    const {
+      application,
+      context,
+      res
+    } = injections;
 
-    const { id } = application;
-    const { res } = injections;
+    assert(application, "[1c5d60f6] An application is required to create an accountless user");
 
     const { results, response } = await this.post<{
       session: string,
@@ -72,10 +71,10 @@ export default class NeasClient extends Client {
         headers: this.defaultHeaders,
         resiliency: this.resiliency,
         body: {
-          id,
+          applicationId: application.id,
         }
       },
-      injections,
+      context,
     );
 
     if (response.statusCode && response.statusCode >= 400) {
