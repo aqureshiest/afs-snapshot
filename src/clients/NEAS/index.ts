@@ -49,20 +49,18 @@ export default class NeasClient extends Client {
    * Public Methods
    * ============================== */
   /**
-   * Creates a new accountless user in Cognito and a session for a given application
+   * Creates an accountless session
    * @param injections Injections
    * @returns Promise<void>
    */
-  async createAccountlessUser(injections: Injections,): Promise<void> {
+  async createAccountlessSession(injections: Injections,): Promise<void> {
     const {
       context,
       request,
       res,
     } = injections;
 
-    const { results, response } = await this.post<{
-      session: string,
-    }>(
+    const { results, response } = await this.post<{ session: string, }>(
       {
         uri: "/auth/identity/unauthenticated",
         headers: this.defaultHeaders,
@@ -84,90 +82,60 @@ export default class NeasClient extends Client {
   }
 
   /**
-   * Associates an existing authId with an email address if one exists,
-   * or creates a new authId for a given user
-   * @param id string
-   * @param token string
+   * Creates an accountless user and adds the returned user id as a reference
    * @param injections Injections
-   * @returns Promise<string>
+   * @returns Promise<void>
    */
-  async createAuthId(
-    id: string,
-    token: string,
-    context: PluginContext,
-  ): Promise<string> {
-    try {
-      const applicationServiceClient =
-        context?.loadedPlugins?.applicationServiceClient?.instance;
-      assert(
-        applicationServiceClient,
-        "[b0e4b066] Application-service-client is required to create an authId",
-      );
+  async createAccountlessUser(injections: Injections,): Promise<void> {
+    const {
+      application,
+      context,
+      request,
+      res,
+    } = injections;
 
-      const { application } = (await applicationServiceClient.sendRequest({
-        query: NEAS_APPLICATION_QUERY,
-        variables: { id },
-      })) as { application: types.Application };
-      assert(application, "[cc7eda2d] Application does not exist");
+    const client = context.loadedPlugins.applicationServiceClient.instance;
 
-      const { details } = application;
-      assert(
-        details?.email,
-        "[55858b44] An email address is required to create an authId",
-      );
+    const applicant = application?.applicants?.find((applicant) =>
+      applicant && applicant.id === request?.params?.id
+    );
 
-      const { results, response } = await this.post<{
-        authId: string;
-        sessionToken: string;
-      }>(
-        {
-          uri: "/auth/identity/authId",
-          headers: {
-            ...this.defaultHeaders,
-            Authorization: token, // overrides default Authorization header
-          },
-          body: {
-            email: details?.email,
-          },
-          resiliency: this.resiliency,
+    const { results, response } = await this.post<{
+      session: string,
+      userId: string,
+    }>(
+      {
+        uri: "/auth/identity/userId",
+        headers: this.defaultHeaders,
+        body: {
+          email: applicant?.details?.email,
         },
-        context,
-      );
+        resiliency: this.resiliency,
+      },
+      context,
+    );
 
-      if (response.statusCode && response.statusCode >= 400) {
-        throw new Error(response.statusMessage);
-      }
-
-      const { authId, sessionToken } = results;
-
-      // create an authId reference for the given application
-      const addReferencesEvent = (await applicationServiceClient.sendRequest(
-        {
-          query: ADD_REFERENCE_MUTATION,
-          variables: {
-            id,
-            references: [{ referencedId: authId, referenceType: "authID" }],
-            meta: "apply-flow-service",
-          },
-        },
-        context,
-      )) as types.Event;
-
-      if (addReferencesEvent.error !== null) {
-        throw new Error(addReferencesEvent.error);
-      }
-
-      return sessionToken;
-    } catch (error) {
-      this.log(
-        {
-          error,
-          message: "[fdcb97cb] Failed to create authId",
-        },
-        context,
-      );
-      throw error;
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new Error(response.statusMessage);
     }
+
+    const { userId, session } = results;
+
+    const { error } = await client?.sendRequest(
+      {
+        query: ADD_REFERENCE_MUTATION,
+        variables: {
+          id: applicant?.id,
+          references: [{ referencedId: userId, referenceType: "userID" }],
+          meta: "apply-flow-service",
+        },
+      },
+      context,
+    ) as unknown as types.Event;
+
+    if (error) throw new Error(error);
+
+    res.cookie("session", session, { domain: ".earnest.com" });
   }
 
   /**

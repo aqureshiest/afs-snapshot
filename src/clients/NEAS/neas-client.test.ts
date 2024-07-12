@@ -16,10 +16,25 @@ describe("[fab1071e] NeasClient", () => {
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
     client = context.loadedPlugins.NeasClient.instance;
-    injections = { request: { params: { id: "1" } }, context, res: { cookie: () => true } };
+    injections = {
+      application: {
+        applicants: [
+          {
+            id: "1",
+          }
+        ]
+      },
+      request: {
+        params: {
+          id: "1"
+        }
+      },
+      context,
+      res: { cookie: () => true }
+    };
   });
 
-  it("[4fe613f4] should throw when creating an accountless user and the request to NEAS fails", async () => {
+  it("[4fe613f4] should throw when creating an accountless session and the request to NEAS fails", async () => {
     mock.method(client, "post", () => {
       return {
         response: {
@@ -28,12 +43,72 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    assert.rejects(
-      async () => await client.createAccountlessUser(injections),
-    );
+    await assert.rejects(client.createAccountlessSession(injections));
   });
 
-  it("[9c1dbc20] should leverage the response objects cookie method to set a cookie when an accountless user is successfully created", async () => {
+  it("[9c1dbc20] should set a cookie when an accountless session is successfully created", async () => {
+    mock.method(client, "post", () => {
+      return {
+        results: {
+          session: "session",
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () => {
+        return {
+          error: null,
+        };
+      },
+    );
+    mock.method(injections.res, "cookie");
+    await client.createAccountlessSession(injections);
+    assert.equal(injections.res.cookie.mock.calls.length, 1);
+  });
+
+  it("[da658e1b] should throw when creating an accountless user and the request to NEAS fails", async () => {
+    mock.method(client, "post", () => {
+      return {
+        response: {
+          statusCode: 400,
+          statusMessage: "Request to NEAS failed",
+        },
+      };
+    });
+    await assert.rejects(client.createAccountlessUser(injections));
+  });
+
+  it("[99416084] should throw when creating an accountless user and an error is returned when creating a reference", async () => {
+    mock.method(client, "post", () => {
+      return {
+        results: {
+          authId: "2",
+          sessionToken: "session",
+        },
+        response: {
+          statusCode: 200,
+          statusMessage: "Request to NEAS failed",
+        },
+      };
+    });
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "sendRequest",
+      () =>  {
+         return {
+          error: "Bad request"
+        }
+      },
+    );
+    await assert.rejects(client.createAccountlessUser(injections));
+  });
+
+  it("[9edb8493] should set a cookie when an accountless user is successfully created", async () => {
     mock.method(client, "post", () => {
       return {
         results: {
@@ -56,142 +131,6 @@ describe("[fab1071e] NeasClient", () => {
     mock.method(injections.res, "cookie");
     await client.createAccountlessUser(injections);
     assert.equal(injections.res.cookie.mock.calls.length, 1);
-  });
-
-  it("[fdf93ed5] should throw when creating an auth id and application-service-client is not instantiated", () => {
-    assert.rejects(
-      async () =>
-        await client.createAuthId("1", "token", {
-          loadedPlugins: {
-            applicationServiceClient: {
-              instance: null,
-            },
-          },
-        }),
-    );
-  });
-
-  it("[9ca88af8] should throw when creating an auth id and an application does not exist", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: null,
-        };
-      },
-    );
-    assert.rejects(
-      async () => await client.createAuthId("1", "token", context),
-    );
-  });
-
-  it("[c5178513] should throw when creating an auth id and an email detail doest not exist", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            details: {
-              email: null,
-            },
-          },
-        };
-      },
-    );
-    assert.rejects(
-      async () => await client.createAuthId("1", "token", context),
-    );
-  });
-
-  it("[da658e1b] should throw when creating an auth id and the request to NEAS fails", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            details: {
-              email: "test@earnest.com",
-            },
-          },
-        };
-      },
-    );
-    mock.method(client, "post", () => {
-      return {
-        response: {
-          statusCode: 400,
-          statusMessage: "Request to NEAS failed",
-        },
-      };
-    });
-    assert.rejects(
-      async () => await client.createAuthId("1", "token", context),
-    );
-  });
-
-  it("[99416084] should throw when creating an auth id and an error is returned when creating an authId reference", () => {
-    mock.method(client, "post", () => {
-      return {
-        results: {
-          authId: "2",
-          sessionToken: "session",
-        },
-        response: {
-          statusCode: 200,
-          statusMessage: "Request to NEAS failed",
-        },
-      };
-    });
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            details: {
-              email: "test@earnest.com",
-            },
-          },
-          error: "Bad request",
-        };
-      },
-    );
-    assert.rejects(
-      async () => await client.createAuthId("1", "token", context),
-    );
-  });
-
-  it("[3f51d326] should return a new session token", async () => {
-    mock.method(client, "post", () => {
-      return {
-        results: {
-          authId: "2",
-          sessionToken: "session",
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            details: {
-              email: "test@earnest.com",
-            },
-          },
-          error: null,
-        };
-      },
-    );
-    const result = await client.createAuthId("1", "token", context);
-    assert.equal(result, "session");
   });
 
   it("[e3f0638e] should throw when sending an email link and application-service-client is not instantiated", async () => {
