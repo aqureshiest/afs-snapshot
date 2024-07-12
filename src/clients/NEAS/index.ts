@@ -53,7 +53,7 @@ export default class NeasClient extends Client {
    * @param injections Injections
    * @returns Promise<void>
    */
-  async createAccountlessSession(injections: Injections,): Promise<void> {
+  async createAccountlessSession(injections: Injections): Promise<void> {
     const {
       context,
       request,
@@ -86,7 +86,7 @@ export default class NeasClient extends Client {
    * @param injections Injections
    * @returns Promise<void>
    */
-  async createAccountlessUser(injections: Injections,): Promise<void> {
+  async createAccountlessUser(injections: Injections): Promise<void> {
     const {
       application,
       context,
@@ -140,80 +140,38 @@ export default class NeasClient extends Client {
 
   /**
    * Send users a email link that they can later use to resume their application
-   * @param id string
-   * @param token string
    * @param injections Injections
    * @returns Promise<void>
    */
-  async sendEmailLink(
-    id: string,
-    token: string,
-    context: PluginContext,
-  ): Promise<void> {
-    try {
-      const applicationServiceClient =
-        context?.loadedPlugins?.applicationServiceClient?.instance;
-      assert(
-        applicationServiceClient,
-        "[a9050dc4] Application-service-client is not instantiated and required to send users an email link",
-      );
+  async sendVerificationEmail(injections: Injections): Promise<void> {
+    const {
+      application,
+      context,
+      request,
+    } = injections;
 
-      const { application } = (await applicationServiceClient.sendRequest(
-        {
-          query: NEAS_APPLICATION_QUERY,
-          variables: { id },
+    const applicant = application?.applicants?.find((applicant) =>
+      applicant && applicant.id === request?.params?.id
+    );
+
+    const { response } = await this.post<void>(
+      {
+        uri: "/auth/identity/access-code/send",
+        headers: this.defaultHeaders,
+        body: {
+          applicationId: applicant?.id,
+          // TODO: add userID as valid reference in application-service
+          // userID: application?.userID,
+          emailId: applicant?.details?.email,
+          expirationDate: Date.now() + 1000 * 60 * 60 * 24 * 30, // 30 days
         },
-        context,
-      )) as { application: types.Application };
-      assert(application, "[b2ca51ed] Application does not exist");
+        resiliency: this.resiliency,
+      },
+      context,
+    );
 
-      const { authID, details } = application;
-      assert(authID, "[3673aadd] An authID is required to send an email link");
-      assert(
-        details?.email,
-        "[028aa77f] An email address is required to send an email link",
-      );
-
-      const { response } = await this.post<void>(
-        {
-          uri: "/auth/identity/access-code/send",
-          headers: {
-            ...this.defaultHeaders,
-            Authorization: token, // overrides default Authorization header
-          },
-          body: {
-            applicationId: id,
-            authId: authID,
-            emailId: details?.email,
-            expirationDate: Date.now() + 1000 * 60 * 60 * 24 * 30, // 30 days
-            attributesToVerify: [
-              {
-                field: "firstName",
-                label: "First Name",
-              },
-              {
-                field: "lastName",
-                label: "Last Name",
-              },
-            ],
-          },
-          resiliency: this.resiliency,
-        },
-        context,
-      );
-
-      if (response.statusCode && response.statusCode >= 400) {
-        throw new Error(response.statusMessage);
-      }
-    } catch (error) {
-      this.log(
-        {
-          error,
-          message: "[2a7945e5] Failed to send email link",
-        },
-        context,
-      );
-      throw error;
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new Error(response.statusMessage);
     }
   }
 

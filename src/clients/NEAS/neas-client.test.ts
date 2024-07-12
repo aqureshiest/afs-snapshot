@@ -133,74 +133,7 @@ describe("[fab1071e] NeasClient", () => {
     assert.equal(injections.res.cookie.mock.calls.length, 1);
   });
 
-  it("[e3f0638e] should throw when sending an email link and application-service-client is not instantiated", async () => {
-    assert.rejects(
-      async () =>
-        await client.sendEmailLink("1", "sessionId", {
-          loadedPlugins: {
-            applicationServiceClient: {
-              instance: null,
-            },
-          },
-        }),
-    );
-  });
-
-  it("[358d4b58] should throw when sending an email link and and an authID detail does not exist", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            authID: null,
-            details: {
-              email: "test@earnest.com",
-            },
-          },
-        };
-      },
-    );
-    assert.rejects(
-      async () => await client.sendEmailLink("1", "token", context),
-    );
-  });
-
-  it("[da760e33] should throw when sending an email link and an email detail does not exist", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            authID: "1",
-            details: {
-              email: null,
-            },
-          },
-        };
-      },
-    );
-    assert.rejects(
-      async () => await client.sendEmailLink("1", "token", context),
-    );
-  });
-
-  it("[adfe133f] should throw when sending an email link and the request to NEAS fails", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            authID: "1",
-            details: {
-              email: "test@earnest.com",
-            },
-          },
-        };
-      },
-    );
+  it("[adfe133f] should throw when sending an email link and the request to NEAS fails", async () => {
     mock.method(client, "post", () => {
       return {
         response: {
@@ -209,26 +142,10 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    assert.rejects(
-      async () => await client.sendEmailLink("1", "token", context),
-    );
+    await assert.rejects(client.sendVerificationEmail(injections));
   });
 
-  it("[e155c81d] should send an email link", () => {
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () => {
-        return {
-          application: {
-            authID: "1",
-            details: {
-              email: "test@earnest.com",
-            },
-          },
-        };
-      },
-    );
+  it("[e155c81d] should send an email link", async () => {
     mock.method(client, "post", () => {
       return {
         response: {
@@ -236,9 +153,7 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    assert.doesNotReject(
-      async () => await client.sendEmailLink("1", "token", context),
-    );
+    await assert.doesNotReject(client.sendVerificationEmail(injections));
   });
 
   it("[bb287e57] should return the returned claims and response object when verifying a session", async () => {
@@ -271,6 +186,6 @@ describe("[fab1071e] NeasClient", () => {
     mock.method(client, "post", () => {
       throw new Error("error");
     });
-    assert.rejects(async () => await client.verifyToken("idToken", context));
+    await assert.rejects(client.verifyToken("idToken", context));
   });
 });
