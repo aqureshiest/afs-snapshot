@@ -199,14 +199,3 @@ export const ADD_REFERENCE_MUTATION = `
     }
   }
 `;
-
-export const NEAS_APPLICATION_QUERY = `
-  query Application($id: UUID!) {
-    application(id: $id) {
-      authID
-      details {
-        email
-      }
-    }
-  }
-`;

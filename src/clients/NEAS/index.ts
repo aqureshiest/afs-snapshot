@@ -1,13 +1,9 @@
-import assert from "node:assert";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 
 import Client from "../client.js";
 
-import {
-  ADD_REFERENCE_MUTATION,
-  NEAS_APPLICATION_QUERY,
-} from "../application-service/graphql.js";
+import { ADD_REFERENCE_MUTATION, } from "../application-service/graphql.js";
 
 export default class NeasClient extends Client {
   get clientName() {
@@ -22,12 +18,18 @@ export default class NeasClient extends Client {
     this.#TEMP_cloudflareKey = TEMP_cloudflareKey;
   }
 
-  get defaultHeaders() {
+  get options() {
+    return {
+      headers: this.requestHeaders,
+      resiliency: this.resiliency,
+    };
+  }
+
+  get requestHeaders() {
     return {
       ...super.headers,
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: `${this.#accessKey}`,
       // [TODO: INF-8996] this is a temporary workaround until NEAS gets an internal api gateway
       ...(this.#TEMP_cloudflareKey
         ? { cf_neas_token: this.#TEMP_cloudflareKey }
@@ -45,9 +47,6 @@ export default class NeasClient extends Client {
     };
   }
 
-  /* ============================== *
-   * Public Methods
-   * ============================== */
   /**
    * Creates an accountless session
    * @param injections Injections
@@ -63,11 +62,11 @@ export default class NeasClient extends Client {
     const { results, response } = await this.post<{ session: string, }>(
       {
         uri: "/auth/identity/unauthenticated",
-        headers: this.defaultHeaders,
-        resiliency: this.resiliency,
+        Authorization: `${this.#accessKey}`,
         body: {
           applicationId: request?.params?.id,
-        }
+        },
+        ...this.options,
       },
       context,
     );
@@ -106,11 +105,10 @@ export default class NeasClient extends Client {
     }>(
       {
         uri: "/auth/identity/userId",
-        headers: this.defaultHeaders,
         body: {
           email: applicant?.details?.email,
         },
-        resiliency: this.resiliency,
+        ...this.options,
       },
       context,
     );
@@ -157,7 +155,6 @@ export default class NeasClient extends Client {
     const { response } = await this.post<void>(
       {
         uri: "/auth/identity/access-code/send",
-        headers: this.defaultHeaders,
         body: {
           applicationId: applicant?.id,
           // TODO: add userID as valid reference in application-service
@@ -165,7 +162,7 @@ export default class NeasClient extends Client {
           emailId: applicant?.details?.email,
           expirationDate: Date.now() + 1000 * 60 * 60 * 24 * 30, // 30 days
         },
-        resiliency: this.resiliency,
+        ...this.options,
       },
       context,
     );
@@ -188,11 +185,10 @@ export default class NeasClient extends Client {
     return this.post<Claims>(
       {
         uri: "/auth/interservice/verify",
-        headers: this.defaultHeaders,
         body: {
           token,
         },
-        resiliency: this.resiliency,
+        ...this.options,
       },
       context,
     );
