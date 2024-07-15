@@ -794,12 +794,12 @@ export default class LendingDecisionServiceClient extends Client {
       ratesInfo: {
         rateMapVersion: application?.rateMapVersion
           ? application.rateMapVersion
-          : "188.1",
+          : "",
         rateMapTag: application?.rateMapTag
           ? application.rateMapTag
           : "default",
         rateAdjustmentData: {
-          name: application?.partnerName ? application.partnerName : "juno",
+          name: application?.partnerName ? application.partnerName : "",
           amount:
             application?.partnerDiscountAmount &&
             !Number.isNaN(Number(application?.partnerDiscountAmount))
