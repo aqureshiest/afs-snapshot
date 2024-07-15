@@ -83,31 +83,6 @@ describe("[fab1071e] NeasClient", () => {
     await assert.rejects(client.createAccountlessUser(injections));
   });
 
-  it("[99416084] should throw when creating an accountless user and an error is returned when creating a reference", async () => {
-    mock.method(client, "post", () => {
-      return {
-        results: {
-          authId: "2",
-          sessionToken: "session",
-        },
-        response: {
-          statusCode: 200,
-          statusMessage: "Request to NEAS failed",
-        },
-      };
-    });
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "sendRequest",
-      () =>  {
-         return {
-          error: "Bad request"
-        }
-      },
-    );
-    await assert.rejects(client.createAccountlessUser(injections));
-  });
-
   it("[9edb8493] should set a cookie when an accountless user is successfully created", async () => {
     mock.method(client, "post", () => {
       return {

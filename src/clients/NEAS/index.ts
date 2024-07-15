@@ -93,8 +93,6 @@ export default class NeasClient extends Client {
       res,
     } = injections;
 
-    const client = context.loadedPlugins.applicationServiceClient.instance;
-
     const applicant = application?.applicants?.find((applicant) =>
       applicant && applicant.id === request?.params?.id
     );
@@ -117,21 +115,7 @@ export default class NeasClient extends Client {
       throw new Error(response.statusMessage);
     }
 
-    const { userId, session } = results;
-
-    const { error } = await client?.sendRequest(
-      {
-        query: ADD_REFERENCE_MUTATION,
-        variables: {
-          id: applicant?.id,
-          references: [{ referencedId: userId, referenceType: "userID" }],
-          meta: "apply-flow-service",
-        },
-      },
-      context,
-    ) as unknown as types.Event;
-
-    if (error) throw new Error(error);
+    const { session } = results;
 
     res.cookie("session", session, { domain: ".earnest.com" });
   }
