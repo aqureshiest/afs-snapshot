@@ -22,7 +22,7 @@ const executeHandler: Handler = async function (
 
   const { contract } = await manifest.execute(
     { ...input, manifest, auth, userState, error },
-    { context, ...input },
+    { context, res, ...input },
   );
 
   return res.send(contract);
