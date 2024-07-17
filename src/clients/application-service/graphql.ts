@@ -24,7 +24,7 @@ fragment ApplicantFragment on Application {
   referralProgramId
   ssnTokenURI
   reference {
-    authID
+    userID
     brand
     cognitoID
     lender {
