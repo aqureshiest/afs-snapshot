@@ -1,6 +1,6 @@
 {
   "type": "string",
-  "pattern": "^[a-zA-Z0-9\\s.'-]*$",
+  "pattern": "^[a-zA-Z0-9\\s.&'-]*$",
   "minLength": 1,
   "errorMessage": {
     "minLength": "Employer name is required.",
