@@ -1,8 +1,8 @@
 def build_build_command(base):
     def build_command(args):
         if args.build_method == 'clean':
-            return base.build_command_func('docker-compose run --rm dev npm run build:clean')(args)
-        return base.build_command_func('docker-compose run --rm dev npm run build')(args)
+            return base.build_command_func('docker compose run --rm service npm run build:clean')(args)
+        return base.build_command_func('docker compose run --rm service npm run build')(args)
     return build_command
 
 def init_gadget(gobase):
@@ -13,4 +13,3 @@ def init_gadget(gobase):
             nargs='?',
             help='Select build operation (default=compile)'
             )
-

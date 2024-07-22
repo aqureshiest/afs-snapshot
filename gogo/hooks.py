@@ -10,5 +10,5 @@ def register_hook(base, git_hook, description, command):
     os.chmod(hook_file, 0o777)
 
 def init_gadget(gobase):
-    register_hook(gobase, "pre-commit", "Run pre-commit git hooks", "docker-compose run -T --no-deps --rm ci npm run lint")
-    register_hook(gobase, "pre-push", "Run pr-push git hooks", "docker-compose run -T  --no-deps --rm ci npm run test")
+    register_hook(gobase, "pre-commit", "Run pre-commit git hooks", "docker compose run -T --no-deps --rm service npm run lint")
+    register_hook(gobase, "pre-push", "Run pr-push git hooks", "docker compose run -T  --no-deps --rm service npm run test")

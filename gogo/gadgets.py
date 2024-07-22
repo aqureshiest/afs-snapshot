@@ -54,14 +54,14 @@ def build_version_command(base):
 
 def build_npm_command(base):
     def npm_command(args):
-        subprocess.call(['docker-compose','run','dev','npm'] + args.npm_args)
+        subprocess.call(['docker compose','run','service','npm'] + args.npm_args)
     return npm_command
 
 def init_gadget(gobase):
     # Basic commands
-    gobase.register_start('docker-compose up dev')
+    gobase.register_start('docker compose up service')
     gobase.register_stop()
-    gobase.register_clean('docker-compose down --volumes')
+    gobase.register_clean('docker compose down --volumes')
     gobase.register_shell()
     gobase.register_lint_jenkinsfile()
     gobase.register_login_npm()
@@ -77,4 +77,4 @@ def init_gadget(gobase):
                                    help='version assets of the service')
 
     # Override default init command
-    gobase.register_init('docker-compose build dev')
+    gobase.register_init('ggo ci msc build')

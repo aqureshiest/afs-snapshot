@@ -11,7 +11,7 @@ def get_version():
 def migrate(args):
     env = os.environ.copy()
     env["VERSION"] = get_version()
-    return subprocess.call(["docker-compose", "run", "schema"], env=env)
+    return subprocess.call(["docker compose", "run", "schema"], env=env)
 
 def create_migration(args):
     now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")[0:14]

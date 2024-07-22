@@ -11,11 +11,8 @@ services:
     ports:
       - '4501:80'
 
-  dev:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: dev
+  service:
+    image: earnest/apply-flow-service:local
     command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
     env_file:
       - ./local.env
@@ -25,10 +22,14 @@ services:
         limits:
           memory: 256M
     depends_on:
-      - gateway
-      - vault
-      - redis
-      - mountebank
+      gateway:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mountebank:
+        condition: service_healthy
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
@@ -48,38 +49,6 @@ services:
       - ./docker/data/mountebank/imposters:/app/imposters
       - ./config:/app/config
       - ./fixtures:/app/fixtures
-  ci:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: dev
-    command: ['npx', 'chassis-test-watch']
-    volumes:
-      - ./.coverage:/usr/src/app/.coverage
-      - ./flows_test:/usr/src/app/flows
-      - ./src:/usr/src/app/src
-      - ./dist:/usr/src/app/dist
-      - ./.npmrc:/usr/src/app/.npmrc
-      - ./package.json:/usr/src/app/package.json
-      - ./package-lock.json:/usr/src/app/package-lock.json
-
-    depends_on:
-      - vault
-      - mountebank
-      - redis
-    env_file:
-      - ./test.env
-
-  prod:
-    image: earnest/apply-flow-service:${VERSION:-latest}
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: prod
-    environment:
-      - APP_ENV=production
-    ports:
-      - 3020:3000
 
   vault:
     environment:
@@ -94,21 +63,11 @@ services:
       - ./docker/data/redis:/usr/local/etc/redis
     ports:
       - 6379:6379
-  
-  pact:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: dev
-    env_file:
-      - ./test.env
-    volumes:
-      - ./src:/usr/src/app/src
 
 volumes:
   history:
   database:
-  node_modules:
+
 
 networks:
   default:
