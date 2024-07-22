@@ -2,7 +2,7 @@
   "type": "number",
   "maximum": 9999999,
   "errorMessage": {
-    "type": "Annual income before taxes is required.",
+    "type": "Annual individual income before taxes is required.",
     "maximum": "The maximum amount is $9,999,999."
   }
 }

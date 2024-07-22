@@ -1,7 +1,7 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { default as NeasClient } from "clients/NEAS/index.js";
 import type { Client } from "@earnest/http";
-import { IExecutionInjections } from "typings/contract/index.js"
+import { IExecutionInjections } from "typings/contract/index.js";
 import { Input as IContractInput } from "contract/manifest.js";
 
 type NeasClientPlugin = ChassisPlugin<NeasClient>;

@@ -24,7 +24,7 @@ describe("[462fd166] manifest.execute", () => {
       context.loadedPlugins.applicationServiceClient.instance;
     analyticsServiceClient =
       context.loadedPlugins.analyticsServiceClient.instance;
-    res = {} as Response; 
+    res = {} as Response;
   });
 
   it("[be92134e] runs without error", async () => {
@@ -33,7 +33,11 @@ describe("[462fd166] manifest.execute", () => {
       "*": new Contract({ raw: JSON.stringify({}) }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
     assert(contract);
   });
 
@@ -46,7 +50,11 @@ describe("[462fd166] manifest.execute", () => {
       reference: new Contract({ key: "reference", raw: "42" }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -67,7 +75,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -91,7 +103,11 @@ describe("[462fd166] manifest.execute", () => {
       ],
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -136,7 +152,11 @@ describe("[462fd166] manifest.execute", () => {
     });
     const ajv = context.loadedPlugins.schema.instance;
     ajv.compile(schema);
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -158,7 +178,11 @@ describe("[462fd166] manifest.execute", () => {
       name: new Contract({ key: "name", raw: JSON.stringify(name) }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
     const parsed = JSON.parse(JSON.stringify(contract));
 
     assert.deepEqual(parsed, "data must be object");
@@ -175,7 +199,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
     const parsed = JSON.parse(JSON.stringify(contract));
 
     assert.deepEqual(parsed, schema);
@@ -285,7 +313,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -304,7 +336,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -331,7 +367,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -350,7 +390,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -432,7 +476,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -457,7 +505,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -482,7 +534,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -535,7 +591,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
     assert(contract);
   });
 
@@ -587,7 +647,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
     assert(contract);
   });
 
@@ -617,7 +681,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -647,7 +715,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     assert(contract);
   });
@@ -667,7 +739,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -692,7 +768,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -717,7 +797,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -800,7 +884,11 @@ describe("[462fd166] manifest.execute", () => {
       arreglo: new Contract({ key: "arreglo", raw: `["1", "2"]` }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -891,7 +979,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -945,7 +1037,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -987,7 +1083,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -1044,7 +1144,11 @@ describe("[462fd166] manifest.execute", () => {
       }),
     });
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
