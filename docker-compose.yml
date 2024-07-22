@@ -10,6 +10,8 @@ services:
       - ./docker/data/nginx/conf.d:/etc/nginx/conf.d
     ports:
       - '4501:80'
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost/"]
 
   service:
     image: earnest/apply-flow-service:local
@@ -23,7 +25,7 @@ services:
           memory: 256M
     depends_on:
       gateway:
-        condition: service_healthy
+        condition: service_started
       vault:
         condition: service_healthy
       redis:
