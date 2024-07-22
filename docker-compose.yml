@@ -49,6 +49,11 @@ services:
       - ./docker/data/mountebank/imposters:/app/imposters
       - ./config:/app/config
       - ./fixtures:/app/fixtures
+    healthcheck:
+      test: ['CMD', 'wget', '-nv', '-t1', '--spider', 'http://localhost:2525/']
+      interval: 4s
+      timeout: 30s
+      start_period: 3s
 
   vault:
     environment:
@@ -56,11 +61,19 @@ services:
     image: earnest/vault-dev:latest
     volumes:
       - ./docker/data/vault:/usr/src/app/vault-data
+    healthcheck:
+      test: curl --fail http://localhost:9000/v1/sys/health || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 40s
+      timeout: 10s
 
   redis:
     image: redis:6.0.20
     volumes:
       - ./docker/data/redis:/usr/local/etc/redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
     ports:
       - 6379:6379
 
