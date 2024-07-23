@@ -159,7 +159,7 @@ export default class PlaidClient extends Client {
 
     if (response.statusCode !== 200 || !results.institutions) {
       const error = new Error(
-        `[5bf3f425] PLAID - failed to search institutions - ${response.statusCode}, ${response.statusMessage}`,
+        `[cc591259] PLAID - failed to search institutions - ${response.statusCode}, ${response.statusMessage}`,
       );
       this.log(
         {
@@ -202,7 +202,7 @@ export default class PlaidClient extends Client {
 
     if (response.statusCode !== 200 || !results) {
       const error = new Error(
-        `[5bf3f425] PLAID - failed to get institution - ${response.statusCode}, ${response.statusMessage}`,
+        `[9279bcc6] PLAID - failed to get institution - ${response.statusCode}, ${response.statusMessage}`,
       );
       this.log(
         {
@@ -216,6 +216,89 @@ export default class PlaidClient extends Client {
 
     return results.institution;
   }
+  // requests ASSETS REPORT for a given array of access_token
+  async createAssetsReport(
+    context: PluginContext,
+    input: Input,
+    id: string,
+    payload,
+  ) {
+    const PLAID_ASSETS_REPORT_DAYS_REQUESTED =
+      context.env.PLAID_ASSETS_REPORT_DAYS_REQUESTED || 60;
+    const request = {
+      access_tokens: payload.access_tokens,
+      days_requested: PLAID_ASSETS_REPORT_DAYS_REQUESTED,
+      options: {
+        // webhook: `${this.baseUrl}/webhooks/plaid/${id}`,
+      },
+      ...this.auth,
+    };
+    const { results, response } = await this.post<PlaidAssetReport>(
+      {
+        uri: "/asset_report/create",
+        body: request,
+        headers: this.headers,
+      },
+      context,
+    );
+
+    if (response.statusCode !== 200) {
+      const error = new Error(
+        `[eabdd551] PLAID - failed to get asset report - ${response.statusCode}, ${response.statusMessage}`,
+      );
+      this.log(
+        {
+          error,
+          results,
+        },
+        context,
+      );
+      throw error;
+    }
+    return results.asset_report_token;
+  }
+  // creates a plaid relay token
+  async createRelayToken(
+    context: PluginContext,
+    input: Input,
+    id: string,
+    payload,
+  ) {
+    const ReportToken = await this.createAssetsReport(
+      context,
+      input,
+      id,
+      payload,
+    );
+    const { results, response } = await this.post<PlaidRelayToken>(
+      {
+        uri: "/credit/relay/create",
+        body: {
+          report_tokens: [ReportToken],
+          secondary_client_id: context.env.PLAID_LDS_CLIENT_ID,
+          ...this.auth,
+        },
+        headers: this.headers,
+      },
+      context,
+    );
+
+    if (response.statusCode !== 200) {
+      const error = new Error(
+        `[038ed001] PLAID - failed to create a Relay Token - ${response.statusCode}, ${response.statusMessage}`,
+      );
+      this.log(
+        {
+          error,
+          results,
+        },
+        context,
+      );
+      throw error;
+    }
+    return results.relay_token;
+  }
+
   //exchanges a public token for a acces_token/itemId
   async exchangePublicToken(
     context: PluginContext,
@@ -257,7 +340,7 @@ export default class PlaidClient extends Client {
     payload,
   ) {
     const applicationService =
-      context.loadedPlugins.applicationServiceClient.instance;
+      context.loadedPlugins.applicationServiceClient?.instance;
 
     context.logger.silly(`Plaid exchange Public Token requested.`);
     const accessToken = await this.exchangePublicToken(
