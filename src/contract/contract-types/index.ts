@@ -30,6 +30,11 @@ export { default as plaidMethod } from "./plaid-method.js";
 export { default as piiRequest } from "./pii-request.js";
 
 /* ============================== *
+ * Neas Service
+ * ============================== */
+export { default as neasRequest } from "./neas-request.js";
+
+/* ============================== *
  * Accredited School Service
  * ============================== */
 export { default as accreditedSchoolRequest } from "./accredited-school-service-request.js";
