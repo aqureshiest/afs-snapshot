@@ -18,20 +18,13 @@ services:
     command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
     env_file:
       - ./local.env
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          memory: 256M
-    depends_on:
-      gateway:
-        condition: service_started
-      vault:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      mountebank:
-        condition: service_healthy
+   depends_on:
+     vault:
+       condition: service_healthy
+     redis:
+       condition: service_healthy
+     mountebank:
+       condition: service_healthy
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
