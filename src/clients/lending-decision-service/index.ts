@@ -761,7 +761,19 @@ export default class LendingDecisionServiceClient extends Client {
           };
         });
     }
-
+    /**
+     *  Convert Plaid access tokens to Plaid Relay token
+     */
+    let plaidRelayToken;
+    if (hasPlaid) {
+      const plaidClient = context.loadedPlugins.plaid?.instance;
+      if (!plaidClient) {
+        throw new Error("[91f2eddb] Plaid Service client instance not found");
+      }
+      plaidRelayToken = await plaidClient.createRelayToken(context, input, "", {
+        access_tokens: plaidTokens,
+      });
+    }
     /**
      * The end result formatted for LDS
      */
@@ -776,7 +788,9 @@ export default class LendingDecisionServiceClient extends Client {
       },
       financialInfo: {
         hasPlaid,
-        ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
+        ...(hasPlaid
+          ? { plaidAccessTokens: plaidTokens, plaidRelayToken }
+          : {}),
         ...(!hasPlaid
           ? {
               financialAccounts: financialAccountDetails

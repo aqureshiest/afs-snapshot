@@ -250,4 +250,25 @@ describe("[f8395630] Plaid Client", () => {
     assert.deepEqual(response, []);
     assert(input.error?.includes("duplicated-account-error"));
   });
+  it("[defcbb11] should be able to get assets report", async () => {
+    mock.reset();
+    const response = await client.createAssetsReport(context, input, "123", {
+      access_token: "asasdasdasd",
+      days_requested: 60,
+    });
+    assert.deepEqual(
+      response,
+      "assets-sandbox-6f12f5bb-22dd-4855-b918-f47ec439198a",
+    );
+  });
+  it("[fc99df78] shuould be able to create a relay token", async () => {
+    mock.reset();
+    const response = await client.createRelayToken(context, input, "123", {
+      access_token: "asasdasdasd",
+    });
+    assert.deepEqual(
+      response,
+      "credit-relay-production-3TAU2CWVYBDVRHUCAAAI27ULU4",
+    );
+  });
 });
