@@ -14,6 +14,7 @@ describe("[462fd166] manifest.execute", () => {
   let context;
   let applicationServiceClient;
   let analyticsServiceClient;
+  let neasServiceClient;
   let res;
   before(async () => {
     const pkg = await readJsonFile("./package.json");
@@ -24,6 +25,7 @@ describe("[462fd166] manifest.execute", () => {
       context.loadedPlugins.applicationServiceClient.instance;
     analyticsServiceClient =
       context.loadedPlugins.analyticsServiceClient.instance;
+    neasServiceClient = context.loadedPlugins.NeasClient.instance;
     res = {} as Response;
   });
 
@@ -588,6 +590,57 @@ describe("[462fd166] manifest.execute", () => {
           }
         }`,
         type: "analytics",
+      }),
+    });
+
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
+    assert(contract);
+  });
+
+  it("[4r3ggwqq] it should execute an Neas-Request contract-type", async () => {
+    const input = {
+      request: {
+        method: "POST",
+      },
+      auth: {
+        session: {
+          userId: "1234",
+          exp: 0,
+          isValid: true,
+        },
+      },
+      applicationState: null,
+      application: {
+        id: 1,
+        primary: {
+          id: 2,
+          details: {
+            financialAccounts: [
+              {
+                plaidAccessToken: "1234",
+              },
+            ],
+          },
+        },
+      },
+    } as Input;
+
+    mock.method(neasServiceClient, "createAccountlessSession", () => {
+      return "";
+    });
+
+    const manifest = new Manifest(context, "neas-request", {
+      key: "neasRequest",
+      "*": new Contract({
+        key: "neasRequest",
+        raw: `{
+          "neastMethod": "createAccountlessSession"
+        }`,
+        type: "neasRequest",
       }),
     });
 
