@@ -1,7 +1,4 @@
-version: '3.9'
-
 services:
-  # Tunnel
   gateway:
     image: nginx:stable-alpine
     restart: always
@@ -18,13 +15,13 @@ services:
     command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
     env_file:
       - ./test.env
-   depends_on:
-     vault:
-       condition: service_healthy
-     redis:
-       condition: service_healthy
-     mountebank:
-       condition: service_healthy
+    depends_on:
+      vault:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mountebank:
+        condition: service_healthy
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
