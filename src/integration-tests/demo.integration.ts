@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import type { Client } from "@earnest/http";
+import { Client } from "@earnest/http";
 
 describe("test ping", () => {
   it("[get /ping", async () => {
