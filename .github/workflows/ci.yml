@@ -14,6 +14,6 @@ jobs:
       service-image-name: "earnest/apply-flow-service"
       testkube_run_type: "testsuite"
       testkube_run_name: "afs"
-      sandbox_testkube_run_type: "testsuite"
-      sandbox_testkube_run_name: "afs"
+      testkube_sandbox_run_type: "testsuite"
+      testkube_sandbox_run_name: "afs"
       # testkube_run_variables: ""
