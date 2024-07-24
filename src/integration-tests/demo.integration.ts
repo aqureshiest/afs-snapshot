@@ -7,7 +7,7 @@ describe("test ping", () => {
     const afsClient = new Client({
       baseUrl: "https://apply-flow-service.staging.earnest.com"
     });
-    const { response } = await afsCLient.get({
+    const { response } = await afsClient.get({
       uri: "/ping",
       headers: {
         tracestate: process.env.TRACESTATE,
