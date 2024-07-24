@@ -24,7 +24,7 @@ fragment ApplicantFragment on Application {
   referralProgramId
   ssnTokenURI
   reference {
-    authID
+    userID
     brand
     cognitoID
     lender {
@@ -196,17 +196,6 @@ export const ADD_REFERENCE_MUTATION = `
   mutation addReferences($id: UUID!, $references: [ReferenceInput], $meta: EventMeta) {
     addReferences(id: $id, references: $references, meta: $meta) {
       error
-    }
-  }
-`;
-
-export const NEAS_APPLICATION_QUERY = `
-  query Application($id: UUID!) {
-    application(id: $id) {
-      authID
-      details {
-        email
-      }
     }
   }
 `;

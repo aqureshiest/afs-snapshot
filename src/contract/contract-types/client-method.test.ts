@@ -1,4 +1,5 @@
 import { before, describe, it, mock } from "node:test";
+import { Response } from "express";
 import assert from "node:assert";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
@@ -10,12 +11,14 @@ import Manifest from "../manifest.js";
 
 describe("[9a0b9d5e] Contract: ClientMethod", () => {
   let context;
+  let res;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
     context = await createPluginContext(pkg);
     await registerChassisPlugins(context);
+    res = {} as Response;
   });
 
   it("[4467ca51] calls the specified client", async () => {
@@ -41,7 +44,11 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
       },
     );
 
-    const { contract } = await manifest.execute(input, { context, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -71,7 +78,11 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
       },
     );
 
-    const { contract } = await manifest.execute(input, { context, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 

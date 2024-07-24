@@ -3,7 +3,7 @@
     "piiRequestMethod": "saveToken",
     "id": "{{request.params.id}}",
     {{#with request.body.values}}
-      "value": {{ssn}}
+      "value": "{{ssn}}"
     {{/with}}
   }
 {{else}}

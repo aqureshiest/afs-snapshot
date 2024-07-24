@@ -262,6 +262,25 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
   type Output = { [key: string]: unknown };
 }
 
+import "contract/contract-types/neas-request.js";
+declare module "contract/contract-types/neas-request.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    neastMethod:
+      | "createAccountlessUser"
+      | "createAccountlessSession"
+      | "sendVerificationEmail";
+    id: string;
+  };
+  type Injections = IExecutionInjections;
+
+  type MinimalApplication = {
+    id: string;
+  };
+  type Output = { [key: string]: unknown };
+}
+
 import "contract/contract-types/error.js";
 declare module "contract/contract-types/error.js" {
   type Input = IContractInput;
