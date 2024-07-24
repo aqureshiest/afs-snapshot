@@ -228,7 +228,7 @@ export default class PlaidClient extends Client {
       context.env.PLAID_ASSETS_REPORT_DAYS_REQUESTED || 60;
     const request = {
       access_tokens: payload.access_tokens,
-      days_requested: PLAID_ASSETS_REPORT_DAYS_REQUESTED,
+      days_requested: Number(PLAID_ASSETS_REPORT_DAYS_REQUESTED),
       options: {
         // webhook: `${this.baseUrl}/webhooks/plaid/${id}`,
       },
