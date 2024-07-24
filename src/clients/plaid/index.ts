@@ -1,6 +1,7 @@
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { Event } from "@earnest/application-service-client/typings/codegen.js";
 import { Institution } from "plaid";
+import SensitiveString from "@earnest-labs/ts-sensitivestring";
 const gql = String.raw;
 
 import Client from "../client.js";
@@ -275,7 +276,9 @@ export default class PlaidClient extends Client {
         uri: "/credit/relay/create",
         body: {
           report_tokens: [ReportToken],
-          secondary_client_id: context.env.PLAID_LDS_CLIENT_ID,
+          secondary_client_id: SensitiveString.ExtractValue(
+            context.env.PLAID_LDS_CLIENT_ID,
+          ),
           ...this.auth,
         },
         headers: this.headers,
