@@ -10,7 +10,7 @@ describe("test ping", () => {
     const { response } = await afsClient.get({
       uri: "/ping",
       headers: {
-        tracestate: process.env.TRACESTATE,
+        tracestate: process.env.TRACESTATE || "",
       },
     })
     assert.equal(response.statusCode, 200);
