@@ -10,7 +10,7 @@ groups:
       target: afs
 
 suites:
-  - name: afs-tests # Name of the suite
+  - name: afs # Name of the suite
     test-definition-glob: nets-gitops/nets/**/groups/**/*.yaml # Location where the tests templates are in nets-gitops repository
     selector:
       kind: all-labels # Selection method for the labels
