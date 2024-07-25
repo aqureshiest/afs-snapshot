@@ -75,7 +75,7 @@ const getInputs: Handler = async function (
     /* ============================== *
      * III. Session Authorization
      * ============================== */
-    const isAuthorized = applicants.reduce((authorized, applicant) => {
+    const isAuthorized = context.env.APP_ENV === "development" || applicants.reduce((authorized, applicant) => {
       const { monolithUserID } = applicant;
 
       if (monolithUserID && userId && monolithUserID == userId) {
