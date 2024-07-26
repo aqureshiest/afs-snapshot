@@ -44,7 +44,11 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
       },
     );
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 
@@ -74,7 +78,11 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
       },
     );
 
-    const { contract } = await manifest.execute(input, { context, res, ...input });
+    const { contract } = await manifest.execute(input, {
+      context,
+      res,
+      ...input,
+    });
 
     const parsed = JSON.parse(JSON.stringify(contract));
 

@@ -3,7 +3,7 @@ import * as types from "@earnest/application-service-client/typings/codegen.js";
 
 import Client from "../client.js";
 
-import { ADD_REFERENCE_MUTATION, } from "../application-service/graphql.js";
+import { ADD_REFERENCE_MUTATION } from "../application-service/graphql.js";
 
 export default class NeasClient extends Client {
   get clientName() {
@@ -53,13 +53,9 @@ export default class NeasClient extends Client {
    * @returns Promise<void>
    */
   async createAccountlessSession(injections: Injections): Promise<void> {
-    const {
-      context,
-      request,
-      res,
-    } = injections;
+    const { context, request, res } = injections;
 
-    const { results, response } = await this.post<{ session: string, }>(
+    const { results, response } = await this.post<{ session: string }>(
       {
         uri: "/auth/identity/unauthenticated",
         Authorization: `${this.#accessKey}`,
@@ -86,20 +82,15 @@ export default class NeasClient extends Client {
    * @returns Promise<void>
    */
   async createAccountlessUser(injections: Injections): Promise<void> {
-    const {
-      application,
-      context,
-      request,
-      res,
-    } = injections;
+    const { application, context, request, res } = injections;
 
-    const applicant = application?.applicants?.find((applicant) =>
-      applicant && applicant.id === request?.params?.id
+    const applicant = application?.applicants?.find(
+      (applicant) => applicant && applicant.id === request?.params?.id,
     );
 
     const { results, response } = await this.post<{
-      session: string,
-      userId: string,
+      session: string;
+      userId: string;
     }>(
       {
         uri: "/auth/identity/userId",
@@ -126,14 +117,10 @@ export default class NeasClient extends Client {
    * @returns Promise<void>
    */
   async sendVerificationEmail(injections: Injections): Promise<void> {
-    const {
-      application,
-      context,
-      request,
-    } = injections;
+    const { application, context, request } = injections;
 
-    const applicant = application?.applicants?.find((applicant) =>
-      applicant && applicant.id === request?.params?.id
+    const applicant = application?.applicants?.find(
+      (applicant) => applicant && applicant.id === request?.params?.id,
     );
 
     const { response } = await this.post<void>(

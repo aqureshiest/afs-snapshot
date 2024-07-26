@@ -21,16 +21,16 @@ describe("[fab1071e] NeasClient", () => {
         applicants: [
           {
             id: "1",
-          }
-        ]
+          },
+        ],
       },
       request: {
         params: {
-          id: "1"
-        }
+          id: "1",
+        },
       },
       context,
-      res: { cookie: () => true }
+      res: { cookie: () => true },
     };
   });
 

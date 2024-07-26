@@ -348,7 +348,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       } catch (error) {
         assert.strictEqual(
           error.message,
-          "[45ff82b1] Application Service client instance not found",
+          "[d5e6bc7f] Application Service client instance not found",
         );
       }
     });

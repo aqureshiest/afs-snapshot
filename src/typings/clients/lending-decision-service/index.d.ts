@@ -39,12 +39,12 @@ type IEducation = Array<{
 type IEmployment = Array<{
   employerName: typings.IncomeDetail["employer"];
   jobTitle: typings.IncomeDetail["title"];
-  employmentStatus: typings.IncomeDetail["type"];
-  employmentStartDate: typings.IncomeDetail["start"];
-  employmentEndDate: typings.IncomeDetail["end"];
+  employmentStatus: typings.IncomeDetail["type"] | string;
+  employmentStartDate?: typings.IncomeDetail["start"];
+  employmentEndDate?: typings.IncomeDetail["end"];
   amount: typings.IncomeDetail["amount"];
-  salary: typings.IncomeDetail["amount"];
-  employmentType: typings.IncomeDetail["type"];
+  salary?: typings.IncomeDetail["amount"];
+  employmentType?: typings.IncomeDetail["type"];
   verifiedSalary?: null;
   employmentEndingSoon?: boolean;
 }>;
@@ -72,21 +72,23 @@ type IFinancialDetails = {
   }>;
 };
 
+type IRatesDetails = {
+  rateMapVersion: string;
+  rateMapTag: string;
+  rateAdjustmentData: {
+    name: string;
+    amount: number;
+  };
+};
+
 interface IDecisionEntity {
   entityInfo: IEntityInfo;
   educations: IEducation;
-  employments: IEmployment;
+  employments?: IEmployment;
   incomes: IIncome;
   assets: IAssets;
-  financialInfo: IFinancialDetails;
-  ratesInfo: {
-    rateMapVersion: string;
-    rateMapTag: string;
-    rateAdjustmentData: {
-      name: string;
-      amount: number;
-    };
-  };
+  financialInfo?: IFinancialDetails;
+  ratesInfo: IRatesDetails;
   loanInfo: {
     claimedLoanAmount: typings.AmountDetail["requested"];
   };
