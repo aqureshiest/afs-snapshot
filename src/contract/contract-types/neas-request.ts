@@ -7,7 +7,7 @@ class NeasRequest extends ContractType<Definition, Definition, Output> {
   }
 
   condition = (input: Input, context: Injections, definition: Definition) => {
-    return Boolean(definition && definition.neastMethod);
+    return Boolean(definition && definition.neasMethod);
   };
 
   evaluate = async (
@@ -24,7 +24,7 @@ class NeasRequest extends ContractType<Definition, Definition, Output> {
 
     let result;
     try {
-      result = await neasClientService[definition.neastMethod](injections);
+      result = await neasClientService[definition.neasMethod](injections);
     } catch (ex) {
       this.error(
         input,
