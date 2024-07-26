@@ -14,7 +14,7 @@ services:
     image: earnest/apply-flow-service:local
     command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
     env_file:
-      - ./local.env
+      - ./test.env
     depends_on:
       vault:
         condition: service_healthy
