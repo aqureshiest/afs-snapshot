@@ -1,0 +1,6 @@
+{
+  "*": "redirect",
+  "actions": ["create-accountless-session"],
+  "redirect": ["redirect.accountless"],
+  "onError": []
+}

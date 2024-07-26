@@ -14,6 +14,7 @@ export const plugin: Plugin = {
     /* ============================== *
      * I. All contracts gather inputs and execute contracts
      * ============================== */
+    context.application.get('/auth/status', wrapAsyncHandler(context, handlers.fakeAuth));
 
     context.application.use(
       `/apply/*/:id(${constants.UUID_REGEX.source})`,
