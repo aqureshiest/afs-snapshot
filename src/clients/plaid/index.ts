@@ -265,12 +265,12 @@ export default class PlaidClient extends Client {
     id: string,
     payload,
   ) {
-    const ReportToken = payload.reportTokens;
+    const reportToken = payload.reportTokens;
     const { results, response } = await this.post<PlaidRelayToken>(
       {
         uri: "/credit/relay/create",
         body: {
-          report_tokens: ReportToken,
+          report_tokens: reportToken,
           secondary_client_id: SensitiveString.ExtractValue(
             context.env.PLAID_LDS_CLIENT_ID,
           ),
