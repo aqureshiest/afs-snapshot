@@ -365,7 +365,8 @@ export default class PlaidClient extends Client {
         this.log(
           {
             error: ex,
-            message: "[38c53670]",
+            message:
+              "[38c53670] failed to generate a plaid assets report, ignoring the error, continuing without it",
           },
           context,
         );
