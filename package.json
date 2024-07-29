@@ -32,6 +32,7 @@
     "@earnest/microservice-chassis-traceid-express-middleware": "^1.0.3",
     "@earnest/state-machine": "^2.2.0",
     "@pact-foundation/pact": "^13.1.1",
+    "@pact-foundation/pact-cli": "^15.0.3",
     "@segment/analytics-node": "^2.1.0",
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
