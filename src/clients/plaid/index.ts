@@ -265,17 +265,12 @@ export default class PlaidClient extends Client {
     id: string,
     payload,
   ) {
-    const ReportToken = await this.createAssetsReport(
-      context,
-      input,
-      id,
-      payload,
-    );
+    const ReportToken = payload.reportTokens;
     const { results, response } = await this.post<PlaidRelayToken>(
       {
         uri: "/credit/relay/create",
         body: {
-          report_tokens: [ReportToken],
+          report_tokens: ReportToken,
           secondary_client_id: SensitiveString.ExtractValue(
             context.env.PLAID_LDS_CLIENT_ID,
           ),
@@ -356,6 +351,25 @@ export default class PlaidClient extends Client {
       (app) => app?.id === id,
     );
     if (accessToken) {
+      let plaidAssetsReportID;
+      try {
+        plaidAssetsReportID = await this.createAssetsReport(
+          context,
+          input,
+          id,
+          {
+            access_tokens: [accessToken.access_token],
+          },
+        );
+      } catch (ex) {
+        this.log(
+          {
+            error: ex,
+            message: "[38c53670]",
+          },
+          context,
+        );
+      }
       const plaidResponse = await this.getAccounts(
         context,
         input,
@@ -402,6 +416,7 @@ export default class PlaidClient extends Client {
                   plaidAccountID: faccount.account_id,
                   plaidItemID: plaidResponse.item.item_id,
                   plaidAccessToken: accessToken.access_token,
+                  plaidAssetsReportID: plaidAssetsReportID,
                 };
               } else {
                 this.error(input, "duplicated-account-error");

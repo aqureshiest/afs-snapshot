@@ -89,6 +89,7 @@ fragment ApplicantFragment on Application {
       plaidAccountID
       plaidItemID
       plaidAccessToken
+      plaidAssetsReportID
     }
     education {
       degree
