@@ -886,7 +886,7 @@ export default class LendingDecisionServiceClient extends Client {
     financialAccountDetails: typings.Details["financialAccounts"],
   ): Promise<DecisionEntity["financialInfo"]> {
     const plaidTokens: Array<string> = [];
-    const plaidAssetsReportTIDs: Array<string> = [];
+    const plaidAssetsReportIDs: Array<string> = [];
     let hasPlaid = false;
     let plaidRelayToken;
 
@@ -902,8 +902,8 @@ export default class LendingDecisionServiceClient extends Client {
           }
         }
         if (account?.plaidAssetsReportID) {
-          if (!plaidAssetsReportTIDs.includes(account?.plaidAssetsReportID)) {
-            plaidAssetsReportTIDs.push(account?.plaidAssetsReportID);
+          if (!plaidAssetsReportIDs.includes(account?.plaidAssetsReportID)) {
+            plaidAssetsReportIDs.push(account?.plaidAssetsReportID);
           }
         }
         return {
@@ -916,7 +916,7 @@ export default class LendingDecisionServiceClient extends Client {
         };
       });
 
-    if (hasPlaid && plaidAssetsReportTIDs.length > 0) {
+    if (hasPlaid && plaidAssetsReportIDs.length > 0) {
       const plaidClient = context.loadedPlugins.plaid?.instance;
       if (!plaidClient) {
         throw new Error("[91f2eddb] Plaid Service client instance not found");
@@ -926,7 +926,7 @@ export default class LendingDecisionServiceClient extends Client {
         input,
         "",
         {
-          reportTokens: plaidAssetsReportTIDs,
+          reportTokens: plaidAssetsReportIDs,
         },
       );
     }
