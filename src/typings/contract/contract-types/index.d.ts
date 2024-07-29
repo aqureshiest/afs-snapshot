@@ -267,11 +267,10 @@ declare module "contract/contract-types/neas-request.js" {
   type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
-    neastMethod:
+    neasMethod:
       | "createAccountlessUser"
       | "createAccountlessSession"
       | "sendVerificationEmail";
-    id: string;
   };
   type Injections = IExecutionInjections;
 
