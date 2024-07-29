@@ -362,14 +362,11 @@ export default class PlaidClient extends Client {
           },
         );
       } catch (ex) {
-        this.log(
-          {
-            error: ex,
-            message:
-              "[38c53670] failed to generate a plaid assets report, ignoring the error, continuing without it",
-          },
-          context,
-        );
+        context.logger.error({
+          error: ex,
+          message:
+            "[38c53670] failed to generate a plaid assets report, ignoring the error, continuing without it",
+        });
       }
       const plaidResponse = await this.getAccounts(
         context,
