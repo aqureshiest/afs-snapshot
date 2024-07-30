@@ -111,7 +111,6 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
               plaidItemID: "yG9aZ7ngMDua9ZWLrX8wIKVW1Wql3lIyVX5X9",
               plaidAccessToken:
                 "access-sandbox-33ce1168-f5d1-44df-b31d-4f1ceaee748a",
-              plaidAssetsReportID: "report-1234",
             },
           ],
           amount: {
