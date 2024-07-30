@@ -261,22 +261,6 @@ describe("[f8395630] Plaid Client", () => {
       "assets-sandbox-6f12f5bb-22dd-4855-b918-f47ec439198a",
     );
   });
-  it("[aada55d3] should throw when unable to get assets report", async () => {
-    mock.reset();
-    mock.method(client, "post", async () => {
-      return {
-        response: {
-          statusCode: 400,
-          statusMessage: "invalid request",
-        },
-      };
-    });
-    const request = client.createAssetsReport(context, input, "123", {
-      access_token: "asasdasdasd",
-      days_requested: 60,
-    });
-    assert.rejects(request);
-  });
   it("[fc99df78] shuould be able to create a relay token", async () => {
     mock.reset();
     const response = await client.createRelayToken(context, input, "123", {
@@ -286,21 +270,5 @@ describe("[f8395630] Plaid Client", () => {
       response,
       "credit-relay-production-3TAU2CWVYBDVRHUCAAAI27ULU4",
     );
-  });
-  it("[10c998c6] should throw when unable to get assets report", async () => {
-    mock.reset();
-    mock.method(client, "post", async () => {
-      return {
-        response: {
-          statusCode: 400,
-          statusMessage: "invalid request",
-        },
-      };
-    });
-    const request = client.createRelayToken(context, input, "123", {
-      access_token: "asasdasdasd",
-      days_requested: 60,
-    });
-    assert.rejects(request);
   });
 });

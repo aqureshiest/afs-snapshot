@@ -32,7 +32,7 @@
     "@earnest/microservice-chassis-traceid-express-middleware": "^1.0.3",
     "@earnest/state-machine": "^2.2.0",
     "@pact-foundation/pact-cli": "^15.0.3",
-    "@pact-foundation/pact": "^12.4.0",
+    "@pact-foundation/pact": "^13.1.1",
     "@segment/analytics-node": "^2.1.0",
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
@@ -40,7 +40,6 @@
     "axios": "^1.6.0",
     "cookie-parser": "^1.4.6",
     "gql-query-builder": "^3.8.0",
-    "graphql": "^16.8.1",
     "handlebars-a-la-json": "^1.5.8",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.1",
@@ -48,6 +47,7 @@
     "pg": "^8.11.1",
     "plaid": "^26.0.0",
     "redis": "^4.6.13",
+    "graphql": "^16.8.1",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
