@@ -908,24 +908,26 @@ export default class LendingDecisionServiceClient extends Client {
         };
       });
 
-    if (hasPlaid) {
-      const plaidClient = context.loadedPlugins.plaid?.instance;
-      if (!plaidClient) {
-        throw new Error("[91f2eddb] Plaid Service client instance not found");
-      }
-      plaidRelayToken = await plaidClient["createRelayToken"](
-        context,
-        input,
-        "",
-        {
-          access_tokens: plaidTokens,
-        },
-      );
-    }
+    // temporally remove plaid relay token integration
+    // if (hasPlaid) {
+    //   const plaidClient = context.loadedPlugins.plaid?.instance;
+    //   if (!plaidClient) {
+    //     throw new Error("[91f2eddb] Plaid Service client instance not found");
+    //   }
+    //   plaidRelayToken = await plaidClient["createRelayToken"](
+    //     context,
+    //     input,
+    //     "",
+    //     {
+    //       access_tokens: plaidTokens,
+    //     },
+    //   );
+    // }
 
     return {
       hasPlaid,
-      ...(hasPlaid ? { plaidAccessTokens: plaidTokens, plaidRelayToken } : {}),
+      // ...(hasPlaid ? { plaidAccessTokens: plaidTokens, plaidRelayToken } : {}),
+      ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
       ...(!hasPlaid
         ? {
             financialAccounts: accounts ? accounts : [],
