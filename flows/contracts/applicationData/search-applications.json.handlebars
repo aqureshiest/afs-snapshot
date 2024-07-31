@@ -1,6 +1,6 @@
 {
   "criteria": {{#list}}
-    {{#with auth.session}}
+    {{#with auth.artifacts}}
       {{#if userId}}
       { "monolithUserID": "{{ userId }}" }
       {{/if}}

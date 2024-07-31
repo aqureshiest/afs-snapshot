@@ -1,13 +1,15 @@
+import assert from "node:assert";
 import * as contractTypes from "./contract-types/index.js";
 import { createHash } from "crypto";
 
+import * as constants from "./constants.js";
 import handlebars from "./handlebars.js";
 
-export default class Contract {
+export default class Contract<I> implements ExecutableParent<Input<I>> {
   id: string;
   name: string;
   version: string;
-  type: (typeof contractTypes)[ContractType];
+  Constructor: (typeof contractTypes)[ContractType];
   raw: string;
   parsed: unknown;
   template: Template;
@@ -25,7 +27,8 @@ export default class Contract {
     this.name = contractKey;
     this.id = version ? `${contractKey}.${version}` : contractKey;
     this.version = version ? version : "default";
-    this.type = contractTypes[type as ContractType] || contractTypes.identity;
+    this.Constructor =
+      contractTypes[type as ContractType] || contractTypes.identity;
     this.raw = raw;
     this.template = handlebars.compile(raw);
   }
@@ -34,31 +37,45 @@ export default class Contract {
    * @param {Function} reviver - contract execution reviver that has the
    * full manifest bound as a parameter to allow full referencing
    */
-  execute(
-    injections: Omit<Injections, "dependents">,
-    key: string,
-    index?: number,
-  ) {
-    const { evaluations } = injections;
+  input(context, executionContext: ExecutionContext<I>, input) {
+    const { index, key, manifest } = executionContext;
+    const evaluations = (executionContext.evaluations =
+      executionContext.evaluations || {});
 
-    const contractInstance = new this.type({
-      contract: this,
-      id: this.id,
-    });
+    const id =
+      (manifest ? manifest.id : "") +
+      (key != null ? ":" + key : "") +
+      (index != null ? `[${index}]` : "");
+
+    const contractInstance = new this.Constructor({
+      parent: this,
+      id,
+      index,
+      evaluations,
+    }).input(context, executionContext, input);
 
     /* ============================== *
      * Each unique mutation will be recorded in the mutations object. If a
      * contract needs to be re-executed after mutations, previously run
      * mutations will be used preferentially;
      * ============================== */
+    const evaluationKey = key || constants.ROOT_CONTRACT;
 
     const existingContract =
-      index != null ? evaluations[key]?.[index] : evaluations[key];
+      index != null
+        ? evaluations[evaluationKey]?.[index]
+        : evaluations[evaluationKey];
 
     if (existingContract && existingContract.isLocked) {
       return existingContract;
     }
 
     return contractInstance;
+  }
+
+  async execute(pluginContext, executionContext, input) {
+    const executable = this.input(pluginContext, executionContext, input);
+    await executable.execute(pluginContext, executionContext, input);
+    return executable;
   }
 }

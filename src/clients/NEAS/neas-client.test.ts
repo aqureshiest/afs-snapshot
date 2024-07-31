@@ -29,8 +29,7 @@ describe("[fab1071e] NeasClient", () => {
           id: "1",
         },
       },
-      context,
-      res: { cookie: () => true },
+      response: { cookie: () => true },
     };
   });
 
@@ -43,7 +42,7 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    await assert.rejects(client.createAccountlessSession(injections));
+    await assert.rejects(client.createAccountlessSession(context, injections));
   });
 
   it("[9c1dbc20] should set a cookie when an accountless session is successfully created", async () => {
@@ -66,9 +65,9 @@ describe("[fab1071e] NeasClient", () => {
         };
       },
     );
-    mock.method(injections.res, "cookie");
-    await client.createAccountlessSession(injections);
-    assert.equal(injections.res.cookie.mock.calls.length, 1);
+    mock.method(injections.response, "cookie");
+    await client.createAccountlessSession(context, injections);
+    assert.equal(injections.response.cookie.mock.calls.length, 1);
   });
 
   it("[da658e1b] should throw when creating an accountless user and the request to NEAS fails", async () => {
@@ -80,7 +79,7 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    await assert.rejects(client.createAccountlessUser(injections));
+    await assert.rejects(client.createAccountlessUser(context, injections));
   });
 
   it("[9edb8493] should set a cookie when an accountless user is successfully created", async () => {
@@ -103,9 +102,9 @@ describe("[fab1071e] NeasClient", () => {
         };
       },
     );
-    mock.method(injections.res, "cookie");
-    await client.createAccountlessUser(injections);
-    assert.equal(injections.res.cookie.mock.calls.length, 1);
+    mock.method(injections.response, "cookie");
+    await client.createAccountlessUser(context, injections);
+    assert.equal(injections.response.cookie.mock.calls.length, 1);
   });
 
   it("[adfe133f] should throw when sending an email link and the request to NEAS fails", async () => {
@@ -117,7 +116,7 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    await assert.rejects(client.sendVerificationEmail(injections));
+    await assert.rejects(client.sendVerificationEmail(context, injections));
   });
 
   it("[e155c81d] should send an email link", async () => {
@@ -128,7 +127,9 @@ describe("[fab1071e] NeasClient", () => {
         },
       };
     });
-    await assert.doesNotReject(client.sendVerificationEmail(injections));
+    await assert.doesNotReject(
+      client.sendVerificationEmail(context, injections),
+    );
   });
 
   it("[bb287e57] should return the returned claims and response object when verifying a session", async () => {

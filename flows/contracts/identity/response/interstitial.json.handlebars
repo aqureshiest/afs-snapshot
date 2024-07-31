@@ -1,26 +1,22 @@
-
-{{#if application}}
-  {{#if application.reference.lendingDecisionID}}
-    {
-      "action": {{{ json (contract 'redirect_homebase') }}}
-    }
-  {{else}}
-    {{#noop}}{{ contract 'analytics' }}{{/noop}}
-    {{#noop }}{{{contract 'set-timestamp'}}}{{/noop}}
-    {
-      "action": {
-        "key": "submitInterstitial",
-        "type": "interstitial",
-        "properties": {
-          "showSpinner": true,
-          "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
-          "action": {{{json (contract 'statusAction')}}}
-        }
-      },
-      "result": {{{json (contract 'actions')}}},
-      "error": {{{json error}}}
-    }
-  {{/if}}
+{{!
+  Use this as the root contract for an interaction
+}}
+{{#if (and (contract 'requirements'))}}
+  {
+    "action": {
+      "key": "submitInterstitial",
+      "type": "interstitial",
+      "properties": {
+        "showSpinner": true,
+        "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+        "action": {{{json (contract 'poll')}}}
+      }
+    },
+    "result": {{{json (contract 'actions')}}},
+    "error": {{{json error}}}
+  }
 {{else}}
-  null
+  {
+    "action": {{{ json (contract 'default') }}}
+  }
 {{/if}}

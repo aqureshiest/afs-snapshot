@@ -40,7 +40,7 @@ class Client extends BaseClient<[Context | void]> {
     return this.health >= this.healthThreshold;
   }
 
-  private logLevelFromMessage(message: Message): string {
+  private logLevelFromMessage(message: LogMessage): string {
     if (message.level) return message.level;
     if ("error" in message) return "error";
     if (
@@ -105,19 +105,8 @@ class Client extends BaseClient<[Context | void]> {
     delete this.healthDaemon;
     await super.stop();
   }
-  error(input: Input, message: string | Array<string>) {
-    if (!input.error) input.error = [];
 
-    if (Array.isArray(message)) {
-      input.error = input.error.concat(message);
-    } else {
-      if (!input.error.includes(message)) {
-        input.error.push(message);
-      }
-    }
-  }
-
-  log(message: Message, context?: Context) {
+  log(message: LogMessage, context?: Context) {
     const level = this.logLevelFromMessage(message);
     const { error } = message;
     const decoratedMessage = {

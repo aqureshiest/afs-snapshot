@@ -1,7 +1,7 @@
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 
-class IdentityContract<Identity> extends ContractType<Identity> {
-  get contractName(): string {
+class IdentityContract<Identity> extends ContractExecutable<Identity> {
+  get executionName(): string {
     return "Identity";
   }
 }

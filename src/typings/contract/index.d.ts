@@ -1,61 +1,76 @@
+import { createJsonHandlebars } from "handlebars-a-la-json";
+import type { default as Ajv } from "ajv";
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import type ContractType from "contract/contract-types/base-contract.js";
-import { create } from "handlebars";
-import { createJsonHandlebars } from "handlebars-a-la-json";
-import type { Application as IApplication } from "clients/application-service/index.js";
+import type { Application as IApplication } from "@earnest/application-service-client/typings/codegen.js";
+import type { HttpError as IHttpError } from "http-errors";
+
+import type { Request, Response } from "express";
+
+import type ContractExecutable from "contract/contract-executable.js";
 import * as contractTypes from "contract/contract-types/index.js";
-import type Contract from "contract/contract.js";
-import type Manifest from "contract/manifest.js";
+import type IContract from "contract/contract.js";
 import type { ApplicationState, UserState } from "clients/redis/index.js";
-import { Response } from "express";
+
+import type {
+  default as IExecutable,
+  ExecutableInterface as IExecutableInterface,
+  ExecutionContext as IExecutionContext,
+  ExecutableParent as IExecutableParent,
+} from "contract/executable.js";
+
+import type {
+  default as Manifest,
+  ContractManifest as IContractManifest,
+  ContractManifests as IContractManifests,
+} from "contract/manifest.js";
 
 type HandlebarsTemplate = ReturnType<
   ReturnType<typeof createJsonHandlebars>["compile"]
 >;
 
-declare module "handlebars-a-la-json" {
-  // NOTE: the typing in "handlebars-a-la-json" is incomplete, so we substitute it with the type from "handlebars"
-  export function createJsonHandlebars(
-    options?: IOptions,
-  ): ReturnType<typeof create>;
-}
-
-type IExecutions<M extends { [key: string]: Contract | Contract[] }> = Map<
-  keyof M,
-  unknown
->;
-
-type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+type IExecutions<
+  M extends { [key: string]: IContract<unknown> | IContract<unknown>[] },
+> = Map<keyof M, unknown>;
 
 /**
  * TODO: fully define this shape
  */
-type IContractInput = {
+type IContractInput<I> = I & {
   applicationState: ApplicationState;
-  application: IApplication | null;
-  request?: {
-    originalUrl?: string;
-    method?: string;
-    params?: { [key: string]: unknown };
-    body?: { [key: string]: unknown };
-    query?: { [key: string]: unknown };
-    headers?: { [key: string]: unknown };
-    cookies?: { [key: string]: string };
-  };
+  request?: Request;
+  response?: Response;
   env?: { [key: string]: string };
   manifestName?: string;
   userState?: UserState;
-  manifest?: Manifest;
-  error?: Array<string>;
+  manifest?: Manifest<I>;
   auth?: {
-    internal?: {
-      isValid: boolean;
-    };
-    session?: {
-      userId: string;
-      exp: number;
-      isValid: boolean;
+    /**
+     * A list of all auth strategies that have been successfully validated
+     */
+    strategies: string[];
+    /**
+     * The request has elevated internal privileges
+     */
+    isInternal: boolean;
+    /**
+     * At least one set of recognized credentials included in the request
+     * are valid (formatting, expiration, verification, etc)
+     */
+    isValid: boolean;
+    /**
+     * The provided credentials have sufficient privilege to affect the resources
+     */
+    isAuthorized: boolean;
+    /**
+     * Artifacts related to any authentication strategies used
+     */
+    artifacts?: {
+      [key: string]: undefined | string | number;
+      userId?: string;
+      candidateId?: string;
+      emailId?: string;
+      exp?: number;
     };
   };
 };
@@ -65,72 +80,52 @@ type IContractInput = {
  */
 type IContractOutput = unknown;
 
-interface IContracts {
+interface IContracts<I> {
   [key: string]: {
-    [version: string]: Contract;
+    [version: string]: IContract<I>;
   };
 }
 type ISchema = { [key: string]: unknown };
 type ISchemas = {
   [key: string]: ISchema;
 };
-/**
- */
-type IContractManifest = Manifest;
-
-type IContractManifests = {
-  "*": never;
-} & {
-  [key: string]: IContractManifest;
-};
 
 interface IEvaluations {
   [key: string]:
-    | ContractType<unknown, unknown, unknown>
-    | ContractType<unknown, unknown, unknown>[];
+    | ContractExecutable<unknown, unknown, unknown>
+    | ContractExecutable<unknown, unknown, unknown>[];
 }
 
-interface IDependencies {
-  [key: string]: ContractType<unknown, unknown, unknown>;
-}
-
-export interface IExecutionInjections extends IContractInput {
+type IExecutionInjections<I> = IContractInput<I> & {
   context: ChassisPluginContext;
-  res: Response;
-  manifest: Manifest;
-  contract: ContractType<unknown, unknown, unknown>;
+  manifest: Manifest<I>;
+  contract?: ContractExecutable<unknown, unknown, unknown>;
   // All known contract instances by key
   evaluations: IEvaluations;
-}
+};
 
-import "contract/manifest.test.js";
-declare module "contract/manifest.test.js" {
-  type Input = IContractInput;
-  type Manifest = IContractManifest;
+import "contract/manifest.js";
+declare module "contract/manifest.js" {
+  type Contract<I> = IContract<I>;
+  type Contracts<I> = IContracts<I>;
+  type Executables<I> = Record<
+    string,
+    IContract<I> | IContract<I>[] | Manifest<I> | Manifest<I>[]
+  >;
 }
 
 import "contract/ingestor.js";
 declare module "contract/ingestor.js" {
-  type Contracts = IContracts;
+  type Contracts<I> = IContracts<I>;
 
   type ContractType = Exclude<keyof typeof contractTypes, "ContractType">;
 
-  type ManifestFile = Record<string, string | string[]>;
-  type Manifest = IContractManifest;
-  type Manifests = IContractManifests;
   type Schema = ISchema;
   type Schemas = ISchemas;
   interface BuildContracts {
-    (context: ChassisPluginContext, path: string): Promise<Contracts>;
+    (context: ChassisPluginContext, path: string): Promise<Contracts<unknown>>;
   }
 
-  interface BuildManifests {
-    (
-      context: ChassisPluginContext,
-      path: string,
-      contracts: Contracts,
-    ): Promise<{ totalManifests: number; manifests: Manifests }>;
-  }
   interface BuildSchemas {
     (
       context: ChassisPluginContext,
@@ -140,19 +135,22 @@ declare module "contract/ingestor.js" {
   interface IngestManifest {
     (
       context: ChassisPluginContext,
-    ): Promise<{ contracts: Contracts; manifests: Manifests }>;
+    ): Promise<{ contracts: Contracts<unknown>; manifests: Manifests }>;
   }
 }
 
-declare module "contract/contract-types/base-contract.js" {
-  type Input = IContractInput;
-  type Dependencies = IDependencies;
+import type { Dependencies as IDependencies } from "contract/executable.js";
+declare module "contract/contract-executable.js" {
+  type Input<I> = IContractInput<I>;
+  type Dependencies<I> = IDependencies<I>;
+  type ExecutableInterface<I> = IExecutableInterface<IContractInput<I>>;
+  type ExecutionContext<I> = IExecutionContext<IContractInput<I>>;
 }
 
 declare module "contract/contract.js" {
   type Context = ChassisPluginContext;
-  type Injections = IExecutionInjections;
-  type Input = IContractInput;
+  type ExecutionContext<I> = IExecutionContext<IContractInput<I>>;
+  type Input<I> = IContractInput<I>;
 
   type ContstructorArguments = {
     key?: string;
@@ -165,35 +163,18 @@ declare module "contract/contract.js" {
   type ContractType = Exclude<keyof typeof contractTypes, "ContractType">;
 
   type Template = HandlebarsTemplate;
-  type ContextualManifest = Manifest;
-  type Executions = IExecutions<{ [key: string]: Contract | Contract[] }>;
-}
-
-import "contract/manifest.js";
-declare module "contract/manifest.js" {
-  type Injections = IExecutionInjections;
-  type Context = ChassisPluginContext;
-
-  type Input = IContractInput;
-
-  type ManifestFile = Record<string, string | string[]>;
-  type Manifests = Manifest | IContractManifests;
-  type Contracts =
-    | {
-        "*": Contract | Contract[];
-      }
-    | {
-        [key: string]: Contract[];
-      };
-
-  type Executions = IExecutions<{ [key: string]: Contract | Contract[] }>;
+  type ContextualManifest<I> = Manifest<I>;
+  type Executions<I> = IExecutions<{
+    [key: string]: Contract<I> | Contract<I>[];
+  }>;
+  type ExecutableInterface<I> = IExecutableInterface<IContractInput<I>>;
 }
 
 type ContractPlugin = ChassisPlugin<{
   Manifest: typeof Manifest;
-  Contract: typeof Contract;
+  Contract: typeof IContract;
   manifests: IContractManifests;
-  contracts: IContracts;
+  contracts: IContracts<unknown>;
 }>;
 
 import "contract/chassis-plugin.js";
@@ -212,9 +193,10 @@ declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
 import "express-serve-static-core";
 declare module "express-serve-static-core" {
   interface Locals {
-    manifest: Manifest;
-    input: IContractInput;
+    errors: Record<string, Array<Error | IHttpError>>;
+    manifest: Manifest<unknown>;
+    input: IContractInput<{ application: Application | null }>;
     contract: IContractOutput;
-    evaluations: Record<string, ContractType<unknown, unknown>>;
+    evaluations: Record<string, ContractExecutable<unknown, unknown>>;
   }
 }

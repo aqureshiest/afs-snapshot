@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 import {
   IdentifyParams,
   PageParams,
@@ -20,14 +20,14 @@ enum EVENT_TYPE {
 //   income_verification_method = "income_verification_method",
 // }
 
-class Analytics extends ContractType<Definition, Definition, Output> {
-  get contractName(): string {
+class Analytics extends ContractExecutable<Definition, Definition, Output> {
+  get executionName(): string {
     return "Analytics";
   }
 
   /**
    */
-  condition = (input: Input, context: Injections, definition: Definition) => {
+  condition = (_, __, input: Input, definition: Definition) => {
     const { application } = input;
 
     const { type } = definition;
@@ -46,12 +46,12 @@ class Analytics extends ContractType<Definition, Definition, Output> {
    * This function should probably return some information about the event that was created
    */
   evaluate = async (
+    context: Context,
+    executionContext,
     input: Input,
-    injections: Injections,
     definition: Definition,
   ) => {
     setImmediate(async () => {
-      const { context } = injections;
       try {
         const analyticsServiceClient =
           context.loadedPlugins.analyticsServiceClient.instance;
@@ -100,7 +100,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     assert(application?.primary, "[38cb50d5] no auth.session.userId");
 
-    const userId = auth?.session?.userId;
+    const userId = auth?.artifacts?.userId;
 
     assert(userId, "[ab4bkv0s] userId is null");
 
@@ -133,8 +133,6 @@ class Analytics extends ContractType<Definition, Definition, Output> {
         props.properties.employment_type = "future employment";
       }
     }
-    // hacky thingys end
-
     return props;
   }
 
@@ -143,7 +141,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
 
     assert(application?.primary, "[18e77f7d] application.primary is null");
 
-    const userId = auth?.session?.userId;
+    const userId = auth?.artifacts?.userId;
 
     assert(userId, "[67bb3ee4] userId is null");
 
@@ -168,7 +166,7 @@ class Analytics extends ContractType<Definition, Definition, Output> {
     const { actionKey, formValue, title, manifest, ...payloadProps } =
       properties;
 
-    const userId = auth?.session?.userId;
+    const userId = auth?.artifacts?.userId;
 
     assert(userId, "[bf4e11e6] userId is null");
 

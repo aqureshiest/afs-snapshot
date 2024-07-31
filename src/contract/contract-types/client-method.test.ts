@@ -24,17 +24,25 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
   it("[4467ca51] calls the specified client", async () => {
     const MOCKED_RESPONSE = "pong";
 
-    const input = {} as Input;
-    const manifest = new Manifest(context, "manifestTest", {
-      "*": new Contract({
-        type: "clientMethod",
-        raw: JSON.stringify({
-          client: "internalRestServiceClient",
-          method: "GET",
-          uri: "/ping",
-        }),
-      }),
-    });
+    const input = { response: res } as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            type: "clientMethod",
+            raw: JSON.stringify({
+              client: "internalRestServiceClient",
+              method: "GET",
+              uri: "/ping",
+            }),
+          }),
+        },
+      },
+    );
 
     mock.method(
       context.loadedPlugins.internalRestServiceClient.instance,
@@ -44,31 +52,35 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
       },
     );
 
-    const { contract } = await manifest.execute(input, {
-      context,
-      res,
-      ...input,
-    });
+    const result = await manifest.execute(context, {}, input);
 
-    const parsed = JSON.parse(JSON.stringify(contract));
+    const parsed = JSON.parse(JSON.stringify(result));
 
-    assert.equal(parsed, MOCKED_RESPONSE);
+    assert.equal(parsed?.results, MOCKED_RESPONSE);
   });
 
   it("[000fd623] quietly ignores non-allow-listed clients", async () => {
     const MOCKED_RESPONSE = "pong";
 
-    const input = {} as Input;
-    const manifest = new Manifest(context, "manifestTest", {
-      "*": new Contract({
-        type: "clientMethod",
-        raw: JSON.stringify({
-          client: "sneakyInternalClient",
-          method: "GET",
-          uri: "/ping",
-        }),
-      }),
-    });
+    const input = { response: res } as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            type: "clientMethod",
+            raw: JSON.stringify({
+              client: "sneakyInternalClient",
+              method: "GET",
+              uri: "/ping",
+            }),
+          }),
+        },
+      },
+    );
 
     mock.method(
       context.loadedPlugins.internalRestServiceClient.instance,
@@ -78,14 +90,10 @@ describe("[9a0b9d5e] Contract: ClientMethod", () => {
       },
     );
 
-    const { contract } = await manifest.execute(input, {
-      context,
-      res,
-      ...input,
-    });
+    const result = await manifest.execute(context, {}, input);
 
-    const parsed = JSON.parse(JSON.stringify(contract));
+    const parsed = JSON.parse(JSON.stringify(result));
 
-    assert.equal(parsed, null);
+    assert.equal(parsed?.results, null);
   });
 });

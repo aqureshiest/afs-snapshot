@@ -1,0 +1,13 @@
+{{! 
+  compare the value at "token" to the environment variable for the LDS s2s key 
+  and return a string indicating that source of the provided token 
+
+  TODO: even though environment variables are only provided as inputs for the input 
+  manifest, it might be a good idea to lock down how environment variables are
+  access within contracts
+}}
+{{#if (eq (contract 'token') (extractSensitiveString env.S2S_KEY_LDS_APPLY_FLOW_SERVICE))}}
+  "lending-decisioning-service"
+{{else}}
+  null
+{{/if}}

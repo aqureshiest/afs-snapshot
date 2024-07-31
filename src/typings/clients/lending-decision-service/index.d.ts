@@ -1,8 +1,9 @@
 import type { Plugin as ChassisPlugin } from "@earnest-labs/microservice-chassis/Plugin.js";
 import type { PluginContext as ChassisPluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
-import type { default as LendingDecisionServiceClient } from "clients/lending-decision-service/index.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
+import type { HttpError as IHttpError } from "http-errors";
 
+import type { default as LendingDecisionServiceClient } from "clients/lending-decision-service/index.js";
 type LendingDecisionServicePlugin = ChassisPlugin<LendingDecisionServiceClient>;
 
 import { WebhookTypeEnum } from "clients/lending-decision-service/index.js";
@@ -188,6 +189,7 @@ declare module "clients/lending-decision-service/chassis-plugin.ts" {
   type Context = ChassisPluginContext;
   type instance = LendingDecisionServiceClient;
 }
+
 declare module "../../../clients/lending-decision-service/index.js" {
   const enum PRODUCTS {
     SLR = "SLR",
@@ -199,11 +201,26 @@ declare module "../../../clients/lending-decision-service/index.js" {
     Primary = "primary",
   }
 
+  /**
+   * TODO: use this interface for the `DecisionRequest` contract type to ensure consistent
+   * interface for error handling / reporting
+   */
+  interface DecisionRequestMethod<U = unknown, O = unknown> {
+    (
+      this: LendingDecisionServiceClient,
+      input: Input<unknown>,
+      context: ChassisPluginContext,
+      id: string,
+      payload: U,
+    ): Promise<{ errors: Array<Error | IHttpError>; results?: O }>;
+  }
+
   type DecisionEntity = IDecisionEntity;
   type ApplicationDecisionDetails = IApplicationDecisionDetails;
   type DecisionRequestDetails = IDecisionRequestDetails;
   type DecisionPostResponse = IDecisionPostResponse;
   type DecisionGetResponse = IDecisionGetResponse;
   type WebhookEventPayload = IWebhookEventPayload;
-  type Input = IContractInput;
+  type Input<I> = IContractInput<I>;
+  type HttpError = IHttpError;
 }

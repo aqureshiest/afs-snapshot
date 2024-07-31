@@ -1,0 +1,32 @@
+{{! Auth strategy formatter for NEAS response to /auth/interservice/verify }}
+{{#contract key="response"}}
+  {
+    "strategy": "neas",
+    {{! This auth strategy is never internal }}
+    "isInternal": false,
+    {{!
+      'authorization' is an array of contracts or manifests that evaluate to
+      either true or false to indicate that some combination of authentication
+      artifacts and input resources permits the requested operation
+    }}
+    {{#with (contract 'authorization') as |authorization|}}
+      "isAuthorized": {{{ json (or authorization) }}},
+    {{else}}
+      "isAuthorized": false,
+    {{/with}}
+    {{! Mark this strategy as successful if the response includes `isValid` }}
+    {{#if (and results.isValid (lt response.statusCode 400))}}
+      "isValid": true,
+      {{!  TODO: any claim obtained by the NEAS verify method should be mapped here }}
+      "artifacts": {{#obj}}
+        {{#with results}}
+          { "userId": {{{ json userId }}} }
+          { "exp": {{{ json exp }}} }
+        {{/with}}
+      {{/obj}}
+    {{else}}
+      "isValid": false
+    {{/if}}
+  }
+{{/contract}}
+

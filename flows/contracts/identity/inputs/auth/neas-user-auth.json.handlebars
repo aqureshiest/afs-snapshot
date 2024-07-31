@@ -1,0 +1,20 @@
+{{! Authorization check for NEAS userId claim and application applicants }}
+{{#with (contract 'application') as | application |}}
+  {{#with (contract 'response') as | response |}}
+    {{{ json ( and 
+        response.results.userId
+        (
+          includes (
+            map application.applicants 'reference.userID'
+          )
+          response.results.userId
+        )
+      )
+    }}}
+  {{else}}
+    false
+  {{/with}}
+{{else}}
+  {{! no application? no problem }}
+  true
+{{/with}}

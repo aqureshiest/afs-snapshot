@@ -7,7 +7,7 @@ export default class AccreditedSchoolServiceClient extends Client {
     return "AccreditedSchoolService";
   }
   async getSchoolName(
-    input: Input,
+    input: Input<unknown>,
     context: PluginContext,
     payload,
   ): Promise<string | null> {
@@ -25,7 +25,7 @@ export default class AccreditedSchoolServiceClient extends Client {
   }
 
   async getSchool(
-    input: Input,
+    input: Input<unknown>,
     context: PluginContext,
     payload,
   ): Promise<SchoolDetails | null> {
@@ -59,12 +59,12 @@ export default class AccreditedSchoolServiceClient extends Client {
   }
 
   async getSchools(
-    input: Input,
+    input: Input<unknown>,
     context: PluginContext,
-    payload: { opeid?: string; name?: string; loanType?: LoanType },
+    payload: { opeid?: string | null; name?: string; loanType?: LoanType },
   ): Promise<Array<School>> {
     if (!payload.loanType && !payload.name && !payload.opeid) {
-      this.error(input, `[28bb0233] Missing required parameters`);
+      throw new Error(`[28bb0233] Missing required parameters`);
     }
 
     const queryPayload = {

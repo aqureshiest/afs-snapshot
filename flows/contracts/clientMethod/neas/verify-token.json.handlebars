@@ -1,0 +1,12 @@
+{{#if (coalesce request.headers.idtoken request.headers.idToken)}}
+{
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/interservice/verify",
+  "body": {
+    "token": {{{ json (coalesce request.headers.idtoken request.headers.idToken) }}}
+  }
+}
+{{else}}
+  null
+{{/if}}

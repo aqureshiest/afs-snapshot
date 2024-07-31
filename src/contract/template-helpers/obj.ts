@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+/**
+ * Block helper that takes a newline separated list of objects and combines them
+ * into a single object
+ */
 const obj: TemplateHelper = function (context) {
   const splitList = context.fn(this).trim().split("\n");
   const obj = {};
 
-  splitList.forEach((item) => {
-    if (item) {
+  splitList
+    .filter((item) => Boolean(item.trim()))
+    .forEach((item) => {
       const parsedItem = JSON.parse(item);
+
+      if (!parsedItem || typeof parsedItem !== "object") return;
 
       Object.keys(parsedItem).forEach((parsedItemKey) => {
         if (obj[parsedItemKey] === undefined) {
@@ -23,8 +30,7 @@ const obj: TemplateHelper = function (context) {
           }
         }
       });
-    }
-  });
+    });
 
   return `${JSON.stringify(obj)}`;
 };

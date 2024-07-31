@@ -1,37 +1,35 @@
 {{!
-  This backfill contract expects the first action to be a decision-request
-  and only triggers if the first applicant has a monolithLoanID
-
-  This contract checks to make sure that the decision request is not in its
-  pre-evaluation state.
 
   TODO: it would be nice if the contract template-helper was able to
   conditionally withold results if `isIncomplete` is true. This might make it
   easier to prevent evaluative contracts from propagating up their own internal
   instructions
 }}
-{{#if (and
-  (contract 'actions' 0)
-  (not (lookup (contract 'actions' 0) "decisionRequestMethod"))
-  application.monolithLoanID
-)}}
-  {
-    "client": "internalRestServiceClient",
-    "method": "POST",
-    "uri": "/apply-flow-service/lending-decisioning",
-    "body": {
-      "loan_id": {{{json application.monolithLoanID}}}
-        {{#with (contract 'actions' 0) }}
+{{#with application as | application |}}
+  {{#with (contract 'actions' (sum @index -1)) as | decision |}}
+    {{#if (and decision.data application.monolithLoanID)}}
+      {
+        "action": "decision-backfill",
+        "client": "internalRestServiceClient",
+        "method": "POST",
+        "uri": "/apply-flow-service/lending-decisioning",
+        "body": {
+          "loan_id": {{{json application.monolithLoanID}}}
           {{#spread}}
             {
-              "journey_application_token": {{{json data.journeyApplicationToken}}},
-              "journey_token": {{{json data.journeyToken}}},
-              "status": {{{json data.status}}}
+              "journey_application_token": {{{json decision.data.journeyApplicationToken}}},
+              "journey_token": {{{json decision.data.journeyToken}}},
+              "status": {{{json decision.data.status}}}
             }
           {{/spread}}
-        {{/with}}
-    }
-  }
-{{else}}
+        }
+      }
+    {{else}}
+      null
+    {{/if}}
+  {{else}}
+    null
+  {{/with}}
+{{ else }}
   null
-{{/if}}
+{{/with}}

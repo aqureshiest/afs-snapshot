@@ -1,7 +1,54 @@
-{
-    "*": "response.interstitial",
-    "actions": ["decision-request", "decision-backfill"],
-    "set-timestamp": "redis.set-timestamp",
-    "statusAction": "actions/decision-request.applicationStatus",
-    "redirect_homebase": "actions/homebase.default"
-}
+[
+  {
+    "methods": [
+      "post",
+      "put",
+      "patch"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid",
+        "required": true
+      }
+    ],
+    "inputs": {
+      "*": "inputs",
+      "application": "application-by-id-param",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "response.interstitial",
+      "requirements": [
+        "requirements/status.incomplete"
+      ],
+      "actions": [
+        {
+          "*": "redis.set-timestamp"
+        },
+        {
+          "*": "decision-request"
+        },
+        {
+          "*": "actions/result",
+          "action": "decision-backfill"
+        }
+      ],
+      "default": "actions/homebase.default",
+      "poll": "actions/decision-request.applicationStatus"
+    }
+  }
+]

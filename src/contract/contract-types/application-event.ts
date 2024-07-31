@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 import { Types as AStypes } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
@@ -38,8 +38,12 @@ const DESTRUCTIVE_EVENTS = Object.freeze([
   "removeReferences",
 ]);
 
-class ApplicationEvent extends ContractType<Definition, Definition, Output> {
-  get contractName(): string {
+class ApplicationEvent extends ContractExecutable<
+  Definition,
+  Definition,
+  Output
+> {
+  get executionName(): string {
     return "ApplicationEvent";
   }
 
@@ -70,7 +74,7 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
   /**
    */
-  condition = (input: Input, context: Injections, definition: Definition) => {
+  condition = (_, __, input: Input, definition: Definition) => {
     const method = input.request?.method;
 
     const { event, payload } = definition;
@@ -101,11 +105,11 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
    * This function should probably return some information about the event that was created
    */
   evaluate = async (
+    context: Context,
+    executionContext,
     input: Input,
-    injections: Injections,
     definition: Definition,
   ) => {
-    const { context } = injections;
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
     assert(
@@ -121,22 +125,25 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
       if (!applicationServiceClient.eventInputTypes) {
         await applicationServiceClient.getEventInputTypes(
           mutationSchemaQuery,
-          injections,
+          context,
         );
       }
     } catch (error) {
-      context.logger.error({
-        error,
+      this.log(context, {
         message:
           "[dc77e2d9] Failed to get event types and unable to perform request",
+        error,
       });
+
       throw error;
     }
 
     if (!applicationServiceClient.eventInputTypes[definition.event]) {
       throw new Error("[694d632f] Event is not defined on event types");
     }
+
     let requestResult;
+
     try {
       requestResult = await applicationServiceClient.sendRequest(
         this.buildRequestBody(
@@ -145,26 +152,44 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
         ),
         context,
       );
-    } catch (error) {
-      if (error) {
-        try {
-          const arrayError = JSON.parse(error.message);
-          this.error(input, arrayError);
-        } catch (ex) {
-          this.error(input, ex);
-        }
-      }
+    } catch (ex) {
+      const error = new Error("Failed to commit application event");
+      /* ============================== *
+       * Unexpected errors:
+       * ============================== */
+      this.log(context, {
+        message: error.message,
+        error: ex,
+        event: definition && definition.event,
+      });
+
+      this.error(executionContext, error);
+
+      /* ============================== *
+       * TODO: consider alternative return types for this contract-type
+       * ============================== */
+
       return {};
     }
 
     if (requestResult) {
       const eventResult = requestResult as { [key: string]: types.Event };
-      const { error } = eventResult[definition.event]
+
+      /* ============================== *
+       * TODO [LA-714]: application-service needs to be able to provide more nuanced
+       * distinction between the types of errors it returns, so that these
+       * can be propagated up to the client with appropriate status code
+       * and formatting
+       * ============================== */
+
+      const { error: errorMessage } = eventResult[definition.event]
         ? eventResult[definition.event]
         : eventResult;
 
-      if (error && typeof error === "string") {
-        this.error(input, error);
+      if (errorMessage && typeof errorMessage === "string") {
+        const error = new Error(errorMessage);
+
+        this.error(executionContext, error);
         return {};
       }
       /* ============================== *
@@ -185,13 +210,10 @@ class ApplicationEvent extends ContractType<Definition, Definition, Output> {
 
           Object.defineProperty(input, "application", { value: application });
         } catch (error) {
-          this.error(
-            input,
-            `[ba26622c] failed ${this.contractName}:\n${error.message}`,
-          );
-          context.logger.warn({
+          this.log(context, {
             message: "failed to rehydrate application",
-            contract: this.id,
+            error,
+            level: "warn",
           });
         }
       }

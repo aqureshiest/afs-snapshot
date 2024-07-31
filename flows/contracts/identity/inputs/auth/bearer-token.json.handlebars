@@ -1,0 +1,2 @@
+{{! Extract and decode a bearer token from the request headers }}
+{{{ json (atob (lookup (match request.headers.authorization '^Bearer\s+(\S+)$') 1)) }}}
