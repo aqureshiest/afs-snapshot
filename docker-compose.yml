@@ -1,7 +1,4 @@
-version: '3.9'
-
 services:
-  # Tunnel
   gateway:
     image: nginx:stable-alpine
     restart: always
@@ -10,32 +7,27 @@ services:
       - ./docker/data/nginx/conf.d:/etc/nginx/conf.d
     ports:
       - '4501:80'
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost/"]
 
-  dev:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: dev
+  service:
+    image: earnest/apply-flow-service:local
     command: ['npx', 'chassis-start-watch', '--inspect=0.0.0.0:9229']
     env_file:
       - ./local.env
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          memory: 256M
     depends_on:
-      - gateway
-      - vault
-      - redis
-      - mountebank
+      vault:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mountebank:
+        condition: service_healthy
     volumes:
       - ./flows:/usr/src/app/flows
       - ./src:/usr/src/app/src
-      - ./dist:/usr/src/app/dist
-      - ./.npmrc:/usr/src/app/.npmrc
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
+      - ./.coverage:/usr/src/app/.coverage
     ports:
       - '9230:9229'
 
@@ -48,38 +40,11 @@ services:
       - ./docker/data/mountebank/imposters:/app/imposters
       - ./config:/app/config
       - ./fixtures:/app/fixtures
-  ci:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: dev
-    command: ['npx', 'chassis-test-watch']
-    volumes:
-      - ./.coverage:/usr/src/app/.coverage
-      - ./flows_test:/usr/src/app/flows
-      - ./src:/usr/src/app/src
-      - ./dist:/usr/src/app/dist
-      - ./.npmrc:/usr/src/app/.npmrc
-      - ./package.json:/usr/src/app/package.json
-      - ./package-lock.json:/usr/src/app/package-lock.json
-
-    depends_on:
-      - vault
-      - mountebank
-      - redis
-    env_file:
-      - ./test.env
-
-  prod:
-    image: earnest/apply-flow-service:${VERSION:-latest}
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: prod
-    environment:
-      - APP_ENV=production
-    ports:
-      - 3020:3000
+    healthcheck:
+      test: ['CMD', 'wget', '-nv', '-t1', '--spider', 'http://localhost:2525/']
+      interval: 4s
+      timeout: 30s
+      start_period: 3s
 
   vault:
     environment:
@@ -87,28 +52,26 @@ services:
     image: earnest/vault-dev:latest
     volumes:
       - ./docker/data/vault:/usr/src/app/vault-data
+    healthcheck:
+      test: curl --fail http://localhost:9000/v1/sys/health || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 40s
+      timeout: 10s
 
   redis:
     image: redis:6.0.20
     volumes:
       - ./docker/data/redis:/usr/local/etc/redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
     ports:
       - 6379:6379
-  
-  pact:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      target: dev
-    env_file:
-      - ./test.env
-    volumes:
-      - ./src:/usr/src/app/src
 
 volumes:
   history:
   database:
-  node_modules:
+
 
 networks:
   default:

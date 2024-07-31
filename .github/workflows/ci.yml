@@ -1,0 +1,19 @@
+name: Actions CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  ci:
+    uses: meetearnest/github-workflows/.github/workflows/chassis-pipeline.yml@main
+    with:
+      service-name: "apply-flow-service"
+      service-image-name: "earnest/apply-flow-service"
+      testkube_run_type: "testsuite"
+      testkube_run_name: "afs"
+      testkube_sandbox_run_type: "testsuite"
+      testkube_sandbox_run_name: "afs"
+      # testkube_run_variables: ""

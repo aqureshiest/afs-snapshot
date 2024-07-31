@@ -1,84 +1,49 @@
-# +----------------------------------------+
-# | Target: dev-dependencies (INTERIM)     |
-# |     Copies dev dependencies            |
-# |                                        |
-# | DO NOT PUBLISH THIS INTERIM TARGET     |
-# +----------------------------------------+
+ARG BASE_IMAGE_TAG
+ARG BASE_IMAGE_REPO
+ARG BASE_IMAGE=$BASE_IMAGE_REPO:$BASE_IMAGE_TAG
 
-ARG BASE_IMAGE=earnest/microservice-base:2.2-6fbd2ab
+FROM $BASE_IMAGE
 
-FROM $BASE_IMAGE AS dev-dependencies
+# Repeated because Docker is silly https://stackoverflow.com/questions/60450479/using-arg-and-env-in-dockerfile
+ARG BASE_IMAGE_TAG
+ARG BASE_IMAGE_REPO
+ARG BASE_IMAGE=$BASE_IMAGE_REPO:$BASE_IMAGE_TAG
+ARG TARGET_IMAGE_REPO
+ARG TARGET_IMAGE_TAG
+ARG NPM_INSTALL_FLAGS=--production=true
+ARG NODE_ENV=production
 
-WORKDIR /usr/src/app
-
-# IMPORTANT: don't publish this target with the .npmrc included
-COPY .npmrc* package.json package-lock.json ./
+COPY package.json package-lock.json ./
 
 # Install dev dependencies
-RUN npm ci --force --production=false && npm cache verify
+RUN --mount=type=secret,id=npmrc,dst=/usr/src/app/.npmrc \
+    npm install --development=true && \
+    npm cache verify
 
-# +----------------------------------------+
-# | Target: dev                            |
-# +----------------------------------------+
-
-FROM $BASE_IMAGE AS dev
-
-WORKDIR /usr/src/app
-
-# built dev-dependencies, sans .npmrc
-COPY --from=dev-dependencies /usr/src/app/package.json ./package.json
-COPY --from=dev-dependencies /usr/src/app/node_modules ./node_modules
-
-# install in development mode to get binaries
-# necessary to compile the source code
-
-# Copy source files
-COPY ./src ./src
-
-# +----------------------------------------+
-# | Target: prod-dependencies (INTERIM)    |
-# |     1. compiles from source            |
-# |     2. clears dev dependencies         |
-# |     3. installs production dependencies|
-# |                                        |
-# | DO NOT PUBLISH THIS INTERIM TARGET     |
-# +----------------------------------------+
-
-FROM dev AS prod-dependencies
-
-# IMPORTANT: don't publish this target with the .npmrc included
-COPY .npmrc* package.json package-lock.json ./
-
-# Remove source code and development libraries
-RUN rm -r node_modules
 
 # Install production dependencies
-RUN npm ci --force --production=true && npm cache verify && rm -f .npmrc
+RUN --mount=type=secret,id=npmrc,dst=/usr/src/app/.npmrc \
+    npm install ${NPM_INSTALL_FLAGS} && \
+    npm cache verify
+
+# Copy source code into container
+COPY . .
+
+# Install gogo-nets
+RUN apt-get -y update; apt-get -y install curl
+RUN bash -c "$(curl -fsSL https://artifactory.tools.earnest.com/gogo/install.sh)"
+RUN ~/.gogo/bin/ggo nets version
 
 # Compile from source (depends on npm install)
 RUN npm run build
 
-# +----------------------------------------+
-# | Target: deployable                     |
-# |     ONLY copies over compiled code and |
-# |     production dependencies            |
-# +----------------------------------------+
-
-FROM $BASE_IMAGE AS prod
-
-WORKDIR /usr/src/app
-
-# Copy just compiled steps from production target
-COPY --from=prod-dependencies /usr/src/app/package.json ./package.json
-COPY --from=prod-dependencies /usr/src/app/node_modules ./node_modules
-COPY --from=prod-dependencies /usr/src/app/dist ./dist
-
-# Add definition files
-COPY ./flows ./flows
-
-ARG VERSION
-ENV VERSION $VERSION
-ENV NODE_ENV=production
+# Inject some debug environment variables to the container
+ENV BASE_IMAGE_REPO   $BASE_IMAGE_REPO
+ENV BASE_IMAGE_TAG    $BASE_IMAGE_TAG
+ENV TARGET_IMAGE_REPO $TARGET_IMAGE_REPO
+ENV TARGET_IMAGE_TAG  $TARGET_IMAGE_TAG
+ENV BASE_IMAGE        $BASE_IMAGE
+ENV TARGET_IMAGE      $TARGET_IMAGE_REPO:$TARGET_IMAGE_TAG
+ENV MICROSERVICE_CHASSIS_EXTRA_VERSION_INFO "{\"target_image\":\"${TARGET_IMAGE}\",\"base_image\":\"${BASE_IMAGE}\"}"
 
 EXPOSE 3000
-

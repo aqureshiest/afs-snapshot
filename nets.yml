@@ -1,0 +1,21 @@
+repo-name: apply-flow-service
+
+groups:
+  - name: afs
+    container: earnest/apply-flow-service # Container where the gogo-nets CLI is going to be executed
+    test-file-glob: ./dist/integration-tests/*.integration.js # Path from root to where this group's tests are located
+    command: node --enable-source-maps  --test-reporter spec {{test-id}} # command that needs to be run to execute a single test
+    labels: # Optional. Label that are going to be used to be selected to be part of a suite.
+      test-tool: node-test
+      target: afs
+
+suites:
+  - name: afs # Name of the suite
+    test-definition-glob: nets-gitops/nets/**/groups/**/*.yaml # Location where the tests templates are in nets-gitops repository
+    selector:
+      kind: all-labels # Selection method for the labels
+      spec:
+        labels: # Labels that all the tests of this suite must have
+          test-tool: node-test
+          target: afs
+          branch: "{{branch}}"

@@ -1,7 +1,7 @@
 GIT_BRANCH_NAME=${CHANGE_BRANCH:-main}
 docker-compose run --rm \
         --env PACT_DO_NOT_TRACK='1' \
-        pact sh -c "
+        service sh -c "
             rm -rf ./dist/* && \
             export GIT_COMMIT=$GIT_COMMIT && \
             export GIT_BRANCH_NAME=$GIT_BRANCH_NAME && \
