@@ -203,7 +203,7 @@ describe("[f8395630] Plaid Client", () => {
           type: account?.type,
           selected: account?.selected,
           account_last4: account?.account_last4,
-          balance: account?.balance,
+          balance: account?.balance / 100,
         };
       }),
     );
