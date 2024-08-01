@@ -1,8 +1,19 @@
-export const DEFAULT_VERSION = "default";
-export const ROOT_CONTRACT = "*";
 /* ============================== *
  * Substitution symbols
  * ============================== */
+
+export const CONTRACT_SUBSTITUTION_SYMBOL = "$";
+export const NOT_CONTRACT = `${CONTRACT_SUBSTITUTION_SYMBOL}NOT`;
+export const AND_CONTRACT = `${CONTRACT_SUBSTITUTION_SYMBOL}AND`;
+export const OR_CONTRACT = `${CONTRACT_SUBSTITUTION_SYMBOL}OR`;
+
+export const REFERENCE_SUBSTITUTION_SYMBOL = "#";
+export const CONCATENATION_SYMBOL = "&";
+export const OPERATION_SYMBOL = "%";
+export const MAPPING_SYMBOL = "@";
+export const WILD_CARD_SYMBOL = "*";
+export const COMMENT_SYMBOL = "?";
+export const SPREAD_SYMBOL = "...";
 
 /* ============================== *
  * Regex
@@ -24,63 +35,9 @@ export const REFERENCE_SUBSTITUTION_REGEX = /([^":\[\]]+)(?:\:\:([^":\[\]]+))?/;
 /* ============================== *
  * Collections
  * ============================== */
-export enum ParameterFormat {
-  uuid = "uuid",
-  integer = "integer",
+
+export enum SUBSTITUTION_STRATEGY {
+  SINGLE = "#",
+  ARRAY = "$",
+  VARIADIC = "@",
 }
-
-export const UUID_REGEX =
-  /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-
-export const INTEGER_REGEX = /^\d+$/;
-
-export const manifestSchema = {
-  type: "object",
-  required: ["outputs"],
-  properties: {
-    parameters: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          key: {
-            type: "string",
-          },
-          format: {
-            type: "string",
-          },
-          required: {
-            type: "boolean",
-          },
-        },
-        required: ["key"],
-      },
-    },
-    outputs: {
-      type: "object",
-      $ref: "#/$defs/contracts",
-    },
-    inputs: {
-      type: "object",
-      $ref: "#/$defs/contracts",
-    },
-  },
-  $defs: {
-    contracts: {
-      type: "object",
-      required: ["*"],
-      additionalProperties: {
-        anyOf: [
-          { type: "string" },
-          { $ref: "#/$defs/contracts" },
-          {
-            type: "array",
-            items: {
-              anyOf: [{ type: "string" }, { $ref: "#/$defs/contracts" }],
-            },
-          },
-        ],
-      },
-    },
-  },
-};

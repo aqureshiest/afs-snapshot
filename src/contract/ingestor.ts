@@ -68,7 +68,7 @@ export const buildContracts: BuildContracts = async function buildContracts(
   context,
   path: string,
 ) {
-  return recursiveDo<Contracts<unknown>>(
+  return recursiveDo<Contracts>(
     context,
     path,
     constants.HANDLEBARS_FILE_REGEX,
@@ -123,8 +123,6 @@ export const buildManifests: BuildManifests = async function buildManifests(
   path,
   contracts,
 ) {
-  const schema = context.loadedPlugins.schema.instance;
-  assert(schema, "[22eda02b] Schema not instantiated");
   let totalManifests = 0;
   const manifests = await recursiveDo<Manifests>(
     context,
@@ -147,50 +145,45 @@ export const buildManifests: BuildManifests = async function buildManifests(
 
       const file = await fs.readFile(rootPath, "utf8");
 
-      let parsed: ManifestContracts | ManifestJson[] = JSON.parse(file);
+      const parsed = JSON.parse(file);
 
-      /**
-       * TODO: this is a temporary compatibility measure
-       */
-      if ("*" in parsed) {
-        parsed = [
-          {
-            methods: Manifest.DEFAULT_METHODS,
-            parameters: Manifest.DEFAULT_PARAMETERS,
-            inputs: Manifest.DEFAULT_INPUTS,
-            outputs: parsed,
-          },
-        ];
+      for (const mappingKey in parsed) {
+        const getContract = (contractKey) => {
+          const [, key, version = DEFAULT_VERSION] =
+            /^([^.]+)(?:\.(.+))?$/.exec(contractKey) || [];
+
+          const contract = contracts?.[key]?.[version];
+
+          if (!contract) {
+            const error = new Error(
+              `[32ed6135] Manifest referenced a non-existent or invalid contract (${key}.${version}), while processing file ${fileName}`,
+            );
+            context?.logger.error({
+              message: error.message,
+              manifest: {
+                key: fileKey,
+                contractKey: mappingKey,
+              },
+              contract: {
+                key,
+                version,
+              },
+            });
+
+            throw error;
+          }
+
+          return contract;
+        };
+
+        parsed[mappingKey] = Array.isArray(parsed[mappingKey])
+          ? parsed[mappingKey].map((subKey) => getContract(subKey))
+          : getContract(parsed[mappingKey]);
       }
 
-      const manifestDefinition = (manifests[manifestName] = {} as ReturnType<
-        (typeof Manifest)["getDefinitionForMethods"]
-      >);
+      const manifest = new Manifest(context, manifestName, parsed);
 
-      const methodDefinitions = Manifest.getDefinitionForMethods(
-        parsed as ManifestJson[],
-      );
-
-      Object.keys(methodDefinitions).forEach(
-        (method: keyof typeof methodDefinitions) => {
-          const methodDefinition = methodDefinitions[method];
-
-          schema.validate(constants.manifestSchema, methodDefinition);
-
-          if (schema.errors) {
-            context.logger.warn({
-              message: "Manifest failed schema validation",
-              manifest: {
-                name: manifestName,
-                method,
-              },
-              errors: schema.errors,
-            });
-          } else {
-            manifestDefinition[method] = methodDefinition;
-          }
-        },
-      );
+      manifests[manifestName] = manifest;
 
       totalManifests++;
       return manifests;

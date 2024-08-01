@@ -1,8 +1,0 @@
-{{#if request.params.id}}
-  {
-    "redisMethod": "getApplicationState",
-    "key": {{{ json request.params.id }}}
-  }
-{{else}}
-  null
-{{/if}}

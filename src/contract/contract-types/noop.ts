@@ -1,7 +1,7 @@
-import ContractExecutable from "../contract-executable.js";
+import ContractType from "./base-contract.js";
 
-class Noop extends ContractExecutable<void, symbol, symbol> {
-  get executionName(): string {
+class Noop extends ContractType<void, symbol, symbol> {
+  get contractName(): string {
     return "Noop";
   }
 

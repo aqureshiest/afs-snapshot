@@ -9,31 +9,14 @@ import type {
 } from "plaid";
 import PlaidClient from "clients/plaid/index.js";
 import { Input as IContractInput } from "contract/manifest.js";
-import { ExecutionContext as IExecutionContext } from "contract/executable.js";
-import type { HttpError as IHttpError } from "http-errors";
-
 type PlaidChassisPlugn = ChassisPlugin<PlaidClient>;
 
-import type { Application as IApplication } from "@earnest/application-service-client/typings/codegen.js";
-
-import type { PluginContext } from "@earnest-labs/microservice-chassis/PluginContext.js";
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
     plaid: PlaidChassisPlugn;
   }
 }
-
 declare module "clients/plaid/index.js" {
-  interface PlaidMethod<U = unknown, O = unknown> {
-    (
-      this: PlaidClient,
-      context: PluginContext,
-      application: IApplication,
-      id: string,
-      payload: U & { public_token?: string },
-    ): Promise<{ errors: Array<Error | IHttpError>; results?: O }>;
-  }
-
   // cloned from Plaid SDK
   type PlaidLinkToken = {
     /**
@@ -71,11 +54,5 @@ declare module "clients/plaid/index.js" {
   type PlaidRelayToken = CreditRelayCreateResponse;
   type Institution = IInstitution;
   type InstitutionsResponse = { institutions: Institutions };
-  type Input<I> = IContractInput<I>;
-  type Application = IApplication;
-}
-
-declare module "clients/plaid/plaid.test.js" {
-  type ExecutionContext = IExecutionContext<unknown>;
-  type Application = IApplication;
+  type Input = IContractInput;
 }

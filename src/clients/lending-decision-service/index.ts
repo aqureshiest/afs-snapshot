@@ -1,8 +1,6 @@
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
-import createError from "http-errors";
-
 import flattenApplication from "../../api/helpers.js";
 import Client from "../client.js";
 
@@ -70,7 +68,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @param id string - Monolith Application ID
    */
   async saveDecision(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     id: string,
     payload: WebhookEventPayload,
@@ -78,8 +76,9 @@ export default class LendingDecisionServiceClient extends Client {
     const { data, webhookType } = payload;
     const { decision, entity, status } = data;
 
-    if (!input.auth?.isInternal || !input.auth?.isValid) {
-      throw createError.Unauthorized("unauthorized");
+    if (!input.auth?.internal?.isValid) {
+      this.error(input, "unauthorized");
+      return;
     }
     /* ============================== *
      * Log webhook event
@@ -223,7 +222,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {Promise<DecisionResponseDetails>}
    */
   async getDecision(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     lendingDecisionId: string,
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
@@ -261,7 +260,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {Promise<DecisionPostResponse>}
    */
   async postDecisionRequest(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     applicationId: string, // Assuming root app ID
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
@@ -394,7 +393,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {DecisionEntity}
    */
   private async formatRequestPayload(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     application: typings.Application,
     applicant: string,
@@ -474,7 +473,7 @@ export default class LendingDecisionServiceClient extends Client {
       citizenshipStatus,
     };
 
-    /*
+    /**
      * The end result formatted for LDS
      */
     let formattedPayload = {
@@ -651,7 +650,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns
    */
   private async applicantEducation(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     edcuationDetails: typings.Details["education"],
   ): Promise<DecisionEntity["educations"] | []> {
@@ -701,9 +700,9 @@ export default class LendingDecisionServiceClient extends Client {
               endDate: education?.graduationDate
                 ? new Date(education.graduationDate).toISOString()
                 : "",
-              schoolName: foundSchool?.name,
-              schoolCode: `${foundSchool?.id}`,
-              schoolType: foundSchool?.forProfit
+              schoolName: foundSchool.name,
+              schoolCode: `${foundSchool.id}`,
+              schoolType: foundSchool.forProfit
                 ? "for_profit"
                 : "not_for_profit",
               opeid: education?.opeid,
@@ -880,7 +879,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {DecisionEntity["financialInfo"]}
    */
   private async applicantFinancialInfo(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     financialAccountDetails: typings.Details["financialAccounts"],
   ): Promise<DecisionEntity["financialInfo"]> {
@@ -1011,7 +1010,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @param monolithIDs Monolith IDs of an application
    */
   private async legacyDataSync(
-    input: Input<unknown>,
+    input: Input,
     context: PluginContext,
     monolithIDs: { [key: string]: string },
   ): Promise<void> {

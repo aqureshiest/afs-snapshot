@@ -24,9 +24,17 @@ const authMiddleware = async (
     applicationState: null,
     application: {
       id,
-    } as unknown as Locals["input"]["application"],
-    request: req,
-    response: res,
+    },
+    request: {
+      originalUrl: req.originalUrl,
+      method: req.method,
+      params: {
+        id,
+      },
+      body: req.body,
+      query: req.query,
+      headers: req.headers,
+    },
   };
   if (idToken) {
     strategyResults.push((await session(context, req)) as unknown as Strategy);

@@ -1,5 +1,3 @@
-[{
-  "outputs": {
-    "*": ["representation", "mutation"]
-  }
-}]
+{
+  "*": ["representation", "mutation"]
+}

@@ -1,34 +1,31 @@
 import assert from "node:assert";
 import { Application } from "@earnest/application-service-client/typings/codegen.js";
-import ContractExecutable from "../contract-executable.js";
+import ContractType from "./base-contract.js";
 import {
   TEMP_DEFAULT_APPLICATION_QUERY,
   TEMP_DEFAULT_APPLICATIONS_QUERY,
 } from "../../clients/application-service/graphql.js";
-import createError from "http-errors";
 
-class ApplicationData extends ContractExecutable<
+class ApplicationData extends ContractType<
   Definition,
   Definition,
   Application | Application[] | null
 > {
-  get executionName(): string {
+  get contractName(): string {
     return "ApplicationData";
   }
 
-  condition = (_, __, ___, transformation: Definition | null) => {
-    return Boolean(transformation);
-  };
+  condition = () => true;
 
   /**
    *
    */
   evaluate = async (
-    context: Context,
-    executionContext,
     input: Input,
+    injections: Injections,
     definition: Definition,
   ) => {
+    const { context } = injections;
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
 
@@ -36,23 +33,17 @@ class ApplicationData extends ContractExecutable<
       applicationServiceClient,
       "[52fb1e44] ApplicationServiceClient not instantiated",
     );
+    if (definition["id"]) {
+      const { application } = (await applicationServiceClient.sendRequest(
+        {
+          query: TEMP_DEFAULT_APPLICATION_QUERY,
+          variables: { id: definition["id"] },
+        },
+        context,
+      )) as unknown as { application: Application };
 
-    if (definition && "id" in definition) {
-      try {
-        const { application } = (await applicationServiceClient.sendRequest(
-          {
-            query: TEMP_DEFAULT_APPLICATION_QUERY,
-            variables: definition,
-          },
-          context,
-        )) as unknown as { application: Application };
-
-        return application;
-      } catch (err) {
-        this.error(executionContext, err);
-        return {} as unknown as Application;
-      }
-    } else if (definition && "criteria" in definition) {
+      return application;
+    } else if ("criteria" in definition) {
       if (definition.criteria.length === 0) {
         return [] as Application[];
       }

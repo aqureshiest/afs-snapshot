@@ -1,4 +1,3 @@
-import SensitiveString from "@earnest-labs/ts-sensitivestring";
 export { default as list } from "./list.js";
 export { default as contract } from "./contract.js";
 export { default as ajv } from "./ajv.js";
@@ -12,26 +11,13 @@ export { default as mapProduct } from "./mapProduct.js";
 export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
 export { default as findInArray } from "./array.js";
 export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationMethod.js";
-export { default as map } from "./map.js";
-
-/**
- * Convert raw multi-line text into JSON-compatible string
- */
-export const multiline = function (context) {
-  const text = context.fn(this);
-  const json = JSON.stringify(text);
-  return json;
-};
 
 export const noop = function (v1) {
-  if (typeof v1?.fn === "function") {
-    v1.fn(this);
-  }
+  v1.fn(this);
   return "";
 };
-
 export const json = function (v1) {
-  return JSON.stringify(v1 ?? null);
+  return JSON.stringify(v1 || null);
 };
 export const eq = (v1, v2) => v1 === v2;
 export const ne = (v1, v2) => v1 !== v2;
@@ -41,60 +27,27 @@ export const lte = (v1, v2) => v1 <= v2;
 export const gte = (v1, v2) => v1 >= v2;
 export const not = (v1) => !v1;
 export const notNull = (v1) => v1 !== null;
-
-/**
- * As `Array.prototype.includes` except a weak comparison is made to each
- * element, and any additional arguments must also be satisfied
- */
-export function includes(array: unknown[], ...args: unknown[]) {
-  return Array.prototype.slice.call(args, 0, -1).every((arg) => {
-    for (const element of array) {
-      if (arg == element) return true;
-    }
-  });
-}
-
+export const includes = (v1, v2) =>
+  Array.isArray(v1) ? v1.includes(v2) : false;
 export function and(...args) {
-  const operands = Array.prototype.slice.call(args, 0, -1);
-  return Array.isArray(operands) && operands.length === 1
-    ? operands[0].every(Boolean)
-    : operands.every(Boolean);
+  return Array.prototype.every.call(args, Boolean);
 }
-
 export function or(...args) {
-  const operands = Array.prototype.slice.call(args, 0, -1);
-  return Array.isArray(operands) && operands.length === 1
-    ? operands[0].some(Boolean)
-    : operands.some(Boolean);
-}
-
-export function coalesce(...args) {
-  const operands = Array.prototype.slice.call(args, 0, -1);
-  return Array.isArray(operands) && operands.length === 1
-    ? operands[0].find((arg) => arg != null)
-    : operands.find((arg) => arg != null);
+  return Array.prototype.slice.call(args, 0, -1).some(Boolean);
 }
 
 export function boolean(v1) {
   return Boolean(v1);
 }
-
 export function number(v1) {
   return Number(String(v1).replace(/[^0-9.]/g, ""));
 }
-
-export function string(v1) {
-  return v1 != null ? String(v1) : "";
-}
-
 export function month(v1) {
   return String(new Date(v1).getMonth() + 1).padStart(2, "0");
 }
-
 export function day(v1) {
   return String(new Date(v1).getDate()).padStart(2, "0");
 }
-
 export function year(v1) {
   return new Date(v1).getFullYear();
 }
@@ -213,18 +166,6 @@ export function mathAdd(v1, v2) {
   return num1 + num2;
 }
 
-export function sum(...args) {
-  return Array.prototype.slice
-    .call(args, 0, -1)
-    .reduce((a, b) => a + (Number(b) || 0), 0);
-}
-
-export function product(...args) {
-  return Array.prototype.slice
-    .call(args, 0, -1)
-    .reduce((a, b) => a * (Number(b) || 0), 0);
-}
-
 export function toUpper(value) {
   if (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
@@ -272,36 +213,36 @@ export function stateMinLoan(addresses) {
   return minLoan;
 }
 
-/**
- * 'values' can be an income detail from db with structure:
- *    {
- *       "amount": number,
- *       "type": string,
- *       "employer": string,
- *       "name": string,
- *       "title": string,
- *       "start": date,
- *       "end": date
- *    }
- * or an additionalIncomeSource type from UI with structure:
- *    {
- *       "type": string
- *       "value": number
- *    }
- * use 'key' to access either 'amount' or 'value' depending on
- * input value type
- */
 export function sumIncomeAmountRange(...args) {
   const [values, key, start, end] = args;
-  let total = 0;
+  /**
+   * 'values' can be an income detail from db with structure:
+   *    {
+   *       "amount": number,
+   *       "type": string,
+   *       "employer": string,
+   *       "name": string,
+   *       "title": string,
+   *       "start": date,
+   *       "end": date
+   *    }
+   * or an additionalIncomeSource type from UI with structure:
+   *    {
+   *       "type": string
+   *       "value": number
+   *    }
+   * use 'key' to access either 'amount' or 'value' depending on
+   * input value type
+   */
+  let sum = 0;
   if (values) {
     for (let i = start; i <= end; i += 1) {
       if (values[i] && values[i][key]) {
-        total += values[i][key];
+        sum += values[i][key];
       }
     }
   }
-  return total;
+  return sum;
 }
 
 export function totalSum(...args) {
@@ -313,39 +254,18 @@ export function testIsArray(v1) {
   return Array.isArray(v1);
 }
 
-/**
- * Test if at least one financial account is selected
- */
 export function someSelected(financialAccounts) {
+  /**
+   * Test if at least one financial account is selected
+   */
   return financialAccounts.some((account) => account.selected === true);
 }
 
-/**
- * Get all selected financial accounts
- */
 export function selectedAccounts(financialAccounts) {
+  /**
+   * Get all selected financial accounts
+   */
   return financialAccounts.filter((account) => account.selected === true);
-}
-
-export function match(input: string, pattern: string, maybeFlags?: string) {
-  if (!input) return null;
-  const flags = typeof maybeFlags === "string" ? maybeFlags : undefined;
-  const re = new RegExp(pattern, flags);
-  return input.match(re);
-}
-
-export function atob(input: string) {
-  if (!input) return null;
-  return Buffer.from(input, "base64").toString("utf8");
-}
-
-export function btoa(input: string) {
-  if (!input) return null;
-  return Buffer.from(input, "utf8").toString("base64");
-}
-
-export function extractSensitiveString(sensitiveString: SensitiveString) {
-  return SensitiveString.ExtractValue(sensitiveString);
 }
 
 export function getFinancialAccountsAsString(financialAccounts) {

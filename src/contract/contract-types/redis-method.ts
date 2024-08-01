@@ -1,13 +1,13 @@
 import assert from "node:assert";
-import ContractExecutable from "../contract-executable.js";
+import ContractType from "./base-contract.js";
 
-class RedisMethod extends ContractExecutable<Definition, Definition, Output> {
-  get executionName(): string {
+class RedisMethod extends ContractType<Definition, Definition, Output> {
+  get contractName(): string {
     return "RedisMethod";
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, definition: Definition) => {
+  condition = (input: Input, context: Injections, definition: Definition) => {
     if (definition?.key) return true;
     return false;
   };
@@ -19,16 +19,13 @@ class RedisMethod extends ContractExecutable<Definition, Definition, Output> {
    * This function should return the result of the method called
    */
   evaluate = async (
-    context: Context,
-    executionContext,
     input: Input,
+    injections: Injections,
     definition: Definition,
   ) => {
+    const { context } = injections;
     const redisClient = context.loadedPlugins?.redis?.instance;
     assert(redisClient, "[c2eaa691] redisClient not instantiated");
-
-    if (!definition) return {};
-
     try {
       return (await redisClient[definition.redisMethod](
         context,
@@ -36,15 +33,15 @@ class RedisMethod extends ContractExecutable<Definition, Definition, Output> {
         definition.value,
       )) as Output;
     } catch (ex) {
-      /* ============================== *
-       * Redis failures should be reported, but recovered from gracefully
-       * ============================== */
-      this.log(context, {
-        message: `[52d082da] failed ${this.executionName}:\n${ex.message}`,
-        error: ex,
-      });
-
-      return {};
+      this.error(
+        input,
+        `[52d082da] failed ${this.contractName}:\n${ex.message}`,
+      );
+      return {
+        method: definition.redisMethod,
+        ContractType: this.contractName,
+        error: ex.message,
+      };
     }
   };
 

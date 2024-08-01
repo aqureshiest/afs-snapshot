@@ -1,26 +1,17 @@
 import assert from "node:assert";
-import ContractExecutable from "../contract-executable.js";
-import createError from "http-errors";
-import { IncomingMessage } from "http";
+import ContractType from "./base-contract.js";
 
-const VALID_CLIENTS = Object.freeze([
-  "internalRestServiceClient",
-  "NeasClient",
-] as const);
+const VALID_CLIENTS = Object.freeze(["internalRestServiceClient"] as const);
 
-class ClientMethod extends ContractExecutable<
-  Definition,
-  Transformation,
-  Output
-> {
-  get executionName(): string {
+class ClientMethod extends ContractType<Definition, Transformation, Output> {
+  get contractName(): string {
     return "ClientMethod";
   }
 
   /**
    * instead of returning invalid contract bodies verbatim that will never be evaluated, return null
    */
-  transform = (_, __, definition: Definition) => {
+  transform = (input: Input, definition: Transformation) => {
     if (
       definition &&
       VALID_CLIENTS.includes(
@@ -34,8 +25,12 @@ class ClientMethod extends ContractExecutable<
   };
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, transformation: Transformation | null) => {
-    return Boolean(transformation);
+  condition = (
+    input: Input,
+    context: Injections,
+    definition: Definition | null,
+  ) => {
+    return Boolean(definition);
   };
 
   /**
@@ -45,11 +40,11 @@ class ClientMethod extends ContractExecutable<
    * This function should return the result of the method called
    */
   evaluate = async (
-    context: Context,
-    executionContext,
     input: Input,
+    injections: Injections,
     definition: Definition,
   ) => {
+    const { context } = injections;
     const clientName = definition.client as (typeof VALID_CLIENTS)[number];
     const client = context.loadedPlugins[clientName]?.instance;
 
@@ -57,35 +52,32 @@ class ClientMethod extends ContractExecutable<
 
     const { method, uri, body, query } = definition;
 
-    try {
-      const { results, response } = await client.request(
-        method,
+    const { results, response } = await client.request<Output>(
+      method,
+      {
+        uri,
+        body,
+        query,
+      },
+      context,
+    );
+
+    if (!response.statusCode || response.statusCode >= 400) {
+      client.log(
         {
-          uri,
-          body,
-          query,
+          level: "warn",
+          results,
         },
         context,
       );
 
       return {
-        action: definition.action,
-        results,
-        response: {
-          statusCode: response.statusCode,
-          statusMessage: response.statusMessage,
-          headers: response.headers,
-        },
-      };
-    } catch (error) {
-      this.error(executionContext, error);
-
-      return {
-        action: definition.action,
-        error,
-        results: null,
+        statusCode: response.statusCode || null,
+        message: response.statusMessage,
       };
     }
+
+    return results;
   };
 }
 

@@ -21,5 +21,6 @@ export type NeasClaims = {
 declare module "clients/NEAS/index.js" {
   type Claims = NeasClaims;
   type ClientResponse<T> = Client.Response<T>;
-  type Input = IContractInput<unknown>;
+  type Injections = IExecutionInjections;
+  type Input = IContractInput;
 }

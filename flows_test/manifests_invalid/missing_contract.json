@@ -1,5 +1,3 @@
-[{
-  "outputs": {
-    "*": "missing_contract"
-  }
-}]
+{
+  "*": "missing_contract"
+}

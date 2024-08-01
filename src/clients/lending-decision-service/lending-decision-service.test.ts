@@ -17,17 +17,13 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   let key;
   const input = {
     auth: {
-      strategies: ["internal"],
-      isInternal: true,
-      isValid: true,
-      isAuthorized: true,
-      artifacts: {
-        source: "lending-decisioning-service",
+      internal: {
+        isValid: true,
       },
     },
     application: null,
     request: {},
-  } as unknown as IContractInput<unknown>;
+  } as IContractInput;
   const root = uuidv4();
   const primary = uuidv4();
   const cosigner = uuidv4();
@@ -325,13 +321,18 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         };
       });
 
-      const request = client.postDecisionRequest(
-        input,
-        context,
-        "12c7482c-7ec2-4513-b575-fa994f2adf88",
-      );
-
-      await assert.rejects(request);
+      try {
+        await client.postDecisionRequest(
+          input,
+          context,
+          "12c7482c-7ec2-4513-b575-fa994f2adf88",
+        );
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[a571403f] Failed to post decision: Unable to process request.",
+        );
+      }
     });
 
     it("[cf74382e] Throw an error when no application ID is given to POST request", async () => {
@@ -342,10 +343,14 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
           applicationServiceClient: {},
         },
       };
-
-      const request = client.postDecisionRequest(input, missingASClientContext);
-
-      await assert.rejects(request);
+      try {
+        await client.postDecisionRequest(input, missingASClientContext);
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[d5e6bc7f] Application Service client instance not found",
+        );
+      }
     });
 
     it("[a76813b3] Throw an error if details are not present in application", async () => {

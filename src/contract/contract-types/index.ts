@@ -1,7 +1,7 @@
 /* ============================== *
  * Abstract / Structural
  * ============================== */
-export { default as ContractType } from "../contract-executable.js";
+export { default as ContractType } from "./base-contract.js";
 export { default as identity } from "./identity.js";
 export { default as noop } from "./noop.js";
 
@@ -45,8 +45,6 @@ export { default as accreditedSchoolRequest } from "./accredited-school-service-
 export { default as redisMethod } from "./redis-method.js";
 
 export { default as clientMethod } from "./client-method.js";
-
-export { default as authenticate } from "./authenticate.js";
 
 /* ============================== *
  * Errors

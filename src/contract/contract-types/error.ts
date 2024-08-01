@@ -1,32 +1,21 @@
-import ContractExecutable from "../contract-executable.js";
-import createError from "http-errors";
-
-class Error extends ContractExecutable<Definition, Definition, Output> {
-  get executionName(): string {
-    return "Error";
+import ContractType from "./base-contract.js";
+class Error extends ContractType<Definition, Definition, Output> {
+  get contractName(): string {
+    return "PlaidMethod";
   }
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, definition: Definition) => {
+  condition = (input: Input, context: Injections, definition: Definition) => {
     return Boolean(definition.error);
   };
   evaluate = async (
-    _,
-    evaluationContext,
     input: Input,
+    injections: Injections,
     definition: Definition,
   ) => {
-    const { statusCode = 500, error: message, ...properties } = definition;
-
-    const errorMessages = Array.isArray(message) ? message : [message];
-
-    const errors = errorMessages.map((errorMessage) =>
-      createError(statusCode, errorMessage, properties),
-    );
-
-    this.error(evaluationContext, errors);
+    this.error(input, definition.error);
     return {
       error: definition.error,
-      contractType: this.executionName,
+      contractType: this.contractName,
     };
   };
 }

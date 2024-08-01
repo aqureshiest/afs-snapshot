@@ -14,7 +14,6 @@ type ISchool = {
   country: string;
   address: string;
   zipCode: string;
-  forProfit: boolean;
 };
 
 type ISchoolDetails = ISchool & {
@@ -26,14 +25,14 @@ type ISchoolDetails = ISchool & {
 };
 declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
   interface LoadedPlugins {
-    accreditedSchoolService: AccreditedSchoolServicePlugin;
+    accreditedSchoolServiceClient: AccreditedSchoolServicePlugin;
   }
 }
 declare module "clients/accredited-school-service/index.js" {
   type LoanType = ILoanType;
 
   type School = ISchool;
-  type Input<I> = IContractInput<I>;
+  type Input = IContractInput;
   type SchoolDetails = ISchool & {
     loanTypes: LoanType;
     costOfAttendance: {

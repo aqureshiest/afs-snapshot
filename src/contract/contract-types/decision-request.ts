@@ -1,25 +1,27 @@
 import assert from "node:assert";
-import ContractExecutable from "../contract-executable.js";
+import ContractType from "./base-contract.js";
 
-class DecisionRequest extends ContractExecutable<
-  Definition,
-  Definition,
-  Output
-> {
-  get executionName(): string {
+class DecisionRequest extends ContractType<Definition, Definition, Output> {
+  get contractName(): string {
     return "DecisionRequest";
   }
 
-  condition = (_, __, ___, definition: Definition) => {
+  condition = (input: Input, context: Injections, definition: Definition) => {
+    /**
+     * TODO: Add authentication checks
+     */
+    if (!definition.id) {
+      this.error(input, "Missing id on payload");
+    }
     return Boolean(definition.id);
   };
 
   evaluate = async (
-    context: Context,
-    executionContext,
     input: Input,
+    injections: Injections,
     definition: Definition,
   ) => {
+    const { context } = injections;
     const lendingDecisionService =
       context.loadedPlugins.lendingDecisionServiceClient?.instance;
     assert(
@@ -35,15 +37,15 @@ class DecisionRequest extends ContractExecutable<
         definition.payload,
       );
     } catch (ex) {
-      const error = new Error("[3b1f3cf5] Failed to execute decision request");
-
-      this.log(context, {
-        message: error.message,
-        error: ex,
-        method: definition && definition.decisionRequestMethod,
+      this.error(
+        input,
+        `[d0aae09c] failed ${this.contractName}:\n${ex.message}`,
+      );
+      context.logger.info({
+        messege: "[e87ed412] Lending Decision Contract Failed",
+        ...ex,
       });
-
-      this.error(executionContext, error);
+      context.logger.error(ex);
     }
 
     return result;

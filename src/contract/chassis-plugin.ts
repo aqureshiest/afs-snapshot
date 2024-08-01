@@ -15,16 +15,6 @@ export const plugin: Plugin = {
   register: async (context: Context) => {
     const { contracts, manifests } = await ingestManifests(context);
 
-    if (Object.keys(manifests).length === 0) {
-      throw new Error("No valid manifests");
-    }
-
-    /* ============================== *
-     * TODO [LA-714]: The watcher cannot dynamically re-register express handlers, so
-     * an alternative might have to be applied to replace the behavior inside of
-     * those handlers instead
-     * ============================== */
-
     const useWatcher =
       context.env.APP_ENV === "development" && !context.env.NODE_TEST_CONTEXT;
 
