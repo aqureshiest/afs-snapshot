@@ -1,0 +1,153 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible",
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Declined",
+      "content": [
+        {
+          "key": "header",
+          "type": "header",
+          "componentProps": {
+            "copy": "We recommend adding a cosigner for a stronger application",
+            "subCopy": "Because the information you have provided so far is inconclusive, we cannot provide preliminary rates. Based on what you told us, a cosigned loan will give you the best approval chances and rates. "
+          }
+        },
+        {
+          "key": "callout",
+          "type": "callout",
+          "containerProps": {
+            "boxProps": {
+              "marginTop": "16px",
+              "marginBottom": "40px"
+            }
+          },
+          "componentProps": {
+            "content": [
+              {
+                "key": "markdown",
+                "type": "markdown",
+                "componentProps": {
+                  "text": "#### Cosigned Loan rates starting at"
+                }
+              },
+              {
+                "key": "statLineGroup",
+                "type": "statLineGroup",
+                "containerProps": {
+                  "boxProps": {
+                    "margin": "12px 0"
+                  }
+                },
+                "componentProps": {
+                  "items": [
+                    {
+                      {{!-- TODO: Replace with call to get actual headline rates --}}
+                      {{!-- https://meetearnest.atlassian.net/browse/LA-1076 --}}
+                      "stat": "3.99%",
+                      "label": "Variable APR"
+                    },
+                    {
+                      {{!-- TODO: Replace with call to get actual headline rates --}}
+                      {{!-- https://meetearnest.atlassian.net/browse/LA-1076 --}}
+                      "stat": "4.99%",
+                      "label": "Fixed APR"
+                    }
+                  ]
+                }
+              },
+              {
+                "key": "markdown",
+                "type": "markdown",
+                "componentProps": {
+                  "type": "disclaimer",
+                  "text": "&ast; Rate includes optional 0.25% Auto Pay discount. Our lowest rates are only available for our most credit qualified borrowers"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key": "markdown",
+          "type": "markdown",
+          "componentProps": {
+            "text": "\n\n ## Why choose a cosigned loan? \n\n Many clients looking for a loan have a limited credit history and income, which tends to make it difficult to meet the minimum eligibility criteria needed to be approved for a loan. A cosigner with a strong credit history and adequate income can improve the likelihood of getting approved."
+          }
+        },
+        {
+          "key": "markdown",
+          "type": "markdown",
+          "containerProps": {
+            "boxProps": {
+              "marginTop": "40px"
+            }
+          },
+          "componentProps": {
+            "text": "## What happens after I invite my cosigner? \n\n We’ll send them a unique link to apply alongside you."
+          }
+        },
+        {
+          "key": "callout",
+          "type": "callout",
+          "containerProps": {
+            "boxProps": {
+              "marginTop": "40px"
+            }
+          },
+          "componentProps": {
+            "content": [
+              {
+                "key": "markdown",
+                "type": "markdown",
+                "componentProps": {
+                  "type": "body",
+                  "text": "#### Continue to Apply Independently. \n Applying independently may result in higher rates. A cosigner with a strong credit history and adequate income can improve the likelihood of getting approved. To qualify and take out loan on your own, you need to meet our [eligibility criteria.](https://www.earnest.com/eligibility)"
+                }
+              },
+              {
+                "key": "buttons",
+                "type": "buttons",
+                "componentProps": {
+                  "stylePreset": "secondaryTertiary",
+                  "globalButtonsProps": {
+                    "fontSize": "14px",
+                    "padding": "8px 12px",
+                    "height": "initial"
+                  },
+                  "buttons": [
+                    {
+                      "copy": "Apply Independently",
+                      "action": {
+                        "key": "applyIndependently",
+                        "type": "navigate",
+                        "properties": {
+                          {{!-- TODO: Use actual manifest as goTo location --}}
+                          "goTo": "secondAddress"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Check rates with cosigner",
+        "action": {
+          "key": "addCosigner",
+          "type": "navigate",
+          "properties": {
+            {{!-- TODO: Use actual manifest as goTo location --}}
+            "goTo": "invite cosigner page"
+          }
+        }
+      }
+    }
+  }
+}
+

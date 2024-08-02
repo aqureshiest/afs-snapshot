@@ -1,0 +1,86 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible", 
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Frozen",
+      "content": [
+        {
+          "key": "header",
+          "type": "header",
+          "componentProps": {
+            "copy": "We are unable to provide rate estimates given your credit is frozen or locked",
+            "subCopy": "Because the information you have provided so far is inconclusive, we cannot provide preliminary rates. "
+          }
+        },
+        {
+          "key": "markdown",
+          "type": "markdown",
+          "componentProps": {
+            "text": "## What does that mean? \n\n Please unlock or thaw your credit report so that we can get you a rate that fits your needs. \n\n"
+          }
+        },
+        {
+          "key": "callout",
+          "type": "callout",
+          "containerProps": {
+            "boxProps": {
+              "marginTop": "40px"
+            }
+          },
+          "componentProps": {
+            "content": [
+              {
+                "key": "markdown",
+                "type": "markdown",
+                "componentProps": {
+                 "type": "body",
+                 "text": "#### Unsure about continue applying independently? \n You can also add a cosigner to see if you might receive better rates and better approval changes."
+                }
+              },
+              {
+                "key": "buttons",
+                "type": "buttons",
+                "componentProps": {
+                  "stylePreset": "secondaryTertiary",
+                  "globalButtonsProps": {
+                    "fontSize": "14px",
+                    "padding": "8px 12px",
+                    "height": "initial"
+                  },
+                  "buttons": [
+                    {
+                      "copy": "Invite Cosigner",
+                      "action": {
+                        "key": "addCosigner",
+                        "type": "navigate",
+                        "properties": {
+                          {{!-- TODO: Use actual manifest as goTo location --}}
+                          "goTo": "invite cosigner page"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Continue to Apply",
+        "action": {
+          "key": "applyIndependent",
+          "type": "navigate",
+          "properties": {
+            {{!-- TODO: Use actual manifest as goTo location --}}
+            "goTo": "confirm address manifest"
+          }
+        }
+      }
+    }
+  }
+}

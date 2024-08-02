@@ -1,0 +1,6 @@
+{
+    "*": "rate-estimate-results-view",
+    "landing_stage": "rate-estimate-results.rate-estimate-frozen",
+    "pageLayout": "sidebar",
+    "redirect_homebase": "actions/homebase.default"
+}

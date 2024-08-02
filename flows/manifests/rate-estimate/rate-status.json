@@ -1,0 +1,8 @@
+{
+    "*": "response.response-rate-estimate-status",
+    "rateDeclined": "actions/rate-estimate-request.declined",
+    "rateUnable": "actions/rate-estimate-request.unable",
+    "rateFrozen": "actions/rate-estimate-request.frozen",
+    "statusAction": "actions/rate-estimate-request.rateEstimateStatus",
+    "goToInterstitial": "actions/rate-estimate-request.rateEstimateStatus"
+}

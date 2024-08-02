@@ -1,0 +1,6 @@
+{
+    "*": "response.interstitial",
+    "actions": ["rate-estimate-request"],
+    "set-timestamp": "redis.set-rate-estimate-request-timestamp",
+    "statusAction": "actions/rate-estimate-request.rateEstimateStatus"
+}

@@ -194,7 +194,8 @@ declare module "contract/contract-types/decision-request.js" {
     decisionRequestMethod:
       | "postDecisionRequest"
       | "saveDecision"
-      | "getDecision";
+      | "getDecision"
+      | "rateCheckRequest";
     id: string;
     payload: IWebhookEventPayload;
   };

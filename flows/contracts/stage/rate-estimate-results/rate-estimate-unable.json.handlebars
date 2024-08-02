@@ -1,0 +1,93 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible",
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Unable",
+      "content": [
+        {
+          "key": "header",
+          "type": "header",
+          "componentProps": {
+            "copy": "We are unable to determine if you qualify for an Earnest loan.",
+            "subCopy": "Because the information you have provided so far is inconclusive, we cannot provide preliminary rates. "
+          }
+        },
+        {
+          "key": "markdown",
+          "type": "markdown",
+          "componentProps": {
+            "text": "\n\n ## What does that mean? \n\n Consider the following basic eligibility guidelines as you decide whether to proceed with a full application. \n\n * Are you employed or do you have an offer letter? \n\n * Do you have enough savings to cover at least a month of normal expenses \n\n * Do you have a history of making payments on time?"
+          }
+        },
+        {
+          "key": "markdown",
+          "type": "markdown",
+          "componentProps": {
+            "text": "## Ready to continue? \n\n Our application takes about 10 minutes and requires a 'hard credit inquiry.' Hard credit inquiries lower your credit score slightly; however, the impact varies from person to person depending on other factors in the credit report. To qualify and take out loan on your own, you need to meet our [eligibility criteria](https://www.earnest.com/eligibility). \n\n"
+          }
+        },
+        {
+          "key": "callout",
+          "type": "callout",
+          "containerProps": {
+            "boxProps": {
+              "marginTop": "40px"
+            }
+          },
+          "componentProps": {
+            "content": [
+              {
+                "key": "markdown",
+                "type": "markdown",
+                "componentProps": {
+                  "type": "body",
+                  "text": "#### Unsure about continue applying independently? \n You can also add a cosigner to see if you might receive better rates and better approval changes."
+                }
+              },
+              {
+                "key": "buttons",
+                "type": "buttons",
+                "componentProps": {
+                  "stylePreset": "secondaryTertiary",
+                  "globalButtonsProps": {
+                    "fontSize": "14px",
+                    "padding": "8px 12px",
+                    "height": "initial"
+                  },
+                  "buttons": [
+                    {
+                      "copy": "Invite Cosigner",
+                      "action": {
+                        "key": "addCosigner",
+                        "type": "navigate",
+                        "properties": {
+                          {{!-- TODO: Use actual manifest as goTo location --}}
+                          "goTo": "invite cosigner page"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Continue to Apply",
+        "action": {
+          "key": "applyIndependent",
+          "type": "navigate",
+          "properties": {
+            {{!-- TODO: Use actual manifest as goTo location --}}
+            "goTo": "confirm address manifest"
+          }
+        }
+      }
+    }
+  }
+}
