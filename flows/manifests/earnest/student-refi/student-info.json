@@ -41,7 +41,7 @@
     "questions/primary/income/amount/claimed-assets.default",
     "questions/primary/income/amount/additional-income.default"
   ],
-  "student-info-income-self-employed-rows": [      
+  "student-info-income-self-employed-rows": [
     "info/student-income.default",
     "questions/primary/employment/job-title.default",
     "questions/primary/employment/start-date.default",
@@ -73,7 +73,9 @@
     "questions/primary/income/amount/annual-income.default",
     "questions/primary/income/amount/additional-income.default"
   ],
-  "onError": ["onError.unauthorized"],
+  "onError": [
+    "onError.unauthorized"
+  ],
   "back-button": "actions/back-buttons.basic-info",
   "noop_details_action": "actions/noop-details.primary",
   "save_primary_details_action": "actions/save-details.primary",
@@ -103,6 +105,5 @@
   "address-field-state": "questions/primary/address/fields.state",
   "address-field-zip": "questions/primary/address/fields.zip",
   "refi-previous-address-validation": "questions/primary/address.refi-previous-address-validation",
-  "primary_retired_additional_income_callout_header": "info/student-income/additional-income-hint.callout-header",
   "redirect_homebase": "actions/homebase.default"
 }
