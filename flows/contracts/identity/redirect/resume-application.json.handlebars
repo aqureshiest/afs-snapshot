@@ -8,8 +8,6 @@
       {{/if}}
     {{/with}}
   {{else}}
-    {{#with application}}
-      "{{brand}}/{{product}}/{{id}}"
-    {{/with}}
+    "{{application.brand}}/{{application.product}}/{{application.id}}"
   {{/if}}
 {{/if}}

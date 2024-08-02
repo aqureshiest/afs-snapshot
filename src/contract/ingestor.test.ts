@@ -3,6 +3,7 @@ import { describe, it, before } from "node:test";
 
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
+import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 
 import ingestManifests, { buildManifests, buildContracts } from "./ingestor.js";
 
@@ -12,6 +13,7 @@ describe("[6bb0091c] ingestor", () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "fatal" };
     context = await createPluginContext(pkg);
+    await registerChassisPlugins(context);
   });
 
   it("[7c11f0d7] runs without error", async () => {

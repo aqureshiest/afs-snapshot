@@ -1,0 +1,22 @@
+{{! Auth strategy formatter for internal services }}
+{
+  "strategy": "internal",
+  "isInternal": true,
+  {{#if request.headers.authorization}}
+    "isValid": {{{ json (boolean (contract "token"))}}},
+  {{else}}
+    "isValid": null,
+  {{/if}}
+  {{#with (contract 'authorization') as |authorization|}}
+    "isAuthorized": {{{ json (or authorization) }}},
+    "artifacts": {
+      {{! source will indicate which internal key was used }}
+      "source": {{{ json (coalesce authorization) }}}
+    }
+  {{else}}
+    "isAuthorized": false,
+    "artifacts": {
+      "source": null
+    }
+  {{/with}}
+}

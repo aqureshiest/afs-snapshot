@@ -1,3 +1,30 @@
-{
-  "*": "search-applications"
-}
+[
+  {
+    "methods": ["get"],
+    "inputs": {
+      "*": "inputs",
+      "applications": {
+        "*": "search-applications",
+        "query": "application/search-query"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "mode": "optional",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "application/search-results"
+    }
+  }
+]

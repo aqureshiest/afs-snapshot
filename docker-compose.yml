@@ -1,6 +1,10 @@
 services:
   gateway:
     image: nginx:stable-alpine
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     restart: always
     depends_on:
       service:
@@ -36,6 +40,10 @@ services:
 
   mountebank:
     image: bbyars/mountebank:2.6.0
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     command: ['mb', '--configfile', 'imposters/index.ejs', '--allowInjection']
     ports:
       - "2525:2525"
@@ -53,6 +61,10 @@ services:
     environment:
       - VAULT_AUTH_TOKEN=fnord
     image: earnest/vault-dev:latest
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     volumes:
       - ./docker/data/vault:/usr/src/app/vault-data
     healthcheck:
@@ -63,6 +75,10 @@ services:
       timeout: 10s
 
   redis:
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     image: redis:6.0.20
     volumes:
       - ./docker/data/redis:/usr/local/etc/redis

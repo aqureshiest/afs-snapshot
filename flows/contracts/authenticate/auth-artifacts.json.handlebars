@@ -1,0 +1,6 @@
+{{! General-purpose auth artifact aggregator; }}
+{
+  {{! authStrategies: should resolve to an array of auth results }}
+  "strategies": {{{ json (contract 'strategies') }}},
+  "mode": "optional"
+}

@@ -1,16 +1,16 @@
 import assert from "node:assert";
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 
-class AccreditedSchoolServiceRequest extends ContractType<
+class AccreditedSchoolServiceRequest extends ContractExecutable<
   Definition,
   Definition,
   Output
 > {
-  get contractName(): string {
+  get executionName(): string {
     return "AccreditedSchoolServiceRequest";
   }
 
-  condition = (input: Input, context: Injections, definition: Definition) => {
+  condition = (_, __, ___, definition: Definition) => {
     /**
      * TODO: Add authentication checks
      */
@@ -18,13 +18,13 @@ class AccreditedSchoolServiceRequest extends ContractType<
   };
 
   evaluate = async (
+    context: Context,
+    executionContext,
     input: Input,
-    injections: Injections,
-    definition: Definition,
+    definition,
   ) => {
-    const { context } = injections;
     const accreditedSchoolServiceClient =
-      context.loadedPlugins.accreditedSchoolService?.instance;
+      context.loadedPlugins.accreditedSchoolService.instance;
     assert(
       accreditedSchoolServiceClient,
       "[2aef0653] Accredited School Service client not instantiated",
@@ -36,14 +36,14 @@ class AccreditedSchoolServiceRequest extends ContractType<
       ](input, context, definition);
       return result;
     } catch (ex) {
-      this.error(
-        input,
-        `[626627ed] failed ${this.contractName}:\n${ex.message}`,
-      );
-      context.logger.error({
-        message: "[4fe92134] School Service Contract Failed",
+      const error = new Error("[6dd53da4] Failed to get school data");
+      this.log(context, {
+        message: error.message,
+        method: definition && definition.accreditedSchoolServiceRequestMethod,
         error: ex,
       });
+
+      this.error(executionContext, error);
       return [];
     }
   };

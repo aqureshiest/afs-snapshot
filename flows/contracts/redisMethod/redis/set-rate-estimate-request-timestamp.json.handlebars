@@ -1,7 +1,7 @@
-{{#if auth.session.userId}}
+{{#if auth.artifacts.userId}}
 {
   "redisMethod": "setUserState",
-  "key": "{{{auth.session.userId}}}",
+  "key": "{{{auth.artifacts.userId}}}",
   "value": {
     "rate-requested-at": "{{getCurrentTime}}"
   }

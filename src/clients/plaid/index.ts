@@ -41,12 +41,13 @@ export default class PlaidClient extends Client {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  async createLinkToken(
-    context: PluginContext,
-    input: Input,
-    id: string,
+  createLinkToken: PlaidMethod<{ userId: string }> = async function (
+    context,
+    application,
+    id,
     payload,
   ) {
+    const errors: Error[] = [];
     const request = {
       user: {
         // TODO: get userId from reference cognitoID
@@ -75,9 +76,7 @@ export default class PlaidClient extends Client {
     );
 
     if (response.statusCode !== 200 || !results.link_token) {
-      const error = new Error(
-        "[2f2bb50e] PLAID - failed to create plaid link_token",
-      );
+      const error = new Error("failed-link-token-creation");
       this.log(
         {
           error,
@@ -85,61 +84,60 @@ export default class PlaidClient extends Client {
         },
         context,
       );
+      errors.push(error);
       throw error;
     }
 
-    return results.link_token;
-  }
-  error(input: Input, message: string | Array<string>) {
-    if (!input.error) input.error = [];
+    return { results: results.link_token, errors };
+  };
 
-    if (Array.isArray(message)) {
-      input.error = input.error.concat(message);
-    } else {
-      if (!input.error.includes(message)) {
-        input.error.push(message);
-      }
-    }
-  }
-  async getAccounts(context: PluginContext, input: Input, id: string, payload) {
-    const request = {
-      ...this.auth,
-      access_token: payload.access_token,
-    };
+  getAccounts: PlaidMethod<{ access_token: string }, PlaidGetAccounts> =
+    async function (context: PluginContext, application, id: string, payload) {
+      const errors: Error[] = [];
+      const request = {
+        ...this.auth,
+        access_token: payload.access_token,
+      };
 
-    const { results, response } = await this.post<PlaidGetAccounts>(
-      {
-        uri: "accounts/get",
-        body: request,
-        headers: this.headers,
-      },
-      context,
-    );
-
-    if (response.statusCode !== 200) {
-      const error = new Error(
-        `[231c4ea1] PLAID - failed to get accounts, status code`,
-      );
-
-      this.log(
+      const { results, response } = await this.post<PlaidGetAccounts>(
         {
-          message: response.statusMessage,
-          results,
+          uri: "accounts/get",
+          body: request,
+          headers: this.headers,
         },
         context,
       );
 
-      throw error;
-    } else {
-      return results;
-    }
-  }
-  async searchInstitutions(
-    context: PluginContext,
-    input: Input,
-    id: string,
-    payload,
-  ) {
+      if (response.statusCode !== 200) {
+        const error = new Error("get-account-failure");
+
+        errors.push(error);
+
+        this.log(
+          {
+            message: response.statusMessage,
+            results,
+          },
+          context,
+        );
+
+        return { errors };
+      } else {
+        return { results, errors };
+      }
+    };
+
+  searchInstitutions: PlaidMethod<
+    { query: string },
+    Array<
+      Pick<
+        InstitutionsResponse["institutions"][number],
+        "institution_id" | "name"
+      >
+    >
+  > = async function (context, application, id, payload) {
+    const errors: Error[] = [];
+
     if (!payload.query) {
       throw new Error(`[49f71236] PLAID - query param is required.`);
     }
@@ -162,6 +160,9 @@ export default class PlaidClient extends Client {
       const error = new Error(
         `[cc591259] PLAID - failed to search institutions - ${response.statusCode}, ${response.statusMessage}`,
       );
+
+      errors.push(error);
+
       this.log(
         {
           error,
@@ -172,15 +173,17 @@ export default class PlaidClient extends Client {
       throw error;
     }
 
-    return results.institutions.map((bank) => ({
+    const filteredInstitutions = results.institutions.map((bank) => ({
       institution_id: bank.institution_id,
       name: bank.name,
     }));
-  }
+
+    return { results: filteredInstitutions, errors };
+  };
 
   async getInstitution(
     context: PluginContext,
-    input: Input,
+    application,
     id: string,
     payload,
   ) {
@@ -217,10 +220,11 @@ export default class PlaidClient extends Client {
 
     return results.institution;
   }
+
   // requests ASSETS REPORT for a given array of access_token
   async createAssetsReport(
     context: PluginContext,
-    input: Input,
+    application,
     id: string,
     payload,
   ) {
@@ -261,13 +265,13 @@ export default class PlaidClient extends Client {
   // creates a plaid relay token
   async createRelayToken(
     context: PluginContext,
-    input: Input,
+    application,
     id: string,
     payload,
   ) {
     const ReportToken = await this.createAssetsReport(
       context,
-      input,
+      application,
       id,
       payload,
     );
@@ -303,69 +307,81 @@ export default class PlaidClient extends Client {
   }
 
   //exchanges a public token for a acces_token/itemId
-  async exchangePublicToken(
-    context: PluginContext,
-    input: Input,
-    id: string,
-    payload,
-  ) {
-    const request = {
-      public_token: payload.public_token,
-      ...this.auth,
-    };
-    const { results, response } = await this.post<PlaidAccessTokenResponse>(
-      {
-        uri: "/item/public_token/exchange",
-        body: request,
-        headers: this.headers,
-      },
-      context,
-    );
-
-    if (response.statusCode !== 200) {
-      const error = new Error(
-        `[7459548f] PLAID - failed to exchange token, status code: ${response.statusCode}, ${response.statusMessage}`,
+  exchangePublicToken: PlaidMethod<unknown, PlaidAccessTokenResponse> =
+    async function (context, application, id, payload) {
+      const errors: Error[] = [];
+      const request = {
+        public_token: payload.public_token,
+        ...this.auth,
+      };
+      const { results, response } = await this.post<PlaidAccessTokenResponse>(
+        {
+          uri: "/item/public_token/exchange",
+          body: request,
+          headers: this.headers,
+        },
+        context,
       );
-      this.log({
-        error,
-        results,
-      });
-      throw error;
-    }
 
-    return results;
-  }
+      if (response.statusCode !== 200) {
+        const error = new Error(
+          `[7459548f] PLAID - failed to exchange token, status code: ${response.statusCode}, ${response.statusMessage}`,
+        );
 
-  async exchangePublicTokenAndGetAccounts(
+        this.log(
+          {
+            error,
+            results,
+          },
+          context,
+        );
+
+        errors.push(error);
+
+        return { errors };
+        throw error;
+      }
+
+      return { results, errors };
+    };
+
+  /**
+   * TODO: holy hell, this plaid client method is a hot mess
+   */
+  exchangePublicTokenAndGetAccounts: PlaidMethod = async function (
     context: PluginContext,
-    input: Input,
+    application,
     id: string,
     payload,
   ) {
+    const errors: Error[] = [];
+
     const applicationService =
       context.loadedPlugins.applicationServiceClient?.instance;
 
     context.logger.silly(`Plaid exchange Public Token requested.`);
-    const accessToken = await this.exchangePublicToken(
-      context,
-      input,
-      id,
-      payload,
-    );
-    const application = input.application?.applicants?.find(
-      (app) => app?.id === id,
-    );
+    const { results: accessToken, errors: publicTokenErrors } =
+      await this.exchangePublicToken(context, application, id, payload);
+
+    errors.push(...publicTokenErrors);
+
+    const applicant = application?.applicants?.find((app) => app?.id === id);
+
     if (accessToken) {
-      const plaidResponse = await this.getAccounts(
-        context,
-        input,
-        id,
-        accessToken,
-      );
+      const { results: plaidResponse, errors: getAccountsErrors } =
+        await this.getAccounts(context, application, id, accessToken);
+
+      errors.push(...getAccountsErrors);
+
       if (plaidResponse) {
-        const institution = await this.getInstitution(context, input, id, {
-          institution_id: plaidResponse.item.institution_id,
-        });
+        const institution = await this.getInstitution(
+          context,
+          application,
+          id,
+          {
+            institution_id: plaidResponse.item.institution_id,
+          },
+        );
         const plaidAccountIDsAdded: Array<string> = [];
         const financialAccounts = plaidResponse.accounts
           ?.map((faccount) => {
@@ -373,7 +389,7 @@ export default class PlaidClient extends Client {
               !["depository"].includes(faccount.type) ||
               !["checking", "savings"].includes(String(faccount.subtype))
             ) {
-              this.error(input, "loan-accounts-error");
+              errors.push(new Error("loan-accounts-error"));
             } else {
               const balanceInCents =
                 Math.round(Number(faccount.balances.current || 0)) * 100;
@@ -381,7 +397,7 @@ export default class PlaidClient extends Client {
               //  but plaid returns a new account ID every time the public token is exchanged.
               // instead we are using a combination of the institution name, account type, account number and balance to check if the account already exists
               const existingAccount =
-                application?.details?.financialAccounts?.find(
+                applicant?.details?.financialAccounts?.find(
                   (account) =>
                     account?.name === institution.name &&
                     account?.type === faccount.subtype &&
@@ -392,23 +408,28 @@ export default class PlaidClient extends Client {
                 );
               if (!existingAccount) {
                 plaidAccountIDsAdded.push(faccount.account_id);
+
                 return {
-                  name: institution.name,
-                  type: faccount.subtype,
-                  selected: true,
-                  // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
-                  account_last4: faccount.mask?.toString().padStart(4, "-"),
-                  balance: balanceInCents,
-                  plaidAccountID: faccount.account_id,
-                  plaidItemID: plaidResponse.item.item_id,
-                  plaidAccessToken: accessToken.access_token,
+                  errors,
+                  results: {
+                    name: institution.name,
+                    type: faccount.subtype,
+                    selected: true,
+                    // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
+                    account_last4: faccount.mask?.toString().padStart(4, "-"),
+                    balance: balanceInCents,
+                    plaidAccountID: faccount.account_id,
+                    plaidItemID: plaidResponse.item.item_id,
+                    plaidAccessToken: accessToken.access_token,
+                  },
                 };
               } else {
-                this.error(input, "duplicated-account-error");
+                errors.push(new Error("duplicated-account-error"));
               }
             }
           })
           .filter((account) => account);
+
         if (financialAccounts.length > 0) {
           try {
             const ASresponse = (await applicationService?.sendRequest(
@@ -448,20 +469,26 @@ export default class PlaidClient extends Client {
               },
               context,
             )) as unknown as { addDetails: Event };
+
             if (ASresponse.addDetails.error) {
-              this.error(input, "application-service-error");
-              this.error(input, ASresponse.addDetails.error);
+              errors.push(
+                new Error("application-service-error"),
+                new Error(ASresponse.addDetails.error),
+              );
             }
+
             if (ASresponse.addDetails.application.details) {
               const { financialAccounts: resultAccounts } =
                 ASresponse.addDetails.application.details;
+
               const result = resultAccounts?.filter((graphqlAccount) => {
                 if (graphqlAccount?.plaidAccountID)
                   return plaidAccountIDsAdded.includes(
                     graphqlAccount?.plaidAccountID,
                   );
               });
-              return result?.map((account) => {
+
+              const results = result?.map((account) => {
                 return {
                   index: account?.index,
                   name: account?.name,
@@ -474,8 +501,10 @@ export default class PlaidClient extends Client {
                       : 0,
                 };
               });
+
+              return { errors, results };
             } else {
-              return [];
+              return { errors, results: [] };
             }
           } catch (ex) {
             this.log(
@@ -485,15 +514,13 @@ export default class PlaidClient extends Client {
               context,
             );
 
-            return {
-              statusCode: 500,
-              message: ex.errorMessage,
-            };
+            errors.push(ex);
+
+            return { errors, results: [] };
           }
         }
-
-        return [];
       }
     }
-  }
+    return { errors, results: [] };
+  };
 }

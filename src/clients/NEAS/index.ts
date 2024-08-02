@@ -52,8 +52,8 @@ export default class NeasClient extends Client {
    * @param injections Injections
    * @returns Promise<void>
    */
-  async createAccountlessSession(injections: Injections): Promise<void> {
-    const { context, request, res } = injections;
+  async createAccountlessSession(context, input): Promise<void> {
+    const { request, response: res } = input;
 
     const { results, response } = await this.post<{ session: string }>(
       {
@@ -81,8 +81,8 @@ export default class NeasClient extends Client {
    * @param injections Injections
    * @returns Promise<void>
    */
-  async createAccountlessUser(injections: Injections): Promise<void> {
-    const { application, context, request, res } = injections;
+  async createAccountlessUser(context, input): Promise<void> {
+    const { application, request, response: res } = input;
 
     const applicant = application?.applicants?.find(
       (applicant) => applicant && applicant.id === request?.params?.id,
@@ -116,8 +116,8 @@ export default class NeasClient extends Client {
    * @param injections Injections
    * @returns Promise<void>
    */
-  async sendVerificationEmail(injections: Injections): Promise<void> {
-    const { application, context, request } = injections;
+  async sendVerificationEmail(context, input): Promise<void> {
+    const { application, request } = input;
 
     const applicant = application?.applicants?.find(
       (applicant) => applicant && applicant.id === request?.params?.id,

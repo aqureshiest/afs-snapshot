@@ -1,0 +1,8 @@
+{{#if request.params.id}}
+  {
+    "id": {{{ json request.params.id }}},
+    "root": true
+  }
+{{else}}
+  null
+{{/if}}

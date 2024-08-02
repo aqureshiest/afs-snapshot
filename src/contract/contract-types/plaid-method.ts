@@ -1,13 +1,13 @@
 import assert from "node:assert";
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 
-class PlaidMethod extends ContractType<Definition, Definition, Output> {
-  get contractName(): string {
+class PlaidMethod extends ContractExecutable<Definition, Definition, Output> {
+  get executionName(): string {
     return "PlaidMethod";
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (input: Input, context: Injections, definition: Definition) => {
+  condition = (_, __, ___, definition: Definition) => {
     return Boolean(definition.id);
   };
 
@@ -17,28 +17,30 @@ class PlaidMethod extends ContractType<Definition, Definition, Output> {
    *
    * This function should probably return some information about the event that was created
    */
-  evaluate = async (
+  evaluate = async function (
+    context: Context,
+    executionContext,
     input: Input,
-    injections: Injections,
     definition: Definition,
-  ) => {
-    const { context } = injections;
+  ) {
     const plaidClient = context.loadedPlugins.plaid.instance;
     assert(plaidClient, "[3eac36d3] plaidClient not instantiated");
 
     try {
-      const result = (await plaidClient[definition.plaidMethod](
-        context,
-        input,
-        definition.id,
-        definition.payload,
-      )) as Output;
-      return result;
+      const { id, plaidMethod, payload } = definition;
+
+      const { errors, results } = await (
+        plaidClient[plaidMethod] as IPlaidMethod
+      )(context, input.application, id, payload as Parameters<IPlaidMethod>[3]);
+
+      if (errors.length) this.errors(executionContext, errors);
+
+      return results as Output;
     } catch (ex) {
-      this.error(input, ex.message);
+      this.error(executionContext, ex);
       return {
         method: definition.plaidMethod,
-        ContractType: this.contractName,
+        ContractType: this.executionName,
         error: ex.message,
       };
     }

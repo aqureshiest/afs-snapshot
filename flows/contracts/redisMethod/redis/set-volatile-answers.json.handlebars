@@ -1,9 +1,9 @@
 
 
-{{#if (and auth.session.userId (or request.body.values.employmentType request.body.values.incomeIsConsistent request.body.values.addAdditionalIncome request.body.values.sixMonthResidence))}}
+{{#if (and auth.artifacts.userId (or request.body.values.employmentType request.body.values.incomeIsConsistent request.body.values.addAdditionalIncome request.body.values.sixMonthResidence))}}
   {
     "redisMethod": "setUserState",
-    "key": "{{auth.session.userId}}",
+    "key": "{{auth.artifacts.userId}}",
     "value": 
       {{#with request.body.values}}
         {{#obj}}

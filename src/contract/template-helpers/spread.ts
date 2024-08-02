@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import assert from "node:assert";
 
+/**
+ * Block helper that takes a valid JSON object and spreads it to an encapsulating object
+ */
 const spread: TemplateHelper = function (context) {
   const objectDefinition = context.fn(this);
   const definition = JSON.parse(objectDefinition);

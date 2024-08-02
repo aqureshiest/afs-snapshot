@@ -8,4 +8,13 @@ Object.keys(templateHelpers).forEach((key) => {
   handlebars.registerHelper(key, templateHelpers[key]);
 });
 
+export const DEFAULT_OPTIONS = {
+  allowedProtoProperties: {
+    /**
+     * Permit request headers to be accessed
+     */
+    headers: true,
+  },
+};
+
 export default handlebars;

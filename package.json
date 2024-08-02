@@ -8,8 +8,10 @@
   "scripts": {
     "build": "rm -rf ./dist && npx chassis-tsc",
     "lint": "npx chassis-lint && prettier --check '{src,test}/**/*.{js,ts}'",
+    "lint:contracts": "npx chassis-lint && prettier --check flows/**/*.json",
     "test": "npx chassis-test",
     "lint:prettify": "prettier --write '{src,test}/**/*.{js,ts}'",
+    "lint:prettify:contracts": "prettier --write flows/**/*.json",
     "pact-test": "./scripts/pact.sh"
   },
   "repository": {

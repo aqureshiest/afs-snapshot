@@ -1,17 +1,26 @@
-{
-  "criteria": {{#list}}
-    {{#with auth.session}}
-      {{#if userId}}
-      { "monolithUserID": "{{ userId }}" }
+{{#with (contract 'query') as |query|}}
+{{#with (contract 'auth') as |auth|}}
+  {{ log "DEBUG_AUTH" auth }}
+  {
+    "query": {{{ json query }}},
+    "criteria": {{#list}}
+      {{#with auth.artifacts }}
+        { "userID": {{{ json (string userId) }}} }
+        { "monolithUserID": {{{ json (string userId) }}} }
+      {{/with}}
+    {{/list}}
+    {{#with request.query}}
+      {{#if limit}}
+        ,"limit": {{{json limit}}}
+      {{/if}}
+      {{#if page}}
+        ,"page": {{{json page}}}
       {{/if}}
     {{/with}}
-  {{/list}}
-  {{#with request.query}}
-    {{#if limit}}
-      ,"limit": {{{json limit}}}
-    {{/if}}
-    {{#if page}}
-      ,"page": {{{json page}}}
-    {{/if}}
-  {{/with}}
-}
+  }
+{{else}}
+  null
+{{/with}}
+{{else}}
+  null
+{{/with}}

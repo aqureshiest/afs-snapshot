@@ -3,7 +3,7 @@
       "action": {{{ json (contract 'redirect_homebase') }}}
     {{else}}
       {{!-- comments --}}
-      "manifest": "{{ manifest.name }}",
+      "manifest": "{{ manifest.id }}",
       "id": "{{request.params.id}}",
       "stage": {{{ json (contract 'landing_stage')}}}
     {{/if}}

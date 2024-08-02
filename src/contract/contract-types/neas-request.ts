@@ -1,21 +1,21 @@
 import assert from "node:assert";
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 
-class NeasRequest extends ContractType<Definition, Definition, Output> {
-  get contractName(): string {
+class NeasRequest extends ContractExecutable<Definition, Definition, Output> {
+  get executionName(): string {
     return "NeasRequest";
   }
 
-  condition = (input: Input, context: Injections, definition: Definition) => {
-    return Boolean(definition && definition.neasMethod);
+  condition = (_, __, ___, transformation: Definition) => {
+    return Boolean(transformation && transformation.neasMethod);
   };
 
   evaluate = async (
+    context: Context,
+    executionContext,
     input: Input,
-    injections: Injections,
     definition: Definition,
   ) => {
-    const { context } = injections;
     const neasClientService = context.loadedPlugins.NeasClient?.instance;
     assert(
       neasClientService,
@@ -24,17 +24,10 @@ class NeasRequest extends ContractType<Definition, Definition, Output> {
 
     let result;
     try {
-      result = await neasClientService[definition.neasMethod](injections);
+      result = await neasClientService[definition.neasMethod](context, input);
     } catch (ex) {
-      this.error(
-        input,
-        `[k5693y67] failed ${this.contractName}:\n${ex.message}`,
-      );
-      context.logger.info({
-        messege: "[twth9ej8] Neas Contract Failed",
-        ...ex,
-      });
       context.logger.error(ex);
+      this.error(input, ex);
     }
 
     return result;

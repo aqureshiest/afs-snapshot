@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import assert from "node:assert";
-import { Status } from "../contract-types/base-contract.js";
+import Contract from "../contract.js";
 
 const contractHelper: TemplateHelper = function (...args) {
   const key: string = typeof args[0] === "string" ? args[0] : args[0].hash.key;
-  const referenceIndex =
+  const index =
     typeof args[1] === "number" ? args[1] : (undefined as number | undefined);
 
   // handlebars template helpers always add the options argument as the last argument, but
@@ -12,85 +12,112 @@ const contractHelper: TemplateHelper = function (...args) {
   // type from the tuple index and–– Listen, I'm not happy about it either. Just go with it.
   const options = args[(args.length - 1) as 3];
 
-  const { manifest, evaluations, contract: self } = options.data;
+  const { context, manifest, self } = options.data;
+  assert(manifest, "[a9232983] missing manifest");
+
+  assert(self);
+
+  const { evaluations } = self;
+  assert(evaluations, "[fd77f1ab] missing evaluations");
 
   /* ============================== *
-   * If the referenced contract has not yet been executed, recursively execute
-   * it and any dependencies before replacing it in the current render.
+   * 1. Check the Manifest in scope for the keyed executable matching the
+   *    key and optional index (in the case of an array)
    * ============================== */
 
-  const referencedContract =
-    Array.isArray(manifest.contracts[key as keyof typeof manifest.contracts]) &&
-    referenceIndex !== undefined
-      ? manifest.contracts[key as keyof typeof manifest.contracts][
-          referenceIndex
-        ]
-      : manifest.contracts[key as keyof typeof manifest.contracts];
+  const executableParent:
+    | undefined
+    | ExecutableParent<unknown>
+    | ExecutableParent<unknown>[] =
+    Array.isArray(manifest.executables[key]) && index !== undefined
+      ? manifest.executables[key][index]
+      : manifest.executables[key];
 
   /* ============================== *
-   * If there is no contract by the context key in the manifest, attempt to
-   * grab an evaluation from the evaluations
+   * 2. Check the evaluations for previously started or completed executables
+   *    matching the key and optional index (in the case of an array)
    * ============================== */
 
-  if (!referencedContract) {
-    if (key in evaluations) {
-      const evaluation = evaluations[key];
-
-      return Array.isArray(evaluation)
-        ? evaluation.map((e, i) => JSON.stringify(e.result))
-        : JSON.stringify(evaluation.result);
-    }
-    return "";
-  }
-
+  const executable: undefined | Executable<unknown> | Executable<unknown>[] =
+    index !== undefined ? evaluations[key]?.[index] : evaluations[key];
   /**
+   * Return the value for local executable parents or existing evaluation scope
    */
-  const deriveContractValue = (
-    contract: Contract,
-    index?: number,
-  ): ContractType => {
-    const evaluation =
-      index != null ? evaluations[key]?.[index] : evaluations[key];
+  const guaranteeExecutable = (
+    inherited?: Executable<unknown>,
+    parent?: ExecutableParent<unknown>,
+    i?: number,
+  ) => {
+    /* ============================== *
+     * 1. Create a new executable instance if there is a
+     * ============================== */
+    if (parent && (!inherited || inherited.parent.id !== parent.id)) {
+      const newExecutable = parent.input(
+        context,
+        { key, index: i, manifest, evaluations, self },
+        options.data.root,
+      );
 
-    if (evaluation) {
-      self.dependencies[contract.id] = evaluation;
-      evaluation.dependents[self.contract.id] = self;
-      return evaluation;
+      if (i !== undefined) {
+        if (!Array.isArray(evaluations[key])) evaluations[key] = [];
+        evaluations[key][i] = newExecutable;
+      } else {
+        evaluations[key] = newExecutable;
+      }
+
+      return newExecutable.toJSON();
     }
 
-    const contractType = contract.execute(options.data, key, index);
-    contractType.dependents[self.contract.id] = self;
+    if (inherited) {
+      self.dependencies[inherited.parent.id] = inherited;
+      inherited.dependents[self.parent.id] = self;
 
-    if (!(contract.id in self.dependents)) {
-      self.dependencies[contract.id] = contractType;
+      return inherited.toJSON();
     }
-
-    return contractType;
   };
 
-  const contractValue = Array.isArray(referencedContract)
-    ? referencedContract.map((c, i) => deriveContractValue(c, i))
-    : deriveContractValue(referencedContract, referenceIndex);
+  const contractValue = (() => {
+    if (executableParent) {
+      if (Array.isArray(executableParent)) {
+        return executableParent.map((parent, i) => {
+          const existing = Array.isArray(executable)
+            ? executable[i]
+            : undefined;
+          return guaranteeExecutable(existing, parent, i);
+        });
+      } else {
+        const existing = Array.isArray(executable) ? undefined : executable;
+        return guaranteeExecutable(existing, executableParent);
+      }
+    } else if (executable) {
+      return Array.isArray(executable)
+        ? executable.map((inherited, i) =>
+            guaranteeExecutable(inherited, undefined, i),
+          )
+        : guaranteeExecutable(executable);
+    } else if ("fn" in options) {
+      const definition = options.fn(this, options);
 
-  if (referenceIndex !== undefined) {
-    evaluations[key] = evaluations[key] || [];
-    if (!Array.isArray(evaluations[key])) {
-      // TODO: figure out what to do with improper indexes of non-array contracts
+      const executableParent = new Contract({
+        type: options.hash.type,
+        raw: definition,
+        key,
+      });
+
+      const embedded = guaranteeExecutable(undefined, executableParent);
+
+      return JSON.stringify(embedded ?? null);
     }
-    evaluations[key][referenceIndex] = contractValue;
-  } else {
-    evaluations[key] = contractValue;
-  }
+  })();
 
-  const contractResult = Array.isArray(contractValue)
-    ? contractValue.map((cv) => cv.result)
-    : contractValue.result;
-
+  /**
+   * If this is a block helper, jsonify the result and send it
+   */
   if ("fn" in options) {
-    return options.fn(contractResult || null);
+    return JSON.stringify(contractValue ?? null);
   }
 
-  return contractResult;
+  return contractValue;
 };
 
 export default contractHelper;

@@ -1,12 +1,12 @@
 import assert from "node:assert";
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 
-class PiiRequest extends ContractType<Definition, Definition, Output> {
-  get contractName(): string {
+class PiiRequest extends ContractExecutable<Definition, Definition, Output> {
+  get executionName(): string {
     return "PiiRequest";
   }
 
-  condition = (input: Input, context: Injections, definition: Definition) => {
+  condition = (_, __, ___, definition: Definition) => {
     /**
      * TODO: Add authentication checks
      */
@@ -15,11 +15,11 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
   };
 
   evaluate = async (
+    context: Context,
+    executionContext,
     input: Input,
-    injections: Injections,
     definition: Definition,
   ) => {
-    const { context } = injections;
     const piiTokenService =
       context.loadedPlugins.piiTokenServiceClient?.instance;
     assert(
@@ -34,15 +34,14 @@ class PiiRequest extends ContractType<Definition, Definition, Output> {
         definition.value,
       );
     } catch (ex) {
-      this.error(
-        input,
-        `[c6392f31] failed ${this.contractName}:\n${ex.message}`,
-      );
-      context.logger.info({
-        messege: "[fbcd8ef5] Pii Token Contract Failed",
-        ...ex,
+      const error = new Error("Failed to get school data");
+      this.log(context, {
+        message: error.message,
+        method: definition && definition.piiRequestMethod,
+        error: ex,
       });
-      context.logger.error(ex);
+
+      this.error(executionContext, error);
     }
 
     return result;

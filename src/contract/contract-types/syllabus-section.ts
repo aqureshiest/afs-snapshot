@@ -1,10 +1,10 @@
-import ContractType from "./base-contract.js";
+import ContractExecutable from "../contract-executable.js";
 
-class Section extends ContractType<Definition, Transformation> {
-  get contractName(): string {
+class Section extends ContractExecutable<Definition, Transformation> {
+  get executionName(): string {
     return "Section";
   }
-  transform(context: Injections, definition: Definition): Transformation {
+  transform(_, __, definition: Definition): Transformation {
     const stats = {
       total: 0,
       completed: 0,
