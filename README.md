@@ -11,7 +11,7 @@ Interface for managing and executing custom product experiences
 
 To use apply-flow-service locally, initialize the project with these steps
 
-1. `docker-compose up service`, this will start the service in docker compose, along with vault, mountebank and redis.
+1. `docker-compose up`, this will start the service in docker compose, along with vault, mountebank redis and gateway.
 
 ## Running tests
 
