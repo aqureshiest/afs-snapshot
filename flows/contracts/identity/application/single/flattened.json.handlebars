@@ -1,0 +1,14 @@
+{{!
+  Given an 'application' contract with a single root application, use the first applicant
+	as the default primary
+}}
+{{#with (contract 'application') as |application|}}
+  {{#obj}}
+    {{#unless application.primary}}
+      { "primary": {{{ json application.applicants.[0] }}} }
+    {{/unless}}
+    {{{ json application }}}
+  {{/obj}}
+{{else}}
+  null
+{{/with}}

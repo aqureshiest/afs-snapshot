@@ -46,7 +46,10 @@ export default class Manifest<I> implements ExecutableParent<I> {
    */
   static DEFAULT_INPUTS = Object.freeze({
     "*": "inputs",
-    application: "application-by-id-param",
+    application: {
+      "*": "application/single.flattened",
+      application: "application-by-id-param",
+    },
     applications: [],
     applicationState: "application-state",
     userState: "user-state",

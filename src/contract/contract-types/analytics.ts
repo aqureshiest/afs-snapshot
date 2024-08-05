@@ -98,7 +98,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
   private buildTrackProps(input: Input, definition: Definition) {
     const { application, auth } = input;
 
-    assert(application?.primary, "[38cb50d5] no auth.session.userId");
+    assert(application?.primary, "[18e77f7d] application.primary is null");
 
     const userId = auth?.artifacts?.userId;
 
