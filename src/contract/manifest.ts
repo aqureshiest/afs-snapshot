@@ -19,7 +19,12 @@ export default class Manifest<I> implements ExecutableParent<I> {
   /**
    * This describes the default methods supported by legacy v1 manifests
    */
-  static DEFAULT_METHODS = ["get" as const, "post" as const];
+  static DEFAULT_METHODS = [
+    "get" as const,
+    "post" as const,
+    "put" as const,
+    "patch" as const,
+  ];
 
   /**
    * This describes the default parameter configuration for legacy v1 manifests:
