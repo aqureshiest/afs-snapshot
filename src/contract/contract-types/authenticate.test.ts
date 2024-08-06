@@ -45,7 +45,7 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const result: { [key: string]: unknown } = (
       await manifest.execute(context, { errors }, input)
-    ).toJSON();
+    ).toJSON() as { [key: string]: unknown };
 
     assert.notEqual(result?.isValid, false);
     assert.equal(
@@ -82,7 +82,7 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const result: { [key: string]: unknown } = (
       await manifest.execute(context, { errors }, input)
-    ).toJSON();
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, true);
 
@@ -116,7 +116,7 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const result: { [key: string]: unknown } = (
       await manifest.execute(context, { errors }, input)
-    ).toJSON();
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, false);
     assert.notEqual(
@@ -161,7 +161,7 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const result: { [key: string]: unknown } = (
       await manifest.execute(context, { errors }, input)
-    ).toJSON();
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, true);
     assert.equal(result?.isAuthorized, false);
@@ -202,7 +202,7 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const result: { [key: string]: unknown } = (
       await manifest.execute(context, { errors }, input)
-    ).toJSON();
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, false);
     assert.equal(result?.isAuthorized, false);

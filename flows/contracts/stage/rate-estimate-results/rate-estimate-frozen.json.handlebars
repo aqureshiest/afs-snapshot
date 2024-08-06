@@ -9,7 +9,7 @@
       "label": "Rate Estimate Result Frozen",
       "content": [
         {
-          "key": "header",
+          "key": "frozenHeader",
           "type": "header",
           "componentProps": {
             "copy": "We are unable to provide rate estimates given your credit is frozen or locked",
@@ -17,32 +17,30 @@
           }
         },
         {
-          "key": "markdown",
-          "type": "markdown",
+          "key": "frozenInfo",
+          "type": "md",
           "componentProps": {
-            "text": "## What does that mean? \n\n Please unlock or thaw your credit report so that we can get you a rate that fits your needs. \n\n"
+            "content": "## What does that mean? \n\n Please unlock or thaw your credit report so that we can get you a rate that fits your needs. \n\n"
           }
         },
         {
-          "key": "callout",
+          "key": "frozenCallout",
           "type": "callout",
           "containerProps": {
-            "boxProps": {
-              "marginTop": "40px"
-            }
+            "marginTop": "40px"
           },
           "componentProps": {
             "content": [
               {
                 "key": "markdown",
-                "type": "markdown",
+                "type": "md",
                 "componentProps": {
                  "type": "body",
-                 "text": "#### Unsure about continue applying independently? \n You can also add a cosigner to see if you might receive better rates and better approval changes."
+                 "content": "#### Unsure about continue applying independently? \n You can also add a cosigner to see if you might receive better rates and better approval changes."
                 }
               },
               {
-                "key": "buttons",
+                "key": "inviteCosignerButtons",
                 "type": "buttons",
                 "componentProps": {
                   "stylePreset": "secondaryTertiary",

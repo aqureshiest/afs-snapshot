@@ -9,7 +9,7 @@
       "label": "Rate Estimate Result Unable",
       "content": [
         {
-          "key": "header",
+          "key": "unableHeader",
           "type": "header",
           "componentProps": {
             "copy": "We are unable to determine if you qualify for an Earnest loan.",
@@ -17,39 +17,37 @@
           }
         },
         {
-          "key": "markdown",
-          "type": "markdown",
+          "key": "unableInfo",
+          "type": "md",
           "componentProps": {
-            "text": "\n\n ## What does that mean? \n\n Consider the following basic eligibility guidelines as you decide whether to proceed with a full application. \n\n * Are you employed or do you have an offer letter? \n\n * Do you have enough savings to cover at least a month of normal expenses \n\n * Do you have a history of making payments on time?"
+            "content": "\n\n ## What does that mean? \n\n Consider the following basic eligibility guidelines as you decide whether to proceed with a full application. \n\n * Are you employed or do you have an offer letter? \n\n * Do you have enough savings to cover at least a month of normal expenses \n\n * Do you have a history of making payments on time?"
           }
         },
         {
-          "key": "markdown",
-          "type": "markdown",
+          "key": "continueAnyway",
+          "type": "md",
           "componentProps": {
-            "text": "## Ready to continue? \n\n Our application takes about 10 minutes and requires a 'hard credit inquiry.' Hard credit inquiries lower your credit score slightly; however, the impact varies from person to person depending on other factors in the credit report. To qualify and take out loan on your own, you need to meet our [eligibility criteria](https://www.earnest.com/eligibility). \n\n"
+            "content": "## Ready to continue? \n\n Our application takes about 10 minutes and requires a 'hard credit inquiry.' Hard credit inquiries lower your credit score slightly; however, the impact varies from person to person depending on other factors in the credit report. To qualify and take out loan on your own, you need to meet our [eligibility criteria](https://www.earnest.com/eligibility). \n\n"
           }
         },
         {
-          "key": "callout",
+          "key": "cosignedCallout",
           "type": "callout",
           "containerProps": {
-            "boxProps": {
-              "marginTop": "40px"
-            }
+            "marginTop": "40px"
           },
           "componentProps": {
             "content": [
               {
-                "key": "markdown",
-                "type": "markdown",
+                "key": "cosignedCalloutHeader",
+                "type": "md",
                 "componentProps": {
                   "type": "body",
-                  "text": "#### Unsure about continue applying independently? \n You can also add a cosigner to see if you might receive better rates and better approval changes."
+                  "content": "#### Unsure about continue applying independently? \n You can also add a cosigner to see if you might receive better rates and better approval changes."
                 }
               },
               {
-                "key": "buttons",
+                "key": "inviteCosignerButtons",
                 "type": "buttons",
                 "componentProps": {
                   "stylePreset": "secondaryTertiary",

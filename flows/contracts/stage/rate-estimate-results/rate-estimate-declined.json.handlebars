@@ -9,7 +9,7 @@
       "label": "Rate Estimate Result Declined",
       "content": [
         {
-          "key": "header",
+          "key": "declinedHeader",
           "type": "header",
           "componentProps": {
             "copy": "We recommend adding a cosigner for a stronger application",
@@ -17,98 +17,81 @@
           }
         },
         {
-          "key": "callout",
+          "key": "cosignedCallout",
           "type": "callout",
           "containerProps": {
-            "boxProps": {
-              "marginTop": "16px",
-              "marginBottom": "40px"
-            }
+            "marginTop": "16px",
+            "marginBottom": "40px"
           },
           "componentProps": {
             "content": [
               {
-                "key": "markdown",
-                "type": "markdown",
+                "key": "cosignedCalloutHeader",
+                "type": "md",
                 "componentProps": {
-                  "text": "#### Cosigned Loan rates starting at"
+                  "content": "#### Cosigned Loan rates starting at"
                 }
               },
               {
-                "key": "statLineGroup",
+                "key": "headLineRates",
                 "type": "statLineGroup",
                 "containerProps": {
-                  "boxProps": {
-                    "margin": "12px 0"
-                  }
+                  "margin": "12px 0"
                 },
                 "componentProps": {
-                  "items": [
-                    {
-                      {{!-- TODO: Replace with call to get actual headline rates --}}
-                      {{!-- https://meetearnest.atlassian.net/browse/LA-1076 --}}
-                      "stat": "3.99%",
-                      "label": "Variable APR"
-                    },
-                    {
-                      {{!-- TODO: Replace with call to get actual headline rates --}}
-                      {{!-- https://meetearnest.atlassian.net/browse/LA-1076 --}}
-                      "stat": "4.99%",
-                      "label": "Fixed APR"
-                    }
-                  ]
+                  {{#with (contract 'headLineRates') as | headLineResults |}}
+                    "items": {{#list}} {{#each headLineResults.results.rates}}
+                      { "stat": "{{this.rate_low}}%", "label": "{{#if (eq this.rate_type 'fixed') }}Fixed APR* {{else}}Variable APR* {{/if}}" } {{/each}}
+                    {{/list}}
+                  {{/with}}
                 }
               },
               {
-                "key": "markdown",
-                "type": "markdown",
+                "key": "rateDisclaimer",
+                "type": "md",
                 "componentProps": {
                   "type": "disclaimer",
-                  "text": "&ast; Rate includes optional 0.25% Auto Pay discount. Our lowest rates are only available for our most credit qualified borrowers"
+                  "content": "&ast; Rate includes optional 0.25% Auto Pay discount. Our lowest rates are only available for our most credit qualified borrowers"
                 }
               }
             ]
           }
         },
         {
-          "key": "markdown",
-          "type": "markdown",
+          "key": "cosignedLoanInfo",
+          "type": "md",
           "componentProps": {
-            "text": "\n\n ## Why choose a cosigned loan? \n\n Many clients looking for a loan have a limited credit history and income, which tends to make it difficult to meet the minimum eligibility criteria needed to be approved for a loan. A cosigner with a strong credit history and adequate income can improve the likelihood of getting approved."
+            "content": "\n\n ## Why choose a cosigned loan? \n\n Many clients looking for a loan have a limited credit history and income, which tends to make it difficult to meet the minimum eligibility criteria needed to be approved for a loan. A cosigner with a strong credit history and adequate income can improve the likelihood of getting approved."
           }
         },
         {
-          "key": "markdown",
-          "type": "markdown",
+          "key": "cosignedInviteInfo",
+          "type": "md",
           "containerProps": {
-            "boxProps": {
-              "marginTop": "40px"
-            }
+            "marginTop": "40px"
           },
           "componentProps": {
-            "text": "## What happens after I invite my cosigner? \n\n We’ll send them a unique link to apply alongside you."
+            "content": "## What happens after I invite my cosigner? \n\n We’ll send them a unique link to apply alongside you."
           }
         },
         {
-          "key": "callout",
+          "key": "applyIndependentlyCallout",
           "type": "callout",
           "containerProps": {
-            "boxProps": {
-              "marginTop": "40px"
-            }
+            "marginTop": "40px"
           },
           "componentProps": {
             "content": [
               {
-                "key": "markdown",
-                "type": "markdown",
+                "key": "applyIndependentInfo",
+                "type": "md",
                 "componentProps": {
                   "type": "body",
-                  "text": "#### Continue to Apply Independently. \n Applying independently may result in higher rates. A cosigner with a strong credit history and adequate income can improve the likelihood of getting approved. To qualify and take out loan on your own, you need to meet our [eligibility criteria.](https://www.earnest.com/eligibility)"
+                  "content": "#### Continue to Apply Independently. \n Applying independently may result in higher rates. A cosigner with a strong credit history and adequate income can improve the likelihood of getting approved. To qualify and take out loan on your own, you need to meet our [eligibility criteria.](https://www.earnest.com/eligibility)"
                 }
               },
               {
-                "key": "buttons",
+                "key": "applyIndependtlyButtons",
                 "type": "buttons",
                 "componentProps": {
                   "stylePreset": "secondaryTertiary",

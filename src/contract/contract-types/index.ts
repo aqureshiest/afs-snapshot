@@ -46,6 +46,8 @@ export { default as redisMethod } from "./redis-method.js";
 
 export { default as clientMethod } from "./client-method.js";
 
+export { default as genericRESTRequest } from "./generic-client-method.js";
+
 export { default as authenticate } from "./authenticate.js";
 
 /* ============================== *

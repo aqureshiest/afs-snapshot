@@ -1,0 +1,32 @@
+{
+  "port": 3018,
+  "protocol": "http",
+  "name": "generic-service",
+  "defaultResponse": {
+    "statusCode": 500
+  },
+  "stubs": [
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/v1/headline_rates"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'generic-service/headLineRates.json') %>",
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+  

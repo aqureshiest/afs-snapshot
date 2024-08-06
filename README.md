@@ -15,4 +15,4 @@ To use apply-flow-service locally, initialize the project with these steps
 
 ## Running tests
 
-Run `docke-compose run service npx chassis-test` to run the test suites.
+Run `docker-compose run service npx chassis-test` to run the test suites.

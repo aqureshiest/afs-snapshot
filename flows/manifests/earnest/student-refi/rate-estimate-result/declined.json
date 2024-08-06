@@ -2,5 +2,6 @@
     "*": "rate-estimate-results-view",
     "landing_stage": "rate-estimate-results.rate-estimate-declined",
     "pageLayout": "sidebar",
-    "redirect_homebase": "actions/homebase.default"
+    "redirect_homebase": "actions/homebase.default",
+    "headLineRates": "rest.headLineRates"
 }
