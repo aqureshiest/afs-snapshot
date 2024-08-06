@@ -87,7 +87,7 @@ const contractHelper: TemplateHelper = function (...args) {
         });
       } else {
         const existing = Array.isArray(executable) ? undefined : executable;
-        return guaranteeExecutable(existing, executableParent);
+        return guaranteeExecutable(existing, executableParent, index);
       }
     } else if (executable) {
       return Array.isArray(executable)
