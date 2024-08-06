@@ -74,6 +74,7 @@ declare module "contract/contract-types/application-event.js" {
     id?: string;
     fields: string;
     payload: { [key: string]: unknown };
+    application: never;
     [key: string]: unknown;
   };
 
@@ -83,7 +84,7 @@ declare module "contract/contract-types/application-event.js" {
 
   type MutationSchema = IMutationSchema;
 
-  type Output = { [key: string]: Event };
+  type Output = { event: string } & Partial<Event>;
 }
 
 import type {

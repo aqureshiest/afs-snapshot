@@ -14,6 +14,7 @@ export const DEFAULT_OPTIONS = {
      * Permit request headers to be accessed
      */
     headers: true,
+    body: true,
   },
 };
 

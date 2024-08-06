@@ -169,7 +169,7 @@ class ApplicationEvent extends ContractExecutable<
        * TODO: consider alternative return types for this contract-type
        * ============================== */
 
-      return {};
+      return { event: definition.event };
     }
 
     if (requestResult) {
@@ -190,7 +190,7 @@ class ApplicationEvent extends ContractExecutable<
         const error = new Error(errorMessage);
 
         this.error(executionContext, error);
-        return {};
+        return { event: definition.event };
       }
       /* ============================== *
        * Rehydration: when application-event evaluates, it should re-hydrate the
@@ -217,9 +217,12 @@ class ApplicationEvent extends ContractExecutable<
           });
         }
       }
-      return eventResult;
+      return {
+        ...eventResult[definition.event],
+        event: definition.event,
+      };
     } else {
-      return {};
+      return { event: definition.event };
     }
   };
 
@@ -227,7 +230,7 @@ class ApplicationEvent extends ContractExecutable<
     if (!this.result) return null;
     return {
       event: this.result?.event,
-      id: this.result?.id,
+      id: this.result?.application?.id,
       createdAt: this.result?.createdAt,
     };
   }
