@@ -410,18 +410,15 @@ export default class PlaidClient extends Client {
                 plaidAccountIDsAdded.push(faccount.account_id);
 
                 return {
-                  errors,
-                  results: {
-                    name: institution.name,
-                    type: faccount.subtype,
-                    selected: true,
-                    // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
-                    account_last4: faccount.mask?.toString().padStart(4, "-"),
-                    balance: balanceInCents,
-                    plaidAccountID: faccount.account_id,
-                    plaidItemID: plaidResponse.item.item_id,
-                    plaidAccessToken: accessToken.access_token,
-                  },
+                  name: institution.name,
+                  type: faccount.subtype,
+                  selected: true,
+                  // padding the account last 4, since plaid response seems to allow in some cases a mask of 3 digits
+                  account_last4: faccount.mask?.toString().padStart(4, "-"),
+                  balance: balanceInCents,
+                  plaidAccountID: faccount.account_id,
+                  plaidItemID: plaidResponse.item.item_id,
+                  plaidAccessToken: accessToken.access_token,
                 };
               } else {
                 errors.push(new Error("duplicated-account-error"));
