@@ -33,25 +33,83 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   const cosigner = uuidv4();
   const primaryAppData = {
     id: root,
-    relationships: [
-      {
-        id: primary,
-        relationship: "applicant",
+    details: {
+      amount: {
+        requested: 6000000,
+        approved: null,
+        certified: null,
       },
-    ],
-    tags: ["primary_only"],
+    },
+    brand: "earnest",
+    product: "student-refi",
+    lendingDecisionID: [],
+    tags: ["incomplete", "primary_only"],
+    status: null,
+    partnerName: null,
+    partnerDiscountAmount: null,
+    rateMapTag: "minus_20_bps_test",
+    rateMapVersion: "193",
+    referralProgramId: null,
+    monolithApplicationID: null,
+    monolithLoanID: "587842",
+    monolithUserID: null,
+    tag: {
+      applicants: "primary_only",
+      serialization: null,
+      status: "incomplete",
+    },
+    root: null,
     applicants: [
       {
         id: primary,
         createdAt: "2024-02-22T20:24:10.140Z",
-        ssnTokenURI: "pii-token://tokens/36db231d-4151-42e4-9a28-4d3d3d3",
+        ssnTokenURI: "pii-token://tokens/6b4d7cb7-e34f-4425-af66-108d2e563692",
+        relationship: null,
+        partnerDiscountAmount: null,
+        tag: {
+          applicants: "primary_only",
+          serialization: null,
+          status: "incomplete",
+        },
+        lenderId: null,
+        lendingCheckoutID: null,
+        lendingDecisionID: [],
+        status: null,
+        lookupHash: [],
+        monolithApplicationID: "576326",
+        monolithLoanID: null,
+        monolithUserID: null,
+        partnerName: null,
+        product: null,
+        rateMapTag: null,
+        rateMapVersion: null,
+        referralProgramId: null,
+        reference: {
+          userID: null,
+          brand: null,
+          cognitoID: null,
+          lender: null,
+          lenderId: null,
+          lendingCheckoutID: null,
+          lendingDecisionID: [],
+          lookupHash: [],
+          monolithApplicationID: "603233",
+          monolithLoanID: null,
+          monolithUserID: "1977678",
+          partnerName: null,
+          product: null,
+          rateMapTag: null,
+          rateMapVersion: null,
+          referralProgramId: null,
+          ssnTokenURI:
+            "pii-token://tokens/6b4d7cb7-e34f-4425-af66-108d2e563692",
+        },
         relationships: [
           {
             id: root,
             relationship: "root",
           },
         ],
-        monolithApplicationID: "576326",
         details: {
           name: {
             first: "Nancy",
@@ -408,6 +466,281 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         assert.strictEqual(error.message, "Application not found");
       }
     });
+
+    it("[9cbd8c40] should throw for APPLICATION_STATUS events when an unknown decision is sent", async () => {
+      const mockFn = mock.fn(() => {
+        return {
+          results: {
+            data: {
+              applications: [
+                {
+                  id: primary,
+                  root: {
+                    id: root,
+                  },
+                  primary: null,
+                },
+              ],
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      });
+
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        mockFn,
+      );
+
+      await assert.rejects(
+        client.saveDecision(input, context, "576326", {
+          data: {
+            decision: "Unknown",
+          },
+          webhookType: "APPLICATION_STATUS",
+        }),
+        (error: Error) => {
+          assert.equal(
+            error.message,
+            "[4b0a0bd3] Unhandled APPLICATION_STATUS event",
+          );
+          return true;
+        },
+      );
+    });
+
+    it("[52f1ee94] should throw for APPLICATION_REVIEW events when an unknown entity status is sent", async () => {
+      const mockFn = mock.fn(() => {
+        return {
+          results: {
+            data: {
+              applications: [
+                {
+                  id: primary,
+                  root: {
+                    id: root,
+                  },
+                  primary: null,
+                },
+              ],
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      });
+
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        mockFn,
+      );
+
+      await assert.rejects(
+        client.saveDecision(input, context, "576326", {
+          data: {
+            decision: "Pending",
+            entity: {
+              status: "Unknown",
+            },
+          },
+          webhookType: "APPLICATION_REVIEW",
+        }),
+        (error: Error) => {
+          assert.equal(
+            error.message,
+            "[31d7e02f] Unhandled APPLICATION_REVIEW event",
+          );
+          return true;
+        },
+      );
+    });
+
+    it("[ffdeb465] should throw for APPLICATION_DOCUMENT_REQUEST events when an unknown entity status is sent", async () => {
+      const mockFn = mock.fn(() => {
+        return {
+          results: {
+            data: {
+              applications: [
+                {
+                  id: primary,
+                  root: {
+                    id: root,
+                  },
+                  primary: null,
+                },
+              ],
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      });
+
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        mockFn,
+      );
+
+      await assert.rejects(
+        client.saveDecision(input, context, "576326", {
+          data: {
+            decision: "Pending",
+            entity: {
+              status: "Unknown",
+            },
+          },
+          webhookType: "APPLICATION_DOCUMENT_REQUEST",
+        }),
+        (error: Error) => {
+          assert.equal(
+            error.message,
+            "[94d72f20] Unhandled APPLICATION_DOCUMENT_REQUEST event",
+          );
+          return true;
+        },
+      );
+    });
+
+    it("[7e58cb91] should throw for unknown webhook events", async () => {
+      const mockFn = mock.fn(() => {
+        return {
+          results: {
+            data: {
+              applications: [
+                {
+                  id: primary,
+                  root: {
+                    id: root,
+                  },
+                  primary: null,
+                },
+              ],
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      });
+
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        mockFn,
+      );
+
+      await assert.rejects(
+        client.saveDecision(input, context, "576326", {
+          data: {
+            decision: "Pending",
+          },
+          webhookType: "UNKNOWN",
+        }),
+        (error: Error) => {
+          assert.equal(error.message, "[3320c677] Unhandled webhook event");
+          return true;
+        },
+      );
+    });
+
+    it("[916993ed] Throw an error on POST request to rate checkendpoint", async () => {
+      mock.method(
+        context.loadedPlugins.applicationServiceClient.instance,
+        "post",
+        () => {
+          return {
+            results: {
+              data: {
+                application: primaryAppData,
+              },
+            },
+            response: {
+              statusCode: 200,
+            },
+          };
+        },
+      );
+
+      mock.method(client, "post", async () => {
+        return {
+          response: {
+            statusCode: 400,
+            statusMessage: "Unable to process request.",
+          },
+        };
+      });
+
+      try {
+        await client.rateCheckRequest(
+          input,
+          context,
+          "12c7482c-7ec2-4513-b575-fa994f2adf88",
+        );
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[53a1b21d] Failed to post rate check: Unable to process request.",
+        );
+      }
+    });
+
+    it("[f1132d41] Throw an error on GET of artifacts", async () => {
+      mock.method(client, "get", async () => {
+        return {
+          response: {
+            statusCode: 400,
+            statusMessage: "Cannot read properties of undefined (reading 'id')",
+          },
+        };
+      });
+
+      try {
+        await client.getArtifacts(
+          input,
+          context,
+          "decisioning-request",
+          "721e917c-572c-4e81-b791-09c3bf1ea5c1",
+          "rate_check",
+        );
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[de6308f4] Failed to get artifacts: Cannot read properties of undefined (reading 'id')",
+        );
+      }
+    });
+
+    it("[c1b91977] Throw an error on GET of price curves", async () => {
+      mock.method(client, "get", async () => {
+        return {
+          response: {
+            statusCode: 400,
+            statusMessage: "Cannot read properties of undefined (reading 'id')",
+          },
+        };
+      });
+
+      try {
+        await client.getPriceCurve(
+          input,
+          context,
+          "decisioning-request",
+          "721e917c-572c-4e81-b791-09c3bf1ea5c1",
+        );
+      } catch (error) {
+        assert.strictEqual(
+          error.message,
+          "[378e8d85] Failed to get price curves: Cannot read properties of undefined (reading 'id')",
+        );
+      }
+    });
   });
 
   it("[8e943ff1] should get a decision", async () => {
@@ -665,51 +998,6 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert(body.variables.status, "declined");
   });
 
-  it("[9cbd8c40] should throw for APPLICATION_STATUS events when an unknown decision is sent", async () => {
-    const mockFn = mock.fn(() => {
-      return {
-        results: {
-          data: {
-            applications: [
-              {
-                id: primary,
-                root: {
-                  id: root,
-                },
-                primary: null,
-              },
-            ],
-          },
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "post",
-      mockFn,
-    );
-
-    await assert.rejects(
-      client.saveDecision(input, context, "576326", {
-        data: {
-          decision: "Unknown",
-        },
-        webhookType: "APPLICATION_STATUS",
-      }),
-      (error: Error) => {
-        assert.equal(
-          error.message,
-          "[4b0a0bd3] Unhandled APPLICATION_STATUS event",
-        );
-        return true;
-      },
-    );
-  });
-
   it("[79712798] should set an applicant's status to 'review' for APPLICATION_REVIEW events with an 'pending_review' entity status", async () => {
     const mockFn = mock.fn(() => {
       return {
@@ -753,54 +1041,6 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     };
     assert(body.variables.id, primary);
     assert(body.variables.status, "review");
-  });
-
-  it("[52f1ee94] should throw for APPLICATION_REVIEW events when an unknown entity status is sent", async () => {
-    const mockFn = mock.fn(() => {
-      return {
-        results: {
-          data: {
-            applications: [
-              {
-                id: primary,
-                root: {
-                  id: root,
-                },
-                primary: null,
-              },
-            ],
-          },
-        },
-        response: {
-          statusCode: 200,
-        },
-      };
-    });
-
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "post",
-      mockFn,
-    );
-
-    await assert.rejects(
-      client.saveDecision(input, context, "576326", {
-        data: {
-          decision: "Pending",
-          entity: {
-            status: "Unknown",
-          },
-        },
-        webhookType: "APPLICATION_REVIEW",
-      }),
-      (error: Error) => {
-        assert.equal(
-          error.message,
-          "[31d7e02f] Unhandled APPLICATION_REVIEW event",
-        );
-        return true;
-      },
-    );
   });
 
   it("[40a0b2ce] should set an applicant's status to 'ai_requested' for APPLICATION_DOCUMENT_REQUEST events with a 'pending_documents' entity status", async () => {
@@ -848,20 +1088,124 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert(body.variables.status, "ai_requested");
   });
 
-  it("[ffdeb465] should throw for APPLICATION_DOCUMENT_REQUEST events when an unknown entity status is sent", async () => {
-    const mockFn = mock.fn(() => {
+  it("[4c477723] should post a rate estimate request", async () => {
+    const { applicants } = primaryAppData;
+    const { details, ...restOfApplicants } = applicants[0];
+    const { income, financialAccounts, ...restOfDetails } = details;
+
+    const newDetails = {
+      income: [
+        {
+          amount: 2000000,
+          type: null,
+          employer: null,
+          name: null,
+          title: null,
+          start: null,
+          end: null,
+        },
+      ],
+      ...restOfDetails,
+    };
+    const newApplicants = [{ ...restOfApplicants, details: newDetails }];
+    const artifacts = {
+      priceCurve: [
+        {
+          rates: [
+            {
+              rate: 5.71,
+              rate_type: "fixed",
+            },
+            {
+              rate: 6.31,
+              rate_type: "variable",
+            },
+          ],
+          score: 6.6566,
+          term_months: 60,
+        },
+        {
+          rates: [
+            {
+              rate: 5.72,
+              rate_type: "fixed",
+            },
+            {
+              rate: 6.31,
+              rate_type: "variable",
+            },
+          ],
+          score: 6.6566,
+          term_months: 61,
+        },
+      ],
+      scoreCurve: [
+        {
+          score: 7,
+          sub_scores: {
+            fico: 1.4818,
+            assets: 1.549,
+            income: 1.3575,
+            degree_type: 0,
+            school_rank: 0,
+            free_cash_flow: 1.4,
+            school_cdr_effect: 0,
+            assets_to_loan_ratio: 1.01,
+            credit_card_to_income_ratio: 0.525,
+          },
+          backend_dti: 0.1482,
+          term_months: 60,
+          fixed_expenses_cents: 253125,
+          free_cash_flow_cents: 894407,
+          revised_assets_cents: 125000000,
+          excess_free_cash_flow_cents: 0,
+          estimated_monthly_payment_cents: 112925,
+        },
+      ],
+      ficoScore: 759,
+      softInquiryDate: "2024-07-24T00:00:00.000Z",
+      softApprovedAmount: 6000000,
+      modelVersion: "1.235-19bbaa0",
+      rateMapVersion: 193,
+      stateLimitsVersion: "2019-12-20",
+      variableCapsVersion: "2017-06-01",
+      rateMapTag: "plus_20_bps_test",
+      grossAnnualIncome: 20500000,
+      netAnnualIncome: 13770389,
+      assetsAmount: 125000000,
+      monthlyHousingExpense: 101200,
+    };
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              application: { ...primaryAppData, applicants: newApplicants },
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+
+    mock.method(client, "post", async () => {
       return {
         results: {
+          message: "Decisioning Request is processed.",
           data: {
-            applications: [
-              {
-                id: primary,
-                root: {
-                  id: root,
-                },
-                primary: null,
-              },
-            ],
+            decisioningToken: "5ffa351f-b39a-490d-b91c-9a541f7d3443",
+            seedId: "29527758200557436062858034636007009573",
+            status: "completed",
+            journeyApplicationStatus: "completed",
+            decisionOutcome: "Approved",
+            journeyToken: "J-yUGcTupSXm0GAbBmYNIZ",
+            journeyApplicationToken: "JA-n4fGh8OBXs64DAzRVftV",
+            artifacts: artifacts,
           },
         },
         response: {
@@ -870,46 +1214,90 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
     });
 
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "post",
-      mockFn,
-    );
+    const results = await client.rateCheckRequest(input, context, root);
 
-    await assert.rejects(
-      client.saveDecision(input, context, "576326", {
-        data: {
-          decision: "Pending",
-          entity: {
-            status: "Unknown",
-          },
-        },
-        webhookType: "APPLICATION_DOCUMENT_REQUEST",
-      }),
-      (error: Error) => {
-        assert.equal(
-          error.message,
-          "[94d72f20] Unhandled APPLICATION_DOCUMENT_REQUEST event",
-        );
-        return true;
-      },
-    );
+    assert.deepEqual(results.message, "Decisioning Request is processed.");
+    assert.deepEqual(results.data.decisionOutcome, "Approved");
+    assert.deepEqual(results.data.artifacts, artifacts);
   });
 
-  it("[7e58cb91] should throw for unknown webhook events", async () => {
-    const mockFn = mock.fn(() => {
+  it("[0ff6b7b5] should get artifacts", async () => {
+    const priceCurves = [
+      {
+        rates: [
+          {
+            rate: 5.71,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.31,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.6566,
+        term_months: 60,
+      },
+      {
+        rates: [
+          {
+            rate: 5.72,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.31,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.6566,
+        term_months: 61,
+      },
+    ];
+    const artifacts = {
+      priceCurve: priceCurves,
+      scoreCurve: [
+        {
+          score: 7,
+          sub_scores: {
+            fico: 1.4818,
+            assets: 1.549,
+            income: 1.3575,
+            degree_type: 0,
+            school_rank: 0,
+            free_cash_flow: 1.4,
+            school_cdr_effect: 0,
+            assets_to_loan_ratio: 1.01,
+            credit_card_to_income_ratio: 0.525,
+          },
+          backend_dti: 0.1482,
+          term_months: 60,
+          fixed_expenses_cents: 253125,
+          free_cash_flow_cents: 894407,
+          revised_assets_cents: 125000000,
+          excess_free_cash_flow_cents: 0,
+          estimated_monthly_payment_cents: 112925,
+        },
+      ],
+      ficoScore: 759,
+      softInquiryDate: "2024-07-24T00:00:00.000Z",
+      softApprovedAmount: 6000000,
+      modelVersion: "1.235-19bbaa0",
+      rateMapVersion: 193,
+      stateLimitsVersion: "2019-12-20",
+      variableCapsVersion: "2017-06-01",
+      rateMapTag: "plus_20_bps_test",
+      grossAnnualIncome: 20500000,
+      netAnnualIncome: 13770389,
+      assetsAmount: 125000000,
+      monthlyHousingExpense: 101200,
+    };
+
+    mock.method(client, "get", async () => {
       return {
         results: {
           data: {
-            applications: [
-              {
-                id: primary,
-                root: {
-                  id: root,
-                },
-                primary: null,
-              },
-            ],
+            applicationId: "602935",
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            artifacts: artifacts,
           },
         },
         response: {
@@ -918,23 +1306,254 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
     });
 
-    mock.method(
-      context.loadedPlugins.applicationServiceClient.instance,
-      "post",
-      mockFn,
+    const results = await client.getArtifacts(
+      input,
+      context,
+      "decisioning-request",
+      "16719670-a754-4719-a185-4f7e875bc04c",
+      "rate_check",
     );
 
-    await assert.rejects(
-      client.saveDecision(input, context, "576326", {
-        data: {
-          decision: "Pending",
-        },
-        webhookType: "UNKNOWN",
-      }),
-      (error: Error) => {
-        assert.equal(error.message, "[3320c677] Unhandled webhook event");
-        return true;
-      },
+    assert.deepEqual(results.data.applicationId, "602935");
+    assert.deepEqual(
+      results.data.decisioningToken,
+      "16719670-a754-4719-a185-4f7e875bc04c",
     );
+    assert.deepEqual(results.data.artifacts, artifacts);
+    assert.deepEqual(results.data.artifacts.priceCurve, priceCurves);
+  });
+
+  it("[2cd0d3d6] should get price curves", async () => {
+    const priceCurves = [
+      {
+        rates: [
+          {
+            rate: 5.71,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.31,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.6566,
+        term_months: 60,
+      },
+      {
+        rates: [
+          {
+            rate: 5.72,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.31,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.6566,
+        term_months: 61,
+      },
+      {
+        rates: [
+          {
+            rate: 5.69,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.09,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9904,
+        term_months: 84,
+      },
+      {
+        rates: [
+          {
+            rate: 5.69,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.1,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9904,
+        term_months: 85,
+      },
+      {
+        rates: [
+          {
+            rate: 5.79,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.26,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9909,
+        term_months: 120,
+      },
+      {
+        rates: [
+          {
+            rate: 5.79,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.26,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9909,
+        term_months: 121,
+      },
+      {
+        rates: [
+          {
+            rate: 5.93,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.44,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9913,
+        term_months: 179,
+      },
+      {
+        rates: [
+          {
+            rate: 5.93,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.44,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9913,
+        term_months: 180,
+      },
+      {
+        rates: [
+          {
+            rate: 6.36,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.79,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9914,
+        term_months: 239,
+      },
+      {
+        rates: [
+          {
+            rate: 6.36,
+            rate_type: "fixed",
+          },
+          {
+            rate: 6.81,
+            rate_type: "variable",
+          },
+        ],
+        score: 6.9914,
+        term_months: 240,
+      },
+    ];
+    const artifacts = {
+      priceCurve: priceCurves,
+      scoreCurve: [
+        {
+          score: 7,
+          sub_scores: {
+            fico: 1.4818,
+            assets: 1.549,
+            income: 1.3575,
+            degree_type: 0,
+            school_rank: 0,
+            free_cash_flow: 1.4,
+            school_cdr_effect: 0,
+            assets_to_loan_ratio: 1.01,
+            credit_card_to_income_ratio: 0.525,
+          },
+          backend_dti: 0.1482,
+          term_months: 60,
+          fixed_expenses_cents: 253125,
+          free_cash_flow_cents: 894407,
+          revised_assets_cents: 125000000,
+          excess_free_cash_flow_cents: 0,
+          estimated_monthly_payment_cents: 112925,
+        },
+      ],
+      ficoScore: 759,
+      softInquiryDate: "2024-07-24T00:00:00.000Z",
+      softApprovedAmount: 6000000,
+      modelVersion: "1.235-19bbaa0",
+      rateMapVersion: 193,
+      stateLimitsVersion: "2019-12-20",
+      variableCapsVersion: "2017-06-01",
+      rateMapTag: "plus_20_bps_test",
+      grossAnnualIncome: 20500000,
+      netAnnualIncome: 13770389,
+      assetsAmount: 125000000,
+      monthlyHousingExpense: 101200,
+    };
+
+    mock.method(client, "get", async () => {
+      return {
+        results: {
+          data: {
+            applicationId: "602935",
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            artifacts: artifacts,
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const filteredPrices = [
+      {
+        term: 60,
+        fixed: 5.71,
+        variable: 6.31,
+      },
+      {
+        term: 84,
+        fixed: 5.69,
+        variable: 6.09,
+      },
+      {
+        term: 120,
+        fixed: 5.79,
+        variable: 6.26,
+      },
+      {
+        term: 180,
+        fixed: 5.93,
+        variable: 6.44,
+      },
+      {
+        term: 240,
+        fixed: 6.36,
+        variable: 6.81,
+      },
+    ];
+    const results = await client.getPriceCurve(
+      input,
+      context,
+      "decisioning-request",
+      "16719670-a754-4719-a185-4f7e875bc04c",
+    );
+
+    assert.deepEqual(results, filteredPrices);
   });
 });

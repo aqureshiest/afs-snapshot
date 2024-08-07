@@ -35,6 +35,7 @@ type IEducation = Array<{
   schoolType: string;
   schoolCode: string;
   opeid: typings.EducationDetail["opeid"];
+  whoseEduation?: string;
 }>;
 
 type IEmployment = Array<{
@@ -82,6 +83,56 @@ type IRatesDetails = {
   };
 };
 
+export type IPriceCurve = {
+  rates: Array<{
+    rate: number;
+    rate_type: string;
+  }>;
+  score: number;
+  term_months: number;
+};
+
+type IScoreCurve = {
+  score: number;
+  sub_scores: {
+    fico: number;
+    assets: number;
+    income: number;
+    degree_type: number;
+    school_rank: number;
+    free_cash_flow: number;
+    school_cdr_effect: number;
+    assets_to_loan_ratio: number;
+    credit_card_to_income_ratio: number;
+  };
+  backend_dti: number;
+  term_months: number;
+  fixed_expenses_cents: number;
+  free_cash_flow_cents: number;
+  revised_assets_cents: number;
+  excess_free_cash_flow_cents: number;
+  estimated_monthly_payment_cents: number;
+};
+
+type IArtifacts = {
+  priceCurve: Array<IPriceCurve>;
+  scoreCurve: Array<IScoreCurve>;
+  creditReport: { [key: string]: unknown };
+  ficoScore: number;
+  number: string;
+  tags: Array<string>;
+  softApprovedAmount: number;
+  modelVersion: string;
+  rateMapVersion: string;
+  stateLimitsVersion: string;
+  variableCapsVersion: string;
+  rateMapTag: string;
+  grossAnnualIncome: number;
+  netAnnualIncome: number;
+  assetsAmount: number;
+  monthlyHousingExpense: number;
+};
+
 interface IDecisionEntity {
   entityInfo: IEntityInfo;
   educations: IEducation;
@@ -114,6 +165,20 @@ interface IDecisionRequestDetails {
   appInfo: IApplicationDecisionDetails;
 }
 
+interface IRateRequestDetails {
+  applicationType: string;
+  requestMetadata: {
+    referenceApplicationId: string;
+    userId: string;
+    applicationId: string;
+    cosignerApplicationId?: string;
+    cosignerUserId?: string;
+  };
+  isInternational: boolean;
+  isMedicalResidency: boolean;
+  appInfo: IApplicationDecisionDetails;
+}
+
 interface IDecisionPostResponse {
   message: string;
   data: {
@@ -138,6 +203,20 @@ interface IDecisionGetResponse {
     decisionOutcome: string;
   };
 }
+
+interface IArtifactGetResponse {
+  data: {
+    applicationId: string;
+    decisioningToken: string;
+    artifacts: IArtifacts;
+  };
+}
+
+type IFilteredPrices = {
+  term: number;
+  fixed: number;
+  variable: number;
+};
 
 export type IWebhookEventPayload = {
   data: {
@@ -191,11 +270,6 @@ declare module "clients/lending-decision-service/chassis-plugin.ts" {
 }
 
 declare module "../../../clients/lending-decision-service/index.js" {
-  const enum PRODUCTS {
-    SLR = "SLR",
-    SLO = "SLO",
-  }
-
   const enum APPLICANT_TYPES {
     Cosigner = "cosigner",
     Primary = "primary",
@@ -221,6 +295,13 @@ declare module "../../../clients/lending-decision-service/index.js" {
   type DecisionPostResponse = IDecisionPostResponse;
   type DecisionGetResponse = IDecisionGetResponse;
   type WebhookEventPayload = IWebhookEventPayload;
+  type RateRequestDetails = IRateRequestDetails;
+  type RateRequestResponse = DecisionPostResponse & {
+    artifacts: IArtifacts;
+  };
+  type ArtifactGetResponse = IArtifactGetResponse;
+  type FilteredPrices = IFilteredPrices;
+
   type Input<I> = IContractInput<I>;
   type HttpError = IHttpError;
 }

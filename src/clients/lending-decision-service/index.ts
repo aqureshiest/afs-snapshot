@@ -50,6 +50,23 @@ enum IncomeTypes {
   DISABILITY = "disability",
 }
 
+enum ApplicationTypes {
+  "primary_only" = "PRIMARY_ONLY",
+  "cosigned" = "COSIGNED",
+}
+
+enum ProductTypes {
+  "student-refi" = "slr",
+}
+
+enum TermLengths {
+  "5 year" = 60,
+  "7 year" = 84,
+  "10 year" = 120,
+  "15 year" = 180,
+  "20 year" = 240,
+}
+
 export default class LendingDecisionServiceClient extends Client {
   get clientName() {
     return "LendingDecisionService";
@@ -177,7 +194,7 @@ export default class LendingDecisionServiceClient extends Client {
     try {
       const status = this.deriveStatusFromEvent(payload);
       if (status) {
-        await applicationServiceClient.sendRequest({
+        await applicationServiceClient["sendRequest"]({
           query: String.raw`mutation (
             $id: UUID!
             $meta: EventMeta
@@ -235,6 +252,10 @@ export default class LendingDecisionServiceClient extends Client {
     const { results, response } = await this.get<DecisionGetResponse>(
       {
         uri: `/v1/decision/${lendingDecisionId}`,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
       },
       context,
     );
@@ -244,14 +265,98 @@ export default class LendingDecisionServiceClient extends Client {
         `[31b3882a] Failed to get decision: ${response.statusMessage}`,
       );
       context.logger.error({
+        decisionToken: lendingDecisionId,
         error,
         message: response.statusMessage, // Log the actual status message from LDS
         statusCode: response.statusCode,
+        results,
       });
       throw error;
     }
 
     return results;
+  }
+
+  async getArtifacts(
+    input: Input<unknown>, // eslint-disable-line @typescript-eslint/no-unused-vars,
+    context: PluginContext,
+    type: string,
+    lendingDecisionId: string,
+    artifactType: string,
+    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
+  ): Promise<ArtifactGetResponse> {
+    if (!lendingDecisionId) {
+      throw new Error("[1704fbd0] missing lending decision id");
+    }
+
+    const { results, response } = await this.get<ArtifactGetResponse>(
+      {
+        uri: `/v1/artifact/${type}/${lendingDecisionId}/${artifactType}`,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+      },
+      context,
+    );
+
+    if (response.statusCode && response.statusCode >= 400) {
+      const error = new Error(
+        `[de6308f4] Failed to get artifacts: ${response.statusMessage}`,
+      );
+      context.logger.error({
+        decisionToken: lendingDecisionId,
+        error,
+        message: response.statusMessage, // Log the actual status message from LDS
+        statusCode: response.statusCode,
+        results,
+      });
+      throw error;
+    }
+
+    return results;
+  }
+
+  async getPriceCurve(
+    input: Input<unknown>, // eslint-disable-line @typescript-eslint/no-unused-vars,
+    context: PluginContext,
+    type: string,
+    lendingDecisionId: string,
+    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
+  ): Promise<Array<FilteredPrices>> {
+    if (!lendingDecisionId) {
+      throw new Error("[2542e05a] missing lending decision id");
+    }
+
+    const { results, response } = await this.get<ArtifactGetResponse>(
+      {
+        uri: `/v1/artifact/${type}/${lendingDecisionId}/rate_check`,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+      },
+      context,
+    );
+
+    if (response.statusCode && response.statusCode >= 400) {
+      const error = new Error(
+        `[378e8d85] Failed to get price curves: ${response.statusMessage}`,
+      );
+      context.logger.error({
+        decisionToken: lendingDecisionId,
+        error,
+        message: response.statusMessage, // Log the actual status message from LDS
+        statusCode: response.statusCode,
+        results,
+      });
+      throw error;
+    }
+
+    const filteredPrices = this.filterPriceCurve(
+      results.data.artifacts.priceCurve,
+    );
+    return filteredPrices;
   }
 
   /**
@@ -267,11 +372,14 @@ export default class LendingDecisionServiceClient extends Client {
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
   ): Promise<DecisionPostResponse> {
     const decisionType = "application";
-    let application = (await this.getApplication(
-      context,
-      applicationId,
-    )) as typings.Application;
-    application = flattenApplication(application);
+    let application = input["application"];
+    if (!application) {
+      application = (await this.getApplication(
+        context,
+        applicationId,
+      )) as typings.Application;
+      application = flattenApplication(application);
+    }
 
     const applicationDecisionDetails = {};
     for (const applicant of [
@@ -288,7 +396,6 @@ export default class LendingDecisionServiceClient extends Client {
         );
       }
     }
-
     /* ============================== *
      * The monolith references have breached containment
      * May god help us all
@@ -330,7 +437,8 @@ export default class LendingDecisionServiceClient extends Client {
     } as unknown as DecisionRequestDetails;
 
     const lendingDecisionURI = "/v2/decision";
-    // TODO: use new Decision endpoint once live.
+    // New Decision endpoint is live in staging, but only for rate check.
+    // Continue to use old `v2/decision` until https://meetearnest.atlassian.net/browse/LD-1386 is done
     // product = slo | slr
     // decisionType = rate-check | application (application full app submit decision)
     // const uri = "/v2/decisioning-request/:product/:decisionType"
@@ -360,9 +468,11 @@ export default class LendingDecisionServiceClient extends Client {
       );
       this.log(
         {
+          appID: applicationId,
           error,
           message: response.statusMessage, // Log the actual status message from LDS
           statusCode: response.statusCode,
+          results,
         },
         context,
       );
@@ -381,11 +491,169 @@ export default class LendingDecisionServiceClient extends Client {
     return results;
   }
 
+  async rateCheckRequest(
+    input: Input<unknown>,
+    context: PluginContext,
+    applicationId: string, // Assuming root app ID
+    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
+  ): Promise<RateRequestResponse> {
+    const decisionType = "rate-check";
+    let application = input["application"];
+    if (!application) {
+      application = (await this.getApplication(
+        context,
+        applicationId,
+      )) as typings.Application;
+      application = flattenApplication(application);
+    }
+
+    const applicationDecisionDetails = {};
+    for (const applicant of [
+      APPLICANT_TYPES.Primary,
+      APPLICANT_TYPES.Cosigner,
+    ]) {
+      if (application[applicant]) {
+        applicationDecisionDetails[applicant] = await this.formatRequestPayload(
+          input,
+          context,
+          application as typings.Application, // Pass full application. We need loan amount and rates details from root
+          applicant,
+          decisionType,
+        );
+      }
+    }
+
+    /* ============================== *
+     * The monolith references have breached containment
+     * May god help us all
+     * ============================== */
+
+    const monolithUserID = application[APPLICANT_TYPES.Primary]?.monolithUserID
+      ? application[APPLICANT_TYPES.Primary].monolithUserID
+      : application?.monolithUserID;
+    const monolithApplicationID =
+      application[APPLICANT_TYPES.Primary]?.monolithApplicationID;
+
+    /**
+     * Application Tags is an array of strings, where the first element is overall application status
+     * and last element is the application type
+     */
+    const appType = await this.getApplicationType(context, applicationId);
+    const product = application?.product
+      ? ProductTypes[application.product]
+      : "";
+
+    const rateRequestPayload = {
+      applicationType: ApplicationTypes[appType],
+      requestMetadata: {
+        referenceApplicationId: application.id,
+        applicationId: monolithApplicationID,
+        userId: monolithUserID,
+      },
+      isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
+      isMedicalResidency: false,
+      appInfo: applicationDecisionDetails,
+    } as unknown as RateRequestDetails;
+
+    const { results, response } = await this.post<RateRequestResponse>(
+      {
+        uri: `/v2/decisioning-request/${product}/${decisionType}`,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+        body: rateRequestPayload,
+        resiliency: {
+          attempts: 3,
+          delay: 1000,
+          timeout: 30000,
+          test: ({ response }) =>
+            Boolean(response.statusCode && response.statusCode <= 500),
+        },
+      },
+      context,
+    );
+
+    if (response.statusCode && response.statusCode >= 400) {
+      const error = new Error(
+        `[53a1b21d] Failed to post rate check: ${response.statusMessage}`,
+      );
+      this.log(
+        {
+          appID: applicationId,
+          error,
+          message: response.statusMessage, // Log the actual status message from LDS
+          statusCode: response.statusCode,
+          results,
+        },
+        context,
+      );
+      throw error;
+    }
+
+    /**
+     * Store the lending decision token as a reference
+     */
+    await this.saveLendingDecisionId(
+      context,
+      applicationId,
+      results.data.decisioningToken,
+    );
+
+    return results;
+  }
   /**
    * ================================================ *
    * Private Methods
    * ================================================ */
 
+  /**
+   * Private method to get the application type via Tag system
+   */
+
+  private async getApplicationType(
+    context: PluginContext,
+    applicationId: string,
+  ): Promise<string> {
+    const applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient?.instance;
+    if (!applicationServiceClient)
+      throw new Error(
+        "[6b2fc666] Application Service client instance not found",
+      );
+    const applicationTypeResult = (await applicationServiceClient[
+      "sendRequest"
+    ]({
+      query: String.raw`query getApplication($id String!, $root: Boolean) {
+          application(id: $id, root: $root) {
+            tag {
+              active
+              status
+              applicants
+            }
+            error
+          }
+        }`,
+      variables: {
+        id: applicationId,
+      },
+    })) as unknown as {
+      application: {
+        tag: { active: string; status: string; applicants: string };
+        error: string | null;
+      };
+    };
+
+    const applicationTypeError = applicationTypeResult?.application?.error;
+    if (applicationTypeError) {
+      const error = new Error("[2b1fb250] Failed to get application type tag");
+      context.logger.warn({
+        message: applicationTypeError,
+      });
+      throw error;
+    }
+    return applicationTypeResult?.application?.tag?.applicants || "";
+  }
   /**
    * Private method to format the application data into the
    * defined payload contract structure for Lending Decision Service
@@ -433,7 +701,12 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * Format the applicant income details
      */
-    const incomeDetails = this.applicantIncomes(details.income);
+    let incomeDetails;
+    if (decisionType === "rate-check") {
+      incomeDetails = this.applicantIncomesRateCheck(details.income);
+    } else {
+      incomeDetails = this.applicantIncomes(details.income);
+    }
 
     /**
      * Obtain and format the applicant's employment details
@@ -732,6 +1005,48 @@ export default class LendingDecisionServiceClient extends Client {
 
   /**
    * Formats the income details of an application into a Decision Entity array of
+   * Income objects
+   * @param incomeDetails Application Income Details
+   * @returns {DecisionEntity["incomes"]}
+   */
+  private applicantIncomesRateCheck(
+    incomeDetails: typings.Details["income"],
+  ): DecisionEntity["incomes"] | [] {
+    if (!incomeDetails || (incomeDetails && incomeDetails.length === 0))
+      return [];
+
+    /* ============================== *
+     * Pre rate check, income detail at index 0 is the annual income data
+     * the user entered in the form. At pre rate check, type is not associated
+     * with this income detail yet. Only on the employment question will type by assigned
+     * ============================== *
+     * Pre rate check, income detail at index 1 is the annual additional income data
+     * the user entered in the form.  At pre rate check, type is not associated
+     * with this income detail yet. Only on the employment question will type by assigned
+     * ============================== *
+     */
+    const rateCheckIncomes: DecisionEntity["incomes"] = [
+      {
+        incomeType: "annual_income",
+        value:
+          incomeDetails[0] && !incomeDetails[0].type && incomeDetails[0].amount
+            ? incomeDetails[0].amount
+            : 0,
+      },
+      {
+        incomeType: "additional_annual_income",
+        value:
+          incomeDetails[1] && !incomeDetails[1].type && incomeDetails[1].amount
+            ? incomeDetails[1].amount
+            : 0,
+      },
+    ];
+
+    return rateCheckIncomes;
+  }
+
+  /**
+   * Formats the income details of an application into a Decision Entity array of
    * Employment objects
    * @param incomeDetails Application Income details
    * @returns {DecisionEntity['employments']}
@@ -1023,6 +1338,7 @@ export default class LendingDecisionServiceClient extends Client {
       );
     const { monolithLoanID, monolithUserID, monolithApplicationID } =
       monolithIDs;
+
     const { results, response } = await internalRestServiceClient["post"](
       {
         uri: "/apply-flow-service/apply",
@@ -1037,6 +1353,7 @@ export default class LendingDecisionServiceClient extends Client {
       },
       context,
     );
+
     if (!response.statusCode || response.statusCode >= 400) {
       const error = new Error("Legacy data sync failed");
       internalRestServiceClient["log"](
@@ -1163,5 +1480,33 @@ export default class LendingDecisionServiceClient extends Client {
       );
       throw error;
     }
+  }
+
+  private filterPriceCurve(
+    priceCurve: ArtifactGetResponse["data"]["artifacts"]["priceCurve"],
+  ): Array<FilteredPrices> {
+    const filteredByTerm = priceCurve.filter((price) => {
+      if (Object.values(TermLengths).includes(price.term_months as number))
+        return price;
+    });
+    const results = filteredByTerm.map((price) => {
+      let fixedRate;
+      let variableRate;
+
+      price.rates.forEach((rate) => {
+        if (rate.rate_type === "fixed") {
+          fixedRate = rate.rate;
+        }
+        if (rate.rate_type === "variable") {
+          variableRate = rate.rate;
+        }
+      });
+      return {
+        term: price.term_months,
+        fixed: fixedRate,
+        variable: variableRate,
+      };
+    });
+    return results;
   }
 }
