@@ -33,7 +33,7 @@ class PlaidMethod extends ContractExecutable<Definition, Definition, Output> {
         plaidClient[plaidMethod] as IPlaidMethod
       )(context, input.application, id, payload as Parameters<IPlaidMethod>[3]);
 
-      if (errors.length) this.errors(executionContext, errors);
+      if (errors.length) this.error(executionContext, errors);
 
       return results as Output;
     } catch (ex) {
