@@ -91,7 +91,7 @@ class ApplicationEvent extends ContractExecutable<
     }
 
     // 3. Any event other than "createApplication" requires an id
-    if (event !== "createApplication" && !payload?.id) {
+    if (event !== "createApplication" && event !== "create" && !payload?.id) {
       return false;
     }
 

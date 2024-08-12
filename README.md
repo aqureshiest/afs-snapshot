@@ -11,8 +11,8 @@ Interface for managing and executing custom product experiences
 
 To use apply-flow-service locally, initialize the project with these steps
 
-1. `docker-compose up`, this will start the service in docker compose, along with vault, mountebank redis and gateway.
+1. `gogo start`, this will start the service in docker compose, along with vault, mountebank redis and gateway.
 
 ## Running tests
 
-Run `docker-compose run service npx chassis-test` to run the test suites.
+Run `docker compose run service npx chassis-test` to run the test suites.

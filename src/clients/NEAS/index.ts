@@ -53,14 +53,14 @@ export default class NeasClient extends Client {
    * @returns Promise<void>
    */
   async createAccountlessSession(context, input): Promise<void> {
-    const { request, response: res } = input;
+    const { application, request, response: res } = input;
 
     const { results, response } = await this.post<{ session: string }>(
       {
         uri: "/auth/identity/unauthenticated",
         Authorization: `${this.#accessKey}`,
         body: {
-          applicationId: request?.params?.id,
+          applicationId: application?.id,
         },
         ...this.options,
       },

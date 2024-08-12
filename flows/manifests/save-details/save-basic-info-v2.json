@@ -1,5 +1,0 @@
-{
-  "*": "redirect",
-  "actions": ["create-accountless-user"],
-  "redirect": "redirect.education-v2"
-}

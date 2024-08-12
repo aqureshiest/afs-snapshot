@@ -50,6 +50,7 @@ export { default as genericRESTRequest } from "./generic-client-method.js";
 
 export { default as authenticate } from "./authenticate.js";
 
+export { default as cookie } from "./cookie.js";
 /* ============================== *
  * Errors
  * ============================== */

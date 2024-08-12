@@ -6,9 +6,6 @@ services:
         limits:
           memory: 256M
     restart: always
-    depends_on:
-      service:
-        condition: service_started
     volumes:
       - ./docker/data/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/data/nginx/conf.d:/etc/nginx/conf.d
@@ -23,6 +20,8 @@ services:
     env_file:
       - ./local.env
     depends_on:
+      gateway:
+        condition: service_started
       vault:
         condition: service_healthy
       redis:
@@ -47,6 +46,7 @@ services:
     command: ['mb', '--configfile', 'imposters/index.ejs', '--allowInjection']
     ports:
       - "2525:2525"
+      - "3007:3007"
     volumes:
       - ./docker/data/mountebank/imposters:/app/imposters
       - ./config:/app/config

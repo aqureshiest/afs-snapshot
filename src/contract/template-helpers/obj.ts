@@ -5,7 +5,7 @@
  * into a single object
  */
 const obj: TemplateHelper = function (context) {
-  const splitList = context.fn(this).trim().split("\n");
+  const splitList = context.fn(this, context).trim().split("\n");
   const obj = {};
 
   splitList
@@ -32,7 +32,7 @@ const obj: TemplateHelper = function (context) {
       });
     });
 
-  return `${JSON.stringify(obj)}`;
+  return JSON.stringify(obj) + "\n";
 };
 
 export default obj;

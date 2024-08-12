@@ -1,0 +1,11 @@
+{
+  "action": "unauthenticated",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/identity/unauthenticated",
+  "body": {{#obj}}
+    {{#with (contract 'actions' (sum @index -1)) as |event|}}
+      { "applicationId": {{{ json event.id }}} }
+    {{/with}}
+  {{/obj}}
+}

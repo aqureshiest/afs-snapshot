@@ -25,7 +25,7 @@ describe("[462fd166] manifest.execute", () => {
       context.loadedPlugins.applicationServiceClient.instance;
     analyticsServiceClient =
       context.loadedPlugins.analyticsServiceClient.instance;
-    // neasServiceClient = context.loadedPlugins.NeasClient.instance;
+    neasServiceClient = context.loadedPlugins.NeasClient.instance;
     res = {} as Response;
   });
 
@@ -705,56 +705,6 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
 
-  it("[4r3ggwqq] it should execute an Neas-Request contract-type", async () => {
-    const input = {
-      request: {
-        method: "POST",
-      },
-      auth: {
-        session: {
-          userId: "1234",
-          exp: 0,
-          isValid: true,
-        },
-      },
-      applicationState: null,
-      application: {
-        id: 1,
-        primary: {
-          id: 2,
-          details: {
-            financialAccounts: [
-              {
-                plaidAccessToken: "1234",
-              },
-            ],
-          },
-        },
-      },
-    } as Input<unknown>;
-
-    mock.method(neasServiceClient, "createAccountlessSession", () => {
-      return "";
-    });
-
-    const manifest = new Manifest(context, "neas-request", {
-      key: "neasRequest",
-      "*": new Contract({
-        key: "neasRequest",
-        raw: `{
-          "neastMethod": "createAccountlessSession"
-        }`,
-        type: "neasRequest",
-      }),
-    });
-
-    const { contract } = await manifest.execute(input, {
-      context,
-      res,
-      ...input,
-    });
-    assert(contract);
-  });
 
   it("[186c9bd5] it should execute an Analytics contract-type income-verification-method manual", async () => {
     const input = {
@@ -887,6 +837,62 @@ describe("[462fd166] manifest.execute", () => {
     assert(contract);
   });
   */
+
+  it("[4r3ggwqq] it should execute an Cookie contract-type", async () => {
+    const input = {} as Input<unknown>;
+
+    const manifest = new Manifest(
+      "manifestCookie",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            key: "testContract",
+            raw: `{
+              "name": "test",
+              "value": "test",
+              "options": "test"
+          }`,
+            type: "cookie",
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+    assert(result);
+  });
+
+  it("[2y2ffwcp] it should execute an Neas-Request contract-type", async () => {
+    const input = {} as Input<unknown>;
+
+    mock.method(neasServiceClient, "createAccountlessSession", () => {
+      return "";
+    });
+
+    const manifest = new Manifest(
+      "manifestNeasRequest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            key: "testContract",
+            raw: `{
+              "neasMethod": "createAccountlessSession"
+          }`,
+            type: "neasRequest",
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+    assert(result);
+  });
 
   it("[ae226507] obj helper", async () => {
     const input = {} as Input<unknown>;

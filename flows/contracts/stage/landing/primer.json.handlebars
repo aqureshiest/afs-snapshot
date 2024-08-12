@@ -1,0 +1,161 @@
+{
+  "type": "view",
+  "label": "full-refi-primer",
+  "onLoadEvent": {},
+  "seo": {
+    "pageTitle": "Earnest"
+  },
+  "pageLayout": {{{json (contract 'layout')}}},
+  "analytics": {},
+  "definition": {
+    "type": "landing",
+    "definition": {
+      "key": "landing",
+      "content": [
+          {
+              "key": "header1",
+              "type": "header",
+              "componentProps": {
+                  "copy": "Let's get started refinancing your loans."
+              }
+          },
+          {
+              "key": "list1",
+              "type": "list",
+              "componentProps": {
+                  "type": "ul",
+                  "defaultIcon": {
+                      "type": "NucleusIcon",
+                      "name": "CheckmarkCircleFilledIcon"
+                  },
+                  "items": [
+                      {
+                          "copy": "Get rates w/o affecting credit score"
+                      },
+                      {
+                          "copy": "Automatically saves your input"
+                      },
+                      {
+                          "copy": "Zero fees"
+                      },
+                      {
+                          "copy": "Flexible payment options"
+                      },
+                      {
+                          "copy": "1:1 assistance if you need help"
+                      }
+                  ]
+              }
+          },
+          {
+              "key": "divider1",
+              "type": "divider",
+              "componentProps": {}
+          },
+          {
+              "key": "list2",
+              "type": "list",
+              "componentProps": {
+                  "type": "ol",
+                  "variant": "stepper",
+                  "label": "Here’s what you may expect:",
+                  "items": [
+                      {
+                          "copy": ":Heading[Get personalized rate estimates] \n\n Provide basic details about yourself \n Soft credit check: no impact on your credit"
+                      },
+                      {
+                          "copy": ":Heading[Apply for your loan] \n\n Verify income and employment \n Hard credit inquiry for final rates and terms"
+                      },
+                      {
+                          "copy": ":Heading[Customize your plan and sign] \n\n Zero pre-payment fees \n Choose your own monthly payment \n Option to enroll in autopay"
+                      }
+                  ]
+              }
+          },
+          {
+              "key": "divider2",
+              "type": "divider",
+              "componentProps": {}
+          },
+          {
+              "key": "socialProof",
+              "type": "row",
+              "componentProps": {
+                  "stackOnMobile": true,
+                  "content": [
+                      {
+                          "key": "socialProofCo1",
+                          "type": "callout",
+                          "componentProps": {
+                              "content": [
+                                  {
+                                      "key": "socialProofmd1",
+                                      "type": "md",
+                                      "componentProps": {
+                                          "content": ":Heading[900+] \n\n Universities trust us"
+                                      }
+                                  }
+                              ]
+                          }
+                      },
+                      {
+                          "key": "socialProofCo2",
+                          "type": "callout",
+                          "componentProps": {
+                              "content": [
+                                  {
+                                      "key": "socialProofmd2",
+                                      "type": "md",
+                                      "componentProps": {
+                                          "content": ":Heading[236,000+] \n\n Happy clients earned"
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  ]
+              }
+          },
+          {
+              "key": "trustpilot",
+              "type": "row",
+              "componentProps": {
+                  "stackOnMobile": true,
+                  "content": [
+                      {
+                          "key": "trustpilotCo1",
+                          "type": "callout",
+                          "componentProps": {
+                              "content": [
+                                  {
+                                      "key": "trustpilotmd1",
+                                      "type": "md",
+                                      "componentProps": {
+                                          "content": ":Heading[4.5/5 Trustpilot Rating] \n\n 6500+ reviews | Excellent"
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  ]
+              }
+          }
+      ],
+      "bottomNavigation": {
+          "buttons": [
+              {
+                  "copy": "Get your rates",
+                  "action": {
+                      "key": "neas-request",
+                      "type": "request",
+                      "properties": {
+                        "manifest": "create-accountless-application",
+                        "method": "POST"
+                      }
+                  }
+              }
+          ]
+      }
+    }
+  }
+}

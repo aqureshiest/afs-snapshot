@@ -1,0 +1,23 @@
+{{#list}}
+  {{#each (contract 'actions') as |result|}}
+    {{#obj}}
+      { "action": {{{ json (coalesce result.action result.event) }}} }
+      {{#if (or (eq result.success false) (eq result.success true))}}
+        { "success": {{{ json result.success }}} }
+      {{else}}
+        { "success": {{{ json (
+            or
+            (
+              and
+              (gte result.response.statusCode 200)
+              (lt result.response.statusCode 400)
+            )
+            (not result.response)
+          ) }}} }
+      {{/if}}
+      {{#if result.id}}
+        { "id": {{{ json result.id }}} }
+      {{/if}}
+    {{/obj}}
+  {{/each}}
+{{/list}}

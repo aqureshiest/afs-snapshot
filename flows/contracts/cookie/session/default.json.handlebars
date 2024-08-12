@@ -1,0 +1,24 @@
+{{#with (contract 'actions' (sum @index -1)) as |identification|}}
+	{{#if (
+		and
+		(gte identification.response.statusCode 200)
+		(lt identification.response.statusCode 400)
+	)}}
+		{
+			"name": "session",
+			"value": {{{ json identification.results.session}}},
+			"options": {
+				"httpOnly": true,
+				"secure": true,
+				"path": "/",
+				"sameSite": "strict",
+				"domain": ".earnest.com"
+			}
+		}
+	{{else}}
+		{
+			"name": "session",
+			"value": null
+		}
+	{{/if}}
+{{else}} null {{/with}}
