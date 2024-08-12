@@ -1,0 +1,34 @@
+{
+  "header": [
+    {
+      "logo": true,
+      "action": {{{ json (contract 'redirect_homebase') }}}
+    },
+    {
+      "icon": "HamburgerMenuIcon",
+      "action": {
+        "key": "sidebar",
+        "type": "sidebar",
+        "properties": {
+          "type": "navigation",
+          "properties": {
+            "dark": true,
+            "items": [
+              {
+                "copy": "Sign Out",
+                "action": {
+                  "type": "logout",
+                  "properties": {
+                    {{!-- TODO: once env variables are passed, dynamically set goTo--}}
+                    "goTo": "{{env.BASE_URL}}",
+                    "external": true
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

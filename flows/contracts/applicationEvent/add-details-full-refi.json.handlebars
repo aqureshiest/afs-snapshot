@@ -1,0 +1,33 @@
+{{#if request.params.id}}
+{{#noop}}{{ contract 'analytics' }}{{/noop}}
+  {
+    "event": "addDetails",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "details": {{#obj}} {{! make sure to flatten each element into a single line}}
+        {{#with request.body.values}}
+          {{#if dateOfBirth}}
+            {"dateOfBirth": "{{{dateObjToString dateOfBirth}}}"}
+          {{/if}}
+          {{#if name}}
+            {"name": {{{json name}}} }
+          {{/if}}
+          {{#if email}}
+            {"email": "{{email}}"}
+          {{/if}}
+          {{#if phone}}
+            {"phone": [{"index": 0, "number": "{{phone}}", "type": "mobile"}]}
+          {{/if}}
+          {{#if citizenship}}
+            {"location": {{#list}}
+                {"index": 0,  "citizenship": "{{citizenship}}" }
+            {{/list}} }
+          {{/if}}
+        {{/with}}
+      {{/obj}}
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}

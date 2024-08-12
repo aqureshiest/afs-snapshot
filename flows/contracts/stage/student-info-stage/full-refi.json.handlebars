@@ -1,0 +1,26 @@
+{
+    "key": "full-refi-basic-info",
+    "type": "form",
+    "label": "Basic Info",
+    "status": "notStarted",
+    "showProgress": true,
+    "pageLayout":{{{json (contract 'pageLayout')}}},
+    "seo": {
+        "pageTitle": "Earnest"
+    },
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "basic": {
+                "type": "object",
+                "properties": {
+                    "name": {{{json (schema 'questions/primary/name')}}},
+                    "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
+                    "phone": {{{json (schema 'questions/primary/phone')}}},
+                    "email": {{{json (schema 'questions/primary/email')}}}
+                }
+            }
+        }
+    }
+}

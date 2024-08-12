@@ -1,0 +1,6 @@
+{
+  "*": "redirect",
+  "actions": ["add-details-full-refi"],
+  "redirect": ["redirect.degree-full-refi"],
+  "onError": []
+}

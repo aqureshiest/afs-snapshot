@@ -1,0 +1,23 @@
+{
+    "*": "full-refi",
+    "stage": "student-info-stage.full-refi",
+    "pageLayout": "layout.sidebar",
+    "steps": [
+      "student-info-form/basic.full-refi"
+    ],
+    "student-info-basic-rows": [
+      "info/student-info.refi",
+      "questions/primary/name.default",
+      "questions/primary/dateOfBirth.default",
+      "questions/primary/phone.default",
+      "questions/primary/email.default",
+      "info/student-disclaimer.default"
+    ],
+    "back-button": "actions/back-buttons.basic-info",
+    "save_basic_info_details_action": "actions/save-details.basic-info-full-refi",
+    "primary_dob_input_status": "questions/primary/dateOfBirth.status",
+    "primary_phone_input_status": "questions/primary/phone.status",
+    "primary_name_input_status": "questions/primary/name.status",
+    "redirect_homebase": "actions/homebase.default",
+    "onError": []
+  }

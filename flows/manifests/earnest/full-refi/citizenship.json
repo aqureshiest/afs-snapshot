@@ -1,0 +1,17 @@
+{
+    "*": "full-refi",
+    "stage": "student-info-stage.full-refi",
+    "pageLayout": "layout.sidebar",
+    "steps": [
+      "student-info-form/citizenship.full-refi"
+    ],
+    "student-info-citizenship-rows": [
+      "info/student-info.citizenship",
+      "questions/primary/citizenship.refi"
+    ],
+    "back-button": "actions/back-buttons.basic-info",
+    "save_citizenship_details_action": "actions/save-details.basic-info-full-refi",
+    "primary_citizenship_input_status": "questions/primary/citizenship.status",
+    "redirect_homebase": "actions/homebase.default",
+    "onError": []
+  }
