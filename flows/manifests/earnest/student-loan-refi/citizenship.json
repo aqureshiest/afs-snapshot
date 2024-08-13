@@ -10,7 +10,7 @@
       "questions/primary/citizenship.refi"
     ],
     "back-button": "actions/back-buttons.basic-info",
-    "save_citizenship_details_action": "actions/save-details.basic-info-full-refi",
+    "save_citizenship_details_action": "actions/save-details/full-refi.citizenship",
     "primary_citizenship_input_status": "questions/primary/citizenship.status",
     "redirect_homebase": "actions/homebase.default",
     "onError": []

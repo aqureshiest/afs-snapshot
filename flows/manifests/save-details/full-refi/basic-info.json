@@ -1,5 +1,6 @@
 [{
   "methods": ["post"],
+  "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
     "auth": {
@@ -18,11 +19,11 @@
     }
   },
   "outputs": {
-    "*": "redirect.degree-full-refi",
+    "*": "redirect/full-refi.education",
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "add-details-full-refi"
+        "full-refi.add-details-full-refi"
       ]
     }
   }
