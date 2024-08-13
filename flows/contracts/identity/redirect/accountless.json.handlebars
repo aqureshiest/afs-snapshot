@@ -1,12 +1,12 @@
-{
-  "action": {
-    "type": "navigate",
-    "properties": {
-      "goTo": "earnest/full-refi/basic-info/{{application.id}}"
-    }
-  },
-  {{! returning actions is not needed, but left for debugin }}
-  "result": {{{ json (contract 'actions') }}},
-  "error": {{{json error}}}
-}
 
+  {
+    "action": {
+      "type": "navigate",
+      "properties": {
+        "goTo": "earnest/student-loan-refi/basic-info/{{application.applicants.0.id}}"
+      }
+    },
+    {{! returning actions is not needed, but left for debugin }}
+    "result": {{{ json (contract 'actions') }}},
+    "error": {{{json error}}}
+  }

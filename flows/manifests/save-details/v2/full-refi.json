@@ -1,0 +1,29 @@
+[{
+  "methods": ["post"],
+  "inputs": {
+    "*": "inputs",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": {
+            "*": "neas.verify-token",
+            "token": "header.idtoken"
+          },
+          "mode": "optional",
+          "authorization": []
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "redirect.degree-full-refi",
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "add-details-full-refi"
+      ]
+    }
+  }
+}]

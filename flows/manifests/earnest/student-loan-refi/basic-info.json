@@ -13,7 +13,7 @@
       "questions/primary/email.default",
       "info/student-disclaimer.default"
     ],
-    "back-button": "actions/back-buttons.basic-info",
+    "back-button": "actions/back-buttons/full-refi.basic-info",
     "save_basic_info_details_action": "actions/save-details.basic-info-full-refi",
     "primary_dob_input_status": "questions/primary/dateOfBirth.status",
     "primary_phone_input_status": "questions/primary/phone.status",

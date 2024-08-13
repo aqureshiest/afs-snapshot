@@ -1,6 +1,0 @@
-{
-  "*": "landing-students",
-  "landing_stage": "landing.primer",
-  "layout": "layout.full-refi-primer",
-  "redirect_homebase": "actions/homebase.default"
-}

@@ -1,0 +1,26 @@
+[{
+  "methods": ["get"],
+  "inputs": {
+    "*": "inputs",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": {
+            "*": "neas.verify-token",
+            "token": "header.idtoken"
+          },
+          "mode": "optional",
+          "authorization": []
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "landing-students",
+    "landing_stage": "landing.primer-full-refi",
+    "layout": "layout.full-refi-primer",
+    "redirect_homebase": "actions/homebase.default"
+  }
+}]
