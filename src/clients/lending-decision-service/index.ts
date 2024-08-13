@@ -280,10 +280,8 @@ export default class LendingDecisionServiceClient extends Client {
   async getArtifacts(
     input: Input<unknown>, // eslint-disable-line @typescript-eslint/no-unused-vars,
     context: PluginContext,
-    type: string,
     lendingDecisionId: string,
-    artifactType: string,
-    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
+    payload,
   ): Promise<ArtifactGetResponse> {
     if (!lendingDecisionId) {
       throw new Error("[1704fbd0] missing lending decision id");
@@ -291,7 +289,7 @@ export default class LendingDecisionServiceClient extends Client {
 
     const { results, response } = await this.get<ArtifactGetResponse>(
       {
-        uri: `/v1/artifact/${type}/${lendingDecisionId}/${artifactType}`,
+        uri: `/v1/artifact/${payload.type}/${lendingDecisionId}/${payload.artifactType}`,
         headers: {
           ...this.headers,
           Authorization: `Bearer ${this.accessKey}`,
@@ -320,9 +318,8 @@ export default class LendingDecisionServiceClient extends Client {
   async getPriceCurve(
     input: Input<unknown>, // eslint-disable-line @typescript-eslint/no-unused-vars,
     context: PluginContext,
-    type: string,
     lendingDecisionId: string,
-    payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
+    payload,
   ): Promise<Array<FilteredPrices>> {
     if (!lendingDecisionId) {
       throw new Error("[2542e05a] missing lending decision id");
@@ -330,7 +327,7 @@ export default class LendingDecisionServiceClient extends Client {
 
     const { results, response } = await this.get<ArtifactGetResponse>(
       {
-        uri: `/v1/artifact/${type}/${lendingDecisionId}/rate_check`,
+        uri: `/v1/artifact/${payload.type}/${lendingDecisionId}/rate_check`,
         headers: {
           ...this.headers,
           Authorization: `Bearer ${this.accessKey}`,
@@ -545,8 +542,9 @@ export default class LendingDecisionServiceClient extends Client {
 
     const rateRequestPayload = {
       applicationType: ApplicationTypes[appType],
+      initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
       requestMetadata: {
-        referenceApplicationId: application.id,
+        rootApplicationId: application.id,
         applicationId: monolithApplicationID,
         userId: monolithUserID,
       },
@@ -624,18 +622,18 @@ export default class LendingDecisionServiceClient extends Client {
     const applicationTypeResult = (await applicationServiceClient[
       "sendRequest"
     ]({
-      query: String.raw`query getApplication($id String!, $root: Boolean) {
+      query: String.raw`query getApplication($id: String!, $root: Boolean) {
           application(id: $id, root: $root) {
             tag {
               active
               status
               applicants
             }
-            error
           }
         }`,
       variables: {
         id: applicationId,
+        root: true,
       },
     })) as unknown as {
       application: {
@@ -731,6 +729,12 @@ export default class LendingDecisionServiceClient extends Client {
     );
 
     const ratesInfo = this.applicationRatesInfo(application);
+    const rateCheckRatesAdjustmentInfo = {
+      rateAdjustmentInfo: {
+        name: ratesInfo?.rateAdjustmentData?.name,
+        amount: ratesInfo?.rateAdjustmentData?.amount,
+      },
+    } as DecisionEntity["ratesInfo"];
 
     const entityDetails = {
       firstName: details.name?.first || "",
@@ -758,7 +762,6 @@ export default class LendingDecisionServiceClient extends Client {
       loanInfo: {
         claimedLoanAmount: application.details?.amount?.requested,
       },
-      ratesInfo: ratesInfo,
     } as DecisionEntity;
 
     /**
@@ -767,12 +770,18 @@ export default class LendingDecisionServiceClient extends Client {
      */
     if (decisionType === "application") {
       formattedPayload = {
+        ...formattedPayload,
         employments:
           employmentDetails && employmentDetails.length > 0
             ? employmentDetails
             : retiredEmploymentDetails,
         financialInfo: financialAccountDetails,
+        ratesInfo: ratesInfo,
+      };
+    } else {
+      formattedPayload = {
         ...formattedPayload,
+        ratesInfo: rateCheckRatesAdjustmentInfo,
       };
     }
 
@@ -1485,28 +1494,19 @@ export default class LendingDecisionServiceClient extends Client {
   private filterPriceCurve(
     priceCurve: ArtifactGetResponse["data"]["artifacts"]["priceCurve"],
   ): Array<FilteredPrices> {
-    const filteredByTerm = priceCurve.filter((price) => {
-      if (Object.values(TermLengths).includes(price.term_months as number))
-        return price;
-    });
-    const results = filteredByTerm.map((price) => {
-      let fixedRate;
-      let variableRate;
-
-      price.rates.forEach((rate) => {
-        if (rate.rate_type === "fixed") {
-          fixedRate = rate.rate;
-        }
-        if (rate.rate_type === "variable") {
-          variableRate = rate.rate;
-        }
+    return priceCurve
+      .filter((price) => {
+        if (Object.values(TermLengths).includes(price.term_months as number))
+          return price;
+      })
+      .flatMap((price) => {
+        return price.rates.map((rate) => {
+          return {
+            rate: Math.round(rate.rate * 100),
+            rateType: rate.rate_type,
+            term: price.term_months,
+          };
+        });
       });
-      return {
-        term: price.term_months,
-        fixed: fixedRate,
-        variable: variableRate,
-      };
-    });
-    return results;
   }
 }

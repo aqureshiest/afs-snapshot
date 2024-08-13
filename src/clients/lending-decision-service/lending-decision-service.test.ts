@@ -1522,29 +1522,54 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     const filteredPrices = [
       {
+        rate: 571,
+        rateType: "fixed",
         term: 60,
-        fixed: 5.71,
-        variable: 6.31,
       },
       {
+        rate: 631,
+        rateType: "variable",
+        term: 60,
+      },
+      {
+        rate: 569,
+        rateType: "fixed",
         term: 84,
-        fixed: 5.69,
-        variable: 6.09,
       },
       {
+        rate: 609,
+        rateType: "variable",
+        term: 84,
+      },
+      {
+        rate: 579,
+        rateType: "fixed",
         term: 120,
-        fixed: 5.79,
-        variable: 6.26,
       },
       {
+        rate: 626,
+        rateType: "variable",
+        term: 120,
+      },
+      {
+        rate: 593,
+        rateType: "fixed",
         term: 180,
-        fixed: 5.93,
-        variable: 6.44,
       },
       {
+        rate: 644,
+        rateType: "variable",
+        term: 180,
+      },
+      {
+        rate: 636,
+        rateType: "fixed",
         term: 240,
-        fixed: 6.36,
-        variable: 6.81,
+      },
+      {
+        rate: 681,
+        rateType: "variable",
+        term: 240,
       },
     ];
     const results = await client.getPriceCurve(

@@ -1,0 +1,11 @@
+{{#if request.params.id}}
+  {
+    "decisionRequestMethod": "getPriceCurve",
+    "id": "{{application.lendingDecisionID.[0]}}", {{!-- TODO: Get latest rate estimate decision id  --}}
+    "payload": {
+      "type": "decisioning-request"
+    }
+  }
+{{else}}
+  null
+{{/if}}

@@ -74,13 +74,16 @@ type IFinancialDetails = {
   }>;
 };
 
+type IRateCheckRatesDetails = {
+  name: string;
+  amount: number;
+};
+
 type IRatesDetails = {
-  rateMapVersion: string;
-  rateMapTag: string;
-  rateAdjustmentData: {
-    name: string;
-    amount: number;
-  };
+  rateMapVersion?: string;
+  rateMapTag?: string;
+  rateAdjustmentData?: IRateCheckRatesDetails;
+  rateAdjustmentInfo?: IRateCheckRatesDetails;
 };
 
 export type IPriceCurve = {
@@ -140,7 +143,7 @@ interface IDecisionEntity {
   incomes: IIncome;
   assets: IAssets;
   financialInfo?: IFinancialDetails;
-  ratesInfo: IRatesDetails;
+  ratesInfo?: IRatesDetails;
   loanInfo: {
     claimedLoanAmount: typings.AmountDetail["requested"];
   };
@@ -213,9 +216,9 @@ interface IArtifactGetResponse {
 }
 
 type IFilteredPrices = {
+  rate: number;
+  rateType: string;
   term: number;
-  fixed: number;
-  variable: number;
 };
 
 export type IWebhookEventPayload = {

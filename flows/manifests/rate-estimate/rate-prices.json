@@ -34,9 +34,12 @@
         }
     },
     "outputs": {
-        "*": "response.interstitial",
-        "actions": ["rate-estimate-request"],
-        "set-timestamp": "redis.set-rate-estimate-request-timestamp",
-        "statusAction": "actions/rate-estimate-request.rateEstimateStatus"
+        "*": "response.response-rate-estimate-status",
+        "actions": ["rate-estimate-prices"],
+        "rateDeclined": "actions/rate-estimate-request.declined",
+        "rateUnable": "actions/rate-estimate-request.unable",
+        "rateFrozen": "actions/rate-estimate-request.frozen",
+        "statusAction": "actions/rate-estimate-request.rateEstimateStatus",
+        "goToInterstitial": "actions/rate-estimate-request.rateEstimateStatus"
     }
 }]

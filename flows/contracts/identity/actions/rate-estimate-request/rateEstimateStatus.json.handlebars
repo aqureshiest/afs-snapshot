@@ -1,8 +1,9 @@
 {
-  "key": "rateEstimateStatus",
+  "key": "rate-estimate-status",
   "type": "request",
   "properties": {
     "manifest": "rate-estimate/rate-status/{{application.id}}",
-    "method": "POST"
+    "method": "POST",
+    "onError": {{{json (contract 'onError')}}}
   }
 }

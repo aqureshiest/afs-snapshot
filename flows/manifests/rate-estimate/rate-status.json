@@ -1,8 +1,45 @@
-{
-    "*": "response.response-rate-estimate-status",
-    "rateDeclined": "actions/rate-estimate-request.declined",
-    "rateUnable": "actions/rate-estimate-request.unable",
-    "rateFrozen": "actions/rate-estimate-request.frozen",
-    "statusAction": "actions/rate-estimate-request.rateEstimateStatus",
-    "goToInterstitial": "actions/rate-estimate-request.rateEstimateStatus"
-}
+[{
+    "methods": ["post"],
+    "parameters": [{
+    "key": "id",
+    "format": "uuid"
+    }],
+    "inputs":{
+        "*": "inputs",
+        "application": {
+            "*": "application/single.flattened",
+            "application": "application-by-id-param"
+        },
+        "applications": [],
+        "applicationState": "application-state",
+        "userState": "user-state",
+        "auth": {
+            "*": "auth-artifacts",
+            "strategies": [
+                {
+                    "*": "inputs/auth.neas-session",
+                    "response": "neas.verify-token",
+                    "authorization": [
+                        "inputs/auth.neas-application-auth",
+                        "inputs/auth.neas-user-auth",
+                        "inputs/auth.neas-monolith-auth"
+                    ]
+                },
+                {
+                    "*": "inputs/auth.internal-bearer",
+                    "token": "inputs/auth.bearer-token",
+                    "authorization": ["inputs/auth.lending-decisioning-webhook"]
+                }
+            ]
+        }
+    },
+    "outputs": {
+        "*": "response.response-rate-estimate-status",
+        "actions": ["rate-estimate-status"],
+        "rateDeclined": "actions/rate-estimate-request.declined",
+        "rateUnable": "actions/rate-estimate-request.unable",
+        "rateFrozen": "actions/rate-estimate-request.frozen",
+        "statusAction": "actions/rate-estimate-request.rateEstimateStatus",
+        "goToInterstitial": "actions/rate-estimate-request.rateEstimateStatus"
+    }
+}]

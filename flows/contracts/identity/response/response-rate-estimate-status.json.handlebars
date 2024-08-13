@@ -23,7 +23,9 @@
         {{{json (contract 'statusAction')}}}
       {{/if}}
     }
-  }
+  },
+  "result": {{{json (contract 'actions')}}},
+  "error": {{{json error}}}
 }
 {{else}}
   null

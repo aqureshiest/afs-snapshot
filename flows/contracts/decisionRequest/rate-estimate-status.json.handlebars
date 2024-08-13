@@ -1,0 +1,12 @@
+{{#if request.params.id}}
+  {
+    "decisionRequestMethod": "getArtifacts",
+    "id": "{{application.lendingDecisionID.[0]}}",  {{!-- TODO: Get latest rate estimate decision id  --}}
+    "payload": {
+      "type": "decisioning-request",
+      "artifactType": "rate_check"
+    }
+  }
+{{else}}
+  null
+{{/if}}
