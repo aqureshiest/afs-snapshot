@@ -54,6 +54,51 @@
           }
         }
       ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:4000",
+              "Content-Type": "application/json"
+            },
+            "body": { "session": "1" }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/auth/identity/identify"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:4000",
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/auth/identity/access-code/send"
+          }
+        }
+      ]
     }
   ]
 }

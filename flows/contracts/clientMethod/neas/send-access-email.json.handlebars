@@ -1,0 +1,14 @@
+{{#if request.params.id }}
+  {
+    "action": "send-access-email",
+    "client": "NeasClient",
+    "method": "post",
+    "uri": "auth/identity/access-code/send",
+    "body": {
+      "applicantId": {{{json request.params.id}}},
+      "emailId": {{{json request.body.values.email}}}
+    }
+  }
+{{else}}
+  null
+{{/if}}

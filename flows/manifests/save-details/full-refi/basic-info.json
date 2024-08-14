@@ -3,6 +3,10 @@
   "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
+    "applications": {
+      "*": "applications-by-email",
+      "query": "application/search-query"
+     },
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
@@ -23,7 +27,10 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "full-refi.add-details-full-refi"
+        "full-refi.add-details-full-refi",
+        "neas.identify",
+        "session",
+        "neas.send-access-email"
       ]
     }
   }

@@ -1,11 +1,11 @@
 {{#with (contract 'actions' (sum @index -1)) as |event|}}
   {
-    "action": "unauthenticated",
+    "action": "identify",
     "client": "NeasClient",
     "method": "post",
-    "uri": "/auth/identity/unauthenticated",
+    "uri": "/auth/identity/identify",
     "body": {
-      "applicationId": {{{ json event.application.applicants.0.id }}}
+      "emailId": {{{json request.body.values.email}}}
     }
   }
 {{else}}

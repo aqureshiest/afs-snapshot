@@ -1,0 +1,16 @@
+{
+  {{#with (contract 'query') as |query|}}
+    "query": {{{ json query }}},
+  {{/with}}
+    "criteria": {{#list}}
+      { "email": {{{ json request.body.values.email }}} }
+    {{/list}}
+  {{#with request.query}}
+     {{#if limit}}
+       ,"limit": {{{json limit}}}
+     {{/if}}
+     {{#if page}}
+      ,"page": {{{json page}}}
+     {{/if}}
+  {{/with}}
+}
