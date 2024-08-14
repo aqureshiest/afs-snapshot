@@ -853,7 +853,7 @@ describe("[462fd166] manifest.execute", () => {
             raw: `{
               "name": "test",
               "value": "test",
-              "options": "test"
+              "options": {}
           }`,
             type: "cookie",
           }),

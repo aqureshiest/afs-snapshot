@@ -33,12 +33,12 @@ class Cookie extends ContractExecutable<Definition, Definition, Output> {
     input: Input,
     definition: Definition,
   ) {
-    const { name, value, options } = definition;
+    const { name, value, options = {} } = definition;
+    // prevents default encoding behavior
+    options.encode = (cookie) => cookie;
 
     if (value) {
-      options
-        ? input.response?.cookie(name, value, options)
-        : input.response?.cookie(name, value);
+      input.response?.cookie(name, value, options)
     } else {
       input.response?.clearCookie(name);
     }

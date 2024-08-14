@@ -231,8 +231,7 @@ class ApplicationEvent extends ContractExecutable<
     return {
       event: this.result?.event,
       id: this.result?.application?.id,
-      createdAt: this.result?.createdAt,
-      application: this.result?.application,
+      createdAt: this.result?.createdAt
     };
   }
 }
