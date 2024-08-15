@@ -1,0 +1,32 @@
+{{#with application.primary}}
+{
+    "type": "input",
+    "definition": {
+        "key": "isParentDriven",
+        "type": "inputRadio",
+        "layout": "default",
+        "direction": "row",
+        {{#if ../userState.isParentDriven}}
+            "value": "{{../userState.isParentDriven}}",
+        {{else}}
+            "value": "",
+        {{/if}}
+        "label": {
+            "copy": "Are you a parent refinancing a Parent Plus loan?"
+        },
+        "items": [
+            {
+                "id": "yes",
+                "label": "Yes",
+                "value": "true"
+            },
+            {
+                "id": "no",
+                "label": "No",
+                "value": "false"
+            }
+        ],
+        "error": "{{{ ajv 'errors' 'questions/primary/is-parent-driven' ../userState.isParentDriven }}}"
+    }
+}
+{{/with}}

@@ -1,0 +1,36 @@
+{
+  "type": "input",
+  "definition": {
+      "key": "graduate-degree-type",
+      "type": "inputSelect",
+      "layout": "default",
+      "direction": "column",
+      "items": [
+        { "id": "masters_arts", "value": "masters_arts", "label": "Master's of Arts" },
+        { "id": "masters_engineering", "value": "masters_engineering", "label": "Master's of Science or Engineering" },
+        { "id": "masters_other", "value": "masters_other", "label": "Other Master's (e.g. MPP, MPG)" },
+        { "id": "medical_other", "value": "medical_other", "label": "Other Medical (e.g. RN, DPT, OD)" },
+        { "id": "jd", "value": "jd", "label": "JD" },
+        { "id": "md", "value": "md", "label": "MD" },
+        { "id": "dds", "value": "dds", "label": "DDS or DMD" },
+        { "id": "do", "value": "do", "label": "DO" },
+        { "id": "dvm", "value": "dvm", "label": "DVM" },
+        { "id": "mba", "value": "mba", "label": "MBA" },
+        { "id": "phd", "value": "phd", "label": "PhD" },
+        { "id": "pharmd", "value": "pharmd", "label": "Pharm.D" },
+        { "id": "other", "value": "other", "label": "Other Professional Degree/Certification" }
+      ],
+      "status": "incomplete",
+      "value": "{{application.education.0.degree}}",
+      "conditional": [
+        [{
+          "field": "EducationInfo.degree-type",
+          "op": "valueEquals",
+          "value": "graduate"
+        }]
+      ],
+      "label": {
+          "copy": "Graduate Degree type"
+      }
+  }
+}

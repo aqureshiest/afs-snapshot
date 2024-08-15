@@ -1,0 +1,22 @@
+{
+  "type": "string",
+  "enum": [
+    "masters_arts",
+    "masters_engineering",
+    "masters_other",
+    "medical_other",
+    "jd",
+    "md",
+    "dds",
+    "do",
+    "dvm",
+    "mba",
+    "phd",
+    "pharmd",
+    "other"
+  ],
+  "errorMessage": {
+    "enum": "Please select your graduate degree type."
+  },
+  "required": ["graduate-degree-type"]
+}

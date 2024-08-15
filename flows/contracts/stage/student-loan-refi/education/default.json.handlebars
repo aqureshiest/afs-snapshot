@@ -1,0 +1,28 @@
+{
+    "key": "full-refi-education-info",
+    "type": "form",
+    "label": "Education Info",
+    "status": "notStarted",
+    "showProgress": true,
+    "pageLayout":{{{json (contract 'pageLayout')}}},
+    "seo": {
+        "pageTitle": "Earnest"
+    },
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "refi-degree": {
+                "type": "object",
+                "properties": {
+                    "degree-type": {{{json (schema 'questions/primary/degree-type')}}},
+                    "school": {{{json (schema 'questions/primary/school')}}},
+                    "undergraduate-degree-type": {{{json (schema 'questions/primary/degree-type-undergraduate')}}},
+                    "graduate-degree-type": {{{json (schema 'questions/primary/degree-type-graduate')}}},
+                    "graduation-date": {{{json (schema 'questions/primary/graduationDate')}}},
+                    "is-parent-driven": {{{json (schema 'questions/primary/is-parent-driven')}}}
+                }
+            }
+        }
+    }
+}

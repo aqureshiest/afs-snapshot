@@ -1,0 +1,7 @@
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/primary/degree-type' details.education) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}

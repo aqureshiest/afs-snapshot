@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "month": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "pattern": "^(1[012]|0?[1-9])$",
+      "requiredParentFields": {
+        "requiredFields": true
+      },
+      "errorMessage": {
+        "requiredParentFields": "Graduation date is required.",
+        "minLength": "Enter a valid month.",
+        "maxLength": "Enter a valid month.",
+        "pattern": "Enter a valid month.",
+        "type": "Graduation date is required."
+      }
+    },
+    "day": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "pattern": "^(([0]?[1-9])|([1-2][0-9])|(3[01]))$",
+      "requiredParentFields": {
+        "requiredFields": true
+      },
+      "errorMessage": {
+        "requiredParentFields": "Graduation date is required.",
+        "minLength": "Enter a valid day.",
+        "maxLength": "Enter a valid day.",
+        "pattern": "Enter a valid day.",
+        "type": "Graduation date is required."
+      }
+    },
+    "year": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 4,
+      "pattern": "^(19|20)\\d{2}$",
+      "requiredParentFields": {
+        "requiredFields": true
+      },
+      "errorMessage": {
+        "requiredParentFields": "Graduation date is required.",
+        "minLength": "Enter a valid year.",
+        "maxLength": "Enter a valid year.",
+        "pattern": "Enter a valid year.",
+        "type": "Graduation date is required."
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "input",
+  "definition": {
+      "key": "degree-type",
+      "type": "inputRadio",
+      "layout": "default",
+      "direction": "column",
+      "items": [
+        { "id": "undergraduate", "value": "undergraduate", "label": "Undergraduate" },
+        { "id": "graduate", "value": "graduate", "label": "Graduate" },
+        { "id": "high-school", "value": "high_school", "label": "High School" }
+      ],
+      "status": "incomplete",
+      "value": "{{application.education.0.degree}}",
+      "label": {
+          "copy": "Degree type"
+      }
+  }
+}

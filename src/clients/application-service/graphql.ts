@@ -98,6 +98,7 @@ fragment ApplicantFragment on Application {
       termEnd
       credits
       opeid
+      residencyEnd
     }
     income {
       amount

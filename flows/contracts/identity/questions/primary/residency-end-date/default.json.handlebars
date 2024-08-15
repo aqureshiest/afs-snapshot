@@ -1,0 +1,42 @@
+{{#if application.primary}}
+{{#with application.primary}}
+{
+    "type": "input",
+    "definition": {
+        "key": "residencyEndDate",
+        "type": "inputDate",
+        "value": 
+          {{#if details.education.0.residencyEnd}}
+          {
+            "month": "{{month details.education.0.residencyEnd}}",
+            "day": "{{day details.education.0.residencyEnd}}",
+            "year": "{{year details.education.0.residencyEnd}}"
+          }
+          {{else}}
+          {
+            "month": "",
+            "day": "",
+            "year": ""
+          }
+          {{/if}}
+        ,
+        "conditional": [
+          [{
+            "field": "EducationInfo.degree-type",
+            "op": "valueEquals",
+            "value": "graduate"
+          }]
+        ],
+        "label": {
+          "copy": "Residency end date"
+        },
+        "error": "{{{ ajv 'errors' 'questions/primary/residency-end-date' details.education.0.residencyEnd }}}"
+    }
+}
+{{/with}}
+{{else}}
+{
+    "statusCode": "401",
+    "message": "Application Primary missing"
+}
+{{/if}}

@@ -1,0 +1,31 @@
+{
+  "type": "input",
+  "definition": {
+      "key": "degree",
+      "type": "inputRadio",
+      "layout": "default",
+      "direction": "column",
+      "items": [
+          {
+              "id": "bachelors",
+              "value": "Bachelors",
+              "label": "bachelors"
+          },
+          {
+              "id": "associates",
+              "value": "Associates",
+              "label": "associates"
+          },
+          {
+              "id": "incomplete",
+              "value": "Incomplete",
+              "label": "incomplete"
+          }
+      ],
+      "status": "incomplete",
+      "value": "{{application.education.0.degree}}",
+      "label": {
+          "copy": "Degree type"
+      }
+  }
+}

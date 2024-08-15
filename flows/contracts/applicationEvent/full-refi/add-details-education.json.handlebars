@@ -1,0 +1,17 @@
+{{#if request.params.id}}
+{{#noop}}{{ contract 'analytics' }}{{/noop}}
+  {
+    "event": "addDetails",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "details": {{#obj}} {{! make sure to flatten each element into a single line}}
+        {{#with request.body.values}}
+            {"education": [{"index": 0, "degree": {{#if (eq degree-type "graduate")}} "{{graduate-degree-type}}" {{else if (eq degree-type "undergraduate")}} "{{undergraduate-degree-type}}" {{/if}}{{#if school}} ,"opeid": "{{school.opeid8}}" {{/if}}{{#if graduationDate}} ,"graduationDate": "{{dateObjToString graduationDate}}" {{/if}} {{#if residencyEndDate}} ,"residencyEnd": "{{dateObjToString residencyEndDate}}" {{/if}} }]}
+        {{/with}}
+      {{/obj}}
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}
