@@ -1,8 +1,8 @@
 [{
     "methods": ["post"],
     "parameters": [{
-    "key": "id",
-    "format": "uuid"
+        "key": "id",
+        "format": "uuid"
     }],
     "inputs":{
         "*": "inputs",

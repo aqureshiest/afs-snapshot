@@ -1027,6 +1027,13 @@ describe("[462fd166] manifest.execute", () => {
                 type: "previous",
               },
             ],
+            EmployedIncomes: [
+              {
+                employer: "BigCompany",
+                type: "employment",
+              },
+            ],
+            tags: ["RC_Primary_Decline"],
           },
         },
       },
@@ -1070,7 +1077,9 @@ describe("[462fd166] manifest.execute", () => {
               "formatDollarsToCents": "{{{formatDollarsToCents '$12,3456.89'}}}",
               "stateMinLoan": {{{json (stateMinLoan request.body.values.location)}}},
               "hasValues": {{{hasValues request.body.values.dateOfBirth}}},
-              "reachedTimeout": {{{reachedTimeout request.body.values.date 60000}}}
+              "reachedTimeout": {{{reachedTimeout request.body.values.date 60000}}},
+              "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.EmployedIncomes}}}",
+              "searchDeniedArtifactTags": {{{searchDeniedArtifactTags request.body.values.tags}}}
             }
         `,
           }),
@@ -1112,53 +1121,32 @@ describe("[462fd166] manifest.execute", () => {
       stateMinLoan: 1000000,
       hasValues: true,
       reachedTimeout: true,
+      employed: "employed",
+      searchDeniedArtifactTags: true,
     });
   });
 
-  /**
-   * What the sweet merciful hell is this test case trying to do?
-   */
-  it.skip("[6c19a4eb] mapIncomeType template helper", async () => {
+  it("[93dc0646] test mapRatePayments", async () => {
     const input = {
       request: {
         body: {
-          values: {
-            EmployedIncomes: [
-              {
-                employer: "BigCompany",
-                type: "employment",
-              },
-            ],
-            FutureEmployedIncomes: [
-              {
-                employer: "BigCompany",
-                type: "employment",
-                title: "title",
-                start: new Date().toISOString(),
-              },
-            ],
-            SelfEmployedIncomes: [
-              {
-                type: "employment",
-                title: "title",
-                start: new Date().toISOString(),
-              },
-            ],
-            UnemployedIncomes: [
-              {
-                type: "unspecified",
-              },
-            ],
-            RetiredIncomes: [
-              {
-                type: "social_security_or_pension",
-              },
-            ],
-          },
+          values: [
+            {
+              rate: 532,
+              rateType: "fixed",
+              term: 60,
+              minPaymentAmountInCents: 114566,
+            },
+            {
+              rate: 631,
+              rateType: "variable",
+              term: 60,
+              minPaymentAmountInCents: 117424,
+            },
+          ],
         },
       },
     } as unknown as Input<unknown>;
-
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1169,11 +1157,7 @@ describe("[462fd166] manifest.execute", () => {
           default: new Contract({
             raw: `
             {
-              "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[0]}}}",
-              "future": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[1]}}}",
-              "selfEmployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[2]}}}",
-              "unemployed": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[3]}}}",
-              "retired": "{{{mapIncomeTypeToEmplStatus request.body.values.incomes.[4]}}}"
+              "mapRatePayments": {{{json (mapRatePayments request.body.values)}}}
             }
         `,
           }),
@@ -1186,11 +1170,10 @@ describe("[462fd166] manifest.execute", () => {
     const parsed = JSON.parse(JSON.stringify(result));
 
     assert.deepEqual(parsed, {
-      employed: "employed",
-      future: "future",
-      selfEmployed: "self_employed",
-      unemployed: "unemployed",
-      retired: "retired",
+      mapRatePayments: {
+        fixedData: [["5 year", "5.32%", "$1,145.66"]],
+        variableData: [["5 year", "6.31%", "$1,174.24"]],
+      },
     });
   });
 

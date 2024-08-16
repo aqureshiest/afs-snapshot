@@ -188,7 +188,7 @@ declare module "contract/contract-types/decision-request.js" {
       | "getDecision"
       | "rateCheckRequest"
       | "getArtifacts"
-      | "getPriceCurve";
+      | "getPaymentsAndRates";
     id: string;
     payload: IWebhookEventPayload;
   };

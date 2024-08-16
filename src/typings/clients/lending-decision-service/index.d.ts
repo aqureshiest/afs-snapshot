@@ -125,6 +125,7 @@ type IArtifacts = {
   number: string;
   tags: Array<string>;
   softApprovedAmount: number;
+  softInquiryDate: string;
   modelVersion: string;
   rateMapVersion: string;
   stateLimitsVersion: string;
@@ -219,6 +220,7 @@ type IFilteredPrices = {
   rate: number;
   rateType: string;
   term: number;
+  minPaymentAmountInCents?: number;
 };
 
 export type IWebhookEventPayload = {

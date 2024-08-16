@@ -1,0 +1,19 @@
+
+{{#with (contract 'actions' 0) as |rateResult|}}
+{
+  "action":
+      {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
+        {{{json (contract 'rateApproved')}}},
+      {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (searchDeniedArtifactTags rateResult.data.artifacts.tags))}}
+        {{{json (contract 'rateDeclined')}}},
+      {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable"))}}
+        {{{json (contract 'rateFrozen')}}},
+      {{else}}
+        {{{json (contract 'rateUnable')}}},
+      {{/if}}
+  "result": ["{{rateResult.data.decisionOutcome}}"],
+  "error": {{{json error}}}
+}
+{{else}}
+  null
+{{/with}}

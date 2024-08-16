@@ -1,6 +1,6 @@
 {{#if request.params.id}}
   {
-    "decisionRequestMethod": "getPriceCurve",
+    "decisionRequestMethod": "getPaymentsAndRates",
     "id": "{{application.lendingDecisionID.[0]}}", {{!-- TODO: Get latest rate estimate decision id  --}}
     "payload": {
       "type": "decisioning-request"

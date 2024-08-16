@@ -14,6 +14,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   let baseUrl;
   let context;
   let client;
+  let calcClient;
   let key;
   const input = {
     auth: {
@@ -31,6 +32,10 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   const root = uuidv4();
   const primary = uuidv4();
   const cosigner = uuidv4();
+
+  /**
+   * TODO: OH GOD I SHOULD THROW THESE INTO MOUNTEBANK
+   */
   const primaryAppData = {
     id: root,
     details: {
@@ -190,6 +195,10 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       },
     ],
   };
+
+  /**
+   * TODO: OH GOD I SHOULD THROW THESE INTO MOUNTEBANK
+   */
   const cosignedAppData = {
     id: root,
     relationships: [
@@ -306,6 +315,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       "";
 
     client = new LendingDecisionServiceClient(accessKey, baseUrl);
+    calcClient = context.loadedPlugins.calculatorServiceClient.instance;
   });
 
   describe("[03df6e1e] Lending Decision Client Error tests", () => {
@@ -728,7 +738,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       });
 
       try {
-        await client.getPriceCurve(
+        await client.getPaymentsAndRates(
           input,
           context,
           "decisioning-request",
@@ -1222,6 +1232,9 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   });
 
   it("[0ff6b7b5] should get artifacts", async () => {
+    /**
+     * TODO: OH GOD I SHOULD THROW THESE INTO MOUNTEBANK
+     */
     const priceCurves = [
       {
         rates: [
@@ -1324,6 +1337,9 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   });
 
   it("[2cd0d3d6] should get price curves", async () => {
+    /**
+     * TODO: OH GOD I SHOULD THROW THESE INTO MOUNTEBANK
+     */
     const priceCurves = [
       {
         rates: [
@@ -1339,133 +1355,8 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         score: 6.6566,
         term_months: 60,
       },
-      {
-        rates: [
-          {
-            rate: 5.72,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.31,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.6566,
-        term_months: 61,
-      },
-      {
-        rates: [
-          {
-            rate: 5.69,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.09,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9904,
-        term_months: 84,
-      },
-      {
-        rates: [
-          {
-            rate: 5.69,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.1,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9904,
-        term_months: 85,
-      },
-      {
-        rates: [
-          {
-            rate: 5.79,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.26,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9909,
-        term_months: 120,
-      },
-      {
-        rates: [
-          {
-            rate: 5.79,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.26,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9909,
-        term_months: 121,
-      },
-      {
-        rates: [
-          {
-            rate: 5.93,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.44,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9913,
-        term_months: 179,
-      },
-      {
-        rates: [
-          {
-            rate: 5.93,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.44,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9913,
-        term_months: 180,
-      },
-      {
-        rates: [
-          {
-            rate: 6.36,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.79,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9914,
-        term_months: 239,
-      },
-      {
-        rates: [
-          {
-            rate: 6.36,
-            rate_type: "fixed",
-          },
-          {
-            rate: 6.81,
-            rate_type: "variable",
-          },
-        ],
-        score: 6.9914,
-        term_months: 240,
-      },
     ];
+
     const artifacts = {
       priceCurve: priceCurves,
       scoreCurve: [
@@ -1505,6 +1396,38 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       monthlyHousingExpense: 101200,
     };
 
+    mock.method(calcClient, "post", async () => {
+      return {
+        results: {
+          prices: [
+            {
+              rateInBps: 532,
+              uwLoanTermInMonths: 60,
+              rateType: "fixed",
+              startingPrincipalBalanceInCents: 6000000,
+              date: "2024-08-08T00:00:00.000Z",
+              dateType: "fti",
+              priceId: 0,
+              minimumPaymentAmountInCents: 114566,
+            },
+            {
+              rateInBps: 631,
+              uwLoanTermInMonths: 60,
+              rateType: "variable",
+              startingPrincipalBalanceInCents: 6000000,
+              date: "2024-08-08T00:00:00.000Z",
+              dateType: "fti",
+              priceId: 1,
+              minimumPaymentAmountInCents: 117424,
+            },
+          ],
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
     mock.method(client, "get", async () => {
       return {
         results: {
@@ -1522,61 +1445,25 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     const filteredPrices = [
       {
-        rate: 571,
+        rate: 532,
         rateType: "fixed",
         term: 60,
+        minPaymentAmountInCents: 114566,
       },
       {
         rate: 631,
         rateType: "variable",
         term: 60,
-      },
-      {
-        rate: 569,
-        rateType: "fixed",
-        term: 84,
-      },
-      {
-        rate: 609,
-        rateType: "variable",
-        term: 84,
-      },
-      {
-        rate: 579,
-        rateType: "fixed",
-        term: 120,
-      },
-      {
-        rate: 626,
-        rateType: "variable",
-        term: 120,
-      },
-      {
-        rate: 593,
-        rateType: "fixed",
-        term: 180,
-      },
-      {
-        rate: 644,
-        rateType: "variable",
-        term: 180,
-      },
-      {
-        rate: 636,
-        rateType: "fixed",
-        term: 240,
-      },
-      {
-        rate: 681,
-        rateType: "variable",
-        term: 240,
+        minPaymentAmountInCents: 117424,
       },
     ];
-    const results = await client.getPriceCurve(
+    const results = await client.getPaymentsAndRates(
       input,
       context,
-      "decisioning-request",
       "16719670-a754-4719-a185-4f7e875bc04c",
+      {
+        type: "decisioning-request",
+      },
     );
 
     assert.deepEqual(results, filteredPrices);

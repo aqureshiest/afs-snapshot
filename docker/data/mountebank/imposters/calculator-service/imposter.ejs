@@ -1,0 +1,27 @@
+{
+    "port": 3019,
+    "protocol": "http",
+    "name": "calculator-service",
+    "defaultResponse": {
+      "statusCode": 404
+    },
+    "stubs": [
+      {
+        "predicates": [{
+          "contains": {
+            "method": "POST",
+            "path": "/payment-schedules/slr/"
+          }
+        }],
+        "responses": [
+          {
+            "inject": "<%- stringify(filename, 'calculator-service/paymentSchedules.js') %>"
+          }
+        ]
+      },
+      {
+        "predicates": [{"equals": { "method": "GET", "path": "/ping" }}],
+        "responses": [{"is": { "statusCode": 200 }}]
+      }
+    ]
+  }

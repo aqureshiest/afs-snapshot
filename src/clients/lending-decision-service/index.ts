@@ -5,6 +5,10 @@ import createError from "http-errors";
 
 import flattenApplication from "../../api/helpers.js";
 import Client from "../client.js";
+import {
+  GetMinPaymentPricePayload,
+  GetMinPaymentPriceResponse,
+} from "../calculator-service/index.js";
 
 export enum WebhookTypeEnum {
   APPLICATION_STATUS = "APPLICATION_STATUS",
@@ -315,7 +319,7 @@ export default class LendingDecisionServiceClient extends Client {
     return results;
   }
 
-  async getPriceCurve(
+  async getPaymentsAndRates(
     input: Input<unknown>, // eslint-disable-line @typescript-eslint/no-unused-vars,
     context: PluginContext,
     lendingDecisionId: string,
@@ -325,6 +329,13 @@ export default class LendingDecisionServiceClient extends Client {
       throw new Error("[2542e05a] missing lending decision id");
     }
 
+    const calculatorServiceClient =
+      context.loadedPlugins.calculatorServiceClient?.instance;
+
+    if (!calculatorServiceClient)
+      throw new Error(
+        "[f5d34f55] Calculator Service client instance not found",
+      );
     const { results, response } = await this.get<ArtifactGetResponse>(
       {
         uri: `/v1/artifact/${payload.type}/${lendingDecisionId}/rate_check`,
@@ -353,7 +364,37 @@ export default class LendingDecisionServiceClient extends Client {
     const filteredPrices = this.filterPriceCurve(
       results.data.artifacts.priceCurve,
     );
-    return filteredPrices;
+    const prices = filteredPrices.map((filteredPrice, index) => {
+      return {
+        rateInBps: filteredPrice.rate,
+        uwLoanTermInMonths: filteredPrice.term,
+        rateType: filteredPrice.rateType,
+        startingPrincipalBalanceInCents:
+          results.data.artifacts.softApprovedAmount,
+        date: results.data.artifacts.softInquiryDate.split("T")[0],
+        dateType: "fti",
+        priceId: index,
+      };
+    });
+
+    const calculatorPayload = {
+      prices,
+    } as GetMinPaymentPricePayload;
+
+    const payments = (await calculatorServiceClient["getMinPaymentPrice"](
+      context,
+      calculatorPayload,
+    )) as unknown as GetMinPaymentPriceResponse;
+
+    const ratesAndPayments = payments?.prices?.map((price) => {
+      return {
+        rate: price.rateInBps,
+        rateType: price.rateType,
+        term: price.uwLoanTermInMonths,
+        minPaymentAmountInCents: price.minimumPaymentAmountInCents,
+      };
+    });
+    return ratesAndPayments;
   }
 
   /**
@@ -1036,14 +1077,14 @@ export default class LendingDecisionServiceClient extends Client {
      */
     const rateCheckIncomes: DecisionEntity["incomes"] = [
       {
-        incomeType: "annual_income",
+        incomeType: "claimed_annual_income",
         value:
           incomeDetails[0] && !incomeDetails[0].type && incomeDetails[0].amount
             ? incomeDetails[0].amount
             : 0,
       },
       {
-        incomeType: "additional_annual_income",
+        incomeType: "annual_additional_income",
         value:
           incomeDetails[1] && !incomeDetails[1].type && incomeDetails[1].amount
             ? incomeDetails[1].amount

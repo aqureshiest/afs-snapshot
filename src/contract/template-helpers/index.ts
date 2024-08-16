@@ -12,6 +12,7 @@ export { default as mapProduct } from "./mapProduct.js";
 export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
 export { default as findInArray } from "./array.js";
 export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationMethod.js";
+export { default as mapRatePayments } from "./mapRatePayments.js";
 export { default as map } from "./map.js";
 export { default as log } from "./log.js";
 
@@ -360,4 +361,13 @@ export function getFinancialAccountsAsString(financialAccounts) {
     (a, i) => `${a}\n${i.name} - ${i.account_last4}`,
     "",
   );
+}
+
+export function searchDeniedArtifactTags(tags) {
+  const deniedTags = [
+    "RC_OfferCosigner",
+    "RC_Primary_Decline",
+    "RC_Cosigner_Decline",
+  ];
+  return deniedTags.some((v) => tags.includes(v));
 }

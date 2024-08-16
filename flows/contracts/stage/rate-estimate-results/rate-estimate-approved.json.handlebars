@@ -1,0 +1,140 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible",
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Approved",
+      "content": [
+        {
+          "key": "approvedHeader",
+          "type": "header",
+          "componentProps": {
+            "copy": "Congratulations, here are your rate estimates!",
+            "subCopy": "Final rates, terms, and approval depend on our review of your full application."
+          }
+        },
+        {
+          "key": "approvedRatesTable",
+          "type": "ratesTable",
+          "componentProps": {
+            {{#with (contract 'getPaymentsAndRates') as | results |}}
+              {{#with (mapRatePayments results) as | filteredResults |}}
+                "data": [
+                  {
+                    "key": "fixedRate",
+                    "label": "Fixed Rates",
+                    "content": [
+                      {
+                        "key": "fixedRateMarkdown",
+                        "type": "md",
+                        "componentProps": {
+                          "content": "## Fixed Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Fixed rate means that your interest rate will not change over the course of your loan term."
+                        }
+                      }
+                    ],
+                    "table": {
+                      "headers": ["loan term", "interest rate *", "payment/mo"],
+                      "rows": {{{json filteredResults.fixedData}}},
+                      "metadata": {
+                        "centered": true,
+                        "stylePreset": "lastColumnBGGray"
+                      },
+                      "footer": "&ast; Rates include 0.25% Auto Pay discount."
+                    }
+                  },
+                  {
+                    "key": "variableRate",
+                    "label": "Variable Rates",
+                    "content": [
+                      {
+                        "key": "variableRatesMarkdown",
+                        "type": "md",
+                        "componentProps": {
+                          "content": "## Variable Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Variable rate means that your interest rate will change over the course of your loan term."
+                        }
+                      }
+                    ],
+                    "table": {
+                      "headers": ["loan term", "interest rate *", "payment/mo"],
+                      "rows": {{{json filteredResults.variableData}}},
+                      "metadata": {
+                        "centered": true,
+                        "stylePreset": "lastColumnBGGray"
+                      },
+                      "footer": "&ast; Rates include 0.25% Auto Pay discount."
+                    }
+                  }
+                ]
+              {{/with}}
+            {{/with}}
+          }
+        },
+        {
+          "key": "ApprovedCallout",
+          "type": "callout",
+          "componentProps": {
+            "content": [
+              {
+                "key": "AddCosignerMarkdown",
+                "type": "md",
+                "componentProps": {
+                  "content":"#### You can also add a cosigner. \n Adding a cosigner can sometimes lower your rates. We’ll send them a unique link to apply alongside you."
+                }
+              },
+              {
+                "key": "inviteCosignerButtons",
+                "type": "buttons",
+                "componentProps": {
+                  "stylePreset": "secondaryTertiary",
+                  "globalButtonsProps": {
+                    "fontSize": "14px",
+                    "padding": "8px 12px",
+                    "height": "initial"
+                  },
+                  "buttons": [
+                    {
+                      "copy": "Invite Cosigner",
+                      "action": {
+                        "key": "addCosigner",
+                        "type": "navigate",
+                        "properties": {
+                          {{!-- TODO: Use actual manifest as goTo location --}}
+                          "goTo": "invite cosigner page"
+                        }
+                      }
+                    },
+                    {
+                      "copy": "Learn more",
+                      "action": {
+                        "key": "learnAddCosigner",
+                        "type": "navigate",
+                        "properties": {
+                          {{!-- TODO: Add learn more page --}}
+                          "goTo": "learn more page"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Continue to Apply",
+        "action": {
+          "key": "applyIndependent",
+          "type": "navigate",
+          "properties": {
+            {{!-- TODO: Use actual manifest as goTo location --}}
+            "goTo": "confirm address manifest"
+          }
+        }
+      }
+    }
+  }
+}
