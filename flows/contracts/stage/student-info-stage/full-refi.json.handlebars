@@ -20,6 +20,19 @@
                     "phone": {{{json (schema 'questions/primary/phone')}}},
                     "email": {{{json (schema 'questions/primary/email')}}}
                 }
+            },
+            "income": {
+                "type": "object",
+                "properties": {
+                    "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
+                    "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}}
+                }
+            },
+            "citizenship": {
+                "type": "object",
+                "properties": {
+                    "citizenship": {{{json (schema 'questions/primary/citizenship')}}}
+                }
             }
         }
     }

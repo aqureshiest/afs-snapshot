@@ -23,6 +23,19 @@
                 {"index": 0,  "citizenship": "{{citizenship}}" }
             {{/list}} }
           {{/if}}
+          {{#if annualIncome}}
+            {"income": [{"index": 0, "amount": {{{formatDollarsToCents annualIncome}}} }]}
+          {{/if}}
+          {{#if claimedAssets}}
+            {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
+          {{/if}}
+          {{#if additionalAmount}}
+            {"income": {{#list}}
+              {{#if additionalAmount.[0]}}
+                  {"index": 1, "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
+              {{/if}}
+              {{/list}} }
+          {{/if}}
         {{/with}}
       {{/obj}}
     },
