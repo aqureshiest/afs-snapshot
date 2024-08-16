@@ -1,4 +1,8 @@
-{{#with (contract 'session' (sum @index -1)) as |session|}}
+{{#if (and
+  (contract 'actions' 1)
+  (eq (lookup (contract 'actions' 1) "action") "identify")
+  request.params.id
+)}}
   {
     "action": "send-access-email",
     "client": "NeasClient",
@@ -12,4 +16,4 @@
   }
 {{else}}
   null
-{{/with}}
+{{/if}}

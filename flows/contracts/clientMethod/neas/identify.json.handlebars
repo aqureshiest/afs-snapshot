@@ -1,4 +1,8 @@
-{{#with (contract 'actions' (sum @index -1)) as |event|}}
+{{#if (and
+  (contract 'actions' 0)
+  (eq (lookup (contract 'actions' 0) "event") "addDetails")
+  request.params.id
+)}}
   {
     "action": "identify",
     "client": "NeasClient",
@@ -11,4 +15,4 @@
   }
 {{else}}
   null
-{{/with}}
+{{/if}}
