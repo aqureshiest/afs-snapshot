@@ -9,9 +9,8 @@
     "method": "post",
     "uri": "auth/identity/access-code/send",
     "body": {
-      "applicantId": {{{json request.params.id}}},
-      "emailId": {{{json request.body.values.email}}},
-      "candidateUserId": {{{json auth.artifacts.candidateUserId}}}
+      "applicationId": {{{json application.id}}},
+      "emailId": {{{json request.body.values.email}}}
     }
   }
 {{else}}
