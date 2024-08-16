@@ -3,10 +3,6 @@
   "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
-    "application": {
-      "*": "application-by-id-param",
-      "query": "application/search-query"
-    },
     "applications": {
       "*": "applications-by-email",
       "query": "application/search-query"
