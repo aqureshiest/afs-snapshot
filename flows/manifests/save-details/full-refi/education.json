@@ -31,7 +31,8 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "full-refi.add-details-education"
+        "full-refi.add-details-education",
+        "redis.full-refi"
       ]
     }
   }

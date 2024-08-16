@@ -1,0 +1,27 @@
+
+
+{{#if (and auth.artifacts.userId (or request.body.values.degree-type request.body.values.graduate-degree-type request.body.values.undergraduate-degree-type request.body.values.isParentDriven))}}
+  {
+    "redisMethod": "setUserState",
+    "key": "{{auth.artifacts.userId}}",
+    "value": 
+      {{#with request.body.values}}
+        {{#obj}}
+          {{#if degree-type}}
+            {"degree-type": "{{degree-type}}"}
+          {{/if}}
+          {{#if graduate-degree-type}}
+            {"graduate-degree-type": "{{graduate-degree-type}}"}
+          {{/if}}
+          {{#if undergraduate-degree-type}}
+            {"undergraduate-degree-type": "{{undergraduate-degree-type}}"}
+          {{/if}}
+          {{#if isParentDriven}}
+            {"isParentDriven": "{{isParentDriven}}"}
+          {{/if}}
+        {{/obj}}
+      {{/with}}
+  }
+{{else}}
+  {}
+{{/if}}
