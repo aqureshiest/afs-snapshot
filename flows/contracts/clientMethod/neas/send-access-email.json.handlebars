@@ -1,4 +1,4 @@
-{{#if request.params.id }}
+{{#with (contract 'session' (sum @index -1)) as |session|}}
   {
     "action": "send-access-email",
     "client": "NeasClient",
@@ -6,9 +6,10 @@
     "uri": "auth/identity/access-code/send",
     "body": {
       "applicantId": {{{json request.params.id}}},
-      "emailId": {{{json request.body.values.email}}}
+      "emailId": {{{json request.body.values.email}}},
+      "candidateUserId": {{{json auth.artifacts.candidateUserId}}}
     }
   }
 {{else}}
   null
-{{/if}}
+{{/with}}

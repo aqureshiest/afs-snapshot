@@ -5,7 +5,8 @@
     "method": "post",
     "uri": "/auth/identity/identify",
     "body": {
-      "emailId": {{{json request.body.values.email}}}
+      "emailId": {{{json request.body.values.email}}},
+      "idToken": {{{ json (coalesce request.headers.idtoken request.headers.idToken) }}}
     }
   }
 {{else}}

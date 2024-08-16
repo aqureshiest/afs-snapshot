@@ -67,10 +67,11 @@ type IContractInput<I> = I & {
      */
     artifacts?: {
       [key: string]: undefined | string | number;
-      userId?: string;
-      candidateId?: string;
+      applicationId?: string;
+      candidateUserId?: string;
       emailId?: string;
       exp?: number;
+      userId?: string;
     };
   };
 };
