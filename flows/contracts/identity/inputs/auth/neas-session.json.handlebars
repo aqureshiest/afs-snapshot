@@ -15,10 +15,10 @@
       "isValid": true,
       {{!  TODO: any claim obtained by the NEAS verify method should be mapped here }}
       "artifacts": {{#obj}}
-          { "applicationId": {{{ json response.results.applicationId }}} },
-          { "candidateUserId": {{{ json response.results.candidateUserId }}} },
+          { "applicationId": {{{ json response.results.applicationId }}} }
+          { "candidateUserId": {{{ json response.results.candidateUserId }}} }
           { "exp": {{{ json response.results.exp }}} }
-          { "userId": {{{ json response.results.userId }}} },
+          { "userId": {{{ json response.results.userId }}} }
       {{/obj}}
     {{else}}
       "isValid": false
