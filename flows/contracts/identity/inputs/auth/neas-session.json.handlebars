@@ -11,6 +11,14 @@
   "isAuthorized": {{{ json (coalesce (contract 'authorization')) }}},
   {{! Mark this strategy as successful if the response includes `isValid` }}
   {{#with (contract "response") as |response|}}
+    {{#log}}
+      {
+        "message": "neas authorization",
+        "isValid": {{{json response.results.isValid}}},
+        "userId": {{{json response.results.userId}}},
+        "applicationId": {{{json response.results.applicationId}}}
+      }
+    {{/log}}
     {{#if (and response.results.isValid (lt response.response.statusCode 400))}}
       "isValid": true,
       {{!  TODO: any claim obtained by the NEAS verify method should be mapped here }}

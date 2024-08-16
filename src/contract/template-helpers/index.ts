@@ -13,14 +13,20 @@ export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
 export { default as findInArray } from "./array.js";
 export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationMethod.js";
 export { default as map } from "./map.js";
+export { default as log } from "./log.js";
 
 /**
  * Convert raw multi-line text into JSON-compatible string
  */
 export const multiline = function (context) {
-  const text = context.fn(this);
-  const json = JSON.stringify(text);
-  return json;
+  const raw = Boolean(context.hash.raw);
+  const text = context.fn(this, context);
+
+  if (raw) {
+    return JSON.stringify(text);
+  } else {
+    return JSON.stringify(JSON.parse(text)) + "\n";
+  }
 };
 
 export const noop = function (v1) {

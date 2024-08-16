@@ -41,7 +41,7 @@ class ApplicationData extends ContractExecutable<
       try {
         const { application } = (await applicationServiceClient.sendRequest(
           {
-            query: TEMP_DEFAULT_APPLICATION_QUERY,
+            query: definition["query"] || TEMP_DEFAULT_APPLICATION_QUERY,
             variables: definition,
           },
           context,

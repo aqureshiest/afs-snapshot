@@ -5,7 +5,7 @@ import ContractExecutable from "../contract-executable.js";
 /**
  *
  */
-class Cookie extends ContractExecutable<Definition, Definition, Output> {
+class Log extends ContractExecutable<Definition, unknown, void> {
   get executionName(): string {
     return "Cookie";
   }
@@ -13,13 +13,7 @@ class Cookie extends ContractExecutable<Definition, Definition, Output> {
   /**
    * Do not process the authorization error checks until all dependencies have been processed
    */
-  condition = function (
-    this: Cookie,
-    _,
-    __,
-    ___,
-    definition: Definition | null,
-  ) {
+  condition = function (this: Log, _, __, ___, definition: Definition | null) {
     return Boolean(definition);
   };
 
@@ -28,23 +22,29 @@ class Cookie extends ContractExecutable<Definition, Definition, Output> {
    * outputs
    */
   evaluate = async function (
+    this: Log,
     context: Context,
     executionContext: ExecutionContext,
     input: Input,
     definition: Definition,
   ) {
-    const { name, value, options = {} } = definition;
-    // prevents default encoding behavior
-    options.encode = (cookie) => cookie;
+    const { level, ...message } = definition;
+    message.contract = {
+      id: this.id,
+      parent: this.parent.id,
+    };
 
-    if (value) {
-      input.response?.cookie(name, value, options);
-    } else {
-      input.response?.clearCookie(name);
+    message.message = message.message || this.id;
+
+    try {
+      context.logger.log(level || "info", message);
+    } catch (error) {
+      context.logger.warn({
+        message: "Logging error",
+        error: { messsage: error.message },
+      });
     }
-
-    return { action: name, success: Boolean(value) };
   };
 }
 
-export default Cookie;
+export default Log;

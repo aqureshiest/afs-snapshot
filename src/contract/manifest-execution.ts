@@ -86,16 +86,22 @@ export default class ManifestExecution<I> extends Executable<I> {
   ) {
     super.input(pluginContext, executionContext, input);
 
-    const root = this.parent.executables[constants.ROOT_CONTRACT];
+    [
+      constants.ROOT_CONTRACT,
+      constants.SYNC_CONTRACT,
+      constants.ASYNC_CONTRACT,
+    ].forEach((rootSymbol) => {
+      const rootKey = constants.RESERVED_CONTRACT_KEYS[rootSymbol];
 
-    if (Array.isArray(root)) {
-      this.evaluations[constants.ROOT_CONTRACT] = root.map(
-        (executableParent, index) =>
+      const root = this.parent.executables[rootKey];
+
+      if (Array.isArray(root)) {
+        this.evaluations[rootKey] = root.map((executableParent, index) =>
           executableParent.input(
             pluginContext,
             {
               ...executionContext,
-              key: constants.ROOT_CONTRACT,
+              key: rootKey,
               index,
               manifest: this.parent,
               self: this,
@@ -103,22 +109,23 @@ export default class ManifestExecution<I> extends Executable<I> {
             },
             input,
           ),
-      );
-    } else {
-      // const index = this.index ?? executionContext.index;
-      this.evaluations[constants.ROOT_CONTRACT] = root.input(
-        pluginContext,
-        {
-          ...executionContext,
-          key: constants.ROOT_CONTRACT,
-          index: undefined,
-          manifest: this.parent,
-          self: this,
-          evaluations: this.evaluations,
-        },
-        input,
-      );
-    }
+        );
+      } else if (root) {
+        // const index = this.index ?? executionContext.index;
+        this.evaluations[rootKey] = root.input(
+          pluginContext,
+          {
+            ...executionContext,
+            key: rootKey,
+            index: undefined,
+            manifest: this.parent,
+            self: this,
+            evaluations: this.evaluations,
+          },
+          input,
+        );
+      }
+    });
 
     return this;
   }
@@ -148,7 +155,17 @@ export default class ManifestExecution<I> extends Executable<I> {
      * using the inhereted Executable behavior
      */
     await super.execute(pluginContext, subExecutionContext, input);
-    this.results[0] = this.evaluations[constants.ROOT_CONTRACT];
+
+    /**
+     * Set the results to either the sync contract or default to the root contract
+     */
+    this.results[0] =
+      this.evaluations[
+        constants.RESERVED_CONTRACT_KEYS[constants.SYNC_CONTRACT]
+      ] ||
+      this.evaluations[
+        constants.RESERVED_CONTRACT_KEYS[constants.ROOT_CONTRACT]
+      ];
 
     return this;
   }

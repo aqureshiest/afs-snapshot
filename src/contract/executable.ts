@@ -1,7 +1,12 @@
+import * as constants from "./constants.js";
 /**
  * Anything that can be executed should do so with a consistent interface
  */
 export default class Executable<Input> implements ExecutableInterface<Input> {
+  /**
+   * Unique identifier for this executable
+   */
+  declare id: string;
   /**
    * Executables that this executable depends on
    */
@@ -11,14 +16,12 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
    */
   declare dependents: Dependencies<Input>;
   /**
-   * Unique identifier for this executable
-   */
-  declare id: string;
-  /**
    * A reference to an object that should be used as the evaluation scope
    * for this executable
    */
   declare __evaluations: Evaluations<Input>;
+
+  declare sync: boolean;
 
   /**
    * By default, executables return the exact references evaluations object
@@ -46,6 +49,7 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
       index,
       id,
       evaluations,
+      sync = true,
       results = [],
       dependencies = {},
       dependents = {},
@@ -83,6 +87,12 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
 
     Object.defineProperty(this, "dependents", {
       value: dependents,
+      enumerable: false,
+      writable: false,
+    });
+
+    Object.defineProperty(this, "sync", {
+      value: sync,
       enumerable: false,
       writable: false,
     });
@@ -138,32 +148,14 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
   ) {
     const { self, evaluations = {} } = executionContext;
 
+    /**
+     * Establish a dependency between this executable and its parent
+     * UNLESS it's an async dependency
+     */
     if (self) {
       this.dependents[self.parent.id] = self;
       self.dependencies[this.parent.id] = this;
     }
-    return this;
-  }
-
-  /**
-   *
-   */
-  async execute(
-    pluginContext: PluginContext,
-    executionContext: ExecutionContext<Input>,
-    input: Input,
-  ) {
-    const incompleteDependencies = Object.values(this.dependencies).filter(
-      (dependency) =>
-        dependency.isIncomplete(pluginContext, executionContext, input),
-    );
-
-    await Promise.all(
-      incompleteDependencies.map(async (dependency) => {
-        await dependency.execute(pluginContext, executionContext, input);
-      }),
-    );
-
     return this;
   }
 
@@ -215,6 +207,43 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
       },
     };
     context?.logger?.log(level, decoratedMessage);
+  }
+
+  /**
+   *
+   */
+  async execute(
+    pluginContext: PluginContext,
+    executionContext: ExecutionContext<Input>,
+    input: Input,
+  ) {
+    const incompleteDependencies = Object.values(this.dependencies).filter(
+      (dependency) =>
+        dependency.isIncomplete(pluginContext, executionContext, input),
+    );
+
+    await Promise.all(
+      incompleteDependencies.map(async (dependency) => {
+        const dependencyExecution = dependency.execute(
+          pluginContext,
+          executionContext,
+          input,
+        );
+
+        if (dependency.sync) {
+          await dependencyExecution;
+        } else {
+          /**
+           * Async dependency
+           */
+          dependencyExecution.catch((error) => {
+            /* noop */
+          });
+        }
+      }),
+    );
+
+    return this;
   }
 
   /**

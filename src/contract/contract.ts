@@ -38,13 +38,15 @@ export default class Contract<I> implements ExecutableParent<Input<I>> {
    * full manifest bound as a parameter to allow full referencing
    */
   input(context, executionContext: ExecutionContext<I>, input) {
-    const { index, key, manifest } = executionContext;
+    const { index, key = "", manifest } = executionContext;
     const evaluations = (executionContext.evaluations =
       executionContext.evaluations || {});
 
+    const keyPath = !manifest || key.startsWith(":") ? key : "." + key;
+
     const id =
       (manifest ? manifest.id : "") +
-      (key != null ? ":" + key : "") +
+      keyPath +
       (index != null ? `[${index}]` : "");
 
     const contractInstance = new this.Constructor({
@@ -52,6 +54,7 @@ export default class Contract<I> implements ExecutableParent<Input<I>> {
       id,
       index,
       evaluations,
+      sync: key !== constants.RESERVED_CONTRACT_KEYS[constants.ASYNC_CONTRACT],
     }).input(context, executionContext, input);
 
     /* ============================== *
@@ -59,7 +62,8 @@ export default class Contract<I> implements ExecutableParent<Input<I>> {
      * contract needs to be re-executed after mutations, previously run
      * mutations will be used preferentially;
      * ============================== */
-    const evaluationKey = key || constants.ROOT_CONTRACT;
+    const evaluationKey =
+      key || constants.RESERVED_CONTRACT_KEYS[constants.ROOT_CONTRACT];
 
     const existingContract =
       index != null

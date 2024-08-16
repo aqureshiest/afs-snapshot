@@ -16,12 +16,12 @@ interface ITemplateData<I> extends IExecutionContext<IContractInput<I>> {
 }
 
 import type IContractExecutable from "contract/contract-executable.js";
-import type { HelperOptions } from "handlebars";
+import type { HelperOptions as IHelperOptions } from "handlebars";
 
 interface ITemplateHelper<T extends unknown[] = []> {
   <I>(
     this: unknown,
-    ...args: [...T, Omit<HelperOptions, "data"> & { data: ITemplateData<I> }] &
+    ...args: [...T, Omit<IHelperOptions, "data"> & { data: ITemplateData<I> }] &
       unknown[]
   ): unknown;
 }
@@ -34,6 +34,27 @@ declare module "contract/template-helpers/contract.js" {
   type ContractType = IContractExecutable<unknown, unknown, unknown>;
   type TemplateHelper = ITemplateHelper;
   type TemplateData = ITemplateData<unknown>;
+
+  type Position = {
+    line: number;
+    column: number;
+  };
+
+  type HelperOptions = IHelperOptions & {
+    data: ITemplateData<unknown>;
+    loc: {
+      start: Position;
+      end: Position;
+    };
+  };
+}
+
+import "contract/template-helpers/log.js";
+declare module "contract/template-helpers/log.js" {
+  type TemplateHelper = ITemplateHelper;
+  type HelperOptions = IHelperOptions & {
+    data: ITemplateData<unknown>;
+  };
 }
 
 import "contract/template-helpers/embedded.js";

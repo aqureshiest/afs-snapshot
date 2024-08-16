@@ -1,4 +1,4 @@
-{{#multiline}}
+{{#multiline raw=true~}}
   query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: Int) {
     applications(criteria: $criteria, limit: $limit, page: $page) {
      id
@@ -40,4 +40,4 @@
      }
    }
   }
-{{/multiline}}
+{{~/multiline}}

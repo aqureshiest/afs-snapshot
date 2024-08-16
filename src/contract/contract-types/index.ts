@@ -13,6 +13,7 @@ export { default as analytics } from "./analytics.js";
 export { default as applicationEvent } from "./application-event.js";
 export { default as applicationData } from "./application-data.js";
 export { default as section } from "./syllabus-section.js";
+export { default as log } from "./log.js";
 
 /* ============================== *
  * Decision
@@ -51,6 +52,7 @@ export { default as genericRESTRequest } from "./generic-client-method.js";
 export { default as authenticate } from "./authenticate.js";
 
 export { default as cookie } from "./cookie.js";
+
 /* ============================== *
  * Errors
  * ============================== */

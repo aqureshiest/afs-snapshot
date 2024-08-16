@@ -1,6 +1,5 @@
 {{#with (contract 'query') as |query|}}
 {{#with (contract 'auth') as |auth|}}
-  {{ log "DEBUG_AUTH" auth }}
   {
     "query": {{{ json query }}},
     "criteria": {{#list}}

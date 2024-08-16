@@ -12,7 +12,7 @@ services:
     ports:
       - '4501:80'
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost/"]
+      test: ["CMD", "curl", "--fail", "http://service:3000/ping"]
 
   service:
     image: earnest/apply-flow-service:local

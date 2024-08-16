@@ -45,6 +45,7 @@ interface IExecutableParent<Input> {
 interface IExecutableArgs<Input, Results extends unknown[]> {
   id: string;
   index?: number;
+  sync?: boolean;
   parent: IExecutableParent<Input>;
   results?: Results;
   dependencies?: IDependencies<Input>;

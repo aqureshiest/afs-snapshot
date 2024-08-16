@@ -1,8 +1,13 @@
 {{#if request.params.id}}
-  {
-    "id": {{{ json request.params.id }}},
-    "root": true
-  }
-{{else}}
-  null
-{{/if}}
+  {{#obj}}
+    {{#multiline~}}
+      {
+        "id": {{{ json request.params.id }}},
+        "root": true
+      }
+    {{~/multiline}}
+    {{#with (contract 'query') as |query|}}
+      { "query": {{{ json query }}} }
+    {{/with}}
+  {{/obj}}
+{{else}} null {{/if}}

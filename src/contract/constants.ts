@@ -1,8 +1,37 @@
 export const DEFAULT_VERSION = "default";
+
 export const ROOT_CONTRACT = "*";
-/* ============================== *
- * Substitution symbols
- * ============================== */
+
+/**
+ * Sync contracts
+ * 1. cannot be marked as a dependency by a neighbor
+ * 2. can depend on neighboring contract keys
+ * 3. is executed as soon as dependencies are resolved, then returned
+ *
+ */
+export const SYNC_CONTRACT = "<";
+
+/**
+ * Async contracts
+ * 1. cannot be marked as a dependency by a neighbor
+ * 2. can depend on neighboring contract keys
+ * 3. is executed as soon as dependencies are resolved, discarding the result
+ */
+export const ASYNC_CONTRACT = ">";
+
+/**
+ * In place of a contract reference, the value of a literal contract will always
+ */
+export const LITERAL_CONTRACT = "@";
+
+export const RESERVED_CONTRACT_KEYS = {
+  [ROOT_CONTRACT]: "@root",
+  [SYNC_CONTRACT]: "@output",
+  [ASYNC_CONTRACT]: "@async",
+  [LITERAL_CONTRACT]: "@literal",
+};
+
+Object.freeze(RESERVED_CONTRACT_KEYS);
 
 /* ============================== *
  * Regex
@@ -68,7 +97,11 @@ export const manifestSchema = {
   $defs: {
     contracts: {
       type: "object",
-      required: ["*"],
+      anyOf: [
+        { required: [ROOT_CONTRACT] },
+        { required: [SYNC_CONTRACT] },
+        { required: [LITERAL_CONTRACT] },
+      ],
       additionalProperties: {
         anyOf: [
           { type: "string" },

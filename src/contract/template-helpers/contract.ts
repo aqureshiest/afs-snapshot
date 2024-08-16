@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import assert from "node:assert";
 import Contract from "../contract.js";
+import * as constants from "../constants.js";
 
 const contractHelper: TemplateHelper = function (...args) {
-  const key: string = typeof args[0] === "string" ? args[0] : args[0].hash.key;
+  const rawKey: string =
+    typeof args[0] === "string" ? args[0] : args[0].hash.key;
   const index =
     typeof args[1] === "number" ? args[1] : (undefined as number | undefined);
+
+  if (rawKey in constants.RESERVED_CONTRACT_KEYS) {
+    throw new Error(`Invalid use of reserved contract key: '${rawKey}'`);
+  }
 
   // handlebars template helpers always add the options argument as the last argument, but
   // we need to tell the type system that the length is always 3 in order to get the right
   // type from the tuple index and–– Listen, I'm not happy about it either. Just go with it.
-  const options = args[(args.length - 1) as 3];
+  const options = args[(args.length - 1) as 3] as HelperOptions;
+
+  const key =
+    rawKey || `:${options.loc.start.line}:${options.loc.start.column}`;
 
   const { context, manifest, self } = options.data;
   assert(manifest, "[a9232983] missing manifest");
@@ -101,12 +110,12 @@ const contractHelper: TemplateHelper = function (...args) {
       const executableParent = new Contract({
         type: options.hash.type,
         raw: definition,
-        key,
+        key: self.parent.id + key,
       });
 
       const embedded = guaranteeExecutable(undefined, executableParent);
 
-      return JSON.stringify(embedded ?? null);
+      return JSON.stringify(embedded ?? "");
     }
   })();
 
@@ -114,7 +123,7 @@ const contractHelper: TemplateHelper = function (...args) {
    * If this is a block helper, jsonify the result and send it
    */
   if ("fn" in options) {
-    return JSON.stringify(contractValue ?? null);
+    return JSON.stringify(contractValue ?? "");
   }
 
   return contractValue;

@@ -1,6 +1,7 @@
 import assert from "node:assert";
 import * as constants from "./constants.js";
 import ManifestExecution from "./manifest-execution.js";
+import Contract from "./contract.js";
 /**
  * Manifests link independent contract modules together to represent a
  * discrete unit of work for Apply Flow Service to complete, typically either:
@@ -13,7 +14,6 @@ export default class Manifest<I> implements ExecutableParent<I> {
   contractKeys: ManifestContracts;
   contracts: Contracts<I>;
   executables: Executables<I>;
-
   references: string[];
 
   /**
@@ -362,9 +362,32 @@ export default class Manifest<I> implements ExecutableParent<I> {
     this.contractKeys = contractKeys;
 
     this.executables = Object.keys(contractKeys).reduce((agg, key) => {
+      if (
+        key === constants.LITERAL_CONTRACT &&
+        !(constants.SYNC_CONTRACT in agg)
+      ) {
+        return {
+          ...agg,
+          [constants.RESERVED_CONTRACT_KEYS[constants.SYNC_CONTRACT]]:
+            new Contract({
+              raw: JSON.stringify(contractKeys[key]),
+            }),
+        };
+      }
+
+      const evaluationKey = Object.keys(
+        constants.RESERVED_CONTRACT_KEYS,
+      ).includes(key)
+        ? constants.RESERVED_CONTRACT_KEYS[key]
+        : key;
+
       return {
         ...agg,
-        [key]: this.aggregateContracts(contractKeys[key], contracts, key),
+        [evaluationKey]: this.aggregateContracts(
+          contractKeys[key],
+          contracts,
+          evaluationKey,
+        ),
       };
     }, {});
   }
@@ -399,7 +422,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
 
     if (typeof contractKeys === "object") {
       return new Manifest(
-        this.id + (mappingKey ? ":" + mappingKey : ""),
+        this.id + (mappingKey ? "." + mappingKey : ""),
         contractKeys,
         contracts,
       );
@@ -431,6 +454,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
       index,
       parent: this,
       evaluations,
+      sync: key !== constants.RESERVED_CONTRACT_KEYS[constants.ASYNC_CONTRACT],
     }).input(pluginContext, executionContext, input);
 
     return manifestExecution;
@@ -446,11 +470,13 @@ export default class Manifest<I> implements ExecutableParent<I> {
       { evaluations, ...executionContext },
       input,
     );
+
     await executable.execute(
       pluginContext,
       { evaluations, ...executionContext },
       input,
     );
+
     return executable;
   }
 }
