@@ -6,7 +6,7 @@
       "id": "{{request.params.id}}",
       "details": {{#obj}} {{! make sure to flatten each element into a single line}}
         {{#with request.body.values}}
-            {"education": [{"index": 0, "degree": {{#if (eq degree-type "graduate")}} "{{graduate-degree-type}}" {{else if (eq degree-type "undergraduate")}} "{{undergraduate-degree-type}}" {{else}} "" {{/if}}{{#if school}} ,"opeid": "{{school.opeid8}}" {{/if}}{{#if graduationDate}} ,"graduationDate": "{{dateObjToString graduationDate}}" {{/if}} {{#if (and (ne residencyEndDate.day "") (ne residencyEndDate.month "") (ne residencyEndDate.year "")) }} ,"residencyEnd": "{{dateObjToString residencyEndDate}}" {{/if}} }]}
+            {"education": [{"index": 0, "degree": {{#if (eq degree-type "graduate")}} "{{graduate-degree-type}}" {{else if (eq degree-type "undergraduate")}} "{{undergraduate-degree-type}}" {{else}} "high_school" {{/if}}{{#if (or school-graduate school-undergraduate)}} ,"opeid":  {{#if (eq degree-type "graduate")}} "{{school-graduate.opeid8}}" {{else if (eq degree-type "undergraduate")}} "{{school-undergraduate.opeid8}}" {{/if}} {{/if}}{{#if graduationDate}} ,"graduationDate": "{{dateObjToString graduationDate}}" {{/if}} {{#if (and (ne residencyEndDate.day "") (ne residencyEndDate.month "") (ne residencyEndDate.year "")) }} ,"residencyEnd": "{{dateObjToString residencyEndDate}}" {{/if}} }]}
         {{/with}}
       {{/obj}}
     },
