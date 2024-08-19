@@ -1,0 +1,15 @@
+{{#if request.params.id}}
+  {
+    "action": "saveToken",
+    "client": "piiTokenServiceClient",
+    "method": "post",
+    "uri": "/tokens",
+    "body": {
+      {{#with request.body.values}}
+        "value": "{{ssn}}"
+      {{/with}}
+    }
+  }
+{{else}}
+  null
+{{/if}} 

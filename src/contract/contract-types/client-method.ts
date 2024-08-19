@@ -6,6 +6,7 @@ import { IncomingMessage } from "http";
 const VALID_CLIENTS = Object.freeze([
   "internalRestServiceClient",
   "NeasClient",
+  "piiTokenServiceClient",
 ] as const);
 
 class ClientMethod extends ContractExecutable<
@@ -55,7 +56,7 @@ class ClientMethod extends ContractExecutable<
 
     assert(client, `[b7949087] invalid client '${clientName}'`);
 
-    const { method, uri, body, query } = definition;
+    const { method, uri, body, query, headers } = definition;
 
     try {
       const { results, response } = await client.request(
@@ -64,6 +65,7 @@ class ClientMethod extends ContractExecutable<
           uri,
           body,
           query,
+          headers,
         },
         context,
       );

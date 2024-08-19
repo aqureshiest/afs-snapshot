@@ -1,0 +1,6 @@
+
+  {{#if (ajv 'validate' 'questions/primary/ssn' application.applicants.0.ssnTokenURI) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}

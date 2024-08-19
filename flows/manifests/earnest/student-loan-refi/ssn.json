@@ -1,0 +1,48 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/ssn.full-refi"
+      ],
+      "rows": [
+        "info/student-info.ssn",
+        "questions/primary/ssn/full-refi.default"
+      ],
+      "decryptPiiSsn": "pii.get-token",
+      "back-button": "actions/back-buttons.basic-info",
+      "save_details_action": "actions/save-details/full-refi.ssn",
+      "primary_ssn_input_status": "questions/primary/ssn/full-refi.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]

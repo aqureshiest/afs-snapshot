@@ -82,6 +82,10 @@ export function coalesce(...args) {
     : operands.find(Boolean);
 }
 
+export function encodeURIStr(str) {
+  return encodeURIComponent(str);
+}
+
 export function boolean(v1) {
   return Boolean(v1);
 }
