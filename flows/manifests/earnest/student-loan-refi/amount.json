@@ -1,0 +1,47 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/amount.full-refi"
+      ],
+      "student-info-amount-rows": [
+        "info/student-info.amount",
+        "questions/primary/amount.full-refi"
+      ],
+      "back-button": "actions/back-buttons/full-refi.income",
+      "save_amount_details_action": "actions/save-details/full-refi.amount",
+      "primary_amount_input_status": "questions/primary/amount.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]

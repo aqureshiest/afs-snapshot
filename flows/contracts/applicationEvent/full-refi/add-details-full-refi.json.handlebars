@@ -29,6 +29,9 @@
           {{#if claimedAssets}}
             {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
           {{/if}}
+          {{#if amount}}
+            {"amount": {"requested": {{{formatDollarsToCents amount}}} } }
+          {{/if}}
           {{#if additionalAmount}}
             {"income": {{#list}}
               {{#if additionalAmount.[0]}}

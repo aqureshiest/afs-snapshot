@@ -1,0 +1,7 @@
+{{#with application}}
+  {{#if (ajv 'validate' 'questions/primary/amount' details.amount.requested) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}
