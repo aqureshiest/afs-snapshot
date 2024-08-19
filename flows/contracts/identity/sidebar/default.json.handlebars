@@ -24,6 +24,17 @@
                     "external": true
                   }
                 }
+              },
+              {
+                "copy": "View Rates",
+                "action": {
+                  "type": "redirect",
+                  "properties": {
+                    {{!-- Need to figure out how to populate the appId --}}
+                    "goTo": "{{env.LEGACY_RATES_URL}}?applicationID={{application.reference.monolithApplicationID}}",
+                    "external": true
+                  }
+                }
               }
             ]
           }
