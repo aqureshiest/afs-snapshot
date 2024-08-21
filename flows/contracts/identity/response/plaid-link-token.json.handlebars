@@ -1,0 +1,18 @@
+
+{{#if application.id}}
+  {{#with (contract "actions") as |plaidResponse|}}
+    {{#if (and (gte plaidResponse.response.statusCode 200) (lt plaidResponse.response.statusCode 400))}}
+      {
+        "results": "{{plaidResponse.results.link_token}}"
+      }
+    {{else}}
+      { "error": {{json plaidResponse.response.body}} }
+    {{/if}}
+  {{else}}
+    { "error": "Plaid response not found" }
+  {{/with}}
+{{else}}
+  {
+    "error": "Application ID not found"
+  }
+{{/if}}

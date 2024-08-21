@@ -2,6 +2,7 @@
 
 const productMap = {
   "student-refi": "slr",
+  "student-loan-refi": "slr",
   "student-loan": "slo",
 };
 const mapProduct = function (applyProduct) {

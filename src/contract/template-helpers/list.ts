@@ -2,7 +2,7 @@
 import assert from "node:assert";
 
 const list: TemplateHelper = function (context) {
-  const { merge } = context.hash;
+  const { merge, unique } = context.hash;
 
   const splitList = context.fn(this).trim().split("\n");
 
@@ -23,6 +23,22 @@ const list: TemplateHelper = function (context) {
       );
 
     return JSON.stringify(mergedList);
+  }
+  if (unique) {
+    const uniqueList = splitList
+      .map((json) => json !== "" && JSON.parse(json))
+      .reduce((array, element) => {
+        if (Array.isArray(element)) {
+          return [...array, ...element];
+        }
+        return [...array, element];
+      }, [])
+      .filter(
+        (element, index, self) =>
+          self.indexOf(element) === index && element !== "",
+      );
+
+    return JSON.stringify(uniqueList);
   }
 
   const joinedList = splitList.join(",");

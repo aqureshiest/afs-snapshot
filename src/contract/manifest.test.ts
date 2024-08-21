@@ -160,6 +160,34 @@ describe("[462fd166] manifest.execute", () => {
 
     assert.deepEqual(parsed, [42, 404, 9001]);
   });
+
+  it("[4c881b62] list helper (unique)", async () => {
+    const input = {} as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+        {{#list unique=true}}
+          42
+          42
+        {{/list}}
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, [42]);
+  });
   const schema = {
     type: "object",
     $id: "nameSchema",

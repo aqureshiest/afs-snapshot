@@ -492,6 +492,7 @@ export default class PlaidClient extends Client {
                   type: account?.type,
                   selected: account?.selected,
                   account_last4: account?.account_last4,
+                  plaid: true,
                   balance:
                     account && account.balance && account.balance > 0
                       ? account.balance / 100

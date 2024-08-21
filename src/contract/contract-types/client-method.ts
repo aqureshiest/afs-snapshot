@@ -6,6 +6,7 @@ import { IncomingMessage } from "http";
 const VALID_CLIENTS = Object.freeze([
   "internalRestServiceClient",
   "NeasClient",
+  "plaid",
   "piiTokenServiceClient",
 ] as const);
 
