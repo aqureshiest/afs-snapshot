@@ -24,9 +24,14 @@
       {{!  TODO: any claim obtained by the NEAS verify method should be mapped here }}
       "artifacts": {{#obj}}
           { "applicationId": {{{ json response.results.applicationId }}} }
-          { "candidateUserId": {{{ json response.results.candidateUserId }}} }
           { "exp": {{{ json response.results.exp }}} }
-          { "userId": {{{ json response.results.userId }}} }
+          { "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}} }
+          {{! A userId in the response indicates that a user has verified who they are either through PII-verification or signing in }}
+          {{#if response.results.userId}}
+            { "verified": true }
+          {{else}}
+            { "verified": false }
+          {{/if}}
       {{/obj}}
     {{else}}
       "isValid": false
