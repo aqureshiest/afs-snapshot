@@ -1,0 +1,54 @@
+{{#with application.primary}}
+{
+  "type": "info",
+  "definition": {
+    "key": "employmentInfoReview",
+    "type": "infoReview",
+    "label": "Employment Info",
+    "items":
+    {{#list}}
+        {{#if ../userState.employmentType}}
+          {"id": "employmentStatus", "label": "Employment Status", "value": "{{toNeutralizeAndUpper ../userState.employmentType}}"}
+        {{else}}
+          {"id": "employmentStatus", "label": "Employment Status", "value": "{{{toNeutralizeAndUpper ( mapIncomeTypeToEmplStatus details.income )}}}"}
+        {{/if}}
+        {{#if details.income.0.employer}}
+          {"id": "employerName", "label": "Employer name", "value": "{{details.income.0.employer}}"}
+        {{/if}}
+        {{#if details.income.0.title}}
+          {"id": "jobTitle", "label": "Job Title", "value": "{{details.income.0.title}}"}
+        {{/if}}
+        {{#if details.income.0.start}}
+          {"id": "startDate", "label": "Start Date", "value": "{{reviewDateFormatter details.income.0.start}}"}
+        {{/if}}
+        {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income )))}}
+          {{#if details.income.0.amount}}
+            {"id": "annualIncome", "label": "Annual individual income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+          {{else}}
+            {"id": "annualIncome", "label": "Annual individual income before taxes", "value": "{{formatToUSCurrency 0}}"}
+          {{/if}}
+        {{else if details.income.0.amount}}
+          {{#if (and (ne ../userState.employmentType 'unemployed') (ne 'unemployed' ( mapIncomeTypeToEmplStatus details.income )))}}
+            {"id": "annualIncome", "label": "Annual individual income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+          {{/if}}
+        {{/if}}
+        {{#if details.asset.0.amount}}
+          {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
+        {{/if}}
+        {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income )))}}
+          {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
+        {{else if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
+          {"id": "additionalIncome", "label": "Additional Income", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
+        {{/if}}
+    {{/list}},
+    "editAction": {
+        "key": "",
+        "type": "navigate",
+        "properties": {
+           "analytics": {},
+            "goTo": "earnest/student-loan-refi/edit/employment-info/{{id}}"
+        }
+    }
+  }
+}
+{{/with}}

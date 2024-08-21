@@ -1,0 +1,32 @@
+{{#with application}}
+{
+    "key": "refi-review",
+    "label": "Student Refi Review",
+    "submit": {
+        {{#if (and reference.lendingDecisionID ( ne tag.status 'incomplete' ))}}
+            "copy": "Dashboard",
+            "action": {{{ json (contract 'actionsDashboard') }}}
+        {{else}}
+            "copy": "Submit my application",
+            "action": {
+                "key": "submitInterstitial",
+                "type": "interstitial",
+                "properties": {
+                    "showSpinner": true,
+                    "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+                    "action": {{{ json (contract 'actions') }}}
+                }
+            }
+        {{/if}}
+    },
+    "back": {
+        "action": {{{ json (contract 'back-button') }}}
+    },
+    "progress": 100,
+    {{#if (and primary.details.financialAccounts (someSelected primary.details.financialAccounts))}}
+        "rows":  {{{ json (contract 'student-info-review-rows')}}}
+    {{else}}
+        "rows":  {{{ json (contract 'student-info-review-noFinancialAccounts-rows')}}}
+    {{/if}}
+}
+{{/with}}

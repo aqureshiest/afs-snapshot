@@ -1,0 +1,56 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "refi-student-info",
+      "stage": "student-info-stage.refi-edit",
+      "pageLayout": "header/refi-edit.default",
+      "steps": [
+        "student-info-form/loan.refi-edit"
+      ],
+      "student-loan-form-rows": [
+        "info/student-loan-amount/edit.default",
+        "questions/primary/amount.full-refi"
+      ],
+      "back-button": "actions/back-buttons/full-refi.review",
+      "save_edited_details_action": "actions/save-details/full-refi.edit-loan-refi",
+      "onError": ["onError.unauthorized", "onError.min-refi-amount-error"],
+      "primary_loan_input_status": "questions/primary/loan.status",
+
+      "address-field-current-address-street-edit": "questions/primary/address/fields.current-address-street-edit",
+      "address-field-previous-address-street-edit": "questions/primary/address/fields.previous-address-street-edit",
+      "address-field-apt": "questions/primary/address/fields.apt",
+      "address-field-city": "questions/primary/address/fields.city",
+      "address-field-state": "questions/primary/address/fields.state",
+      "address-field-zip": "questions/primary/address/fields.zip",
+      "refi-current-address-validation-edit": "questions/primary/address.refi-current-address-validation-edit",
+      "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit",
+
+      "redirect_homebase": "actions/homebase.default"
+    }
+  }
+]

@@ -1,0 +1,76 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "refi-student-info",
+      "stage": "student-info-stage.refi-edit",
+      "pageLayout": "header/refi-edit.default",
+      "steps": [
+        "student-info-form/basic.refi-edit"
+      ],
+      "student-info-basic-rows": [
+        "info/student-info/edit.default",
+        "questions/primary/name.default",
+        "questions/primary/dateOfBirth.default",
+        "questions/primary/phone.default",
+        "questions/primary/email.default",
+        "questions/primary/address.refiCurrentAddress-edit",
+        "questions/primary/citizenship.refi",
+        "questions/primary/ssn/full-refi.default"
+      ],
+      "back-button": "actions/back-buttons/full-refi.review",
+      "student-info-basic-withprevAddress-rows": [
+        "info/student-info/edit.default",
+        "questions/primary/name.default",
+        "questions/primary/dateOfBirth.default",
+        "questions/primary/phone.default",
+        "questions/primary/email.default",
+        "questions/primary/address.refiCurrentAddress-edit",
+        "questions/primary/address.refi-prevAddress-edit",
+        "questions/primary/citizenship.refi",
+        "questions/primary/ssn/full-refi.default"
+      ],
+      "save_edited_details_action": "actions/save-details/full-refi.edit-full-refi",
+      "primary_dob_input_status": "questions/primary/dateOfBirth.status",
+      "primary_phone_input_status": "questions/primary/phone.status",
+      "primary_address_input_status": "questions/primary/address.status",
+      "primary_citizenship_input_status": "questions/primary/citizenship.status",
+      "primary_name_input_status": "questions/primary/name.status",
+      "primary_email_input_status": "questions/primary/email.status",
+      "decryptPiiSsn": "pii.get-token",
+      "address-field-current-address-street-edit": "questions/primary/address/fields.current-address-street-edit",
+      "address-field-previous-address-street-edit": "questions/primary/address/fields.previous-address-street-edit",
+      "address-field-apt": "questions/primary/address/fields.apt",
+      "address-field-city": "questions/primary/address/fields.city",
+      "address-field-state": "questions/primary/address/fields.state",
+      "address-field-zip": "questions/primary/address/fields.zip",
+      "refi-current-address-validation-edit": "questions/primary/address.refi-current-address-validation-edit",
+      "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit",
+      "redirect_homebase": "actions/homebase.default"
+    }
+  }
+]

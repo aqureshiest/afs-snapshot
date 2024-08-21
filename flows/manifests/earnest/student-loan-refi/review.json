@@ -1,0 +1,75 @@
+[
+    {
+      "methods": ["get"],
+      "parameters": [{
+        "key": "id",
+        "format": "uuid"
+      }],
+      "inputs": {
+        "*": "inputs",
+        "application": {
+          "*": "application/single.flattened",
+          "application": "application-by-id-param"
+        },
+        "auth": {
+          "*": "auth-artifacts",
+          "strategies": [
+            {
+              "*": "inputs/auth.neas-session",
+              "response": "neas.verify-token",
+              "authorization": [
+                "inputs/auth.neas-application-auth",
+                "inputs/auth.neas-user-auth"
+              ]
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "*": "refi-review",
+        "stage": "review.refi",
+        "pageLayout": "sidebar",
+        "steps": [
+            "student-info-form/review.refi"
+        ],
+        "student-info-review-rows": [
+            "info/student-review.default",
+            "info/student-info/review.full-refi",
+            "info/student-education/review.full-refi",
+            "info/student-loan-amount/review.full-refi",
+            "info/student-employment/review.full-refi",
+            "info/student-finances/review.full-refi",
+            "questions/primary/consent.default",
+            "questions/primary/disclosure.default",
+            "questions/primary/disclosure.disclaimer"
+        ],
+        "student-info-review-noFinancialAccounts-rows": [
+            "info/student-review.default",
+            "info/student-info/review.full-refi",
+            "info/student-education/review.full-refi",
+            "info/student-loan-amount/review.full-refi",
+            "info/student-employment/review.full-refi",
+            "questions/primary/consent.default",
+            "questions/primary/disclosure.default",
+            "questions/primary/disclosure.disclaimer"
+        ],
+        "back-button": "actions/back-buttons/full-refi.income-verification",
+        "decryptPiiSsn": "pii.get-token",
+        "getSchools": "primary-get-school-name",
+        "goToInterstitial": "actions/view-interstitial.primary",
+        "actions": "actions/decision-request.primary",
+        "actionsDashboard": "actions/homebase.default",
+        "onError": ["onError.unauthorized"],
+        "getDegrees": "questions/primary/degree.get-degrees",
+        "disclosureLinks": [
+            "questions/primary/disclosure/links.terms-of-services",
+            "questions/primary/disclosure/links.privacy-policy",
+            "questions/primary/disclosure/links.privacy-notice",
+            "questions/primary/disclosure/links.credit-report-policy",
+            "questions/primary/disclosure/links.consent-electronic-communications",
+            "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+        ],
+        "redirect_homebase": "actions/homebase.default"
+      }
+    }
+  ]

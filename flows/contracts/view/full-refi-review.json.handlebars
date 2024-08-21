@@ -1,0 +1,9 @@
+{
+    {{#if (and application.reference.lendingDecisionID ( ne application.tag.status 'incomplete' ))}}
+      "action": {{{ json (contract 'redirect_homebase') }}}
+    {{else}}
+        "manifest": "{{manifest.id}}",
+        "id": "{{application.id}}",
+        "stage": {{{ json (contract 'stage')}}}
+    {{/if}}
+}

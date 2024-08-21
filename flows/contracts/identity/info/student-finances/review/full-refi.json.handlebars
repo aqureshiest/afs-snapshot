@@ -1,0 +1,25 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "incomeInfoReview",
+        "type": "infoReview",
+        "label": "Income Verification",
+        "items": [
+            {
+                "id": "myaccounts",
+                "label": "My accounts",
+                "value": "{{getFinancialAccountsAsString details.financialAccounts}}"
+            }
+        ],
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                 "analytics": {},
+                "goTo": "#"
+            }
+        }
+    }
+}
+{{/with}}

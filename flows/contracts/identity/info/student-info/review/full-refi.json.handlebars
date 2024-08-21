@@ -16,14 +16,16 @@
                 {"id": "previousAddress", "label": "Previous Address", "value": "{{formatAddress (findPreviousAddress details.location)}}"}
             {{/if}}
             {"id": "citizenship", "label": "Citizenship", "value": "{{toUpper details.location.0.citizenship }}"}
-            {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' ( contract 'decryptPiiSsn' )}}"}
+            {{#with (contract 'decryptPiiSsn') as |result|}}
+                {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' result.results.value}}"}
+            {{/with}}
         {{/list}},
         "editAction": {
             "key": "",
             "type": "navigate",
             "properties": {
                  "analytics": {},
-                "goTo": "earnest/student-refi/edit/personal-info/{{id}}"
+                "goTo": "earnest/student-loan-refi/edit/personal-info/{{id}}"
             }
         }
     }
