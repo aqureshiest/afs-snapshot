@@ -1,0 +1,39 @@
+[{
+  "methods": ["post"],
+  "parameters": [ { "key": "id", "format": "uuid" } ],
+  "inputs": {
+    "*": "inputs",
+    "application": {
+      "*": "application-by-id-param",
+      "query": "application/search-query"
+    },
+    "applications": {
+      "*": "applications-by-email",
+      "query": "application/search-query"
+     },
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": {
+            "*": "neas.verify-token",
+            "token": "header.idtoken"
+          },
+          "mode": "optional",
+          "authorization": []
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "earnest-student-loan-refi/save.response",
+    "returnedAction": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.citizenship"},
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "full-refi.add-details-full-refi"
+      ]
+    }
+  }
+}]

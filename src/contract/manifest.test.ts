@@ -969,7 +969,7 @@ describe("[462fd166] manifest.execute", () => {
           default: new Contract({
             raw: `
         {
-          "testkey1": "testvalue1"
+          "testkey1": "testvalue1",
           {{#spread}}
             {"testkey2": "testvalue2", "testkey3": "testvalue3"}
           {{/spread}}

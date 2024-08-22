@@ -61,14 +61,6 @@
       "primary_income_sources_of_income_input_status": "questions/primary/income/sources-of-income-retired.status",
       "primary_consistent_income_input_status": "questions/primary/income/consistent-income.status",
       "primary_retired_has_additional_income_status": "questions/primary/income/has-additional-income.status",
-      "address-field-current-address-street-edit": "questions/primary/address/fields.current-address-street-edit",
-      "address-field-previous-address-street-edit": "questions/primary/address/fields.previous-address-street-edit",
-      "address-field-apt": "questions/primary/address/fields.apt",
-      "address-field-city": "questions/primary/address/fields.city",
-      "address-field-state": "questions/primary/address/fields.state",
-      "address-field-zip": "questions/primary/address/fields.zip",
-      "refi-current-address-validation-edit": "questions/primary/address.refi-current-address-validation-edit",
-      "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit",
       "redirect_homebase": "actions/homebase.default"
     }
   }

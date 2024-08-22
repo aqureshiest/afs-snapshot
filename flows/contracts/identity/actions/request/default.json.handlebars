@@ -1,0 +1,10 @@
+{
+    "key": {{#if (contract "key")}}{{{json (contract "key")}}}{{else}}"request"{{/if}},
+    "type": "request",
+    "properties": {
+        "analytics": {{#if (contract "analytics")}}{{{json (contract "analytics")}}}{{else}}{}{{/if}},
+        "manifest": {{#if (contract "manifest")}}{{{json (contract "manifest")}}}{{else}}""{{/if}},
+        "method": {{#if (contract "method")}}{{{json (contract "method")}}}{{else}}"POST"{{/if}},
+        "onError": {{#if (contract "onError")}}{{{json (contract "onError")}}}{{else}}[]{{/if}}
+    }
+}

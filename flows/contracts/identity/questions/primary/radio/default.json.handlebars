@@ -1,0 +1,18 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+    "key": {{#if (contract "key")}}{{{json (contract 'key')}}}{{else}}"input-radio"{{/if}},
+    "type": "inputRadio",
+    "layout": {{#if (contract "layout")}}{{{json (contract 'layout')}}}{{else}}"default"{{/if}},
+    "direction":{{#if (contract "direction")}}{{{json (contract 'direction')}}}{{else}}"column"{{/if}},
+    "value":{{#if (contract "value")}}{{{json (contract 'value')}}}{{else}}""{{/if}},
+    "items":{{#if (contract "items")}}
+      {{{json (contract 'items')}}}
+    {{else}}
+      [{ "id": "yes", "label": "Yes", "value": "true" }, { "id": "no", "label": "No", "value": "false" }],
+    {{/if}}
+    "error": "{{{ ajv 'errors' 'questions/primary/address/additional-address' sixMonthResidence }}}"
+  }
+}
+{{/with}}

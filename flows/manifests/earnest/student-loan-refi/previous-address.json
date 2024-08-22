@@ -1,0 +1,35 @@
+{
+  "*": "earnest-student-loan-refi/pages.response",
+  "stage": "earnest-student-loan-refi/pages/previous-address",
+  "pageLayout": "layout.sidebar",
+  "steps": [
+    "earnest-student-loan-refi/pages/previous-address.step-address"
+  ],
+  "address-rows": [
+    {"*": "info/header", "copy": {"@": "Confirm your address details"}, "subCopy": {"@": "Adding an additional address will help us verify your eligibility."}},
+    {
+      "*": "questions/primary/address",
+      "reviewStyle": {"@": "true"},
+      "baseLabel": {"@": "Your current address"}
+    },
+    {
+      "*": "questions/primary/radio",
+      "key": {"@": "sixMonthResidence"},
+      "direction": {"@": "row"}
+    },
+    {
+      "*": "questions/primary/address",
+      "key": {"@": "previousAddress"},
+      "expanded": {"@": "true"},
+      "streetLabel": {"@": "Previous address street"},
+      "conditional": "earnest-student-loan-refi/pages/previous-address.input-conditional",
+      "previousValue": {"@": "true"}
+    }
+  ],
+  "current-address-validation": {"*": "questions/primary/address/validation"},
+  "previous-address-validation": {"*": "questions/primary/address/validation"},
+  "back-action": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.degree" },
+  "save-action": { "*": "actions/request", "key": {"@": "save-address"}, "manifest": "earnest-student-loan-refi/urls/save.previous-address"}, "onError": [],
+  "save-copy": {"@": "Income & Employment"},
+  "redirect_homebase": "actions/navigate.homebase"
+}

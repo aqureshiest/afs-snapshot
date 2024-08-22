@@ -1,0 +1,45 @@
+{
+    "key": "previous-address",
+    "type": "form",
+    "label": "Previous Address",
+    "pageLayout":{{{json (contract 'pageLayout')}}},
+    "seo": {
+        "pageTitle": "Earnest"
+    },
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+          "previous-address": {
+            "type": "object",
+            "anyOf": [
+              {
+                "properties": {
+                  "sixMonthResidence": {
+                    "type": "string",
+                    "enum": ["true"],
+                    "errorMessage": {
+                      "enum": "Select an option"
+                    }
+                  },
+                  "currentAddress": {{{json (contract 'current-address-validation')}}}
+                }
+              },
+              {
+                "properties": {
+                  "sixMonthResidence": {
+                    "type": "string",
+                    "enum": ["false"],
+                    "errorMessage": {
+                      "enum": "Select an option"
+                    }
+                  },
+                  "currentAddress": {{{json (contract 'current-address-validation')}}},
+                  "previousAddress": {{{json (contract 'previous-address-validation') }}}
+                }
+              }
+            ]
+          }
+        }
+    }
+}

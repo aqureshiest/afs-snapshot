@@ -1,0 +1,21 @@
+{
+  "*": "earnest-student-loan-refi/pages.response",
+  "stage": "earnest-student-loan-refi/pages/address",
+  "pageLayout": "layout.sidebar",
+  "steps": [
+    "earnest-student-loan-refi/pages/address.step-address"
+  ],
+  "address-rows": [
+    {"*": "info/header", "copy": {"@": "Address"}, "subCopy": {"@": "Enter the permanent address, typically shown on your ID or driver’s license. "}},
+    {
+      "*": "questions/primary/address",
+      "expanded": {"@": "true"},
+      "baseLabel": {"@": "Address"}
+    }
+  ],
+  "current-address-validation": {"*": "questions/primary/address/validation"},
+  "back-action": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.degree" },
+  "save-action": { "*": "actions/request", "key": {"@": "save-address"}, "manifest": "earnest-student-loan-refi/urls/save.address"}, "onError": [],
+  "save-copy": {"@": "Citizenship"},
+  "redirect_homebase": "actions/navigate.homebase"
+}

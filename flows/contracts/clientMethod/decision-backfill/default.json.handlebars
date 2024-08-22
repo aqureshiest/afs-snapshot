@@ -20,7 +20,7 @@
     "method": "POST",
     "uri": "/apply-flow-service/lending-decisioning",
     "body": {
-      "loan_id": {{{json application.monolithLoanID}}}
+      "loan_id": {{{json application.monolithLoanID}}},
         {{#with (contract 'actions' 0) }}
           {{#spread}}
             {

@@ -22,14 +22,14 @@
             "currentAddress": {
                 "type": "object",
                 "properties": {
-                    "currentAddress": {{{json (schema 'questions/primary/address')}}},
+                    "currentAddress": {{{json (contract 'current-address-validation')}}},
                     "sixMonthResidence": {{{json (schema 'questions/primary/address/additional-address')}}}
                 }
             },
             "previousAddress": {
                 "type": "object",
                 "properties": {
-                    "previousAddress": {{{json (contract 'refi-previous-address-validation')}}}
+                    "previousAddress": {{{json (contract 'previous-address-validation')}}}
                 }
             },
             "employmentStatus": {

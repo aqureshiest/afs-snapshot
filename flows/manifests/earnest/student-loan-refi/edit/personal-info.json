@@ -38,7 +38,7 @@
         "questions/primary/dateOfBirth.default",
         "questions/primary/phone.default",
         "questions/primary/email.default",
-        "questions/primary/address.refiCurrentAddress-edit",
+        {"*": "questions/primary/address", "reviewStyle": {"@": "true"}},
         "questions/primary/citizenship.refi",
         "questions/primary/ssn/full-refi.default"
       ],
@@ -49,8 +49,14 @@
         "questions/primary/dateOfBirth.default",
         "questions/primary/phone.default",
         "questions/primary/email.default",
-        "questions/primary/address.refiCurrentAddress-edit",
-        "questions/primary/address.refi-prevAddress-edit",
+        {"*": "questions/primary/address", "reviewStyle": {"@": "true"}},
+        {
+          "*": "questions/primary/address",
+          "key": {
+            "@": "previousAddress",
+            "previousValue": {"@": "true"}
+          }
+        },
         "questions/primary/citizenship.refi",
         "questions/primary/ssn/full-refi.default"
       ],
@@ -62,14 +68,24 @@
       "primary_name_input_status": "questions/primary/name.status",
       "primary_email_input_status": "questions/primary/email.status",
       "decryptPiiSsn": "pii.get-token",
-      "address-field-current-address-street-edit": "questions/primary/address/fields.current-address-street-edit",
-      "address-field-previous-address-street-edit": "questions/primary/address/fields.previous-address-street-edit",
-      "address-field-apt": "questions/primary/address/fields.apt",
-      "address-field-city": "questions/primary/address/fields.city",
-      "address-field-state": "questions/primary/address/fields.state",
-      "address-field-zip": "questions/primary/address/fields.zip",
-      "refi-current-address-validation-edit": "questions/primary/address.refi-current-address-validation-edit",
-      "refi-previous-address-validation-edit": "questions/primary/address.refi-previous-address-validation-edit",
+      "current-address-validation": {
+        "*": "questions/primary/address/validation",
+        "matchesAgainstPath": {
+            "@": "editPersonalInfo.previousAddress"
+          },
+          "matchesError": {
+            "@": "Your current address cannot match your previous address."
+          }
+      },
+      "previous-address-validation": {
+        "*": "questions/primary/address/validation",
+        "matchesAgainstPath": {
+            "@": "editPersonalInfo.currentAddress"
+          },
+          "matchesError": {
+            "@": "Your previous address cannot match your current address."
+          }
+      },
       "redirect_homebase": "actions/homebase.default"
     }
   }

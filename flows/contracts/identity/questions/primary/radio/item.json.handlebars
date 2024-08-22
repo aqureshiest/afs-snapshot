@@ -1,0 +1,11 @@
+{
+  id: {{#if (contract "id")}}{{{json (contract 'id')}}}{{else}}"radio-item"{{/if}},
+  label: {{#if (contract "label")}}{{{json (contract 'label')}}}{{else}}"Label"{{/if}},
+  value: {{#if (contract "value")}}{{{json (contract 'value')}}}{{else}}"Value"{{/if}},
+  {{#if (contract "icon")}}
+    icon: {{{json (contract 'icon')}}},
+  {{/if}}
+  {{#if (contract "copy")}}
+    copy: {{{json (contract 'copy')}}}
+  {{/if}}
+}

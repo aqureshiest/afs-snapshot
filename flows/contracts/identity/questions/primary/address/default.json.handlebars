@@ -2,35 +2,57 @@
 {
   "type": "input",
   "definition": {
-      "reviewStyle": false,
-      "key": "currentAddress",
+      "reviewStyle": {{#if (contract 'reviewStyle')}} {{{json (contract 'reviewStyle')}}} {{else}} false {{/if}},
+      "expanded": {{#if (contract 'expanded')}} {{{json (contract 'expanded')}}} {{else}} false {{/if}},
+      "key": {{#if (contract 'key')}} {{{ json (contract 'key') }}} {{else}} "currentAddress" {{/if}},
       "type": "inputAddress",
-      "value": {
-          "street": "{{{ details.location.0.street1}}}",
-          "apt": "{{{ details.location.0.street2}}}",
-          "city": "{{{ details.location.0.city}}}",
-          "state": "{{{ details.location.0.state}}}",
-          "zip": "{{{ details.location.0.zip}}}"
-      },
+      "value": {{#if (contract 'value')}} 
+        {{{ json (contract 'value') }}} 
+      {{else}}
+        {{#if (contract "previousValue")}}
+          {
+            "street": "{{{ details.location.1.street1}}}",
+            "apt": "{{{ details.location.1.street2}}}",
+            "city": "{{{ details.location.1.city}}}",
+            "state": "{{{ details.location.1.state}}}",
+            "zip": "{{{ details.location.1.zip}}}"
+          }
+        {{else}}
+          {
+            "street": "{{{ details.location.0.street1}}}",
+            "apt": "{{{ details.location.0.street2}}}",
+            "city": "{{{ details.location.0.city}}}",
+            "state": "{{{ details.location.0.state}}}",
+            "zip": "{{{ details.location.0.zip}}}"
+          }
+        {{/if}}
+      {{/if}},
+      {{#if (contract 'primary_address_input_status')}}
       "status": {{{json (contract 'primary_address_input_status')}}},
+      {{/if}}
+      {{#if (contract 'conditional')}}
+        {{#spread trailingComma=true}}
+            {{{json (contract 'conditional')}}}
+        {{/spread}}
+      {{/if}}
       "labels": {
           "base": {
-              "copy": "Your address"
+              "copy": {{#if (contract 'baseLabel')}} {{{ json (contract 'baseLabel') }}} {{else}} "Your address" {{/if}}
           },
           "street": {
-              "copy": "Street address"
+              "copy": {{#if (contract 'streetLabel')}} {{{ json (contract 'streetLabel') }}} {{else}} "Street address" {{/if}}
           },
           "apt": {
-              "copy": "Apt/Suite number (optional)"
+              "copy": {{#if (contract 'aptLabel')}} {{{ json (contract 'aptLabel') }}} {{else}} "Apt/Suite number (optional)" {{/if}}
           },
           "city": {
-              "copy": "City"
+              "copy": {{#if (contract 'cityLabel')}} {{{ json (contract 'cityLabel') }}} {{else}} "City" {{/if}}
           },
           "state": {
-              "copy": "State"
+              "copy": {{#if (contract 'stateLabel')}} {{{ json (contract 'stateLabel') }}} {{else}} "State" {{/if}}
           },
           "zip": {
-              "copy": "Zipcode"
+              "copy": {{#if (contract 'cipLabel')}} {{{ json (contract 'cipLabel') }}} {{else}} "Zipcode" {{/if}}
           }
       },
       "error": "{{{ ajv 'errors' 'questions/primary/address' details.location }}}"

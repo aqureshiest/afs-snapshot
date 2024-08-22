@@ -17,9 +17,9 @@
                     "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
                     "phone": {{{json (schema 'questions/primary/phone')}}},
                     "email": {{{json (schema 'questions/primary/email')}}},
-                    "currentAddress": {{{json (contract 'refi-current-address-validation-edit')}}},
+                    "currentAddress": {{{json (contract 'current-address-validation')}}},
                     {{#if (findPreviousAddress details.location)}}
-                        "previousAddress": {{{json (contract 'refi-previous-address-validation-edit')}}},
+                        "previousAddress": {{{json (contract 'previous-address-validation')}}},
                     {{/if}}
                     "citizenship": {{{json (schema 'questions/primary/citizenship')}}},
                     "ssn": {{{json (schema 'questions/primary/ssn')}}}

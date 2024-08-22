@@ -23,7 +23,7 @@
   ],
   "student-info-address-rows": [
     "info/student-address.default",
-    "questions/primary/address.default"
+    "questions/primary/address"
   ],
   "student-info-citizenship-rows": [
     "info/student-citizenship.default",
@@ -42,6 +42,4 @@
 
   "primary_address_input_status": "questions/primary/address.status",
   "primary_citizenship_input_status": "questions/primary/citizenship.status"
-
-  
 }
