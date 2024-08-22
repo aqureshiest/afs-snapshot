@@ -36,9 +36,7 @@ const spread: TemplateHelper = function (context) {
           definition[key]
         )}${addTrailingComma ? "," : ""}`;
       }
-      console.log('KEY', key, addTrailingComma, `multipleKeys: ${multipleKeys}, isLastKey: ${isLastKey}, trailingComma: ${trailingComma}`);
     });
-    console.log("THREE", spreadJson);
     return spreadJson;
   }
   return "";

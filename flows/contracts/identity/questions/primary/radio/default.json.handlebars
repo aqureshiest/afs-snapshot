@@ -3,6 +3,14 @@
   "type": "input",
   "definition": {
     "key": {{#if (contract "key")}}{{{json (contract 'key')}}}{{else}}"input-radio"{{/if}},
+    {{#if (contract "label")}}
+      "label": {
+        {{#if (contract "subLabel")}}
+        "subCopy": {{{json (contract 'subCopy')}}},
+        {{/if}}
+        "copy": {{{json (contract 'label')}}}
+      },
+    {{/if}}
     "type": "inputRadio",
     "layout": {{#if (contract "layout")}}{{{json (contract 'layout')}}}{{else}}"default"{{/if}},
     "direction":{{#if (contract "direction")}}{{{json (contract 'direction')}}}{{else}}"column"{{/if}},

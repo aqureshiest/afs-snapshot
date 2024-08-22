@@ -15,6 +15,7 @@
     {
       "*": "questions/primary/radio",
       "key": {"@": "sixMonthResidence"},
+      "label": {"@": "Have you lived here for over 6 months?"},
       "direction": {"@": "row"}
     },
     {
@@ -27,7 +28,15 @@
     }
   ],
   "current-address-validation": {"*": "questions/primary/address/validation"},
-  "previous-address-validation": {"*": "questions/primary/address/validation"},
+  "previous-address-validation": {
+    "*": "questions/primary/address/validation",
+    "matchesAgainstPath": {
+        "@": "previous-address.currentAddress"
+      },
+      "matchesError": {
+        "@": "Your previous address cannot match your current address."
+      }
+  },
   "back-action": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.degree" },
   "save-action": { "*": "actions/request", "key": {"@": "save-address"}, "manifest": "earnest-student-loan-refi/urls/save.previous-address"}, "onError": [],
   "save-copy": {"@": "Income & Employment"},
