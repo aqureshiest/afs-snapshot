@@ -28,7 +28,7 @@
   },
   "outputs": {
     "*": "earnest-student-loan-refi/save.response",
-    "returnedAction": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.employment"},
+    "returnedAction": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.income-source"},
     "actions": {
       "*": "actions/result.results",
       "actions": [
