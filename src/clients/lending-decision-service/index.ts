@@ -1251,8 +1251,8 @@ export default class LendingDecisionServiceClient extends Client {
   ): Promise<DecisionEntity["financialInfo"]> {
     const plaidTokens: Array<string> = [];
     let hasPlaid = false;
-    let plaidRelayToken;
-
+    let plaidAssetsReportId;
+    let plaidRelayToken = "";
     const accounts = financialAccountDetails
       ?.filter((finAccount) => {
         if (finAccount?.selected) return finAccount;
@@ -1264,6 +1264,9 @@ export default class LendingDecisionServiceClient extends Client {
             plaidTokens.push(account?.plaidAccessToken);
           }
         }
+        if (account?.plaidAssetsReportID && !plaidAssetsReportId) {
+          plaidAssetsReportId = account?.plaidAssetsReportID;
+        }
         return {
           accountType: "banking",
           accountSubType: account?.type,
@@ -1274,26 +1277,24 @@ export default class LendingDecisionServiceClient extends Client {
         };
       });
 
-    // temporally remove plaid relay token integration
-    // if (hasPlaid) {
-    //   const plaidClient = context.loadedPlugins.plaid?.instance;
-    //   if (!plaidClient) {
-    //     throw new Error("[91f2eddb] Plaid Service client instance not found");
-    //   }
-    //   plaidRelayToken = await plaidClient["createRelayToken"](
-    //     context,
-    //     input,
-    //     "",
-    //     {
-    //       access_tokens: plaidTokens,
-    //     },
-    //   );
-    // }
+    if (hasPlaid && plaidAssetsReportId) {
+      const plaidClient = context.loadedPlugins.plaid?.instance;
+      if (!plaidClient) {
+        throw new Error("[91f2eddb] Plaid Service client instance not found");
+      }
+      plaidRelayToken = await plaidClient["createRelayToken"](
+        context,
+        input,
+        "",
+        {
+          report_tokens: plaidAssetsReportId,
+        },
+      );
+    }
 
     return {
       hasPlaid,
-      // ...(hasPlaid ? { plaidAccessTokens: plaidTokens, plaidRelayToken } : {}),
-      ...(hasPlaid ? { plaidAccessTokens: plaidTokens } : {}),
+      ...(hasPlaid ? { plaidAccessTokens: plaidTokens, plaidRelayToken } : {}),
       ...(!hasPlaid
         ? {
             financialAccounts: accounts ? accounts : [],
