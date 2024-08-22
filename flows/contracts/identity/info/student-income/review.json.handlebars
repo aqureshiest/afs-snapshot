@@ -1,0 +1,40 @@
+{{#with application.primary}}
+{
+    "type": "info",
+    "definition": {
+        "key": "incomeInfo",
+        "type": "infoReview",
+        "label": "Income Info",
+        "items": 
+        {{#list}}
+            {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income )))}}
+            {{#if details.income.0.amount}}
+                {"id": "annualIncome", "label": "Annual income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+            {{else}}
+                {"id": "annualIncome", "label": "Annual income before taxes", "value": "{{formatToUSCurrency 0}}"}
+            {{/if}}
+            {{else if details.income.0.amount}}
+            {{#if (and (ne ../userState.employmentType 'unemployed') (ne 'unemployed' ( mapIncomeTypeToEmplStatus details.income )))}}
+                {"id": "annualIncome", "label": "Annual income before taxes", "value": "{{formatToUSCurrency details.income.0.amount}}"}
+            {{/if}}
+            {{/if}}
+            {{#if details.asset.0.amount}}
+            {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
+            {{/if}}
+            {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income )))}}
+            {"id": "additionalIncome", "label": "Additional Income (optional)", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
+            {{else if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
+            {"id": "additionalIncome", "label": "Additional Income (optional)", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
+            {{/if}}
+        {{/list}},
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                 "analytics": {},
+                "goTo": "earnest/student-loan-refi/income/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}

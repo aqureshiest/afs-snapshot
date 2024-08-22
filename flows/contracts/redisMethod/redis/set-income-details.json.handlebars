@@ -1,0 +1,25 @@
+
+{{#with (contract 'auth') as |auth|}}
+  {{#if auth.artifacts.userId}}
+  {
+    "redisMethod": "setUserState",
+    "key":  {{{ json auth.artifacts.userId}}},
+    "value": 
+      {{#if application.primary.details.income}}
+        {{#obj}}
+          {{#if application.primary.details.income.0.amount}}
+            {"annualIncome": {{application.primary.details.income.0.amount}} }
+          {{/if}}
+          {{#if application.primary.details.income.1.amount}}
+            {"additionalAmount": {{application.primary.details.income.1.amount}} }
+          {{/if}}
+        {{/obj}}
+      {{/if}}
+  }
+  {{else}}
+    {}
+  {{/if}}
+{{else}}
+  null
+{{/with}}
+

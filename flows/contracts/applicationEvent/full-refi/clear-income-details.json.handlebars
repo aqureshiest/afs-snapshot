@@ -1,0 +1,22 @@
+{{#if request.params.id }}
+  {{noop (contract 'actions' (sum @index -1))}}
+  {
+    "event": "removeDetails",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "details": { {{! make sure to flatten each element into a single line}}
+        "income": [
+          {"index": 0, "keys": ["amount", "type", "employer", "name", "title", "start", "end"] },
+          {"index": 1, "keys": ["amount", "type", "employer", "name", "title", "start", "end"] },
+          {"index": 2, "keys": ["amount", "type", "employer", "name", "title", "start", "end"] },
+          {"index": 3, "keys": ["amount", "type", "employer", "name", "title", "start", "end"] },
+          {"index": 4, "keys": ["amount", "type", "employer", "name", "title", "start", "end"] },
+          {"index": 5, "keys": ["amount", "type", "employer", "name", "title", "start", "end"] }
+        ]
+      }
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  {}
+{{/if}}

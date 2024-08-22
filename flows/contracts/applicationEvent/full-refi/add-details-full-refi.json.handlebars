@@ -1,4 +1,5 @@
 {{#if request.params.id}}
+  {{noop (contract 'actions' (sum @index -1))}}
 {{#noop}}{{ contract 'analytics' }}{{/noop}}
   {
     "event": "addDetails",
@@ -40,9 +41,9 @@
           {{/if}}
           {{#if additionalAmount}}
             {"income": {{#list}}
-              {{#if additionalAmount.[0]}}
-                  {"index": 1, "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
-              {{/if}}
+                {{#if additionalAmount.[0]}}
+                    {"index": 1, "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
+                {{/if}}
               {{/list}} }
           {{/if}}
         {{/with}}

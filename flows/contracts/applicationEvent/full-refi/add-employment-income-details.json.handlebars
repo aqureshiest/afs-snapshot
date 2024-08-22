@@ -1,0 +1,57 @@
+{{#if  request.params.id}}
+    {{#noop}}{{ contract 'analytics' }}{{/noop}}
+    {
+      "event": "addDetails",
+      "payload": {
+        "id": "{{request.params.id}}",
+        {{#with request.body.values as |req|}}
+          {{noop (contract 'actions' (sum @index -1))}}
+            "details": {{#obj}} 
+                {"income": {{#list}}
+                    {{#if (eq req.employmentType 'self_employed')}}
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString req.startDate}}}" {{/if}} }
+                    {{else if (eq req.employmentType 'future')}}
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                    {{else if (eq req.employmentType 'retired')}}
+                      {"index": 0, {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} }
+                    {{else if (eq req.employmentType 'unemployed')}}
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" }
+                    {{else}}
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} }
+                    {{/if}}
+                      {{#if (testIsArray req.additionalAmount)}}
+                        {{#list}}
+                          {{#if additionalAmount.[0]}}
+                              {"index": 1, "type": "{{req.additionalAmount.0.type}}", {{#if ../userState.additionalAmount}}, "amount": {{{../userState.additionalAmount}}} {{/if}} }
+                          {{/if}}
+                          {{#if additionalAmount.[1]}}
+                              {"index": 2, "type": "{{req.additionalAmount.1.type}}", {{#if ../userState.additionalAmount}}, "amount": {{{../userState.additionalAmount}}} {{/if}} }
+                          {{/if}}
+                          {{#if additionalAmount.[2]}}
+                              {"index": 3, "type": "{{req.additionalAmount.2.type}}", {{#if ../userState.additionalAmount}}, "amount": {{{../userState.additionalAmount}}} {{/if}} }
+                          {{/if}}
+                          {{#if additionalAmount.[3]}}
+                              {"index": 4, "type": "{{req.additionalAmount.3.type}}", {{#if ../userState.additionalAmount}}, "amount": {{{../userState.additionalAmount}}} {{/if}} }
+                          {{/if}}
+                          {{#if additionalAmount.[4]}}
+                              {"index": 5, "type": "{{req.additionalAmount.4.type}}", {{#if ../userState.additionalAmount}}, "amount": {{{../userState.additionalAmount}}} {{/if}} }
+                          {{/if}}
+                        {{/list}} 
+                      {{else if ../userState.additionalAmount}}
+                        {"index": 1, "amount": {{{../userState.additionalAmount}}} } 
+                      {{/if}}
+                  {{/list}}
+                } 
+                {{#if application.primary.details.asset}}
+                  {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{application.primary.details.asset.0.amount}}} }]}
+                {{/if}}
+            {{/obj}}
+      {{else}}
+        null
+      {{/with}}
+      },
+      "fields": "application { id }"
+    }
+{{else}}
+  null
+{{/if}}

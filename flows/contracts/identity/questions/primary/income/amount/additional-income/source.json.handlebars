@@ -1,0 +1,25 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "additionalIncomeSource",
+      "type": "inputCheckbox",
+      "layout": "copyWithIcon",
+      "direction": "column",
+      "value": "rental",
+      "items": {{#list}}
+        {"id": "rental", "label": "Rental income", "value": "rental"}
+        {"id": "k1", "label": "K-1 income", "value": "k1"}
+        {"id": "social_security_or_pension", "label": "Social security / Pension", "value": "social_security_or_pension"}
+        {"id": "child_support_or_alimony", "label": "Child support / alimony", "value": "child_support_or_alimony"}
+        {"id": "disability", "label": "Disability", "value": "disability"}
+      {{/list}},
+      "status": "incomplete",
+      "error": "",
+      "label": {
+        "copy": "Sources of additional income",
+        "subCopy": "Select all that apply"
+      }
+  }
+}
+{{/with}}

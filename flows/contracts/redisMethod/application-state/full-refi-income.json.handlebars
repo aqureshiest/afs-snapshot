@@ -1,0 +1,9 @@
+{{#if request.params.id}}
+  {{noop (contract 'actions' (sum @index -1))}}
+  {
+    "redisMethod": "getIncomeDetails",
+    "key": {{{ json request.params.id }}}
+  }
+{{else}}
+  null
+{{/if}}

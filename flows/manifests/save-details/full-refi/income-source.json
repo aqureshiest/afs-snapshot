@@ -1,0 +1,38 @@
+[{
+  "methods": ["post"],
+  "parameters": [ { "key": "id", "format": "uuid" } ],
+  "inputs": {
+    "*": "inputs",
+    "application": {
+      "*": "application/single.flattened",
+      "application": "application-by-id-param"
+    },
+    "userState": "user-state",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": "neas.verify-token",
+          "mode": "optional",
+          "authorization": [
+            "inputs/auth.neas-application-auth",
+            "inputs/auth.neas-user-auth"
+          ]
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "redirect",
+    "redirect": "redirect/full-refi.income-verification",
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "redis.set-income-details",
+        "full-refi.clear-income-details",
+        "full-refi.add-employment-income-details"
+      ]
+    }
+  }
+}]

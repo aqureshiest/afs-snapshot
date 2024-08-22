@@ -1,0 +1,31 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "employerName",
+      "type": "inputText",
+      "value": "{{{details.income.0.employer}}}",
+      "status": {{{json (contract 'primary_income_employer_name_input_status')}}},
+      "label": {  
+        "copy": "Employer name"
+      },
+      "conditional": [
+        [
+          {
+            "field": "incomeSource.employmentType", 
+            "op": "valueEquals",
+            "value": "employed"
+          }
+        ],
+        [
+          {
+            "field": "incomeSource.employmentType", 
+            "op": "valueEquals",
+            "value": "future"
+          }
+        ]
+      ],
+      "error": "{{{ ajv 'errors' 'questions/primary/employment/employer-name' details.income.0.employer }}}"
+  }
+}
+{{/with}}
