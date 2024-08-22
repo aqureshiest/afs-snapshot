@@ -1,6 +1,6 @@
 
 {{#if application}}
-  {{#if (and application.reference.lendingDecisionID ( ne application.tag.status 'incomplete' ))}}
+  {{#if (and application.primary.details.decision ( ne application.tag.status 'incomplete' ))}}
     {
       "action": {{{ json (contract 'redirect_homebase') }}}
     }

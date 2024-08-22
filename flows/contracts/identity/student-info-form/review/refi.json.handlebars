@@ -3,7 +3,7 @@
     "key": "refi-review",
     "label": "Student Refi Review",
     "submit": {
-        {{#if (and reference.lendingDecisionID ( ne tag.status 'incomplete' ))}}
+        {{#if (and primary.details.decision ( ne tag.status 'incomplete' ))}}
             "copy": "Dashboard",
             "action": {{{ json (contract 'actionsDashboard') }}}
         {{else}}

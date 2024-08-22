@@ -34,7 +34,7 @@
         }
     },
     "outputs": {
-        "*": "response.response-rate-estimate-status",
+        "*": "response.rate-interstitial",
         "actions": ["rate-estimate-prices"],
         "rateDeclined": "actions/rate-estimate-request.declined",
         "rateUnable": "actions/rate-estimate-request.unable",

@@ -522,8 +522,9 @@ export default class LendingDecisionServiceClient extends Client {
      */
     await this.saveLendingDecisionId(
       context,
-      applicationId,
+      application[APPLICANT_TYPES.Primary].id, // TODO: Send application id of initiator
       results.data.decisioningToken,
+      decisionType,
     );
 
     return results;
@@ -635,8 +636,9 @@ export default class LendingDecisionServiceClient extends Client {
      */
     await this.saveLendingDecisionId(
       context,
-      applicationId,
+      application[APPLICANT_TYPES.Primary].id,
       results.data.decisioningToken,
+      decisionType,
     );
 
     return results;
@@ -1489,6 +1491,7 @@ export default class LendingDecisionServiceClient extends Client {
     context: PluginContext,
     applicationId: string,
     decisionToken: string,
+    decisionType: string,
   ): Promise<void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
@@ -1504,15 +1507,15 @@ export default class LendingDecisionServiceClient extends Client {
             $references: [ReferenceInput]
             $meta: EventMeta
           ) {
-            addReferences(id: $id, references: $references, meta: $meta) {
+            addDetails(details: $details, meta: $meta, id: $id) {
               id
             }
           }`,
           variables: {
-            references: [
+            details: [
               {
-                referenceType: "lendingDecisionID",
-                referenceId: decisionToken,
+                decisionID: decisionToken,
+                type: decisionType,
               },
             ],
             id: applicationId,

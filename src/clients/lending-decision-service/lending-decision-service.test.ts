@@ -1,7 +1,6 @@
 import { describe, it, before, mock } from "node:test";
-import { v4 as uuidv4 } from "uuid";
 import assert from "node:assert";
-
+import { v4 as uuidv4 } from "uuid";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
@@ -299,7 +298,6 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       },
     ],
   };
-
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };

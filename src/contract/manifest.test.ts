@@ -866,6 +866,59 @@ describe("[462fd166] manifest.execute", () => {
   });
   */
 
+  it("[885jutry] it should execute an DecisionRequest contract-type", async () => {
+    const input = {} as Input<unknown>;
+
+    const manifest = new Manifest(
+      "manifestDecisionRequest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            key: "testContract",
+            raw: `{
+              "decisionRequestMethod": "postDecisionRequest",
+              "id": "test",
+              "payload": {}
+          }`,
+            type: "decisionRequest",
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+    assert(result);
+  });
+
+  it("[7p5kkyur] it should execute an AccreditedSchoolServiceRequest contract-type", async () => {
+    const input = {} as Input<unknown>;
+
+    const manifest = new Manifest(
+      "manifestAccreditedSchoolRequest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            key: "testContract",
+            raw: `{
+              "accreditedSchoolServiceRequestMethod": "getSchools",
+              "search": {}
+          }`,
+            type: "accreditedSchoolRequest",
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+    assert(result);
+  });
+
   it("[4r3ggwqq] it should execute an Cookie contract-type", async () => {
     const input = {} as Input<unknown>;
 
