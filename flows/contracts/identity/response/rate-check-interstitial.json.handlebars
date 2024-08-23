@@ -14,7 +14,7 @@
           "action": {{{json (contract 'rate-check-action')}}}
         }
       },
-      "result": null,
+      "result": {{{ json (contract 'actions') }}},
       "error": {{{json error}}}
     }
   {{/if}}
