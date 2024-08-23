@@ -574,9 +574,9 @@ export default class LendingDecisionServiceClient extends Client {
       initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
       requestMetadata: {
         rootApplicationId: application.id,
-        applicationRefId: application[APPLICANT_TYPES.Primary].refId,
+        applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId),
         applicationId: application[APPLICANT_TYPES.Primary].id,
-        userId: input?.auth?.artifacts?.userID, // Should we assert, at this point should have been authenticated
+        userId: input?.auth?.artifacts?.userId, // Should we assert, at this point should have been authenticated
       },
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       isMedicalResidency: false,
