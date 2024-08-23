@@ -1,7 +1,43 @@
-{
-    "*": "response.response-decision-status",
-    "checkoutAction": "actions/checkout.default",
-    "homebaseAction": "actions/homebase.default",
-    "statusAction": "actions/decision-request.applicationStatus",
-    "goToInterstitial": "actions/decision-request.applicationStatus"
-}
+[{
+    "methods": ["post"],
+    "parameters": [{
+        "key": "id",
+        "format": "uuid"
+    }],
+    "inputs":{
+        "*": "inputs",
+        "application": {
+            "*": "application/single.flattened",
+            "application": "application-by-id-param"
+        },
+        "applications": [],
+        "applicationState": "application-state",
+        "userState": "user-state",
+        "auth": {
+            "*": "auth-artifacts",
+            "strategies": [
+                {
+                    "*": "inputs/auth.neas-session",
+                    "response": "neas.verify-token",
+                    "authorization": [
+                        "inputs/auth.neas-application-auth",
+                        "inputs/auth.neas-user-auth",
+                        "inputs/auth.neas-monolith-auth"
+                    ]
+                },
+                {
+                    "*": "inputs/auth.internal-bearer",
+                    "token": "inputs/auth.bearer-token",
+                    "authorization": ["inputs/auth.lending-decisioning-webhook"]
+                }
+            ]
+        }
+    },
+    "outputs": {
+        "*": "response.response-decision-status",
+        "checkoutAction": "actions/checkout.default",
+        "homebaseAction": "actions/homebase.default",
+        "statusAction": "actions/decision-request.applicationStatus",
+        "goToInterstitial": "actions/decision-request.applicationStatus"
+    }
+}]

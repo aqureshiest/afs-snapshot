@@ -523,6 +523,7 @@ export default class LendingDecisionServiceClient extends Client {
      */
     await this.saveLendingDecisionId(
       context,
+      applicationId,
       application[APPLICANT_TYPES.Primary].id, // TODO: Send application id of initiator
       results.data.decisioningToken,
       decisionType,
@@ -574,7 +575,7 @@ export default class LendingDecisionServiceClient extends Client {
       initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
       requestMetadata: {
         rootApplicationId: application.id,
-        applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId),
+        applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId), // refId is string in DB, they expect a Number
         applicationId: application[APPLICANT_TYPES.Primary].id,
         userId: input?.auth?.artifacts?.userId, // Should we assert, at this point should have been authenticated
       },
@@ -629,6 +630,7 @@ export default class LendingDecisionServiceClient extends Client {
      */
     await this.saveLendingDecisionId(
       context,
+      applicationId,
       application[APPLICANT_TYPES.Primary].id,
       results.data.decisioningToken,
       decisionType,
@@ -1482,7 +1484,8 @@ export default class LendingDecisionServiceClient extends Client {
    */
   private async saveLendingDecisionId(
     context: PluginContext,
-    applicationId: string,
+    rootApplicationId: string,
+    applicantApplicationId: string,
     decisionToken: string,
     decisionType: string,
   ): Promise<void> {
@@ -1510,10 +1513,12 @@ export default class LendingDecisionServiceClient extends Client {
           }`,
           variables: {
             details: {
-              decisionID: decisionToken,
-              type: decisionType,
+              decision: {
+                decisionID: decisionToken,
+                type: decisionType,
+              },
             },
-            id: applicationId,
+            id: applicantApplicationId,
           },
         },
         context,
@@ -1553,7 +1558,7 @@ export default class LendingDecisionServiceClient extends Client {
                 referenceId: decisionToken,
               },
             ],
-            id: applicationId,
+            id: rootApplicationId,
           },
         },
         context,
