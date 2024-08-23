@@ -1509,12 +1509,10 @@ export default class LendingDecisionServiceClient extends Client {
             }
           }`,
           variables: {
-            details: [
-              {
-                decisionID: decisionToken,
-                type: decisionType,
-              },
-            ],
+            details: {
+              decisionID: decisionToken,
+              type: decisionType,
+            },
             id: applicationId,
           },
         },
