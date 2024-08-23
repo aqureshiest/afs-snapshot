@@ -74,7 +74,8 @@ class ClientMethod extends ContractExecutable<
       if (response.statusCode && response.statusCode >= 400) {
         throw createError(
           response.statusCode,
-          response?.statusMessage || `[9a7d542b] ${clientName} ${method} to ${uri} failed`
+          response?.statusMessage ||
+            `[9a7d542b] ${clientName} ${method} to ${uri} failed`,
         );
       }
 

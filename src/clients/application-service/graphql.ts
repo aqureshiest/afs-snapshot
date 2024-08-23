@@ -1,6 +1,7 @@
 export const META_FRAGMENT = `
 fragment ApplicantFragment on Application {
   id
+  refId
   createdAt
   href
   relationship
@@ -85,6 +86,7 @@ fragment ApplicantFragment on Application {
       account_last4
       institution_name
       monolithFinancialAccountID
+      plaidAssetsReportID
       balance
       plaidAccountID
       plaidItemID

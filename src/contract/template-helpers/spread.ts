@@ -33,7 +33,7 @@ const spread: TemplateHelper = function (context) {
 
       if (definition[key] !== null) {
         spreadJson = `${spreadJson} "${key}": ${JSON.stringify(
-          definition[key]
+          definition[key],
         )}${addTrailingComma ? "," : ""}`;
       }
     });

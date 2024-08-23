@@ -563,17 +563,6 @@ export default class LendingDecisionServiceClient extends Client {
       }
     }
 
-    /* ============================== *
-     * The monolith references have breached containment
-     * May god help us all
-     * ============================== */
-
-    const monolithUserID = application[APPLICANT_TYPES.Primary]?.monolithUserID
-      ? application[APPLICANT_TYPES.Primary].monolithUserID
-      : application?.monolithUserID;
-    const monolithApplicationID =
-      application[APPLICANT_TYPES.Primary]?.monolithApplicationID;
-
     /**
      * Application Tags is an array of strings, where the first element is overall application status
      * and last element is the application type
@@ -585,15 +574,19 @@ export default class LendingDecisionServiceClient extends Client {
       initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
       requestMetadata: {
         rootApplicationId: application.id,
-        applicationId: monolithApplicationID,
-        userId: monolithUserID,
+        applicationRefId: application[APPLICANT_TYPES.Primary].refId,
+        applicationId: application[APPLICANT_TYPES.Primary].id,
+        userId: input?.auth?.artifacts?.userID, // Should we assert, at this point should have been authenticated
       },
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       isMedicalResidency: false,
       appInfo: applicationDecisionDetails,
     } as unknown as RateRequestDetails;
 
-    assert(application?.product, "[c3b14b3d] Missing application product in rate check request");
+    assert(
+      application?.product,
+      "[c3b14b3d] Missing application product in rate check request",
+    );
 
     const { results, response } = await this.post<RateRequestResponse>(
       {
@@ -1500,11 +1493,15 @@ export default class LendingDecisionServiceClient extends Client {
         "[b4d69fd7] Application Service client instance not found",
       );
     try {
+      /* ============================== *
+       * Saving the Decision ID as both
+       * a compound detail and reference
+       * ============================== */
       await applicationServiceClient["sendRequest"](
         {
           query: String.raw`mutation (
             $id: UUID!
-            $references: [ReferenceInput]
+            $details: AddDetailInput
             $meta: EventMeta
           ) {
             addDetails(details: $details, meta: $meta, id: $id) {
@@ -1527,7 +1524,47 @@ export default class LendingDecisionServiceClient extends Client {
       this.log(
         {
           error,
-          message: `[c9c97ad8] error while retrieving application`,
+          message: `[1aaea07c] error saving decision id as detail`,
+          stack: error.stack,
+        },
+        context,
+      );
+      throw error;
+    }
+
+    try {
+      /* ============================== *
+       * Saving the Decision ID as both
+       * a compound detail and reference
+       * ============================== */
+      await applicationServiceClient["sendRequest"](
+        {
+          query: String.raw`mutation (
+            $id: UUID!
+            $references: [ReferenceInput]
+            $meta: EventMeta
+          ) {
+            addReferences(id: $id, references: $references, meta: $meta) {
+              id
+            }
+          }`,
+          variables: {
+            references: [
+              {
+                referenceType: "lendingDecisionID",
+                referenceId: decisionToken,
+              },
+            ],
+            id: applicationId,
+          },
+        },
+        context,
+      );
+    } catch (error) {
+      this.log(
+        {
+          error,
+          message: `[a48d7973] error saving decision id as reference`,
           stack: error.stack,
         },
         context,
