@@ -1,28 +1,27 @@
 {{#if request.params.id}}
-    {{#if application.primary.ssnTokenURI}}
-      {
-          "event": "reference",
-          "payload": {
-              "id": "{{request.params.id}}",
-            {{#with (contract 'actions' (sum @index -1)) as |result|}}
-              "reference": { "ssnTokenURI": {{{json result.results.uri}}} }
-            {{/with}}
-          },
-          "fields": "application { id }"
-      }
-    {{else}}
-      {
-          "event": "addReferences",
-          "payload": {
-            "id": "{{request.params.id}}",
-            {{#with (contract 'actions' (sum @index -1)) as |result|}}
+    {{#with (contract 'actions' (sum @index -1)) as |result|}}
+        {{#if ../application.primary.ssnTokenURI}}
+          {
+              "event": "reference",
+              "payload": {
+                  "id": "{{../application.primary.id}}",
+                  "reference": { "ssnTokenURI": {{{json result.results.uri}}} }
+              },
+              "fields": "application { id }"
+          }
+        {{else}}
+          {
+              "event": "addReferences",
+              "payload": {
+                "id": "{{../application.primary.id}}",
                 "references": [{"referenceId": {{{json result.results.uri}}}, "referenceType": "ssnTokenURI"}] 
-            {{/with}}
-          },
-          "fields": "application { id }"
-      }
-    {{/if}}
-  
+              },
+              "fields": "application { id }"
+          }
+        {{/if}}
+    {{else}}
+      {}
+    {{/with}}
 {{else}}
   null
 {{/if}}
