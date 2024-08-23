@@ -1,0 +1,10 @@
+{
+    "key": "rate-check-request",
+    "type": "request",
+    "properties": {
+        "manifest": "rate-estimate/rate-request/{{application.id}}",
+        "analytics": {},
+        "method": "POST",
+        "onError": {{{json (contract 'onError')}}}
+    }
+}

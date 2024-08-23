@@ -23,8 +23,8 @@
     }
   },
   "outputs": {
-    "*": "redirect",
-    "redirect": "redirect/full-refi.rate-check",
+    "*": "response.rate-check-interstitial",
+    "rate-check-action": "actions/rate-estimate-request.rate-check",
     "actions": {
       "*": "actions/result.results",
       "actions": [

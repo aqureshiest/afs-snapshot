@@ -1,0 +1,23 @@
+{{#if application}}
+  {{#if (and application.primary.details.decision ( ne application.tag.status 'incomplete' ))}}
+    {
+      "action": {{{ json (contract 'redirect_homebase') }}}
+    }
+  {{else}}
+    {{#noop}}{{ contract 'analytics' }}{{/noop}}
+    {
+      "action": {
+        "key": "rateCheckInterstitial",
+        "type": "interstitial",
+        "properties": {
+          "showSpinner": true,
+          "action": {{{json (contract 'rate-check-action')}}}
+        }
+      },
+      "result": null,
+      "error": {{{json error}}}
+    }
+  {{/if}}
+{{else}}
+  null
+{{/if}}
