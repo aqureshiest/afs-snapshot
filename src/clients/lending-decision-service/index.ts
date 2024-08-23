@@ -1,3 +1,4 @@
+import assert from "node:assert";
 import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../application-service/graphql.js";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
@@ -578,9 +579,6 @@ export default class LendingDecisionServiceClient extends Client {
      * and last element is the application type
      */
     const appType = await this.getApplicationType(context, applicationId);
-    const product = application?.product
-      ? ProductTypes[application.product]
-      : "";
 
     const rateRequestPayload = {
       applicationType: ApplicationTypes[appType],
@@ -595,9 +593,11 @@ export default class LendingDecisionServiceClient extends Client {
       appInfo: applicationDecisionDetails,
     } as unknown as RateRequestDetails;
 
+    assert(application?.product, "[c3b14b3d] Missing application product in rate check request");
+
     const { results, response } = await this.post<RateRequestResponse>(
       {
-        uri: `/v2/decisioning-request/${product}/${decisionType}`,
+        uri: `/v2/decisioning-request/${application?.product}/${decisionType}`,
         headers: {
           ...this.headers,
           Authorization: `Bearer ${this.accessKey}`,
