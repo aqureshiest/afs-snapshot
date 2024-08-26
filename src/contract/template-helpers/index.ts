@@ -1,4 +1,6 @@
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
+import * as typings from "@earnest/application-service-client/typings/codegen.js";
+
 export { default as list } from "./list.js";
 export { default as contract } from "./contract.js";
 export { default as ajv } from "./ajv.js";
@@ -375,3 +377,20 @@ export function searchDeniedArtifactTags(tags) {
   ];
   return deniedTags.some((v) => tags.includes(v));
 }
+
+export function hasActiveIncompleteApplication(id: string, applications: typings.Application[]) {
+  return Object.values(applications).filter(
+    (app) => app?.tag?.active && app.id !== id && app.tag.status === "incomplete").pop() || null;
+}
+
+export function hasActivePostSubmissionApplication(id: string, applications: typings.Application[]) {
+  return  Object.values(applications).filter(
+    (app) => app?.tag?.active && app.id !== id && app.tag.status !== "incomplete").pop() || null;
+}
+
+export function ISODateToYYYYMMDD(dateStr:string) {
+  if (dateStr) {
+    return new Date(dateStr).toISOString().split('T')[0];
+  }
+}
+

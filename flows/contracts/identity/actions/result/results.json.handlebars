@@ -18,6 +18,9 @@
       {{#if result.id}}
         { "id": {{{ json result.id }}} }
       {{/if}}
+      {{#if result.response.statusCode}}
+        { "statusCode": {{{ json result.response.statusCode }}} }
+      {{/if}}
     {{/obj}}
   {{/each}}
 {{/list}}

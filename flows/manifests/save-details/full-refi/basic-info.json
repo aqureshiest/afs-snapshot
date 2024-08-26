@@ -3,6 +3,10 @@
   "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
+    "application": {
+      "*": "application/single.flattened",
+      "application": "application-by-id-param"
+    },
     "applications": {
       "*": "applications-by-email",
       "query": "application/search-query"
@@ -23,7 +27,8 @@
     }
   },
   "outputs": {
-    "*": "redirect/full-refi.education",
+    "*": "redirect/full-refi.identity-conflict",
+    "redirect-education": "redirect/full-refi.education",
     "actions": {
       "*": "actions/result.results",
       "actions": [
