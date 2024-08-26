@@ -1284,7 +1284,7 @@ export default class LendingDecisionServiceClient extends Client {
         input,
         "",
         {
-          report_tokens: plaidAssetsReportId,
+          report_tokens: [plaidAssetsReportId],
         },
       );
     }
