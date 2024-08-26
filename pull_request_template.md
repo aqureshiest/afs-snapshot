@@ -1,6 +1,3 @@
-[skip bearer]
-[skip prettier]
-
 ## What does this PR do?
 (A brief synopsis of the feature / problem and the proposed solution)
 - A new feature to the application flow such that...

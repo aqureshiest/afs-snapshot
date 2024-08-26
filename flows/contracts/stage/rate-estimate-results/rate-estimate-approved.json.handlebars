@@ -112,8 +112,8 @@
                         "key": "learnAddCosigner",
                         "type": "navigate",
                         "properties": {
-                          {{!-- TODO: Add learn more page --}}
-                          "goTo": "learn more page"
+                          "external": true,
+                          "goTo": "https://www.earnest.com/blog/do-you-need-a-cosigner-for-student-loans/"
                         }
                       }
                     }
@@ -130,8 +130,7 @@
           "key": "applyIndependent",
           "type": "navigate",
           "properties": {
-            {{!-- TODO: Use actual manifest as goTo location --}}
-            "goTo": "confirm address manifest"
+            "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.primary.id}}"
           }
         }
       }
