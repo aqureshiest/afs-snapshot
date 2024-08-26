@@ -2,9 +2,15 @@
 import assert from "node:assert";
 
 const list: TemplateHelper = function (context) {
-  const { merge, unique } = context.hash;
+  const { merge, unique, notemptyitems } = context.hash;
 
-  const splitList = context.fn(this).trim().split("\n");
+  const splitList = notemptyitems
+    ? context
+        .fn(this)
+        .trim()
+        .split("\n")
+        .filter((item) => Boolean(item.trim()))
+    : context.fn(this).trim().split("\n");
 
   /* ============================== *
    * merge: Any arrays at the top level of the list will have their elements

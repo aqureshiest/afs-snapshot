@@ -31,6 +31,7 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
+        "plaid.access_tokens",
         {
           "*": "full-refi.add-details-financials",
           "generate-assets-report": "plaid.generate-assets-report"

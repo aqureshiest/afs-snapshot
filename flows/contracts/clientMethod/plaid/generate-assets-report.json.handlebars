@@ -1,18 +1,13 @@
-
 {
   "action": "generate-assets-report",
   "client": "plaid",
   "method": "post",
   "uri": "/asset_report/create",
   "body": {
-    "access_tokens": {{#list unique=true}} 
-      {{#each application.primary.details.financialAccounts as |fAccount|}}
-        "{{fAccount.plaidAccessToken}}"
-      {{/each}}
-    {{/list}},
+    "access_tokens": {{{json (contract 'actions' (sum @index -1))}}},
     "days_requested": {{{env.PLAID_ASSETS_REPORT_DAYS_REQUESTED}}},
-    "client_id": {{{json env.PLAID_CLIENT_ID}}},
-    "secret": {{{json env.PLAID_SECRET}}}
+    "client_id": "{{{env.PLAID_CLIENT_ID}}}",
+    "secret": "{{{env.PLAID_SECRET}}}"
   },
   "headers": {
     "Content-Type": "application/json",

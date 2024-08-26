@@ -1,0 +1,5 @@
+{{#list unique=true}} 
+  {{#each application.primary.details.financialAccounts as |fAccount|}}
+    {{#if (ne fAccount.plaidAccessToken "null")}}"{{fAccount.plaidAccessToken}}"{{/if}}
+  {{/each}}
+{{/list}}

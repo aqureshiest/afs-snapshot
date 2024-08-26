@@ -106,7 +106,8 @@
             "linkToken": "{{plaidResponse.results.link_token}}",
           {{/if}}
         {{/with}}
-        "tokenUrl": "{{application.reference.brand}}/student-loan-refi/plaid/create-link-token/{{{request.params.id}}}",
+        {{! temporally removing the id from the url, waiting for the change on the UI}}
+        "tokenUrl": "{{application.reference.brand}}/student-loan-refi/plaid/create-link-token",
         "exchangeUrl": "plaid/exchange/{{{request.params.id}}}",
         "onError": [
           {

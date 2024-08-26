@@ -18,7 +18,7 @@ const logHelper: TemplateHelper = function (...args) {
         }
 
         if (typeof b === "object") {
-          return { ...a, ...b };
+          return { ...a, data: { ...a.data, ...b } };
         }
 
         return a;
