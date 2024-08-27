@@ -24,7 +24,7 @@
       "*": "actions/result.results",
       "actions": [
         "full-refi.clear-income-details",
-        "full-refi.add-details-full-refi"
+        "full-refi.add-income-details"
       ]
     }
   }

@@ -4,21 +4,31 @@
   "definition": {
       "key": "additionalIncomeSource",
       "type": "inputCheckbox",
-      "layout": "copyWithIcon",
       "direction": "column",
-      "value": "rental",
+      "value": { 
+        {{#with (getAdditionalIncomeSourceTypes details.income) as |addIncomeIds|}}
+          "rental": {{#if (includes addIncomeIds "rental")}} true {{else}} false {{/if}},
+          "k1": {{#if (includes addIncomeIds "k1")}} true {{else}} false {{/if}},
+          "social_security_or_pension": {{#if (includes addIncomeIds "social_security_or_pension")}} true {{else}} false {{/if}},
+          "child_support_or_alimony": {{#if (includes addIncomeIds "child_support_or_alimony")}} true {{else}} false {{/if}},
+          "disability": {{#if (includes addIncomeIds "disability")}} true {{else}} false {{/if}}
+        {{/with}}
+      },
       "items": {{#list}}
-        {"id": "rental", "label": "Rental income", "value": "rental"}
-        {"id": "k1", "label": "K-1 income", "value": "k1"}
-        {"id": "social_security_or_pension", "label": "Social security / Pension", "value": "social_security_or_pension"}
-        {"id": "child_support_or_alimony", "label": "Child support / alimony", "value": "child_support_or_alimony"}
-        {"id": "disability", "label": "Disability", "value": "disability"}
+        {"id": "rental", "copy": "Rental income", "value": true}
+        {"id": "k1", "copy": "K-1 income", "value": true}
+        {"id": "social_security_or_pension", "copy": "Social security / Pension", "value": true}
+        {"id": "child_support_or_alimony", "copy": "Child support / alimony", "value": true}
+        {"id": "disability", "copy": "Disability", "value": true}
       {{/list}},
       "status": "incomplete",
       "error": "",
       "label": {
         "copy": "Sources of additional income",
         "subCopy": "Select all that apply"
+      },
+      "metadata": {
+        "stylePreset": "defaultCheckboxList"
       }
   }
 }

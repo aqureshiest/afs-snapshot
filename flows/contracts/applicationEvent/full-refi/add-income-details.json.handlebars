@@ -1,0 +1,33 @@
+{{#if request.params.id}}
+  {{noop (contract 'actions' (sum @index -1))}}
+{{#noop}}{{ contract 'analytics' }}{{/noop}}
+  {
+    "event": "addDetails",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "details": {{#obj}} {{! make sure to flatten each element into a single line}}
+        {{#with request.body.values}}
+          {{#if annualIncome}}
+            {"income": [{"index": 0, "amount": {{{formatDollarsToCents annualIncome}}} }]}
+          {{/if}}
+          {{#if claimedAssets}}
+            {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
+          {{/if}}
+          {{#if amount}}
+            {"amount": {"requested": {{{formatDollarsToCents amount}}} } }
+          {{/if}}
+          {{#if additionalAmount}}
+            {"income": {{#list}}
+                {{#if additionalAmount.[0]}}
+                    {"index": 1, "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
+                {{/if}}
+              {{/list}} }
+          {{/if}}
+        {{/with}}
+      {{/obj}}
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}

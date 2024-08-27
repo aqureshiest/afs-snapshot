@@ -42,6 +42,7 @@ export const noop = function (v1) {
 export const json = function (v1) {
   return JSON.stringify(v1 ?? null);
 };
+
 export const eq = (v1, v2) => v1 === v2;
 export const ne = (v1, v2) => v1 !== v2;
 export const lt = (v1, v2) => v1 < v2;
@@ -326,6 +327,37 @@ export function testIsArray(v1) {
   return Array.isArray(v1);
 }
 
+export function getAdditionalIncomeSourceArray(v1, additionalIncome) {
+  const entries = Object.entries(v1).filter(([_, v]) => v);
+  const additionalIncomeArr: Array<{ type: string; amount: number }> = [];
+  if (!entries) {
+    return undefined;
+  }
+
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i];
+    const obj = { type: entry[0], amount: 0 };
+    if (i === 0) {
+      obj.amount = Math.ceil(additionalIncome / entries.length);
+    } else {
+      obj.amount = Math.floor(additionalIncome / entries.length);
+    }
+    additionalIncomeArr.push(obj);
+  }
+  return additionalIncomeArr;
+}
+export function getAdditionalIncomeSourceTypes(v1) {
+  return v1 ? v1.filter((i) => i.type).map((i) => i.type) : undefined;
+}
+export function totalAdditionalIncome(v1) {
+  return v1 && Array.isArray(v1) && v1.length > 1
+    ? v1
+        .slice(1)
+        .filter((i) => i.amount)
+        .reduce((a, i) => a + Number(i.amount), 0)
+    : 0;
+}
+
 /**
  * Test if at least one financial account is selected
  */
@@ -378,19 +410,36 @@ export function searchDeniedArtifactTags(tags) {
   return deniedTags.some((v) => tags.includes(v));
 }
 
-export function hasActiveIncompleteApplication(id: string, applications: typings.Application[]) {
-  return Object.values(applications).filter(
-    (app) => app?.tag?.active && app.id !== id && app.tag.status === "incomplete").pop() || null;
+export function hasActiveIncompleteApplication(
+  id: string,
+  applications: typings.Application[],
+) {
+  return (
+    Object.values(applications)
+      .filter(
+        (app) =>
+          app?.tag?.active && app.id !== id && app.tag.status === "incomplete",
+      )
+      .pop() || null
+  );
 }
 
-export function hasActivePostSubmissionApplication(id: string, applications: typings.Application[]) {
-  return  Object.values(applications).filter(
-    (app) => app?.tag?.active && app.id !== id && app.tag.status !== "incomplete").pop() || null;
+export function hasActivePostSubmissionApplication(
+  id: string,
+  applications: typings.Application[],
+) {
+  return (
+    Object.values(applications)
+      .filter(
+        (app) =>
+          app?.tag?.active && app.id !== id && app.tag.status !== "incomplete",
+      )
+      .pop() || null
+  );
 }
 
-export function ISODateToYYYYMMDD(dateStr:string) {
+export function ISODateToYYYYMMDD(dateStr: string) {
   if (dateStr) {
-    return new Date(dateStr).toISOString().split('T')[0];
+    return new Date(dateStr).toISOString().split("T")[0];
   }
 }
-

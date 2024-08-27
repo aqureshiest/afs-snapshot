@@ -1258,6 +1258,210 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
 
+  it("[32Fg6m5g] test getAdditionalIncomeSourceArray", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            additionalIncomeSource: {
+              rental: true,
+              k1: true,
+              social_security_or_pension: false,
+              child_support_or_alimony: false,
+              disability: false,
+            },
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "additionalIncome": {{{json (getAdditionalIncomeSourceArray request.body.values.additionalIncomeSource 100)}}}
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      additionalIncome: [
+        {
+          amount: 50,
+          type: "rental",
+        },
+        {
+          amount: 50,
+          type: "k1",
+        },
+      ],
+    });
+  });
+
+  it("[dqn5b25p] test totalAdditionalIncome", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            income: [{ amount: 100 }, { amount: 100 }],
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "totalAdditionalIncome": {{{json (totalAdditionalIncome request.body.values.income)}}}
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      totalAdditionalIncome: 100,
+    });
+  });
+
+  it("[az2rbIre] test getAdditionalIncomeSourceTypes", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            income: [{ type: "rental" }, { type: "k1" }],
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "additionalIncomeType": {{{json (getAdditionalIncomeSourceTypes request.body.values.income)}}}
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      additionalIncomeType: ["rental", "k1"],
+    });
+  });
+
+  it("[fwq7qasv] test hasActiveIncompleteApplication", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            applications: [
+              { id: 1, tag: { active: true, status: "incomplete" } },
+            ],
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "activeApplication": {{{json (hasActiveIncompleteApplication 1 request.body.values.applications)}}}
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      activeApplication: null,
+    });
+  });
+
+  it("[ug7zqiz2] test hasActivePostSubmissionApplication", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            applications: [
+              { id: 1, tag: { active: true, status: "incomplete" } },
+            ],
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "activePostSubmitApplication": {{{json (hasActivePostSubmissionApplication 1 request.body.values.applications)}}}
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      activePostSubmitApplication: null,
+    });
+  });
+
   /*
   it("[1bb916db] sumIncomeAmountRange and totalSum template helper", async () => {
     const input = {

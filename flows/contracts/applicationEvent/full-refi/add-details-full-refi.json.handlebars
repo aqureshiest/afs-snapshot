@@ -30,22 +30,6 @@
           {{#if (and previousAddress previousAddress.street previousAddress.city previousAddress.state previousAddress.zip)}}
             {"location": [{"index": 1, "street1": "{{previousAddress.street}}", {{#if (ne previousAddress.apt "") }} "street2": "{{previousAddress.apt}}", {{/if}} "city": "{{previousAddress.city}}", "state": "{{previousAddress.state}}", "zip": "{{previousAddress.zip}}" , "type": "previous" {{#if citizenship}} , "citizenship": "{{citizenship}}" {{/if}} }]}
           {{/if}}
-          {{#if annualIncome}}
-            {"income": [{"index": 0, "amount": {{{formatDollarsToCents annualIncome}}} }]}
-          {{/if}}
-          {{#if claimedAssets}}
-            {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{formatDollarsToCents claimedAssets}}} }]}
-          {{/if}}
-          {{#if amount}}
-            {"amount": {"requested": {{{formatDollarsToCents amount}}} } }
-          {{/if}}
-          {{#if additionalAmount}}
-            {"income": {{#list}}
-                {{#if additionalAmount.[0]}}
-                    {"index": 1, "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
-                {{/if}}
-              {{/list}} }
-          {{/if}}
         {{/with}}
       {{/obj}}
     },
