@@ -43,21 +43,24 @@
                               (boolean (hasActiveIncompleteApplication ../application.id ../applications))
                             )}}
                               {{!Login screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../application.id ../applications) "root") "id"}}"
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../application.id ../applications) "root") "id"}}",
+                              "external": true
                           {{! Returning users with an inflight post-submission application}}
                             {{else if (and
                               (eq actions.[1].statusCode 409)
                               (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
                             )}}
                               {{!Login screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../application.id ../applications) "root") "id"}}"
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../application.id ../applications) "root") "id"}}",
+                              "external": true
                           {{! Returning accountless users with an inflight incomplete or post-submission application}}
                             {{else if (or
                               (boolean (hasActiveIncompleteApplication ../application.id ../applications))
                               (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
                             )}}
                               {{!PII verification screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{../request.body.values.email}}"
+                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{../request.body.values.email}}",
+                              "external": true
                             {{/if}}
                           }
                       }
@@ -74,7 +77,8 @@
                             {{!Login screen}}
                             "type": "navigate",
                             "properties": {
-                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.root.id}}" 
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.root.id}}",
+                              "external": true
                             }
                           {{else}}
                             {{!Send verification code + redirect to Verification screen}}
