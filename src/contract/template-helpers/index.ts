@@ -330,7 +330,7 @@ export function testIsArray(v1) {
 export function getAdditionalIncomeSourceArray(v1, additionalIncome) {
   const entries = Object.entries(v1).filter(([_, v]) => v);
   const additionalIncomeArr: Array<{ type: string; amount: number }> = [];
-  if (!entries) {
+  if (!(entries && additionalIncome)) {
     return undefined;
   }
 
