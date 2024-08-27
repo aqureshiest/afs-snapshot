@@ -10,32 +10,32 @@
             "details": {{#obj}} 
                 {"income": {{#list}}
                     {{#if (eq req.employmentType 'self_employed')}}
-                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString req.startDate}}}" {{/if}} }
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString req.startDate}}}" {{/if}} }
                     {{else if (eq req.employmentType 'future')}}
-                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
                     {{else if (eq req.employmentType 'retired')}}
-                      {"index": 0, {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} }
+                      {"index": 0, {{#if ../userState.annualIncome}}, "amount": {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} }
                     {{else if (eq req.employmentType 'unemployed')}}
                       {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" }
                     {{else}}
-                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} }
+                      {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} }
                     {{/if}}
                       {{#if req.additionalIncomeSource }}
                         {{#with (getAdditionalIncomeSourceArray req.additionalIncomeSource ../userState.additionalAmount) as |addIncomeArr|}}
                           {{#if addIncomeArr.[0]}}
-                              {"index": 1, "type": "{{addIncomeArr.[0].type}}", "amount": {{{addIncomeArr.[0].amount}}} }
+                              {"index": 1, "type": "{{addIncomeArr.[0].type}}", "amount": {{{formatDollarsToCents addIncomeArr.[0].amount}}} }
                           {{/if}}
                           {{#if addIncomeArr.[1]}}
-                              {"index": 2, "type": "{{addIncomeArr.[1].type}}", "amount": {{{addIncomeArr.[1].amount}}} }
+                              {"index": 2, "type": "{{addIncomeArr.[1].type}}", "amount": {{{formatDollarsToCents addIncomeArr.[1].amount}}} }
                           {{/if}}
                           {{#if addIncomeArr.[2]}}
-                              {"index": 3, "type": "{{addIncomeArr.[2].type}}", "amount": {{{addIncomeArr.[2].amount}}} }
+                              {"index": 3, "type": "{{addIncomeArr.[2].type}}", "amount": {{{formatDollarsToCents addIncomeArr.[2].amount}}} }
                           {{/if}}
                           {{#if addIncomeArr.[3]}}
-                              {"index": 4, "type": "{{addIncomeArr.[3].type}}", "amount": {{{addIncomeArr.[3].amount}}} }
+                              {"index": 4, "type": "{{addIncomeArr.[3].type}}", "amount": {{{formatDollarsToCents addIncomeArr.[3].amount}}} }
                           {{/if}}
                           {{#if addIncomeArr.[4]}}
-                              {"index": 5, "type": "{{addIncomeArr.[4].type}}", "amount": {{{addIncomeArr.[4].amount}}} }
+                              {"index": 5, "type": "{{addIncomeArr.[4].type}}", "amount": {{{formatDollarsToCents addIncomeArr.[4].amount}}} }
                           {{/if}}
                         {{/with}}
                       {{else if ../../userState.additionalAmount}}

@@ -1310,43 +1310,6 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
 
-  it("[dqn5b25p] test totalAdditionalIncome", async () => {
-    const input = {
-      request: {
-        body: {
-          values: {
-            income: [{ amount: 100 }, { amount: 100 }],
-          },
-        },
-      },
-    } as unknown as Input<unknown>;
-    const manifest = new Manifest(
-      "manifestTest",
-      {
-        "*": "raw",
-      },
-      {
-        raw: {
-          default: new Contract({
-            raw: `
-            {
-              "totalAdditionalIncome": {{{json (totalAdditionalIncome request.body.values.income)}}}
-            }
-        `,
-          }),
-        },
-      },
-    );
-
-    const result = await manifest.execute(context, {}, input);
-
-    const parsed = JSON.parse(JSON.stringify(result));
-
-    assert.deepEqual(parsed, {
-      totalAdditionalIncome: 100,
-    });
-  });
-
   it("[az2rbIre] test getAdditionalIncomeSourceTypes", async () => {
     const input = {
       request: {

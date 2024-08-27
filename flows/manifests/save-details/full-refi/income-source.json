@@ -29,7 +29,6 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "redis.set-income-details",
         "full-refi.clear-income-details",
         "full-refi.add-employment-income-details"
       ]
