@@ -9,79 +9,90 @@
       "type": "modal",
       "properties": {
         "type": "flexible",
-        "content": [
-          {
-            "key": "header",
-            "type": "header",
-            "componentProps": {
-              "copy": "Welcome back {{ toUpper request.body.values.name.first }}",
-              "subCopy": "We noticed you started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication application.id applications) "root") "createdAt")}}. Would you like to save time by picking up where you left off?",
-              "asset": {
-                "center": true,
-                "type": "Assets.LocalAsset",
-                "name": "illustrations.info"
+        "definition": {
+          "content": [
+            {
+              "key": "header",
+              "type": "header",
+              "componentProps": {
+                "copy": "Welcome back {{ toUpper request.body.values.name.first }}",
+                "subCopy": "We noticed you started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication application.id applications) "root") "createdAt")}}. Would you like to save time by picking up where you left off?",
+                "asset": {
+                  "center": true,
+                  "type": "Assets.LocalAsset",
+                  "name": "illustrations.info"
+                }
               }
-            }
-          },
-          {
-            "key": "buttons",
-            "type": "buttons",
-            "componentProps": {
-              "stylePreset": "primaryTertiary",
-              "buttons": [
-                {{#with (contract 'actions') as |actions|}}
-                  {{!Primary Button}}
-                  {
-                    "copy": "Pick up where I left off",
-                    "action": {
-                        "type": "navigate",
-                        "properties": {
-                        {{! Returning users with an account and an inflight incomplete application}}
-                          {{#if (and
-                            (eq actions.[1].statusCode 409)
-                            (boolean (hasActiveIncompleteApplication ../application.id ../applications))
-                          )}}
+            },
+            {
+              "key": "buttons",
+              "type": "buttons",
+              "componentProps": {
+                "stylePreset": "primaryTertiary",
+                "buttons": [
+                  {{#with (contract 'actions') as |actions|}}
+                    {{!Primary Button}}
+                    {
+                      "copy": "Pick up where I left off",
+                      "action": {
+                          "type": "navigate",
+                          "properties": {
+                          {{! Returning users with an account and an inflight incomplete application}}
+                            {{#if (and
+                              (eq actions.[1].statusCode 409)
+                              (boolean (hasActiveIncompleteApplication ../application.id ../applications))
+                            )}}
+                              {{!Login screen}}
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../application.id ../applications) "root") "id"}}"
+                          {{! Returning users with an inflight post-submission application}}
+                            {{else if (and
+                              (eq actions.[1].statusCode 409)
+                              (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
+                            )}}
+                              {{!Login screen}}
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../application.id ../applications) "root") "id"}}"
+                          {{! Returning accountless users with an inflight incomplete or post-submission application}}
+                            {{else if (or
+                              (boolean (hasActiveIncompleteApplication ../application.id ../applications))
+                              (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
+                            )}}
+                              {{!PII verification screen}}
+                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{../request.body.values.email}}"
+                            {{/if}}
+                          }
+                      }
+                    }
+                    {{!Secondary Button}}
+                    {{#if (and
+                      (boolean (hasActiveIncompleteApplication ../application.id ../applications))
+                      (not (boolean (hasActivePostSubmissionApplication ../application.id ../applications)))
+                    )}}
+                      ,{
+                        "copy": "Resume current application",
+                        "action": {
+                          {{#if (eq actions.[1].statusCode 409)}}
                             {{!Login screen}}
-                            "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../application.id ../applications) "root") "id"}}"
-                        {{! Returning users with an inflight post-submission application}}
-                          {{else if (and
-                            (eq actions.[1].statusCode 409)
-                            (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
-                          )}}
-                            {{!Login screen}}
-                            "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../application.id ../applications) "root") "id"}}"
-                        {{! Returning accountless users with an inflight incomplete or post-submission application}}
-                          {{else if (or
-                            (boolean (hasActiveIncompleteApplication ../application.id ../applications))
-                            (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
-                          )}}
-                            {{!PII verification screen}}
-                            "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{../application.details.email}}"
+                            "type": "navigate",
+                            "properties": {
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.root.id}}" 
+                            }
+                          {{else}}
+                            {{!Send verification code + redirect to Verification screen}}
+                            "type": "request",
+                            "properties": {
+                              "manifest": "send-verification-email/{{../application.id}}",
+                              "method": "POST"
+                            }
                           {{/if}}
                         }
-                    }
-                  }
-                  {{!Secondary Button}}
-                  {{#if (and
-                    (boolean (hasActiveIncompleteApplication ../application.id ../applications))
-                    (not (boolean (hasActivePostSubmissionApplication ../application.id ../applications)))
-                  )}}
-                    ,{
-                      "copy": "Resume current application",
-                      {{#if (eq actions.[1].statusCode 409)}}
-                        {{!Login screen}}
-                        "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.root.id}}" 
-                      {{else}}
-                        {{!Verification screen}}
-                        "goTo": "{{env.BASE_URL}}/_/auth/neasauth/instant_verify?email={{../application.details.email}}" 
-                      {{/if}}
-                    }
-                  {{/if}}
-                {{/with}}
-              ]
+                      }
+                    {{/if}}
+                  {{/with}}
+                ]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     }
   }

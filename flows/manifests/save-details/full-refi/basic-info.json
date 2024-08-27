@@ -3,6 +3,7 @@
   "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
+    "env": "inputs/env",
     "application": {
       "*": "application/single.flattened",
       "application": "application-by-id-param"

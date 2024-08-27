@@ -443,3 +443,7 @@ export function ISODateToYYYYMMDD(dateStr: string) {
     return new Date(dateStr).toISOString().split("T")[0];
   }
 }
+
+export function getApplicant(id: string, application: typings.Application) {
+  return (application.applicants || []).find((applicant) => applicant && applicant?.id === id);
+}
