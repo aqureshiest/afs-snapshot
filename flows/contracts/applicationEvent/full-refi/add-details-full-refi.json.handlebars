@@ -19,6 +19,9 @@
           {{#if phone}}
             {"phone": [{"index": 0, "number": "{{phone}}", "type": "mobile"}]}
           {{/if}}
+          {{#if amount}}
+            {"amount": {"requested": {{{formatDollarsToCents amount}}} } }
+          {{/if}}
           {{#if citizenship}}
             {"location": {{#list}}
                 {"index": 0,  "citizenship": "{{citizenship}}" }
