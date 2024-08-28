@@ -176,6 +176,9 @@ export default class LendingDecisionServiceClient extends Client {
       })) as unknown as { applications: Array<typings.Application> };
 
       application = result["applications"][0];
+      this.log({
+        message: `[6da39e53] decision request update payload application: ${JSON.stringify(application)}`,
+      });
     } catch (error) {
       this.log(
         {
@@ -190,6 +193,9 @@ export default class LendingDecisionServiceClient extends Client {
 
     try {
       const status = this.deriveStatusFromEvent(payload);
+      this.log({
+        message: `[bb2d0cbd] decision request update status: ${JSON.stringify(status)}`,
+      });
       if (status) {
         await applicationServiceClient["sendRequest"]({
           query: String.raw`mutation (
@@ -860,7 +866,9 @@ export default class LendingDecisionServiceClient extends Client {
   private deriveStatusFromEvent = (payload: WebhookEventPayload) => {
     const { data, webhookType } = payload;
     const { decision, entity } = data;
-
+    this.log({
+      message: `[478f644d] decision request update payload: ${JSON.stringify(payload)}`,
+    });
     let status;
     switch (webhookType) {
       /* ============================== *
