@@ -238,6 +238,7 @@ export type IWebhookEventPayload = {
     status?: string;
     entity?: {
       applicationRole: string;
+      applicantRole: string;
       entityToken: string;
       status: string;
     };

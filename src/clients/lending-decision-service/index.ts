@@ -160,6 +160,9 @@ export default class LendingDecisionServiceClient extends Client {
               primary {
                 ...ApplicantFragment
               }
+              cosigner {
+                ...ApplicantFragment
+              }
             }
           }
           `,
@@ -177,7 +180,7 @@ export default class LendingDecisionServiceClient extends Client {
 
       application = result["applications"][0];
       this.log({
-        message: `[6da39e53] decision request update payload application: ${JSON.stringify(application)}`,
+        message: `[6da39e53] decision request update application: ${JSON.stringify(application)}`,
       });
     } catch (error) {
       this.log(
@@ -196,6 +199,31 @@ export default class LendingDecisionServiceClient extends Client {
       this.log({
         message: `[bb2d0cbd] decision request update status: ${JSON.stringify(status)}`,
       });
+
+      let queryVars;
+      if (!Number.isNaN(Number(id))) {
+        // We got V1 monolith application id
+        queryVars = {
+          ...(entity
+            ? {
+                id: application.id, // update the applicant's status if an entity is passed
+              }
+            : {
+                id: application.root.id, // otherwise, update the root application status
+              }),
+        };
+      } else {
+        queryVars = {
+          ...(entity
+            ? {
+                id: application[entity.applicantRole].id, // update the applicant's status if an entity is passed
+              }
+            : {
+                id: application.id, // otherwise, update the root application status
+              }),
+        };
+      }
+
       if (status) {
         await applicationServiceClient["sendRequest"]({
           query: String.raw`mutation (
@@ -211,13 +239,7 @@ export default class LendingDecisionServiceClient extends Client {
             }
           }`,
           variables: {
-            ...(entity
-              ? {
-                  id: application.id, // update the applicant's status if an entity is passed
-                }
-              : {
-                  id: application.root.id, // otherwise, update the root application status
-                }),
+            ...queryVars,
             status,
             meta: { service: "apply-flow-service" },
           },

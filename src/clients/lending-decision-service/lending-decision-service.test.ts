@@ -966,6 +966,48 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.equal(body.variables.status, "approved");
   });
 
+  it("[edbe14de] should set a root application's status to 'approved' for APPLICATION_STATUS events with an 'Approved' decision", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await client.saveDecision(input, context, root, {
+      data: {
+        decision: "Approved",
+      },
+      webhookType: "APPLICATION_STATUS",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert.equal(body.variables.id, primary);
+    assert.equal(body.variables.status, "approved");
+  });
+
   it("[182f16c7] should set a root application's status to 'declined' for APPLICATION_STATUS events with an 'Denied' decision", async () => {
     const mockFn = mock.fn(() => {
       return {
