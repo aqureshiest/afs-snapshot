@@ -411,6 +411,7 @@ export default class LendingDecisionServiceClient extends Client {
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
   ): Promise<DecisionPostResponse> {
     const decisionType = "application";
+    let decisionAPIVersion = "v1";
     let application = input["application"];
     if (!application) {
       application = (await this.getApplication(
@@ -418,6 +419,32 @@ export default class LendingDecisionServiceClient extends Client {
         applicationId,
       )) as typings.Application;
       application = flattenApplication(application);
+    }
+
+    /* ============================== *
+     * The monolith references have breached containment
+     * May god help us all
+     * ============================== */
+
+    const monolithUserID = application[APPLICANT_TYPES.Primary]?.monolithUserID
+      ? application[APPLICANT_TYPES.Primary].monolithUserID
+      : application?.monolithUserID;
+    const monolithApplicationID =
+      application[APPLICANT_TYPES.Primary]?.monolithApplicationID;
+    const monolithLoanID = application.monolithLoanID;
+
+    if (!monolithUserID && !monolithApplicationID) {
+      // This application came from new Apply Flow where there is no monolith IDs
+      decisionAPIVersion = "v2";
+    }
+
+    if (monolithLoanID && monolithUserID && monolithApplicationID) {
+      const monolithIDs = {
+        monolithLoanID: monolithLoanID,
+        monolithUserID: monolithUserID,
+        monolithApplicationID: monolithApplicationID,
+      };
+      await this.legacyDataSync(input, context, monolithIDs);
     }
 
     const applicationDecisionDetails = {};
@@ -432,28 +459,9 @@ export default class LendingDecisionServiceClient extends Client {
           application as typings.Application, // Pass full application. We need loan amount and rates details from root
           applicant,
           decisionType,
+          decisionAPIVersion,
         );
       }
-    }
-    /* ============================== *
-     * The monolith references have breached containment
-     * May god help us all
-     * ============================== */
-
-    const monolithUserID = application[APPLICANT_TYPES.Primary]?.monolithUserID
-      ? application[APPLICANT_TYPES.Primary].monolithUserID
-      : application?.monolithUserID;
-    const monolithApplicationID =
-      application[APPLICANT_TYPES.Primary]?.monolithApplicationID;
-    const monolithLoanID = application.monolithLoanID;
-
-    if (monolithLoanID && monolithUserID && monolithApplicationID) {
-      const monolithIDs = {
-        monolithLoanID: monolithLoanID,
-        monolithUserID: monolithUserID,
-        monolithApplicationID: monolithApplicationID,
-      };
-      await this.legacyDataSync(input, context, monolithIDs);
     }
 
     /* ============================== *
@@ -461,26 +469,48 @@ export default class LendingDecisionServiceClient extends Client {
      * to determine which applicants are submitted
      * ============================== */
     await this.setSubmittedStatus(context, application, applicationId);
+    let decisionPayload;
+    let lendingDecisionURI;
 
-    const decisionPayload = {
-      product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
-      decisioningWorkflowName: "AUTO_APPROVAL",
-      decisionSource: "apply-flow-service",
-      applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
-      requestMetadata: {
-        applicationId: monolithApplicationID,
-        userId: monolithUserID,
-      },
-      isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
-      appInfo: applicationDecisionDetails,
-    } as unknown as DecisionRequestDetails;
+    // New Decision endpoint is live in staging.
+    // But we need to support both V1 and V2 slr applications, so we need to
+    // support using /v2/decision and /v2/decisioning-request
+    if (decisionAPIVersion === "v1") {
+      lendingDecisionURI = "/v2/decision";
 
-    const lendingDecisionURI = "/v2/decision";
-    // New Decision endpoint is live in staging, but only for rate check.
-    // Continue to use old `v2/decision` until https://meetearnest.atlassian.net/browse/LD-1386 is done
-    // product = slo | slr
-    // decisionType = rate-check | application (application full app submit decision)
-    // const uri = "/v2/decisioning-request/:product/:decisionType"
+      decisionPayload = {
+        product: "SLR", // TODO: For v2 use application.product where can be string 'student-refi' or 'student-origination'
+        decisioningWorkflowName: "AUTO_APPROVAL",
+        decisionSource: "apply-flow-service",
+        applicationType: "PRIMARY_ONLY", // TODO: For v2 use application.tags where can be string ['primary_only','cosigned', 'parent_plus']
+        requestMetadata: {
+          applicationId: monolithApplicationID,
+          userId: monolithUserID,
+        },
+        isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
+        appInfo: applicationDecisionDetails,
+      } as unknown as DecisionRequestDetails;
+    } else {
+      /**
+       * Application Tags is an array of strings, where the first element is overall application status
+       * and last element is the application type
+       */
+      const appType = await this.getApplicationType(context, applicationId);
+      lendingDecisionURI = `/v2/decisioning-request/${application?.product}/${decisionType}`;
+      decisionPayload = {
+        applicationType: ApplicationTypes[appType],
+        initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
+        requestMetadata: {
+          rootApplicationId: application.id,
+          applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId), // refId is string in DB, they expect a Number
+          applicationId: application[APPLICANT_TYPES.Primary].id,
+          userId: input?.auth?.artifacts?.userId, // Should we assert, at this point should have been authenticated
+        },
+        isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
+        isMedicalResidency: false,
+        appInfo: applicationDecisionDetails,
+      } as unknown as DecisionRequestDetails;
+    }
 
     const { results, response } = await this.post<DecisionPostResponse>(
       {
@@ -560,6 +590,7 @@ export default class LendingDecisionServiceClient extends Client {
           application as typings.Application, // Pass full application. We need loan amount and rates details from root
           applicant,
           decisionType,
+          "v2",
         );
       }
     }
@@ -703,6 +734,7 @@ export default class LendingDecisionServiceClient extends Client {
     application: typings.Application,
     applicant: string,
     decisionType: string,
+    decisionAPIVersion: string = "v1", // needed to support v1 and v2 full app submission
   ): Promise<DecisionEntity> {
     const { details } = application[applicant];
     const applicantSSN = application[applicant].ssnTokenURI
@@ -764,6 +796,7 @@ export default class LendingDecisionServiceClient extends Client {
       input,
       context,
       details.financialAccounts,
+      decisionAPIVersion,
     );
 
     const ratesInfo = this.applicationRatesInfo(application);
@@ -1245,6 +1278,7 @@ export default class LendingDecisionServiceClient extends Client {
     input: Input<unknown>,
     context: PluginContext,
     financialAccountDetails: typings.Details["financialAccounts"],
+    decisionAPIVersion: string,
   ): Promise<DecisionEntity["financialInfo"]> {
     const plaidTokens: Array<string> = [];
     let hasPlaid = false;
@@ -1289,15 +1323,38 @@ export default class LendingDecisionServiceClient extends Client {
       );
     }
 
-    return {
-      hasPlaid,
-      ...(hasPlaid ? { plaidAccessTokens: plaidTokens, plaidRelayToken } : {}),
-      ...(!hasPlaid
-        ? {
-            financialAccounts: accounts ? accounts : [],
-          }
-        : {}),
-    };
+    if (decisionAPIVersion === "v1") {
+      /**
+       * v1 of full app submission decision endpoint
+       * only accepts financialAccounts or plaid if 'hasPlaid'
+       * is true or false respectively
+       *
+       * Can only have one or the other, not both details
+       */
+      return {
+        hasPlaid,
+        ...(hasPlaid
+          ? { plaidAccessTokens: plaidTokens, plaidRelayToken }
+          : {}),
+        ...(!hasPlaid
+          ? {
+              financialAccounts: accounts ? accounts : [],
+            }
+          : {}),
+      };
+    } else {
+      /**
+       * v2 of full app submission decision needs financialAccounts
+       * regardless if hasPlaid is true or false
+       */
+      return {
+        hasPlaid,
+        financialAccounts: accounts ? accounts : [],
+        ...(hasPlaid
+          ? { plaidAccessTokens: plaidTokens, plaidRelayToken }
+          : {}),
+      };
+    }
   }
 
   /**

@@ -437,5 +437,7 @@ export function ISODateToYYYYMMDD(dateStr: string) {
 }
 
 export function getApplicant(id: string, application: typings.Application) {
-  return (application.applicants || []).find((applicant) => applicant && applicant?.id === id);
+  return (application.applicants || []).find(
+    (applicant) => applicant && applicant?.id === id,
+  );
 }

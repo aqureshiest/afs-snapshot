@@ -157,24 +157,32 @@ interface IApplicationDecisionDetails {
 }
 
 interface IDecisionRequestDetails {
-  product: string;
-  decisioningWorkflowName: string;
+  product?: string;
+  decisioningWorkflowName?: string;
   decisionSource?: string;
+  initiator?: string;
   applicationType: string;
   requestMetadata: {
+    rootApplicationId?: string;
+    applicationRefId?: number;
     userId: string;
     applicationId: string;
+    cosignerApplicationId?: string;
+    cosignerUserId?: string;
   };
   isInternational: boolean;
+  isMedicalResidency?: boolean;
   appInfo: IApplicationDecisionDetails;
 }
 
 interface IRateRequestDetails {
   applicationType: string;
+  initiator: string;
   requestMetadata: {
-    referenceApplicationId: string;
+    rootApplicationId: string;
     userId: string;
     applicationId: string;
+    applicationRefId?: string;
     cosignerApplicationId?: string;
     cosignerUserId?: string;
   };
