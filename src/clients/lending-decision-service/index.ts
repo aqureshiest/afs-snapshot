@@ -847,7 +847,7 @@ export default class LendingDecisionServiceClient extends Client {
             ? employmentDetails
             : retiredEmploymentDetails,
         financialInfo: financialAccountDetails,
-        ratesInfo: ratesInfo,
+        ...(decisionAPIVersion === "v1" ? { ratesInfo: ratesInfo } : {}),
       };
     } else {
       formattedPayload = {

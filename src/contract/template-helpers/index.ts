@@ -410,14 +410,12 @@ export function hasActiveIncompleteApplication(
     return null;
   }
 
-  return (
-    Object.values(applications)
-      .filter(
-        (app) =>
-          app?.tag?.active && app.id !== id && app.tag.status === "incomplete",
-      )
-      .pop()
-  );
+  return Object.values(applications)
+    .filter(
+      (app) =>
+        app?.tag?.active && app.id !== id && app.tag.status === "incomplete",
+    )
+    .pop();
 }
 
 export function hasActivePostSubmissionApplication(
@@ -428,14 +426,12 @@ export function hasActivePostSubmissionApplication(
     return null;
   }
 
-  return (
-    Object.values(applications)
-      .filter(
-        (app) =>
-          app?.tag?.active && app.id !== id && app.tag.status !== "incomplete",
-      )
-      .pop()
-  );
+  return Object.values(applications)
+    .filter(
+      (app) =>
+        app?.tag?.active && app.id !== id && app.tag.status !== "incomplete",
+    )
+    .pop();
 }
 
 export function ISODateToYYYYMMDD(dateStr: string) {
@@ -449,4 +445,3 @@ export function getApplicant(id: string, application: typings.Application) {
     (applicant) => applicant && applicant?.id === id,
   );
 }
-
