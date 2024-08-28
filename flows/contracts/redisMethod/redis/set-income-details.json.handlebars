@@ -1,24 +1,19 @@
-{{noop (contract 'actions' (sum @index -1))}}
-{{#with (contract 'auth') as |auth|}}
-  {{#if auth.artifacts.userId}}
-  {
-    "redisMethod": "setUserState",
-    "key": {{{ json auth.artifacts.userId}}},
-    "value": 
-      {{#if ../request.body.values}}
-        {{#obj}}
-          {{#if ../request.body.values.annualIncome}}
-            {"annualIncome": {{../request.body.values.annualIncome}} }
-          {{/if}}
-          {{#if ../request.body.values.additionalAmount.[0]}}
-            {"additionalAmount": {{../request.body.values.additionalAmount.[0].value}} }
-          {{/if}}
-        {{/obj}}
-      {{/if}}
-  }
-  {{else}}
-    null
-  {{/if}}
+{{#if (and auth.artifacts.userId (or request.body.values.annualIncome request.body.values.additionalAmount.[0]))}}
+{
+  "redisMethod": "setUserState",
+  "key": "{{{auth.artifacts.userId}}}",
+  "value": 
+    {{#with request.body.values}}
+      {{#obj}}
+        {{#if annualIncome}}
+          {"annualIncome": {{annualIncome}} }
+        {{/if}}
+        {{#if additionalAmount.[0]}}
+          {"additionalAmount": {{additionalAmount.[0].value}} }
+        {{/if}}
+      {{/obj}}
+    {{/with}}
+}
 {{else}}
   null
-{{/with}}
+{{/if}}
