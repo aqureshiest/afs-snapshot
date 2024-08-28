@@ -406,13 +406,17 @@ export function hasActiveIncompleteApplication(
   id: string,
   applications: typings.Application[],
 ) {
+  if (Array.isArray(applications) && !applications.length) {
+    return null;
+  }
+
   return (
     Object.values(applications)
       .filter(
         (app) =>
           app?.tag?.active && app.id !== id && app.tag.status === "incomplete",
       )
-      .pop() || null
+      .pop()
   );
 }
 
@@ -420,13 +424,17 @@ export function hasActivePostSubmissionApplication(
   id: string,
   applications: typings.Application[],
 ) {
+  if (Array.isArray(applications) && !applications.length) {
+    return null;
+  }
+
   return (
     Object.values(applications)
       .filter(
         (app) =>
           app?.tag?.active && app.id !== id && app.tag.status !== "incomplete",
       )
-      .pop() || null
+      .pop()
   );
 }
 
@@ -441,3 +449,4 @@ export function getApplicant(id: string, application: typings.Application) {
     (applicant) => applicant && applicant?.id === id,
   );
 }
+

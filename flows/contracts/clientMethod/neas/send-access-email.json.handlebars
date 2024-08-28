@@ -1,18 +1,28 @@
-{{#if (and
-  (contract 'actions' 1)
-  (eq (lookup (contract 'actions' 1) "action") "identify")
-  request.params.id
-)}}
-  {
-    "action": "send-access-email",
-    "client": "NeasClient",
-    "method": "post",
-    "uri": "auth/identity/access-code/send",
-    "body": {
-      "applicationId": {{{json application.id}}},
-      "emailId": {{{json request.body.values.email}}}
-    }
-  }
+{{#with (contract 'actions' (sum @index -2)) as |identify|}}
+  {{#if (and
+    (gte identify.response.statusCode 200)
+		(lt identify.response.statusCode 400) 
+  )}}
+    {{#if (or
+      (hasActiveIncompleteApplication ../application.id ../applications)
+      (hasActivePostSubmissionApplication ../application.id ../applications)
+    )}}
+      null
+    {{else}}
+      {
+        "action": "send-access-email",
+        "client": "NeasClient",
+        "method": "post",
+        "uri": "auth/identity/access-code/send",
+        "body": {
+          "applicationId": {{{json ../application.id}}},
+          "emailId": {{{json ../request.body.values.email}}}
+        }
+      }
+    {{/if}}
+  {{else}}
+    null
+  {{/if}}
 {{else}}
   null
-{{/if}}
+{{/with}}

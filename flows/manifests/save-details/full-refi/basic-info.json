@@ -35,7 +35,7 @@
       "actions": [
         "full-refi.add-details-full-refi",
         "neas.identify",
-        "session",
+        "session.identify",
         "neas.send-access-email"
       ]
     }
