@@ -141,17 +141,6 @@ export default class LendingDecisionServiceClient extends Client {
     fragment ApplicantFragment on Application {
       id
       monolithUserID
-      details {
-        income {
-          amount
-          type
-          employer
-          name
-          title
-          start
-          end
-        }
-      }
       tag {
         applicants
       }
@@ -178,6 +167,9 @@ export default class LendingDecisionServiceClient extends Client {
           criteria: [
             {
               monolithApplicationID: id,
+            },
+            {
+              id: id,
             },
           ],
         },
@@ -500,6 +492,7 @@ export default class LendingDecisionServiceClient extends Client {
       decisionPayload = {
         applicationType: ApplicationTypes[appType],
         initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
+        decisionSource: "apply-flow-service",
         requestMetadata: {
           rootApplicationId: application.id,
           applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId), // refId is string in DB, they expect a Number
