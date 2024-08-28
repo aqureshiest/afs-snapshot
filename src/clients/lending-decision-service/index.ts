@@ -225,7 +225,7 @@ export default class LendingDecisionServiceClient extends Client {
       }
 
       if (status) {
-        await applicationServiceClient["sendRequest"]({
+        const ASresponse = (await applicationServiceClient["sendRequest"]({
           query: String.raw`mutation (
             $id: UUID!
             $meta: EventMeta
@@ -236,6 +236,7 @@ export default class LendingDecisionServiceClient extends Client {
               application {
                 id
               }
+              error
             }
           }`,
           variables: {
@@ -243,7 +244,15 @@ export default class LendingDecisionServiceClient extends Client {
             status,
             meta: { service: "apply-flow-service" },
           },
-        });
+        })) as unknown as { setStatus: Event };
+
+        if (
+          ASresponse &&
+          ASresponse.setStatus &&
+          ASresponse.setStatus["error"]
+        ) {
+          input?.response?.status(400).send(ASresponse.setStatus["error"]);
+        }
       }
     } catch (error) {
       this.log(
