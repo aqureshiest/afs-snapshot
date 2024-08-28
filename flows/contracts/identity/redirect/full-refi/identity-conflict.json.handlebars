@@ -19,9 +19,14 @@
                 "subCopy": "We noticed you started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication application.id applications) "root") "createdAt")}}. Would you like to save time by picking up where you left off?",
                 "asset": {
                   "center": true,
-                  "type": "Assets.LocalAsset",
+                  "type": "LocalAsset",
                   "name": "illustrations.info"
                 }
+              },
+              "modalProps": {
+                "maxWidth": "400px",
+                "showCloseButton": false,
+                "outsideClickEnable": false
               }
             },
             {
@@ -92,7 +97,11 @@
                       }
                     {{/if}}
                   {{/with}}
-                ]
+                ],
+                "groupProps": {
+                  "flexDirection": "column",
+                  "alignItems": "center"
+                }
               }
             }
           ]

@@ -9,7 +9,14 @@
     )}}
       {
         "name": "session",
-        "value": null
+        "value": null,
+        "options": {
+          "httpOnly": true,
+          "secure": true,
+          "path": "/",
+          "sameSite": "strict",
+          "domain": ".earnest.com"
+        }
       }
     {{else}}
         {
@@ -27,7 +34,14 @@
   {{else}}
     {
       "name": "session",
-      "value": null
+      "value": null,
+      "options": {
+        "httpOnly": true,
+        "secure": true,
+        "path": "/",
+        "sameSite": "strict",
+        "domain": ".earnest.com"
+      }
     }
   {{/if}}
 {{else}}

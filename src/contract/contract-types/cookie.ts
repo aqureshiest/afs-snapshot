@@ -40,7 +40,7 @@ class Cookie extends ContractExecutable<Definition, Definition, Output> {
     if (value) {
       input.response?.cookie(name, value, options);
     } else {
-      input.response?.clearCookie(name);
+      input.response?.clearCookie(name, options);
     }
 
     return { action: name, success: Boolean(value) };
