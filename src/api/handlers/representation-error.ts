@@ -71,7 +71,13 @@ const representationErrorHandler: Handler = async function (
       );
 
       if ([401, 403].includes(error.statusCode)) {
-        res.clearCookie("session");
+        res.clearCookie("session", {
+          httpOnly: true,
+          secure: true,
+          path: "/",
+          sameSite: "strict",
+          domain: ".earnest.com"
+        });
         res.clearCookie("access_token");
       }
 
