@@ -132,6 +132,7 @@ fragment ApplicantFragment on Application {
 
 fragment ApplicationFragment on Application {
   id
+  refId
   details {
     amount {
       requested

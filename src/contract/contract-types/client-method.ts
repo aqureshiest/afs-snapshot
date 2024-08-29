@@ -85,7 +85,7 @@ class ClientMethod extends ContractExecutable<
 
       this.log(context, {
         error,
-        message: `[d576aec7] ClientMethod contract-type failed on ${client} request`
+        message: `[d576aec7] ClientMethod contract-type failed on ${client} request`,
       });
 
       return {

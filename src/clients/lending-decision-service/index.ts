@@ -540,7 +540,7 @@ export default class LendingDecisionServiceClient extends Client {
         decisionSource: "apply-flow-service",
         requestMetadata: {
           rootApplicationId: application.id,
-          applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId), // refId is string in DB, they expect a Number
+          applicationRefId: Number(application.refId), // refId is string in DB, they expect a Number
           applicationId: application[APPLICANT_TYPES.Primary].id,
           userId: input?.auth?.artifacts?.userId, // Should we assert, at this point should have been authenticated
         },
