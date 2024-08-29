@@ -167,14 +167,22 @@ export default class LendingDecisionServiceClient extends Client {
           }
           `,
         variables: {
-          criteria: [
-            {
-              monolithApplicationID: id,
-            },
-            {
-              id: id,
-            },
-          ],
+          ...(!Number.isNaN(Number(id))
+            ? {
+                // We got V1 monolith application id
+                criteria: [
+                  {
+                    monolithApplicationID: id,
+                  },
+                ],
+              }
+            : {
+                criteria: [
+                  {
+                    id: id,
+                  },
+                ],
+              }),
         },
       })) as unknown as { applications: Array<typings.Application> };
 
