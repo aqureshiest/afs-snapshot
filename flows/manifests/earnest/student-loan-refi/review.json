@@ -34,7 +34,7 @@
         ],
         "student-info-review-rows": [
             "info/student-review.default",
-            "info/student-info/review.full-refi",
+            {"<":"info/student-info/review.full-refi", "decryptPiiSsn": "pii.get-token"},
             "info/student-education/review.full-refi",
             "info/student-loan-amount/review.full-refi",
             "info/student-employment/review.full-refi",
@@ -45,7 +45,7 @@
         ],
         "student-info-review-noFinancialAccounts-rows": [
             "info/student-review.default",
-            "info/student-info/review.full-refi",
+            {"<":"info/student-info/review.full-refi", "decryptPiiSsn": "pii.get-token"},
             "info/student-education/review.full-refi",
             "info/student-loan-amount/review.full-refi",
             "info/student-employment/review.full-refi",
@@ -54,7 +54,6 @@
             "questions/primary/disclosure.disclaimer"
         ],
         "back-button": "actions/back-buttons/full-refi.income-verification",
-        "decryptPiiSsn": "pii.get-token",
         "getSchools": "primary-get-school-name",
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.primary",

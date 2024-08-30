@@ -1,4 +1,5 @@
-{{#with application.primary}}
+{{#with (contract 'decryptPiiSsn') as |result|}}
+{{#with ../application.primary}}
 {
     "type": "info",
     "definition": {
@@ -16,9 +17,7 @@
                 {"id": "previousAddress", "label": "Previous Address", "value": "{{formatAddress (findPreviousAddress details.location)}}"}
             {{/if}}
             {"id": "citizenship", "label": "Citizenship", "value": "{{toUpper details.location.0.citizenship }}"}
-            {{#with (contract 'decryptPiiSsn') as |result|}}
-                {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' result.results.value}}"}
-            {{/with}}
+            {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' result.results.value}}"}
         {{/list}},
         "editAction": {
             "key": "",
@@ -30,4 +29,5 @@
         }
     }
 }
+{{/with}}
 {{/with}}
