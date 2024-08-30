@@ -1,0 +1,14 @@
+{
+  "icon": "HamburgerMenuIcon",
+  "action": {
+    "key": "sidebar",
+    "type": "sidebar",
+    "properties": {
+      "type": "navigation",
+      "properties": {
+        "dark": {{#if (contract 'dark')}}{{{json (contract 'dark')}}}{{else}}true{{/if}},
+        "items": {{{json (contract 'items')}}}
+      }
+    }
+  }
+}

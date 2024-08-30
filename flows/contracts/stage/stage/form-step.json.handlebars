@@ -1,0 +1,18 @@
+{
+    "key": {{#if (contract "stepKey")}}{{{json (contract "stepKey")}}}{{else}}"step-key"{{/if}},
+    "label": {{#if (contract "stepLabel")}}{{{json (contract "stepLabel")}}}{{else}}"Step Label"{{/if}},
+    {{#if (contract "stepBackAction")}}
+    "back": {
+      "hidden": {{{json (contract 'stepBackHidden')}}},
+      "action": {{{ json (contract 'stepBackAction') }}}
+    },
+    {{/if}}
+    {{#if (contract "stepProgress")}}
+      "progress":{{{json (contract 'stepProgress')}}},
+    {{/if}}
+    "submit": {
+        "copy": {{{json (contract 'stepSaveCopy')}}},
+        "action": {{{json (contract 'stepSaveAction')}}}
+    },
+    "rows": {{{json (contract 'stepRows')}}}
+}

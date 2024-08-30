@@ -1,0 +1,7 @@
+{
+  "key": {{#if (contract "key")}}{{{json (contract "key")}}}{{else}}"progress-item-key"{{/if}},
+  {{#if (contract "label")}}
+    "label": {{{json (contract "label")}}},
+  {{/if}}
+  "value": {{{json (contract "value")}}}
+}

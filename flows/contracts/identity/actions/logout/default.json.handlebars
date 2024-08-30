@@ -1,0 +1,7 @@
+{
+  "type": "logout",
+  "properties": {
+    "goTo": {{#if (contract 'goTo')}}{{{json (contract 'goTo')}}}{{else}}"{{env.BASE_URL}}"{{/if}},
+    "external": {{#if (contract 'external')}}{{{json (contract 'external')}}}{{else}}true{{/if}},
+  }
+}

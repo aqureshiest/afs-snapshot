@@ -1,44 +1,121 @@
 {
-  "*": "earnest-student-loan-refi/pages.response",
-  "stage": "earnest-student-loan-refi/pages/previous-address",
-  "pageLayout": "layout.sidebar",
-  "steps": [
-    "earnest-student-loan-refi/pages/previous-address.step-address"
-  ],
-  "address-rows": [
-    {"*": "info/header", "copy": {"@": "Confirm your address details"}, "subCopy": {"@": "Adding an additional address will help us verify your eligibility."}},
-    {
-      "*": "questions/primary/address",
-      "reviewStyle": {"@": "true"},
-      "baseLabel": {"@": "Your current address"}
+  "*": "stage",
+  "stage": {
+    "*": "stage.form",
+    "stageKey": {
+      "@": "apply"
     },
-    {
-      "*": "questions/primary/radio",
-      "key": {"@": "sixMonthResidence"},
-      "label": {"@": "Have you lived here for over 6 months?"},
-      "direction": {"@": "row"}
+    "stageLabel": {
+      "@": "Apply"
     },
-    {
-      "*": "questions/primary/address",
-      "key": {"@": "previousAddress"},
-      "expanded": {"@": "true"},
-      "streetLabel": {"@": "Previous address street"},
-      "conditional": "earnest-student-loan-refi/pages/previous-address.input-conditional",
-      "previousValue": {"@": "true"}
-    }
-  ],
-  "current-address-validation": {"*": "questions/primary/address/validation"},
-  "previous-address-validation": {
-    "*": "questions/primary/address/validation",
-    "matchesAgainstPath": {
-        "@": "previous-address.currentAddress"
+    "stageValidation": {
+      "*": "earnest-student-loan-refi/pages/previous-address.validation",
+      "current-address-validation": {
+        "*": "questions/primary/address/validation"
       },
-      "matchesError": {
-        "@": "Your previous address cannot match your current address."
+      "previous-address-validation": {
+        "*": "questions/primary/address/validation",
+        "matchesAgainstPath": {
+          "@": "previous-address-step.currentAddress"
+        },
+        "matchesError": {
+          "@": "Your previous address cannot match your current address."
+        }
       }
-  },
-  "back-action": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.degree" },
-  "save-action": { "*": "actions/request", "key": {"@": "save-address"}, "manifest": "earnest-student-loan-refi/urls/save.previous-address"}, "onError": [],
-  "save-copy": {"@": "Income & Employment"},
-  "redirect_homebase": "actions/navigate.homebase"
+    },
+    "stageLayout": {
+      "*": "stage/layout",
+      "header": [
+        {
+          "*": "stage/layout/header.logo",
+          "action": "actions/navigate.homebase"
+        }
+      ]
+    },
+    "stageSteps": [
+      {
+        "*": "stage.form-step",
+        "stepKey": {
+          "@": "previous-address-step"
+        },
+        "stepLabel": {
+          "@": "Confirm Address"
+        },
+        "stepProgress": [
+          {
+            "*": "stage.progress-item",
+            "label": {
+              "@": "Apply"
+            },
+            "value": {
+              "@": "60"
+            }
+          }
+        ],
+        "stepBackAction": {
+          "*": "actions/navigate",
+          "goTo": "earnest-student-loan-refi/urls.degree"
+        },
+        "stepSaveAction": {
+          "*": "actions/request",
+          "key": {
+            "@": "save-address"
+          },
+          "manifest": "earnest-student-loan-refi/urls/save.previous-address"
+        },
+        "onError": [],
+        "stepSaveCopy": {
+          "@": "Income & Employment"
+        },
+        "stepRows": [
+          {
+            "*": "info/header",
+            "copy": {
+              "@": "Confirm your address details"
+            },
+            "subCopy": {
+              "@": "Adding an additional address will help us verify your eligibility."
+            }
+          },
+          {
+            "*": "questions/primary/address",
+            "reviewStyle": {
+              "@": "true"
+            },
+            "baseLabel": {
+              "@": "Your current address"
+            }
+          },
+          {
+            "*": "questions/primary/radio",
+            "key": {
+              "@": "sixMonthResidence"
+            },
+            "label": {
+              "@": "Have you lived here for over 6 months?"
+            },
+            "direction": {
+              "@": "row"
+            }
+          },
+          {
+            "*": "questions/primary/address",
+            "key": {
+              "@": "previousAddress"
+            },
+            "expanded": {
+              "@": "true"
+            },
+            "streetLabel": {
+              "@": "Previous address street"
+            },
+            "conditional": "earnest-student-loan-refi/pages/previous-address.input-conditional",
+            "previousValue": {
+              "@": "true"
+            }
+          }
+        ]
+      }
+    ]
+  }
 }
