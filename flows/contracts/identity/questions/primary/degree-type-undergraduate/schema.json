@@ -3,7 +3,7 @@
   "enum": [
     "bachelors",
     "associates",
-    "incomplete"
+    "incomplete_grads"
   ],
   "errorMessage": {
     "enum": "Please select your degree type."

@@ -3,7 +3,7 @@
   "properties": {
     "month": {
       "type": "string",
-      "minLength": 2,
+      "minLength": 1,
       "maxLength": 2,
       "pattern": "^(1[012]|0?[1-9])$",
       "requiredParentFields": {
@@ -19,7 +19,7 @@
     },
     "day": {
       "type": "string",
-      "minLength": 2,
+      "minLength": 1,
       "maxLength": 2,
       "pattern": "^(([0]?[1-9])|([1-2][0-9])|(3[01]))$",
       "requiredParentFields": {
