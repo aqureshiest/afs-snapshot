@@ -1,14 +1,10 @@
-{{#if request.params.id}}
-  {
-    "action": "send-verification-email",
-    "client": "NeasClient",
-    "method": "post",
-    "uri": "/auth/identity/instant-access-code/send",
-    "body": {
-      "applicationId": {{{json application.id}}},
-      "emailId": {{{json (lookup (lookup (getApplicant request.params.id application) "details") "email")}}}
-    }
+{
+  "action": "send-verification-email",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/identity/instant-access-code/send",
+  "body": {
+     "applicationId": {{{json application.id}}},
+     "emailId": {{{json (lookup (lookup (getApplicant request.params.id application) "details") "email")}}}
   }
-{{else}}
-  null
-{{/if}}
+}

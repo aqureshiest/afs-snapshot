@@ -5,5 +5,6 @@
       "goTo": "{{env.BASE_URL}}/_/auth/neasauth/instant_verify?email={{lookup (lookup (getApplicant request.params.id application) "details") "email"}}",
       "external": true
     }
-  }
+    },
+    "results": {{{json (contract 'actions')}}}
 }
