@@ -445,3 +445,16 @@ export function getApplicant(id: string, application: typings.Application) {
     (applicant) => applicant && applicant?.id === id,
   );
 }
+
+export function mapCitizenship(citizenship:string): string | null {
+  const citizenshipMapping = Object.freeze({
+    citizen: "U.S. Citizen",
+    permanent_resident: "U.S. Permanent Resident",
+    asylee: "Asylee",
+    daca: "Deferred Action Childhood Arrivals",
+    h1_b: "H1-B",
+    "non-resident": "Non-U.S. Resident/Other",
+  });
+
+  return citizenshipMapping[citizenship] || null;
+}
