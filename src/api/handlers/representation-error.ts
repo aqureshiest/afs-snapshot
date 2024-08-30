@@ -76,7 +76,7 @@ const representationErrorHandler: Handler = async function (
           secure: true,
           path: "/",
           sameSite: "strict",
-          domain: ".earnest.com"
+          domain: ".earnest.com",
         });
         res.clearCookie("access_token");
       }

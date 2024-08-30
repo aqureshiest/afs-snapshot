@@ -28,10 +28,10 @@
               {
                 "copy": "View Rates",
                 "action": {
-                  "type": "redirect",
+                  "type": "navigate",
                   "properties": {
                     {{!-- Need to figure out how to populate the appId --}}
-                    "goTo": "{{env.LEGACY_RATES_URL}}?applicationID={{application.reference.monolithApplicationID}}",
+                    "goTo": "{{env.LEGACY_RATES_URL}}?applicationId={{this.application.primary.reference.monolithApplicationID}}",
                     "external": true
                   }
                 }
