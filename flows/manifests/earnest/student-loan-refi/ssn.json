@@ -11,6 +11,7 @@
         "*": "application/single.flattened",
         "application": "application-by-id-param"
       },
+      "env": "inputs/env.pii-token",
       "auth": {
         "*": "auth-artifacts",
         "strategies": [
