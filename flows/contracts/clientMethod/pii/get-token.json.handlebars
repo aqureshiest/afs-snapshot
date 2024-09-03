@@ -3,10 +3,14 @@
     "action": "getTokenValue",
     "client": "piiTokenServiceClient",
     "method": "get",
-    "uri": "/tokens",
-    "query": "uri={{encodeURIStr application.primary.ssnTokenURI}}",
+    "uri": "/tokens?uri={{encodeURIStr application.primary.ssnTokenURI}}",
     "headers": {
       "Authorization" : "Bearer {{{env.PII_TOKEN_SERVICE_KEY}}}"
+    },
+    "resiliency": {
+      "attempts": 3,
+      "delay": 100,
+      "timeout": 100000
     }
   }
 {{else}}

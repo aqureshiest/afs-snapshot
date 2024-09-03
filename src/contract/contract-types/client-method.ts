@@ -57,7 +57,7 @@ class ClientMethod extends ContractExecutable<
 
     assert(client, `[b7949087] invalid client '${clientName}'`);
 
-    const { method, uri, body, query, headers } = definition;
+    const { method, uri, body, query, headers, resiliency } = definition;
 
     try {
       const { results, response } = await client.request(
@@ -67,6 +67,7 @@ class ClientMethod extends ContractExecutable<
           body,
           query,
           headers,
+          resiliency,
         },
         context,
       );
