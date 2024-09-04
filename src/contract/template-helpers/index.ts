@@ -446,7 +446,7 @@ export function getApplicant(id: string, application: typings.Application) {
   );
 }
 
-export function mapCitizenship(citizenship:string): string | null {
+export function mapCitizenship(citizenship: string): string | null {
   const citizenshipMapping = Object.freeze({
     citizen: "U.S. Citizen",
     permanent_resident: "U.S. Permanent Resident",

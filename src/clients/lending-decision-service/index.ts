@@ -506,6 +506,7 @@ export default class LendingDecisionServiceClient extends Client {
      * to determine which applicants are submitted
      * ============================== */
     await this.setSubmittedStatus(context, application, applicationId);
+
     let decisionPayload;
     let lendingDecisionURI;
 
@@ -528,6 +529,29 @@ export default class LendingDecisionServiceClient extends Client {
         appInfo: applicationDecisionDetails,
       } as unknown as DecisionRequestDetails;
     } else {
+      /**
+       * For v2 accountless applications, the 'candidateUserId' is needed by Checkout Service.
+       * In the auth artifacts we store either the 'userId' or the 'candidateUserId' under
+       * the field auth.artifacts.userId.
+       *
+       * We can determine what value is stored in the field ' auth.artifacts.userId' by the 'verified' field in the artifacts
+       * If this field is 'true' this indicates that a user has verified who they are either through PII-verification or signing in
+       * and the value in 'auth.artifacts.userId' is the authenticated 'userID'
+       * else if 'false' this is the 'candidateUserId'
+       *
+       * Use the 'verified' key in setUserID() to determine under what reference key
+       * we save the auth.artifacts.userId
+       */
+      const userId = input?.auth?.artifacts?.userId;
+      const isVerified = Boolean(input?.auth?.artifacts?.verified);
+      assert(userId, "[3a97066b] Missing 'userId' from artifacts");
+
+      await this.setUserID(
+        context,
+        application[APPLICANT_TYPES.Primary].id,
+        userId,
+        isVerified,
+      );
       /**
        * Application Tags is an array of strings, where the first element is overall application status
        * and last element is the application type
@@ -1568,6 +1592,75 @@ export default class LendingDecisionServiceClient extends Client {
       const error = new Error("Failed to mark application as 'submitted'");
       context.logger.warn({
         message: setStatusError,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Method to save the userID to application service upon submission.
+   * by checkout service
+   * @param context
+   * @param applicationId
+   * @param userIdBeforeVerifyingThroughEmailId
+   */
+  private async setUserID(
+    context: PluginContext,
+    applicationId: string,
+    userID: string,
+    isVerified: boolean,
+  ): Promise<void> {
+    const applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient?.instance;
+    if (!applicationServiceClient)
+      throw new Error(
+        "[0f4e75fe] Application Service client instance not found",
+      );
+    const setUserIDResult = (await applicationServiceClient["sendRequest"](
+      {
+        query: String.raw`mutation (
+          $id: UUID!
+          $meta: EventMeta
+          $references: [ReferenceInput]
+        ) {
+          addReferences(id: $id, meta: $meta, references: $references) {
+            id,
+            error,
+          }
+        }`,
+        variables: {
+          id: applicationId,
+          ...(isVerified
+            ? {
+                references: [
+                  {
+                    referenceId: userID,
+                    referenceType: "userID",
+                  },
+                ],
+              }
+            : {
+                references: [
+                  {
+                    referenceId: userID,
+                    referenceType: "userIdBeforeVerifyingThroughEmailId",
+                  },
+                ],
+              }),
+          meta: { service: "apply-flow-service" },
+        },
+      },
+      context,
+    )) as { addReferences: { error: string | null } };
+
+    const setUserIDError = setUserIDResult?.addReferences?.error;
+
+    if (setUserIDError) {
+      const error = new Error(
+        "[4604f09e] Failed to set 'userIdBeforeVerifyingThroughEmailId'",
+      );
+      context.logger.warn({
+        message: setUserIDError,
       });
       throw error;
     }

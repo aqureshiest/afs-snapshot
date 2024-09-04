@@ -23,6 +23,8 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       isAuthorized: true,
       artifacts: {
         source: "lending-decisioning-service",
+        userId: uuidv4(),
+        verified: true,
       },
     },
     application: null,
@@ -829,6 +831,139 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.data.status, "completed");
   });
 
+  it("[692d13ff] should post a primary v2 app decision", async () => {
+    const primaryV2App = {
+      ...primaryAppData,
+      monolithLoanID: null,
+      applicants: [
+        {
+          ...primaryAppData.applicants[0],
+          monolithApplicationID: null,
+          reference: {
+            ...primaryAppData.applicants[0].reference,
+            monolithApplicationID: null,
+            monolithUserID: null,
+          },
+        },
+      ],
+    };
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              application: primaryV2App,
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Application Review",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const results = await client.postDecisionRequest(input, context, root);
+
+    assert.deepEqual(results.message, "Decisioning Request is processed.");
+    assert.deepEqual(results.data.decisionOutcome, "Application Review");
+    assert.deepEqual(results.data.status, "completed");
+  });
+
+  it("[e4944ada] should post a primary v2 app decision with unverified userID", async () => {
+    const primaryV2App = {
+      ...primaryAppData,
+      monolithLoanID: null,
+      applicants: [
+        {
+          ...primaryAppData.applicants[0],
+          monolithApplicationID: null,
+          reference: {
+            ...primaryAppData.applicants[0].reference,
+            monolithApplicationID: null,
+            monolithUserID: null,
+          },
+        },
+      ],
+    };
+
+    const otherInput = {
+      ...input,
+      auth: {
+        ...input.auth,
+        artifacts: {
+          ...input?.auth?.artifacts,
+          verified: false,
+        },
+      },
+    };
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              application: primaryV2App,
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Application Review",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const results = await client.postDecisionRequest(otherInput, context, root);
+
+    assert.deepEqual(results.message, "Decisioning Request is processed.");
+    assert.deepEqual(results.data.decisionOutcome, "Application Review");
+    assert.deepEqual(results.data.status, "completed");
+  });
+
   it("[36a5efe2] set the root application's status to 'submitted'", async () => {
     const mockFn = mock.fn(() => {
       return {
@@ -1038,7 +1173,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     await client.saveDecision(input, context, "576326", {
       data: {
-        decision: "Approved",
+        decision: "Denied",
       },
       webhookType: "APPLICATION_STATUS",
     });
@@ -1048,6 +1183,90 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     };
     assert(body.variables.id, root);
     assert(body.variables.status, "declined");
+  });
+
+  it("[8e796cf7] should set a root application's status to 'expired' for APPLICATION_STATUS events with an 'Time out' decision", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await client.saveDecision(input, context, "576326", {
+      data: {
+        decision: "Time out",
+      },
+      webhookType: "APPLICATION_STATUS",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert(body.variables.id, root);
+    assert(body.variables.status, "expired");
+  });
+
+  it("[f2e72388] should set a root application's status to 'withdrawn' for APPLICATION_STATUS events with an 'Withdrawn' decision", async () => {
+    const mockFn = mock.fn(() => {
+      return {
+        results: {
+          data: {
+            applications: [
+              {
+                id: primary,
+                root: {
+                  id: root,
+                },
+                primary: null,
+              },
+            ],
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      mockFn,
+    );
+
+    await client.saveDecision(input, context, "576326", {
+      data: {
+        decision: "Withdrawn",
+      },
+      webhookType: "APPLICATION_STATUS",
+    });
+
+    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+      body: { variables: { id: string; status: string } };
+    };
+    assert(body.variables.id, root);
+    assert(body.variables.status, "withdrawn");
   });
 
   it("[79712798] should set an applicant's status to 'review' for APPLICATION_REVIEW events with an 'pending_review' entity status", async () => {
