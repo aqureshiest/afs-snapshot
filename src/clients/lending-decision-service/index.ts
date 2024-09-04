@@ -144,6 +144,12 @@ export default class LendingDecisionServiceClient extends Client {
       tag {
         applicants
       }
+      applicants {
+        id
+        relationships {
+          relationship
+        }
+      }
     }
     `;
 
@@ -186,10 +192,13 @@ export default class LendingDecisionServiceClient extends Client {
         },
       })) as unknown as { applications: Array<typings.Application> };
 
-      application = result["applications"][0];
-      this.log({
-        message: `[6da39e53] decision request update application: ${JSON.stringify(application)}`,
-      });
+      application = flattenApplication(result["applications"][0]);
+      this.log(
+        {
+          message: `[6da39e53] decision request update application: ${JSON.stringify(application)}`,
+        },
+        context,
+      );
     } catch (error) {
       this.log(
         {
@@ -203,10 +212,19 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     try {
+      this.log(
+        {
+          message: `[478f644d] decision request update payload: ${JSON.stringify(payload)}`,
+        },
+        context,
+      );
       const status = this.deriveStatusFromEvent(payload);
-      this.log({
-        message: `[bb2d0cbd] decision request update status: ${JSON.stringify(status)}`,
-      });
+      this.log(
+        {
+          message: `[bb2d0cbd] decision request update status: ${JSON.stringify(status)}`,
+        },
+        context,
+      );
 
       let queryVars;
       if (!Number.isNaN(Number(id))) {
@@ -240,11 +258,11 @@ export default class LendingDecisionServiceClient extends Client {
             $status: ApplicationStatusName!
             ) {
               setStatus(id: $id, meta: $meta, status: $status) {
-              id
-              application {
                 id
-              }
-              error
+                application {
+                  id
+                }
+                error
             }
           }`,
           variables: {
@@ -573,6 +591,14 @@ export default class LendingDecisionServiceClient extends Client {
         appInfo: applicationDecisionDetails,
       } as unknown as DecisionRequestDetails;
     }
+
+    this.log(
+      {
+        appID: applicationId,
+        message: `[ad9489fd] requesting decision ${lendingDecisionURI}`,
+      },
+      context,
+    );
 
     const { results, response } = await this.post<DecisionPostResponse>(
       {
@@ -929,9 +955,6 @@ export default class LendingDecisionServiceClient extends Client {
   private deriveStatusFromEvent = (payload: WebhookEventPayload) => {
     const { data, webhookType } = payload;
     const { decision, entity } = data;
-    this.log({
-      message: `[478f644d] decision request update payload: ${JSON.stringify(payload)}`,
-    });
     let status;
     switch (webhookType) {
       /* ============================== *
@@ -1602,7 +1625,8 @@ export default class LendingDecisionServiceClient extends Client {
    * by checkout service
    * @param context
    * @param applicationId
-   * @param userIdBeforeVerifyingThroughEmailId
+   * @param userID
+   * @param isVerified
    */
   private async setUserID(
     context: PluginContext,
@@ -1616,6 +1640,12 @@ export default class LendingDecisionServiceClient extends Client {
       throw new Error(
         "[0f4e75fe] Application Service client instance not found",
       );
+    let referenceType = "userID";
+
+    if (!isVerified) {
+      referenceType = "userIdBeforeVerifyingThroughEmailId";
+    }
+
     const setUserIDResult = (await applicationServiceClient["sendRequest"](
       {
         query: String.raw`mutation (
@@ -1630,23 +1660,12 @@ export default class LendingDecisionServiceClient extends Client {
         }`,
         variables: {
           id: applicationId,
-          ...(isVerified
-            ? {
-                references: [
-                  {
-                    referenceId: userID,
-                    referenceType: "userID",
-                  },
-                ],
-              }
-            : {
-                references: [
-                  {
-                    referenceId: userID,
-                    referenceType: "userIdBeforeVerifyingThroughEmailId",
-                  },
-                ],
-              }),
+          references: [
+            {
+              referenceId: userID,
+              referenceType: referenceType,
+            },
+          ],
           meta: { service: "apply-flow-service" },
         },
       },
@@ -1656,9 +1675,7 @@ export default class LendingDecisionServiceClient extends Client {
     const setUserIDError = setUserIDResult?.addReferences?.error;
 
     if (setUserIDError) {
-      const error = new Error(
-        "[4604f09e] Failed to set 'userIdBeforeVerifyingThroughEmailId'",
-      );
+      const error = new Error(`[4604f09e] Failed to set ${referenceType}`);
       context.logger.warn({
         message: setUserIDError,
       });

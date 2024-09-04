@@ -15,7 +15,7 @@
       {
         "message": "neas authorization",
         "isValid": {{{json response.results.isValid}}},
-        "userId": {{{json response.results.userId}}},
+        "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}},
         "applicationId": {{{json response.results.applicationId}}}
       }
     {{/log}}
