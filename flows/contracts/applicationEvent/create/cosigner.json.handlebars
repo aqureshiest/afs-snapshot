@@ -1,51 +1,24 @@
-{{! application contains the app created by create/applicant, which is the primary}}
-{{#with request.body}}
-  {{#if (eq values.loanType "cosigned")}}
-  {{! cosigner creation requested }}
-    {{#if (not (includes application.tags "cosigned"))}}
-      {{! returns createApplication with cosigner relationship}}
-      {
-        "event": "createApplication",
-        "fields": "application { id root { id } }",
-        "payload": {
-          "relationships": [{
-            "as": "cosigner",
-            "to": "{{ application.id }}"
-          },
-          {
-            "as": "applicant",
-            "to": "{{ application.root.id }}"
-          }]
+{{! cosigner creation requested }}
+{{#if (not (includes application.tags "cosigned"))}}
+  {
+    "event": "create",
+    "payload": {
+      "application": {
+        "primary": {
+          "id": "{{ application.primary.id }}"
+        },
+        "root": {
+          "id": "{{ application.id }}"
+        },
+        "details": {
+          "name": {{{json request.body.values.name}}},
+          "email": "{{request.body.values.email}}"
         }
       }
-    {{else}}
-      null
-    {{/if}}
-  {{else}}
-    {{#if (eq values.loanType "solo")}}
-      {{! user requested solo loanType}}
-      {{#if (includes application.tags "cosigned")}}
-        {{! app contains a cosigner applicant}}
-        {{! should return deleteRelationship for cosigner applicant}}
-        {
-          "event": "deleteRelationship",
-          "fields": "application { id root { id } }",
-          "payload": {
-            "relationships": [{
-              "as": "cosigner",
-              "to": "{{ application.id }}"
-            },
-            {
-              "as": "applicant",
-              "to": "{{ application.root.id }}"
-            }]
-          }
-        }
-      {{else}}
-        null
-      {{/if}}
-    {{else}}
-      null
-    {{/if}}
-  {{/if}}
-{{/with}}
+    },
+    "fields": "application { id root { id } }"
+  }
+{{else}}
+  null
+{{/if}}
+  

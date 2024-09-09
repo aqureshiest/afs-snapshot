@@ -1,0 +1,52 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.refi-cosigner-invite",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/cosigner-invite"
+      ],
+      "cosigner-invite-rows": [
+        "info/cosigner-invite.full-refi",
+        "questions/cosigner/name.default",
+        "questions/cosigner/email.full-refi-invite"
+      ],
+      "back-button": "actions/back-buttons/full-refi.basic-info",
+      "save_action": "actions/cosigner-invite",
+      "cosigner_name_input_status": "questions/cosigner/name.status",
+      "cosigner_email_input_status": "questions/cosigner/email.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]

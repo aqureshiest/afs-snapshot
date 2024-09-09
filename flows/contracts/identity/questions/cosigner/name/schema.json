@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "properties": {
+    "first": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s'-]*$",
+      "errorMessage": {
+        "pattern": "First name contains invalid characters."
+      }
+    },
+    "last": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s'-]*$",
+      "errorMessage": {
+        "pattern": "Last name contains invalid characters."
+      }
+    },
+    "middle": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s'-]*$",
+      "errorMessage": {
+        "pattern": "Middle name contains invalid characters."
+      }
+    },
+    "title": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\s.']*$",
+      "errorMessage": {
+        "pattern": "Title contains invalid characters."
+      }
+    }
+  },
+  "required": [
+    "first",
+    "last"
+  ]
+}

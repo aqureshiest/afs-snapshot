@@ -1,0 +1,18 @@
+{
+    "type": "input",
+    "definition": {
+        "key": "name",
+        "type": "inputName",
+        "placeholders": {
+            "first": "First name",
+            "last": "Last name"
+        },
+        "status": {{{json (contract 'cosigner_name_input_status')}}},
+        "value": {{#if application.cosigner}} {{{json application.cosigner.details.name}}} {{else}} "" {{/if}},
+        "label": {
+            "copy": "Cosigner's full legal name"
+        },
+        "error": {{#if application.cosigner}} "{{{ ajv 'errors' 'questions/cosigner/name' application.cosigner.details.name }}}" {{else}} "" {{/if}}
+    }
+}
+

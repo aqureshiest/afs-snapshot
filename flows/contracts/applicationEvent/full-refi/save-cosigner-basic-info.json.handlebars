@@ -1,0 +1,25 @@
+{{#with (json (contract 'actions' 0)) as |cosigner|}}
+{{#if cosigner}}
+    {
+      "event": "addDetails",
+      "payload": {
+        "id": "{{cosigner.id}}",
+        "details": {{#obj}} {{! make sure to flatten each element into a single line}}
+          {{#with request.body.values}}
+            {{#if name}}
+              {"name": {{{json name}}} }
+            {{/if}}
+            {{#if email}}
+              {"email": "{{email}}"}
+            {{/if}}
+          {{/with}}
+        {{/obj}}
+      },
+      "fields": "application { id }"
+    }
+  {{else}}
+    {}
+  {{/if}}
+{{else}}
+  {}
+{{/with}}

@@ -1,0 +1,24 @@
+{
+    "key": "full-refi-cosigner-invite",
+    "type": "form",
+    "label": "Cosigner Invite",
+    "status": "notStarted",
+    "showProgress": true,
+    "pageLayout":{{{json (contract 'pageLayout')}}},
+    "seo": {
+        "pageTitle": "Earnest"
+    },
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "basic": {
+                "type": "object",
+                "properties": {
+                    "name": {{{json (schema 'questions/cosigner/name')}}},
+                    "email": {{{json (schema 'questions/cosigner/email')}}}
+                }
+            }
+        }
+    }
+}

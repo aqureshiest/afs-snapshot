@@ -1,0 +1,9 @@
+{{#with application.cosigner}}
+  {{#if (ajv 'validate' 'questions/cosigner/name' details.name) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{else}}
+   "incomplete"
+{{/with}}

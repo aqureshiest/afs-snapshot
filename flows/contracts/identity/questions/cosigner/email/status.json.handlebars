@@ -1,0 +1,9 @@
+{{#with application.primary}}
+  {{#if (ajv 'validate' 'questions/cosigner/email' details.email) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{else}}
+   "incomplete"
+{{/with}}

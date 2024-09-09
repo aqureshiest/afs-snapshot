@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "minLength": 1,
+  "format": "email",
+  "errorMessage": {
+    "minLength": "Email is required.",
+    "type": "Invalid email.",
+    "format": "Email address contains invalid characters."
+  }
+}
