@@ -10,15 +10,7 @@
     {
       "responses": [
         {
-          "is": {
-            "statusCode": 201,
-            "headers": {
-              "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "http://localhost:4000",
-              "Content-Type": "application/json"
-            },
-            "body": { "userId": 1, "exp": 9999999999, "isValid": true }
-          }
+          "inject": "<%- stringify(filename, 'neas/verify.js') %>"
         }
       ],
       "predicates": [
@@ -33,17 +25,7 @@
     {
       "responses": [
         {
-          "is": {
-            "statusCode": 201,
-            "headers": {
-              "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "http://localhost:4000",
-              "Content-Type": "application/json"
-            },
-            "body": { "notification_type": "application_unauthenticated_continue"
-            , "user" : { "id":"1", "email":"test@earnest.com" }
-            , "session": "1" }
-          }
+          "inject": "<%- stringify(filename, 'neas/accountless.js') %>"
         }
       ],
       "predicates": [
@@ -58,15 +40,7 @@
     {
       "responses": [
         {
-          "is": {
-            "statusCode": 201,
-            "headers": {
-              "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "http://localhost:4000",
-              "Content-Type": "application/json"
-            },
-            "body": { "session": "1" }
-          }
+          "inject": "<%- stringify(filename, 'neas/accountless.js') %>"
         }
       ],
       "predicates": [
@@ -85,7 +59,7 @@
             "statusCode": 201,
             "headers": {
               "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "http://localhost:4000",
+              "Access-Control-Allow-Origin": "http://localhost:3000",
               "Content-Type": "application/json"
             }
           }

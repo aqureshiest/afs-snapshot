@@ -15,6 +15,12 @@
           "authorization": []
         }
       ]
+    },
+    "env": {
+      "*": "inputs/env.combine",
+      "groups": [
+        "inputs/env.ui"
+      ]
     }
   },
   "outputs": {
