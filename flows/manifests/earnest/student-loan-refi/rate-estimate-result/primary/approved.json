@@ -1,5 +1,5 @@
 [{
-    "methods": ["post"],
+    "methods": ["get"],
     "parameters": [{
         "key": "id",
         "format": "uuid"
@@ -34,11 +34,10 @@
         }
     },
     "outputs": {
-        "*": "response.rate-interstitial",
-        "actions": ["rate-estimate-request"],
-        "rateDeclined": "actions/rate-estimate-request.declined",
-        "rateUnable": "actions/rate-estimate-request.unable",
-        "rateFrozen": "actions/rate-estimate-request.frozen",
-        "rateApproved": "actions/rate-estimate-request.approved"
+        "*": "rate-estimate-results-view",
+        "landing_stage": "rate-estimate-results/primary.rate-estimate-approved",
+        "pageLayout": "sidebar",
+        "getPaymentsAndRates": "rate-estimate-prices",
+        "redirect_homebase": "actions/homebase.default"
     }
 }]

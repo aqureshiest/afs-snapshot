@@ -24,7 +24,7 @@
   },
   "outputs": {
     "*": "response.rate-check-interstitial",
-    "rate-check-action": "actions/rate-estimate-request.rate-check",
+    "rate-check-action": "actions/rate-estimate-request/primary.rate-check",
     "actions": {
       "*": "actions/result.results",
       "actions": [

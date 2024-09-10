@@ -1,0 +1,46 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible",
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Declined",
+      "content": [
+        {
+          "key": "cosignerDeclinedHeader",
+          "type": "header",
+          "componentProps": {
+            "copy": "We are unable to determine if you qualify for an Earnest loan.",
+            "subCopy": "Because the information you have provided so far is inconclusive, we cannot provide preliminary rates. "
+          }
+        },
+        {
+          "key": "sosignerDeclinedeInfo",
+          "type": "md",
+          "componentProps": {
+            "content": "\n\n ## What does that mean? \n\n Consider the following basic eligibility guidelines as you decide whether to proceed with a full application. \n\n * Are you employed or do you have an offer letter? \n\n * Do you have enough savings to cover at least a month of normal expenses \n\n * Do you have a history of making payments on time?"
+          }
+        },
+        {
+          "key": "cosignerContinueAnyway",
+          "type": "md",
+          "componentProps": {
+            "content": "## Ready to continue? \n\n Our application takes about 10 minutes and requires a 'hard credit inquiry.' Hard credit inquiries lower your credit score slightly; however, the impact varies from person to person depending on other factors in the credit report. To qualify and take out loan on your own, you need to meet our [eligibility criteria](https://www.earnest.com/eligibility). \n\n"
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Continue to Apply",
+        "action": {
+          "key": "applyIndependent",
+          "type": "navigate",
+          "properties": {
+            "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.cosigner.id}}"
+          }
+        }
+      }
+    }
+  }
+}

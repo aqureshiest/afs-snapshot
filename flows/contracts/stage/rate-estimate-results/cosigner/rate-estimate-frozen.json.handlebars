@@ -1,0 +1,39 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible",
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Frozen",
+      "content": [
+        {
+          "key": "frozenHeader",
+          "type": "header",
+          "componentProps": {
+            "copy": "We are unable to provide rate estimates given your credit is frozen or locked",
+            "subCopy": "Because the information you have provided so far is inconclusive, we cannot provide preliminary rates. "
+          }
+        },
+        {
+          "key": "frozenInfo",
+          "type": "md",
+          "componentProps": {
+            "content": "## What does that mean? \n\n Please unlock or thaw your credit report so that we can get you a rate that fits your needs. \n\n"
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Continue to Apply",
+        "action": {
+          "key": "applyIndependent",
+          "type": "navigate",
+          "properties": {
+            "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.cosigner.id}}"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "type": "flexible",
+  "label": "Rate Estimate Result",
+  "pageLayout": {{{json (contract 'pageLayout')}}},
+  "definition": {
+    "type": "flexible",
+    "definition": {
+      "key": "landing",
+      "label": "Rate Estimate Result Approved",
+      "content": [
+        {
+          "key": "approvedHeader",
+          "type": "header",
+          "componentProps": {
+            "copy": "Congratulations, here are your rate estimates!",
+            "subCopy": "Final rates, terms, and approval depend on our review of your full application."
+          }
+        },
+        {
+          "key": "approvedRatesTable",
+          "type": "ratesTable",
+          "componentProps": {
+            {{#with (contract 'getPaymentsAndRates') as | results |}}
+              {{#with (mapRatePayments results) as | filteredResults |}}
+                "data": [
+                  {
+                    "key": "fixedRate",
+                    "label": "Fixed Rates",
+                    "content": [
+                      {
+                        "key": "fixedRateMarkdown",
+                        "type": "md",
+                        "componentProps": {
+                          "content": "## Fixed Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Fixed rate means that your interest rate will not change over the course of your loan term."
+                        }
+                      }
+                    ],
+                    "table": {
+                      "headers": ["loan term", "interest rate *", "payment/mo"],
+                      "rows": {{{json filteredResults.fixedData}}},
+                      "metadata": {
+                        "centered": true,
+                        "stylePreset": "lastColumnBGGray"
+                      },
+                      "footer": "&ast; Rates include 0.25% Auto Pay discount."
+                    }
+                  },
+                  {
+                    "key": "variableRate",
+                    "label": "Variable Rates",
+                    "content": [
+                      {
+                        "key": "variableRatesMarkdown",
+                        "type": "md",
+                        "componentProps": {
+                          "content": "## Variable Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Variable rate means that your interest rate will change over the course of your loan term."
+                        }
+                      }
+                    ],
+                    "table": {
+                      "headers": ["loan term", "interest rate *", "payment/mo"],
+                      "rows": {{{json filteredResults.variableData}}},
+                      "metadata": {
+                        "centered": true,
+                        "stylePreset": "lastColumnBGGray"
+                      },
+                      "footer": "&ast; Rates include 0.25% Auto Pay discount."
+                    }
+                  }
+                ]
+              {{/with}}
+            {{/with}}
+          }
+        },
+        {
+          "key": "ApprovedCallout",
+          "type": "callout",
+          "componentProps": {
+            "content": [
+              {
+                "key": "SharedWithPrimary",
+                "type": "md",
+                "componentProps": {
+                  "content":"#### Shared with your primary \n These rates have also been shared to your primary. Your primary will get an email to see these estimated rates."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "primaryAction": {
+        "copy": "Continue to Apply",
+        "action": {
+          "key": "applyIndependent",
+          "type": "navigate",
+          "properties": {
+            "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.cosigner.id}}"
+          }
+        }
+      }
+    }
+  }
+}

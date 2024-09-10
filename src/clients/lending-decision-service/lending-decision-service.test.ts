@@ -749,7 +749,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       } catch (error) {
         assert.strictEqual(
           error.message,
-          "[378e8d85] Failed to get price curves: Cannot read properties of undefined (reading 'id')",
+          "[378e8d85] Failed to get artifacts: Cannot read properties of undefined (reading 'id')",
         );
       }
     });

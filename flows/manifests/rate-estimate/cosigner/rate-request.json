@@ -35,11 +35,10 @@
     },
     "outputs": {
         "*": "response.rate-interstitial",
-        "actions": ["rate-estimate-status"],
-        "rateDeclined": "actions/rate-estimate-request.declined",
-        "rateUnable": "actions/rate-estimate-request.unable",
-        "rateFrozen": "actions/rate-estimate-request.frozen",
-        "statusAction": "actions/rate-estimate-request.rateEstimateStatus",
-        "goToInterstitial": "actions/rate-estimate-request.rateEstimateStatus"
+        "actions": ["rate-estimate-request"],
+        "rateDeclined": "actions/rate-estimate-request/cosigner.declined",
+        "rateUnable": "actions/rate-estimate-request/cosigner.unable",
+        "rateFrozen": "actions/rate-estimate-request/cosigner.frozen",
+        "rateApproved": "actions/rate-estimate-request/cosigner.approved"
     }
 }]

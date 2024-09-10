@@ -1,6 +1,6 @@
 {
     "*": "rate-estimate-results-view",
-    "landing_stage": "rate-estimate-results.rate-estimate-unable",
+    "landing_stage": "rate-estimate-results/primary.rate-estimate-frozen",
     "pageLayout": "sidebar",
     "redirect_homebase": "actions/homebase.default"
 }

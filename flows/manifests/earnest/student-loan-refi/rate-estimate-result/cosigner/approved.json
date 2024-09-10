@@ -35,7 +35,7 @@
     },
     "outputs": {
         "*": "rate-estimate-results-view",
-        "landing_stage": "rate-estimate-results.rate-estimate-approved",
+        "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
         "pageLayout": "sidebar",
         "getPaymentsAndRates": "rate-estimate-prices",
         "redirect_homebase": "actions/homebase.default"

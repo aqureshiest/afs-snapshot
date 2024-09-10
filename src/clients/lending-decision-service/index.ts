@@ -405,7 +405,7 @@ export default class LendingDecisionServiceClient extends Client {
 
     if (response.statusCode && response.statusCode >= 400) {
       const error = new Error(
-        `[378e8d85] Failed to get price curves: ${response.statusMessage}`,
+        `[378e8d85] Failed to get artifacts: ${response.statusMessage}`,
       );
       context.logger.error({
         decisionToken: lendingDecisionId,
@@ -418,6 +418,7 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     const filteredPrices = this.filterPriceCurve(
+      context,
       results.data.artifacts.priceCurve,
     );
     const prices = filteredPrices.map((filteredPrice, index) => {
@@ -1784,21 +1785,34 @@ export default class LendingDecisionServiceClient extends Client {
   }
 
   private filterPriceCurve(
+    context: PluginContext,
     priceCurve: ArtifactGetResponse["data"]["artifacts"]["priceCurve"],
   ): Array<FilteredPrices> {
-    return priceCurve
-      .filter((price) => {
-        if (Object.values(TermLengths).includes(price.term_months as number))
-          return price;
-      })
-      .flatMap((price) => {
-        return price.rates.map((rate) => {
-          return {
-            rate: Math.round(rate.rate * 100),
-            rateType: rate.rate_type,
-            term: price.term_months,
-          };
+    try {
+      return priceCurve
+        .filter((price) => {
+          if (Object.values(TermLengths).includes(price.term_months as number))
+            return price;
+        })
+        .flatMap((price) => {
+          return price.rates.map((rate) => {
+            return {
+              rate: Math.round(rate.rate * 100),
+              rateType: rate.rate_type,
+              term: price.term_months,
+            };
+          });
         });
-      });
+    } catch (error) {
+      this.log(
+        {
+          error,
+          message: `[2f9ca551] processing priceCurve`,
+          stack: error.stack,
+        },
+        context,
+      );
+      throw error;
+    }
   }
 }
