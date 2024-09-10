@@ -16,7 +16,7 @@
               "key": "header1",
               "type": "header",
               "componentProps": {
-                  "copy": "Let's get started refinancing your loans."
+                  "copy": {{{json (contract 'headerLabel')}}}
               }
           },
           {
@@ -53,12 +53,44 @@
               "componentProps": {}
           },
           {
+              "key": "subheader1",
+              "type": "md",
+                "componentProps": {
+                    "content": ":Heading[Here’s what you may expect: :props[{marginBottom: '20px', fontSize: '20px', fontWeight: 400, display: 'block'}]]"
+                }
+          },
+          {{#if application.isCosigner}}
+          {
+              "key": "loanDetails",
+              "type": "row",
+              "componentProps": {
+                  "stackOnMobile": true,
+                  "content": [
+                      {
+                          "key": "loanDetails1",
+                          "type": "callout",
+                          "componentProps": {
+                              "content": [
+                                  {
+                                      "key": "loanDetails2",
+                                      "type": "md",
+                                      "componentProps": {
+                                          "content": ":Heading[Loan details requested] \n\n Primary requested an estimated amount to refinance \n\n ${{formatCentsToDollars application.details.amount.requested}}"
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  ]
+              }
+          },
+          {{/if}}
+          {
               "key": "list2",
               "type": "list",
               "componentProps": {
                   "type": "ol",
                   "variant": "stepper",
-                  "label": "Here’s what you may expect:",
                   "items": [
                       {
                           "copy": ":Heading[Get personalized rate estimates] \n\n Provide basic details about yourself \n Soft credit check: no impact on your credit"
@@ -145,14 +177,24 @@
           "buttons": [
               {
                   "copy": "Get your rates",
-                  "action": {
-                      "key": "neas-request",
-                      "type": "request",
-                      "properties": {
-                        "manifest": "create-accountless-application",
-                        "method": "POST"
-                      }
-                  }
+                  {{#if application.isCosigner}}
+                    "action": {
+                        "key": "cosigner-basic-info-request",
+                        "type": "navigate",
+                        "properties": {
+                            "goTo" : "earnest/student-loan-refi/basic-info/{{application.applicant.id}}"
+                        }
+                    }
+                  {{else}}
+                    "action": {
+                        "key": "neas-request",
+                        "type": "request",
+                        "properties": {
+                            "manifest": "create-accountless-application",
+                            "method": "POST"
+                        }
+                    }
+                  {{/if}}
               }
           ]
       }

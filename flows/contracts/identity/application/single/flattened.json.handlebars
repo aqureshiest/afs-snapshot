@@ -7,6 +7,16 @@
     {{#unless application.primary}}
       { "primary": {{{ json application.applicants.[0] }}} }
     {{/unless}}
+    {{#unless application.cosigner}}
+      { "cosigner": {{{ json application.applicants.[1] }}} }
+    {{/unless}}
+    {{#unless application.applicant}}
+      {{#if (eq ../request.params.id application.applicants.[0].id)}}
+        { "applicant": {{{ json application.applicants.[0] }}}, "isPrimary": true, "isCosigner":false }
+      {{else if (eq ../request.params.id application.applicants.[1].id)}}
+        { "applicant": {{{ json application.applicants.[1] }}}, "isPrimary": false, "isCosigner":true }
+      {{/if}}
+    {{/unless}}
     {{{ json application }}}
   {{/obj}}
 {{else}}
