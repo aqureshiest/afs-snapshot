@@ -1,0 +1,36 @@
+{
+  "type": "input",
+  "definition": {
+      "key": "graduate-degree-type",
+      "type": "inputSelect",
+      "layout": "default",
+      "direction": "column",
+      "items": [
+        { "id": "mba", "value": "mba", "label": "MBA" },
+        { "id": "masters_arts", "value": "masters_arts", "label": "Master of Arts" },
+        { "id": "masters_engineering", "value": "masters_engineering", "label": "Master of Science / Engineering" },
+        { "id": "phd", "value": "phd", "label": "PhD" },
+        { "id": "masters_other", "value": "masters_other", "label": "Other Master's (MPP, MPG)" },
+        { "id": "jd", "value": "jd", "label": "Doctor of Jurisprudence" },
+        { "id": "dvm", "value": "dvm", "label": "Doctor of Veterinany Medicine" },
+        { "id": "do", "value": "do", "label": "Doctor of Osteopathic Medicine" },
+        { "id": "md", "value": "md", "label": "Doctor of Medicine" },
+        { "id": "dds", "value": "dds", "label": "Doctor of Dentistry" },
+        { "id": "medical_other", "value": "medical_other", "label": "Other Medical (RN, PA)" },
+        { "id": "pharmd", "value": "pharmd", "label": "Doctor of Pharmacy" },
+        { "id": "other", "value": "other", "label": "Other Doctorate" }
+      ],
+      "status": "incomplete",
+      "value": "{{userState.graduate-degree-type}}",
+      "conditional": [
+        [{
+          "field": "refi-degree.degree-type",
+          "op": "valueEquals",
+          "value": "graduate"
+        }]
+      ],
+      "label": {
+          "copy": "Graduate Degree type"
+      }
+  }
+}

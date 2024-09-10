@@ -1,0 +1,54 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-loan-refi/education",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/education.full-refi"
+      ],
+      "back-button": "actions/back-buttons.education",
+      "student-education-info-rows": [
+        "info/student-education.full-refi",
+        "questions/cosigner/degree-type.default",
+        "questions/cosigner/school.full-refi-graduate",
+        "questions/cosigner/school.full-refi-undergraduate",
+        "questions/cosigner/degree-type-undergraduate",
+        "questions/cosigner/degree-type-graduate",
+        "questions/cosigner/graduationDate.full-refi"
+
+      ],
+      "primary_school_input_status": "questions/cosigner/school.status",
+      "save-education-details": "actions/save-details/full-refi/cosigner.education"
+    }
+  }
+]

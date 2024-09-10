@@ -1,0 +1,12 @@
+{
+  "type": "string",
+  "enum": [
+    "undergraduate",
+    "graduate",
+    "high-school"
+  ],
+  "errorMessage": {
+    "enum": "Please select your degree type."
+  },
+  "required": ["degree-type"]
+}
