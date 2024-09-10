@@ -1,9 +1,9 @@
-{{#if application.primary.ssnTokenURI}}
+{{#if application.applicant.ssnTokenURI}}
   {
     "action": "getTokenValue",
     "client": "piiTokenServiceClient",
     "method": "get",
-    "uri": "/tokens?uri={{encodeURIStr application.primary.ssnTokenURI}}",
+    "uri": "/tokens?uri={{encodeURIStr application.applicant.ssnTokenURI}}",
     "headers": {
       "Authorization" : "Bearer {{{env.PII_TOKEN_SERVICE_KEY}}}"
     },

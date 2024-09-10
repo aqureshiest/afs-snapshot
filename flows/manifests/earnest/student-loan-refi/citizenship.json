@@ -1,17 +1,46 @@
-{
-    "*": "full-refi",
-    "stage": "student-info-stage.full-refi",
-    "pageLayout": "layout.sidebar",
-    "steps": [
-      "student-info-form/citizenship.full-refi"
-    ],
-    "student-info-citizenship-rows": [
-      "info/student-info.citizenship",
-      "questions/primary/citizenship.refi"
-    ],
-    "back-button": "actions/back-buttons/full-refi.address",
-    "save_citizenship_details_action": "actions/save-details/full-refi.citizenship",
-    "primary_citizenship_input_status": "questions/primary/citizenship.status",
-    "redirect_homebase": "actions/homebase.default",
-    "onError": []
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/citizenship.full-refi"
+      ],
+      "student-info-citizenship-rows": [
+        "info/student-info.citizenship",
+        "questions/primary/citizenship.refi"
+      ],
+      "back-button": "actions/back-buttons/full-refi.address",
+      "save_citizenship_details_action": "actions/save-details/full-refi.citizenship",
+      "primary_citizenship_input_status": "questions/primary/citizenship.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
   }
+]

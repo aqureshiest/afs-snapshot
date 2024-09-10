@@ -1,10 +1,10 @@
 {{#if request.params.id}}
     {{#with (contract 'actions' (sum @index -1)) as |result|}}
-        {{#if ../application.primary.ssnTokenURI}}
+        {{#if ../application.applicant.ssnTokenURI}}
           {
               "event": "reference",
               "payload": {
-                  "id": "{{../application.primary.id}}",
+                  "id": "{{../application.applicant.id}}",
                   "reference": { "ssnTokenURI": {{{json result.results.uri}}} }
               },
               "fields": "application { id }"
@@ -13,7 +13,7 @@
           {
               "event": "addReferences",
               "payload": {
-                "id": "{{../application.primary.id}}",
+                "id": "{{../application.applicant.id}}",
                 "references": [{"referenceId": {{{json result.results.uri}}}, "referenceType": "ssnTokenURI"}] 
               },
               "fields": "application { id }"
