@@ -15,6 +15,8 @@
         { "applicant": {{{ json application.applicants.[0] }}}, "isPrimary": true, "isCosigner":false }
       {{else if (eq ../request.params.id application.applicants.[1].id)}}
         { "applicant": {{{ json application.applicants.[1] }}}, "isPrimary": false, "isCosigner":true }
+      {{else if (eq ../request.params.id application.id)}}
+        { "applicant": {{{ json application.applicants.[0] }}}, "isPrimary": false, "isCosigner":false }
       {{/if}}
     {{/unless}}
     {{{ json application }}}
