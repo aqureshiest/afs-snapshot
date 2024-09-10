@@ -1,0 +1,71 @@
+{
+  "*": "stage",
+  "stage": {
+    "*": "stage.view",
+    "stageKey": {
+      "@": "get-rates"
+    },
+    "stageLabel": {
+      "@": "Current Address"
+    },
+    "stageLayout": {
+      "*": "stage/layout",
+      "header": [
+        {
+          "*": "stage/layout/header.logo",
+          "action": "actions/navigate.homebase"
+        }
+      ]
+    },
+    "bottomNavigation": {
+      "*": "stage.bottom-navigation",
+      "buttons": [{
+        "*": "actions.with-copy",
+        "copy": {
+          "@": "Send reminder to primary"
+        },
+        "action": {
+          "*": "actions/navigate",
+          "goTo": "earnest-student-loan-refi/urls.reminder-sent"
+        }
+      }]
+    },
+    "stageContent": [
+      {
+        "*": "flexible-content/items/header",
+        "copy": {
+          "@": "Your application at a glance"
+        },
+        "subCopy": {
+          "@": "You’re almost done with submitting your full application - send your cosigner an reminder to finish their portion."
+        }
+      },
+      {
+        "*": "flexible-content/items/progress-card",
+        "label": {
+          "@": "Cosigner's info"
+        },
+        "status": {
+          "*": "asset/local",
+          "icon": "asset/local/icons.green-check"
+        },
+        "progress": {
+          "@": "100"
+        }
+      },
+      {
+        "*": "flexible-content/items/progress-card",
+        "label": {
+          "@": "Primary's info"
+        },
+        "status": { "@": "in progress"},
+        "progress": {
+          "@": "50"
+        },
+        "containerProps": {
+          "@": {"marginTop": "24px"}
+        }
+      }
+    ]
+  }
+}

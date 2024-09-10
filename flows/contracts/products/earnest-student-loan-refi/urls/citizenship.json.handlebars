@@ -1,1 +1,3 @@
-"{{application.reference.brand}}/student-loan-refi/citizenship/{{{application.id}}}"
+{{#applicantById}}
+  "{{../application.reference.brand}}/student-loan-refi/{{#if isCosigner}}cosigner/{{/if}}citizenship/{{{applicant.id}}}"
+{{/applicantById}}

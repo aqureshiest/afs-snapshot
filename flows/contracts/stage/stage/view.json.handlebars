@@ -1,0 +1,20 @@
+{
+    "key": {{#if (contract "stageKey")}}{{{json (contract "stageKey")}}}{{else}}"stage-key"{{/if}},
+    "type": "view",
+    "label": {{#if (contract "stageLabel")}}{{{json (contract "stageLabel")}}}{{else}}"Stage Label"{{/if}},
+    {{#if (contract "stageLayout")}}
+      "pageLayout":{{{json (contract 'stageLayout')}}},
+    {{/if}}
+    {{#if (contract "stageSeo")}}
+      "seo":{{{json (contract 'stageSeo')}}},
+    {{/if}}
+    "definition": {
+      "type": "landing",
+      "definition": {
+        {{#if (contract "bottomNavigation")}}
+          "bottomNavigation": {{{json (contract "bottomNavigation")}}},
+        {{/if}}
+        "content": {{{maybe (json (contract 'stageContent')) []}}}
+      }
+    }
+}

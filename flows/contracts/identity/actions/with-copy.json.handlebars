@@ -1,4 +1,9 @@
 {
-  "copy": {{{json (contract 'copy')}}},
+  {{#if (contract "copy")}}
+    "copy": {{{json (contract 'copy')}}},
+  {{/if}}
+  {{#if (contract "text")}}
+    "text": {{{json (contract 'text')}}},
+  {{/if}}
   "action": {{{json (contract 'action')}}}
 }

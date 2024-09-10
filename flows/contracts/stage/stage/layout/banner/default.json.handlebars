@@ -1,0 +1,10 @@
+{
+  {{#if (contract "secondaryAction")}}
+    "additionalButtonProps": {{{json (contract "secondaryAction")}}},
+  {{/if}}
+  {{#if (contract "primaryAction")}}
+    "actionButtonProps": {{{json (contract "primaryAction")}}},
+  {{/if}}
+  "variant": {{{json (maybe (contract "variant") "brand")}}},
+  "text": {{{json (maybe (contract "copy") "Banner content")}}}
+}

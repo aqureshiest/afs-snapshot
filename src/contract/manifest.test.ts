@@ -1010,6 +1010,88 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
 
+  it("[ba9215d8] applicantById helper", async () => {
+    const input = (paramId) => ({
+      request: {
+        params: {
+          id: paramId
+        },
+      },
+      application: {
+        primary: { id: 1 },
+        cosigner: { id: 2 },
+      },
+    } as unknown as Input<unknown>);
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {{#applicantById}}
+              {
+                "applicantId": {{{applicant.id}}},
+                "isPrimary": {{{isPrimary}}},
+                "isCosigner": {{{isCosigner}}}
+              }
+            {{/applicantById}}
+          `,
+          }),
+        },
+      },
+    );
+
+    const resultPrimary = await manifest.execute(context, {}, input(1));
+    const parsedPrimary = JSON.parse(JSON.stringify(resultPrimary));
+    assert.deepEqual(parsedPrimary, {
+      applicantId: 1,
+      isPrimary: true,
+      isCosigner: false,
+    });
+
+    const resultCosigner = await manifest.execute(context, {}, input(2));
+    const parsedCosigner = JSON.parse(JSON.stringify(resultCosigner));
+    assert.deepEqual(parsedCosigner, {
+      applicantId: 2,
+      isPrimary: false,
+      isCosigner: true,
+    });
+  });
+
+  it("[ba9215d8] maybe helper", async () => {
+    const input = {} as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+        {
+          "shouldBeTrue": {{{maybe true false}}},
+          "shouldAlsoBeTrue": {{{maybe false true}}}
+        }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      shouldBeTrue: true,
+      shouldAlsoBeTrue: true
+    });
+  });
+
   it("[ba9215d8] spread helper", async () => {
     const input = {} as Input<unknown>;
     const manifest = new Manifest(

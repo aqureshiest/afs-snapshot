@@ -106,6 +106,7 @@ export const manifestSchema = {
         anyOf: [
           { type: "string" },
           { $ref: "#/$defs/contracts" },
+          {type: "object"},
           {
             type: "array",
             items: {

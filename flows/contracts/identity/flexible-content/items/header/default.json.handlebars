@@ -1,0 +1,19 @@
+{
+  "key": {{{json (contract "item-key")}}},
+  "type": "header",
+  {{#if (contract "containerProps")}}
+    "containerProps": {{{json (contract "containerProps")}}},
+  {{/if}}
+  "componentProps": {
+    {{#if (contract "subCopy")}}
+      "subCopy": {{{json (contract "subCopy")}}},
+    {{/if}}
+    {{#if (contract "asset")}}
+      "asset": {{{json (contract "asset")}}},
+    {{/if}}
+    {{#if (contract "centered")}}
+      "centered": {{{json (contract "centered")}}},
+    {{/if}}
+    "copy": {{{json (maybe (contract "copy") "Add header copy")}}}
+  }
+}

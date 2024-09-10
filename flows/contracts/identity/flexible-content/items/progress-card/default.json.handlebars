@@ -1,0 +1,16 @@
+{
+  "componentProps": {
+    {{#if (contract "action")}}
+      "action": {{{json (contract "action")}}},
+    {{/if}}
+    "label": {{{json (maybe (contract "label") "Add a label")}}},
+    "status": {{{json (maybe (contract "status") "in progress")}}},
+    "progress": {{{json (number (maybe (contract "progress") 0))}}}
+  },
+  {{#if (contract "containerProps")}}
+    "containerProps": {{{json (contract "containerProps")}}},
+  {{/if}}
+  "key": {{{json (contract "item-key")}}},
+  "type": "progressCard"
+
+}

@@ -1,0 +1,58 @@
+{
+  "*": "stage",
+  "stage": {
+    "*": "stage.view",
+    "stageKey": {
+      "@": "invite-sent"
+    },
+    "stageLabel": {
+      "@": "Invite Sent"
+    },
+    "stageLayout": {
+      "*": "stage/layout",
+      "header": [
+        {
+          "*": "stage/layout/header.logo",
+          "action": "actions/navigate.homebase"
+        }
+      ]
+    },
+    "bottomNavigation": {
+      "*": "stage.bottom-navigation",
+      "buttons": [{
+        "*": "actions.with-copy",
+        "copy": {
+          "@": "Finish my application"
+        },
+        "action": {
+          "*": "actions/navigate",
+          "goTo": "earnest-student-loan-refi/urls.previous-address"
+        }
+      }]
+    },
+    "stageContent": [
+      {
+        "*": "flexible-content/items/header",
+        "centered": {
+          "@": "true"
+        },
+        "asset": {
+          "*": "asset/local",
+          "icon": "asset/local/illustrations.success",
+          "centered": {
+            "@": "true"
+          }
+        },
+        "copy": {
+          "@": "Your invite has been sent!"
+        },
+        "subCopy": {
+          "@": "You can track your cosigner’s progress and once you’ve finished your part of the application."
+        },
+        "containerProps": {
+          "@": { "flexGrow": 1, "alignContent": "center" }
+        }
+      }
+    ]
+  }
+}

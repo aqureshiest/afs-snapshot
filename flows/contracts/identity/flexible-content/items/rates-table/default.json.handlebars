@@ -1,0 +1,56 @@
+{{#with (contract 'getPaymentsAndRates') as | results |}}
+{{#with (mapRatePayments results) as | filteredResults |}}
+{
+  "key": {{{json (maybe (contract "item-key") "content-rates-table")}}},
+  "type": "ratesTable",
+  "componentProps": {
+        "data": [
+          {
+            "key": "fixedRate",
+            "label": "Fixed Rates",
+            "content": [
+              {
+                "key": "fixedRateMarkdown",
+                "type": "md",
+                "componentProps": {
+                  "content": "## Fixed Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Fixed rate means that your interest rate will not change over the course of your loan term."
+                }
+              }
+            ],
+            "table": {
+              "headers": ["loan term", "interest rate *", "payment/mo"],
+              "rows": {{{json filteredResults.fixedData}}},
+              "metadata": {
+                "centered": true,
+                "stylePreset": "lastColumnBGGray"
+              },
+              "footer": "&ast; Rates include 0.25% Auto Pay discount."
+            }
+          },
+          {
+            "key": "variableRate",
+            "label": "Variable Rates",
+            "content": [
+              {
+                "key": "variableRatesMarkdown",
+                "type": "md",
+                "componentProps": {
+                  "content": "## Variable Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Variable rate means that your interest rate will change over the course of your loan term."
+                }
+              }
+            ],
+            "table": {
+              "headers": ["loan term", "interest rate *", "payment/mo"],
+              "rows": {{{json filteredResults.variableData}}},
+              "metadata": {
+                "centered": true,
+                "stylePreset": "lastColumnBGGray"
+              },
+              "footer": "&ast; Rates include 0.25% Auto Pay discount."
+            }
+          }
+        ]
+  }
+}
+{{/with}}
+{{/with}}

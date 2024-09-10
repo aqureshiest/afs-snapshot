@@ -1,4 +1,4 @@
-{{#with application.primary}}
+{{#applicantById}}
 {
   "type": "input",
   "definition": {
@@ -11,25 +11,22 @@
       {{else}}
         {{#if (contract "previousValue")}}
           {
-            "street": "{{{ details.location.1.street1}}}",
-            "apt": "{{{ details.location.1.street2}}}",
-            "city": "{{{ details.location.1.city}}}",
-            "state": "{{{ details.location.1.state}}}",
-            "zip": "{{{ details.location.1.zip}}}"
+            "street": "{{{ applicant.details.location.1.street1}}}",
+            "apt": "{{{ applicant.details.location.1.street2}}}",
+            "city": "{{{ applicant.details.location.1.city}}}",
+            "state": "{{{ applicant.details.location.1.state}}}",
+            "zip": "{{{ applicant.details.location.1.zip}}}"
           }
         {{else}}
           {
-            "street": "{{{ details.location.0.street1}}}",
-            "apt": "{{{ details.location.0.street2}}}",
-            "city": "{{{ details.location.0.city}}}",
-            "state": "{{{ details.location.0.state}}}",
-            "zip": "{{{ details.location.0.zip}}}"
+            "street": "{{{ applicant.details.location.0.street1}}}",
+            "apt": "{{{ applicant.details.location.0.street2}}}",
+            "city": "{{{ applicant.details.location.0.city}}}",
+            "state": "{{{ applicant.details.location.0.state}}}",
+            "zip": "{{{ applicant.details.location.0.zip}}}"
           }
         {{/if}}
       {{/if}},
-      {{#if (contract 'primary_address_input_status')}}
-      "status": {{{json (contract 'primary_address_input_status')}}},
-      {{/if}}
       {{#if (contract 'conditional')}}
         {{#spread trailingComma=true}}
             {{{json (contract 'conditional')}}}
@@ -52,10 +49,10 @@
               "copy": {{#if (contract 'stateLabel')}} {{{ json (contract 'stateLabel') }}} {{else}} "State" {{/if}}
           },
           "zip": {
-              "copy": {{#if (contract 'cipLabel')}} {{{ json (contract 'cipLabel') }}} {{else}} "Zipcode" {{/if}}
+              "copy": {{#if (contract 'zipLabel')}} {{{ json (contract 'zipLabel') }}} {{else}} "Zipcode" {{/if}}
           }
       },
-      "error": "{{{ ajv 'errors' 'questions/primary/address' details.location }}}"
+      "error": "{{{ ajv 'errors' 'questions/primary/address' applicant.details.location }}}"
   }
 }
-{{/with}}
+{{/applicantById}}

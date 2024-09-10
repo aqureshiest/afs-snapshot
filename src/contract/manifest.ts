@@ -367,6 +367,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
         key === constants.LITERAL_CONTRACT &&
         !(constants.SYNC_CONTRACT in agg)
       ) {
+        
         return {
           ...agg,
           [constants.RESERVED_CONTRACT_KEYS[constants.SYNC_CONTRACT]]:

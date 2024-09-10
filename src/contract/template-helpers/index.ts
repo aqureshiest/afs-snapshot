@@ -17,6 +17,8 @@ export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationM
 export { default as mapRatePayments } from "./mapRatePayments.js";
 export { default as map } from "./map.js";
 export { default as log } from "./log.js";
+export { default as applicantById } from "./applicantById.js";
+export { default as maybe } from "./maybe.js";
 
 /**
  * Convert raw multi-line text into JSON-compatible string
