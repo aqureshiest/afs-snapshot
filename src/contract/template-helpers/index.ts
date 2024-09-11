@@ -17,6 +17,7 @@ export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationM
 export { default as mapRatePayments } from "./mapRatePayments.js";
 export { default as map } from "./map.js";
 export { default as log } from "./log.js";
+export { default as json } from "./json.js";
 export { default as applicantById } from "./applicantById.js";
 export { default as maybe } from "./maybe.js";
 
@@ -39,10 +40,6 @@ export const noop = function (v1) {
     v1.fn(this);
   }
   return "";
-};
-
-export const json = function (v1) {
-  return JSON.stringify(v1 ?? null);
 };
 
 export const eq = (v1, v2) => v1 === v2;

@@ -1,1 +1,24 @@
-{{{ json applications }}}
+{{!
+  Presents an array of user-indexed applications with relationships mapped
+  directly onto the root applicant
+}}
+{{#list}}
+  {{#each applications as |application|}}
+    {{! relationships array is used for mapping, but excluded from the output }}
+    {{#obj relationships=false}}
+      {{{ json application }}}
+      {{!
+        these keys are pre-populated as null to ensure they are present in
+        the output and consistent in ordering
+      }}
+      { "root": null, "primary": null, "cosigner": null }
+      {{#each application.relationships as |related|}}
+        {{#multiline}} {
+          "{{related.relationship}}": {{#obj relationship=false }}
+            {{{ json related }}}
+          {{/obj}}
+        } {{/multiline}}
+      {{/each}}
+    {{/obj}}
+  {{/each}}
+{{/list}}

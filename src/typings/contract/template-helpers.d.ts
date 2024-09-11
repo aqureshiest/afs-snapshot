@@ -102,3 +102,8 @@ declare module "contract/template-helpers/map.js" {
 
   type TemplateHelper = ITemplateHelper<[Array<RecursiveObject>, string]>;
 }
+
+import "contract/template-helpers/json.js";
+declare module "contract/template-helpers/json.js" {
+  type TemplateHelper = ITemplateHelper;
+}

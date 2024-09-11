@@ -4,6 +4,7 @@
 }}
 {{#with (contract 'application') as |application|}}
   {{#obj}}
+    {{{ json application }}}
     {{#unless application.primary}}
       { "primary": {{{ json application.applicants.[0] }}} }
     {{/unless}}
@@ -19,7 +20,6 @@
         { "applicant": {{{ json application.applicants.[0] }}}, "isPrimary": false, "isCosigner":false }
       {{/if}}
     {{/unless}}
-    {{{ json application }}}
   {{/obj}}
 {{else}}
   null

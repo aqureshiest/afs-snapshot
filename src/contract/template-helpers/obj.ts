@@ -8,6 +8,17 @@ const obj: TemplateHelper = function (context) {
   const splitList = context.fn(this, context).trim().split("\n");
   const obj = {};
 
+  const { include, exclude } = Object.keys(context.hash).reduce(
+    (a, key) => {
+      if (context.hash[key]) {
+        return { ...a, include: [...a.include, key] };
+      } else {
+        return { ...a, exclude: [...a.exclude, key] };
+      }
+    },
+    { include: [] as string[], exclude: [] as string[] },
+  );
+
   splitList
     .filter((item) => Boolean(item.trim()))
     .forEach((item) => {
@@ -15,21 +26,30 @@ const obj: TemplateHelper = function (context) {
 
       if (!parsedItem || typeof parsedItem !== "object") return;
 
-      Object.keys(parsedItem).forEach((parsedItemKey) => {
-        if (obj[parsedItemKey] === undefined) {
-          obj[parsedItemKey] = parsedItem[parsedItemKey];
-        } else {
+      Object.keys(parsedItem)
+        .filter(
+          (parsedItemKey) =>
+            (!include.length || include.includes(parsedItemKey)) &&
+            (!exclude.length || !exclude.includes(parsedItemKey)),
+        )
+        .forEach((parsedItemKey) => {
+          const value = parsedItem[parsedItemKey];
+
           if (Array.isArray(obj[parsedItemKey])) {
-            if (Array.isArray(parsedItem[parsedItemKey])) {
-              obj[parsedItemKey] = obj[parsedItemKey].concat(
-                parsedItem[parsedItemKey],
-              );
+            // Array concatenation
+            if (Array.isArray(value)) {
+              obj[parsedItemKey] = obj[parsedItemKey].concat(value);
+            } else if (value !== null) {
+              obj[parsedItemKey].push(value);
+            }
+          } else {
+            if (obj[parsedItemKey] && value !== null) {
+              obj[parsedItemKey] = [obj[parsedItemKey], value];
             } else {
-              obj[parsedItemKey].push(parsedItem[parsedItemKey]);
+              obj[parsedItemKey] = value;
             }
           }
-        }
-      });
+        });
     });
 
   return JSON.stringify(obj) + "\n";
