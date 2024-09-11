@@ -1,4 +1,4 @@
-const applicantById = function(options) {
+const applicantById = function (options) {
   const id = this?.request?.params?.id;
   const primaryApplicant = this?.application?.primary;
   const cosignerApplicant = this?.application?.cosigner;
@@ -7,8 +7,8 @@ const applicantById = function(options) {
     const context = {
       applicant: {},
       isPrimary: false,
-      isCosigner: false
-    }
+      isCosigner: false,
+    };
 
     if (id === primaryApplicant.id) {
       context.applicant = primaryApplicant;
@@ -21,6 +21,6 @@ const applicantById = function(options) {
   }
 
   return options.fn(this);
-}
+};
 
 export default applicantById;

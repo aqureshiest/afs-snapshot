@@ -4,8 +4,26 @@
     "query": {{{ json query }}},
     "criteria": {{#list}}
       {{#with auth.artifacts }}
-        { "userID": {{{ json (string userId) }}} }
-        { "monolithUserID": {{{ json (string userId) }}} }
+        {{!
+          applicationId in claims could be keyed to the root application or the applicant;
+          in either case, we will return in the results any applicants of a root
+          application with that ID, or the applicant with that ID
+        }}
+        {{#if applicationId}}
+          {{! 1. match an applicationId directly if the have the role "applicant"}}
+          { "id": {{{ json applicationId }}}, "role": "applicant" }
+          {{! 2. return any application that has the applicationId as "root"}}
+          { "root": {{{ json applicationId }}} }
+        {{/if}}
+        {{#if userId}}
+          {{! 3. return any application with a "userID" reference
+            directly matching the userId claim }}
+          { "userID": {{{ json (string userId) }}} }
+          {{! 4. return any application with a "monolithUserID" reference
+            directly matching the userId claim
+          }}
+          { "monolithUserID": {{{ json (string userId) }}} }
+        {{/if}}
       {{/with}}
     {{/list}}
     {{#with request.query}}

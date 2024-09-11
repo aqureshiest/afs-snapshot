@@ -1011,17 +1011,18 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[ba9215d8] applicantById helper", async () => {
-    const input = (paramId) => ({
-      request: {
-        params: {
-          id: paramId
+    const input = (paramId) =>
+      ({
+        request: {
+          params: {
+            id: paramId,
+          },
         },
-      },
-      application: {
-        primary: { id: 1 },
-        cosigner: { id: 2 },
-      },
-    } as unknown as Input<unknown>);
+        application: {
+          primary: { id: 1 },
+          cosigner: { id: 2 },
+        },
+      }) as unknown as Input<unknown>;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1088,7 +1089,7 @@ describe("[462fd166] manifest.execute", () => {
 
     assert.deepEqual(parsed, {
       shouldBeTrue: true,
-      shouldAlsoBeTrue: true
+      shouldAlsoBeTrue: true,
     });
   });
 
