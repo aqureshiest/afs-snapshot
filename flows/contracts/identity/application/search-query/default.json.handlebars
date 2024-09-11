@@ -1,57 +1,43 @@
 {{#multiline raw=true~}}
-fragment Applicant on Application {
-  status {
-    name
-    asOf
+  query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: Int) {
+    applications(criteria: $criteria, limit: $limit, page: $page) {
+     id
+     href
+     tag {
+       active
+       applicants
+       status
+     }
+     status {
+       name
+       asOf
+     }
+     details {
+       name {
+         first
+         last
+       }
+     }
+     reference {
+       monolithApplicationID
+     }
+     root {
+       id
+       createdAt
+       href
+       status {
+         name
+         asOf
+       }
+       details {
+         amount {
+           requested
+         }
+       }
+       reference {
+         monolithLoanID
+       }
+     }
+   }
   }
-  details {
-    name {
-      first
-      last
-    }
-    location {
-      street1
-      street2
-      city
-      state
-      zip
-      type
-    }
-  }
-  reference {
-    monolithApplicationID
-  }
-}
-
-fragment Root on Application {
-  reference {
-    monolithLoanID
-    product
-    brand
-  }
-  details {
-    amount {
-      requested
-    }
-  }
-}
-
-query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: Int) {
-  applications(criteria: $criteria, limit: $limit, page: $page) {
-    id
-    href
-    tag {
-      active
-      applicants
-      status
-    }
-    ...Applicant
-    relationships {
-      id
-      relationship
-      ...Applicant
-      ...Root
-    }
-  }
-}
 {{~/multiline}}
