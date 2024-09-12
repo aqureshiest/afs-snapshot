@@ -9,7 +9,7 @@
             {{#list}}
                 {"id": "schoolName", "label": "College or school name", "value": "{{contract 'getSchools'}}"}
                 {"id": "highestDegree", "label": "Highest degree", "value": "{{findInArray (json (contract 'getDegrees')) 'id' details.education.0.degree 'label'}}"}
-                {"id": "gradDate", "label": "Graducation date", "value": "{{reviewDateFormatter details.education.0.graduationDate}}"}
+                {"id": "gradDate", "label": "Graduation date", "value": "{{reviewDateFormatter details.education.0.graduationDate}}"}
             {{/list}},
         "editAction": {
             "key": "",
