@@ -7,7 +7,8 @@
       "status": {{{json (contract 'primary_school_input_status')}}},
       {{! TODO: request school name based on opeid from accredited-school-service}}
       "value": {{{details.education.0.opeid}}},
-
+      {{! TODO: the placeholder should depend on the degree type: Graduate school or Undergraduate school}}
+      "placeholder": "School to be attended",
       "label": {
           "copy": "School to be attended"
       },
