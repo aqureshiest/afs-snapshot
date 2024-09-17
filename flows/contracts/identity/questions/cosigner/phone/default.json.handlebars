@@ -1,0 +1,38 @@
+{{#with application.cosigner}}
+{
+    "type": "input",
+    "definition": {
+        "key": "phone",
+        "type": "inputPhone",
+        "status": {{{json (contract 'cosigner_phone_input_status')}}},
+        "value": "{{details.phone.0.number}}",
+        "label": {
+            "copy": "Phone number"
+        },
+        "error": "{{{ ajv 'errors' 'questions/cosigner/phone' details.phone }}}",
+        "hint": [
+            {
+            "key": "phone-modal",
+            "type": "action",
+            "containerProps": { "marginTop": "space.8" },
+            "componentProps": {
+                "styleAsLink": true,
+                "button": {
+                "copy": "What will you use my number for?",
+                "action": {
+                    "key": "phone-modal-action",
+                    "type": "modal",
+                    "properties": {
+                    "type": "disclosure",
+                    "definition": {
+                        "copy": ":Heading[What will you use my number for :props[{fontSize: '1.5em', className: 'dark'}]] \n\n When you give us your mobile phone number, we have your permission to contact you at that number about all your Earnest accounts. Your consent allows us to use text messaging, artificial or prerecorded voice messages and automatic dialing technology for informational and account service calls, but not for telemarketing or sales calls. It may include contact from companies working on our behalf to service your accounts. Message and data rates may apply. You may contact us any time to change these preferences."
+                    }
+                    }
+                }
+                }
+            }
+            }
+        ]
+    }
+}
+{{/with}}

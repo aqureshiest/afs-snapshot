@@ -1,0 +1,52 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi-cosigner",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/basic.full-refi"
+      ],
+      "student-info-basic-rows": [
+        "info/student-info.refi",
+        "questions/cosigner/name.default",
+        "questions/cosigner/dateOfBirth.default",
+        "questions/cosigner/phone.default",
+        "questions/cosigner/email.default",
+        "info/student-disclaimer.full-refi"
+      ],
+      "back-button": "actions/back-buttons/full-refi/cosigner.basic-info",
+      "save_basic_info_details_action": "actions/save-details/full-refi/cosigner.basic-info",
+      "cosigner_dob_input_status": "questions/cosigner/dateOfBirth.status",
+      "cosigner_phone_input_status": "questions/cosigner/phone.status",
+      "cosigner_name_input_status": "questions/cosigner/name.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]

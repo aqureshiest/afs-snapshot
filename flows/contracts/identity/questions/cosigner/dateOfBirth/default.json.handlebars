@@ -1,0 +1,37 @@
+{{#if application.cosigner}}
+{{#with application.cosigner}}
+{
+    "type": "input",
+    "definition": {
+        "key": "dateOfBirth",
+        "type": "inputDate",
+        "status": {{{json (contract 'cosigner_dob_input_status')}}},
+        "value": 
+          {{#if details.dateOfBirth}}
+          {
+            "month": "{{month details.dateOfBirth}}",
+            "day": "{{day details.dateOfBirth}}",
+            "year": "{{year details.dateOfBirth}}"
+          }
+          {{else}}
+          {
+            "month": "",
+            "day": "",
+            "year": ""
+          }
+          {{/if}}
+        ,
+        "label": {
+          "copy": "Date of birth"
+        },
+        "hint": "",
+        "error": "{{{ ajv 'errors' 'questions/cosigner/dateOfBirth' details.dateOfBirth }}}"
+    }
+}
+{{/with}}
+{{else}}
+{
+    "statusCode": "401",
+    "message": "Application Cosigner missing"
+}
+{{/if}}
