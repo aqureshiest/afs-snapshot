@@ -1,0 +1,15 @@
+{
+  "type": "string",
+  "enum": [
+    "citizen",
+    "permanent_resident",
+    "asylee",
+    "daca",
+    "non-resident",
+    "h1_b"
+  ],
+  "errorMessage": {
+    "enum": "Please select a citizenship status."
+  },
+  "required": ["citizenship"]
+}

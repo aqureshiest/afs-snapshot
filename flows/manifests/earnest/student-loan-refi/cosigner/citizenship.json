@@ -1,0 +1,46 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi-cosigner",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/citizenship.full-refi"
+      ],
+      "student-info-citizenship-rows": [
+        "info/student-info.citizenship",
+        "questions/cosigner/citizenship.default"
+      ],
+      "back-button": "actions/back-buttons/full-refi/cosigner.address",
+      "save_citizenship_details_action": "actions/save-details/full-refi/cosigner.citizenship",
+      "cosigner_citizenship_input_status": "questions/cosigner/citizenship.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]

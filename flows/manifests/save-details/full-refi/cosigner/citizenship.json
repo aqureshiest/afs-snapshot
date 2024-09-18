@@ -1,0 +1,29 @@
+[{
+  "methods": ["post"],
+  "parameters": [ { "key": "id", "format": "uuid" } ],
+  "inputs": {
+    "*": "inputs",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": "neas.verify-token",
+          "authorization": [
+            "inputs/auth.neas-application-auth",
+            "inputs/auth.neas-user-auth"
+          ]
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "redirect/full-refi/cosigner.income",
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "full-refi.add-details-full-refi"
+      ]
+    }
+  }
+}]
