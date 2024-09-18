@@ -60,6 +60,30 @@
                 }
           },
           {
+              "key": "loanDetails",
+              "type": "row",
+              "componentProps": {
+                  "stackOnMobile": true,
+                  "content": [
+                      {
+                          "key": "loanDetails1",
+                          "type": "callout",
+                          "componentProps": {
+                              "content": [
+                                  {
+                                      "key": "loanDetails2",
+                                      "type": "md",
+                                      "componentProps": {
+                                          "content": ":Heading[Loan details requested] \n\n Primary requested an estimated amount to refinance \n\n ${{formatCentsToDollars application.details.amount.requested}}"
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  ]
+              }
+          },
+          {
               "key": "list2",
               "type": "list",
               "componentProps": {
@@ -152,11 +176,10 @@
               {
                 "copy": "Get your rates",
                 "action": {
-                    "key": "neas-request",
-                    "type": "request",
+                    "key": "cosigner-basic-info-request",
+                    "type": "navigate",
                     "properties": {
-                        "manifest": "create-accountless-application",
-                        "method": "POST"
+                        "goTo" : "earnest/student-loan-refi/cosigner/basic-info/{{application.cosigner.id}}"
                     }
                 }
               }

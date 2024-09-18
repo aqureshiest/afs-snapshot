@@ -7,7 +7,7 @@
   "inputs": {
     "*": "inputs",
     "application": {
-      "*": "application/single.flattened",
+      "*": "application/cosigned.flattened",
       "application": "application-by-id-param"
     },
     "auth": {
@@ -26,7 +26,7 @@
   "outputs": {
     "*": "landing-students",
     "landing_stage": { 
-      "*": "landing.primer-full-refi", 
+      "*": "landing.primer-full-refi-cosigner", 
       "headerLabel": {
         "@": "You’ve been invited {primary.first} to be a cosigner."
       }
