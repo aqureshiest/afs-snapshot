@@ -39,6 +39,7 @@ fragment Root on Application {
 query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: Int) {
   applications(criteria: $criteria, limit: $limit, page: $page) {
     id
+    createdAt
     href
     tag {
       active
