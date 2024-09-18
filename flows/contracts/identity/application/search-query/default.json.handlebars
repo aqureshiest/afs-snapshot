@@ -24,6 +24,7 @@ fragment Applicant on Application {
 }
 
 fragment Root on Application {
+  createdAt
   reference {
     monolithLoanID
     product
@@ -32,6 +33,8 @@ fragment Root on Application {
   details {
     amount {
       requested
+      approved
+      certified
     }
   }
 }
