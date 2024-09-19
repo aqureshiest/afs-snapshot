@@ -1,0 +1,50 @@
+{{#with application.cosigner}}
+{
+  "type": "input",
+  "definition": {
+      "key": "employmentType",
+      "type": "inputRadio",
+      "layout": "copyWithIcon",
+      "direction": "column",
+      {{#if ../userState.employmentType }}
+        "value": "{{{../userState.employmentType}}}",
+      {{else if details.income }}
+        "value": "{{{mapIncomeTypeToEmplStatus details.income}}}",
+      {{else}}
+        "value": "",
+      {{/if}}
+      "items": [
+        {
+            "id": "employed",
+            "label": "Employed",
+            "value": "employed"
+        },
+        {
+            "id": "self_employed",
+            "label": "Self-employed",
+            "value": "self_employed"
+        },
+        {
+            "id": "future",
+            "label": "Future (job offer)",
+            "value": "future"
+        },
+        {
+            "id": "retired",
+            "label": "Retired",
+            "value": "retired"
+        },
+        {
+            "id": "unemployed",
+            "label": "Unemployed",
+            "value": "unemployed"
+        }
+      ],
+      "status": {{{json (contract 'cosigner_employment_input_status')}}},
+      "error": "{{{ ajv 'errors' 'questions/cosigner/employment' employmentType }}}",
+      "label": {
+        "copy": "Employment Status"
+      }
+  }
+}
+{{/with}}

@@ -35,7 +35,9 @@
       ],
       "rows": [
         "info/student-info.ssn",
-        "questions/cosigner/ssn.default"
+        "questions/cosigner/ssn.default",
+        "info/callout.ssn",
+        "questions/primary/disclosure.ssn-disclaimer"
       ],
       "decryptPiiSsn": "pii.get-token",
       "back-button": "actions/back-buttons/full-refi/cosigner.income",

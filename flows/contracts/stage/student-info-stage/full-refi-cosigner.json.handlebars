@@ -1,5 +1,5 @@
 {
-    "key": "full-refi-basic-info",
+    "key": "full-refi-cosigner",
     "type": "form",
     "label": "Basic Info",
     "status": "notStarted",
@@ -38,7 +38,73 @@
                 "properties": {
                     "annualIncome": {{{json (schema 'questions/cosigner/income/annual-income')}}},
                     "claimedAssets": {{{json (schema 'questions/cosigner/income/claimed-assets')}}}
-                }
+                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "additionalAmount": { "const": "" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {}
+                        },
+                        "else": {
+                            "properties": {
+                                "additionalAmount": {{{json (schema 'questions/cosigner/income/additional-income')}}}
+                            }
+                        }
+                    }
+                ]
+            },
+            "incomeSource": {
+                "type": "object",
+                "properties": {
+                    "employmentType": {{{json (schema 'questions/cosigner/employment')}}},
+                    "additionalIncomeSource": {{{json (schema 'questions/cosigner/income/additional-income/income-source')}}}
+                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "employed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/cosigner/employment/employer-name')}}},
+                                "jobTitle": {{{json (schema 'questions/cosigner/employment/job-title')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "self_employed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "jobTitle": {{{json (schema 'questions/cosigner/employment/job-title')}}},
+                                "startDate": {{{json (schema 'questions/cosigner/employment/start-date')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "future" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/cosigner/employment/employer-name')}}},
+                                "jobTitle": {{{json (schema 'questions/cosigner/employment/job-title')}}},
+                                "startDate": {{{json (schema 'questions/cosigner/employment/start-date')}}}
+                            }
+                        }
+                    }
+                ]
             }
         }
     }

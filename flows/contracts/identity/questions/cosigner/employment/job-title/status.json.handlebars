@@ -1,9 +1,7 @@
 {{#with application.cosigner}}
-  {{#if (ajv 'validate' 'questions/cosigner/email' details.email) }}
+  {{#if (ajv 'validate' 'questions/cosigner/employment/job-title' details.income.0.title) }}
      "completed"
   {{else}} 
      "incomplete"
   {{/if}}
-{{else}}
-   "incomplete"
 {{/with}}

@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "anyOf":[
+    {
+      "patternProperties":{
+        "^rental$":{
+          "const": true
+        }
+      }
+    },
+    {
+      "patternProperties":{
+        "^k1$":{
+          "const": true
+        }
+      }
+    },
+    {
+      "patternProperties":{
+        "^social_security_or_pension$":{
+          "const": true
+        }
+      }
+    },
+    {
+      "patternProperties":{
+        "^child_support_or_alimony$":{
+          "const": true
+        }
+      }
+    },
+    {
+      "patternProperties":{
+        "^disability$":{
+          "const": true
+        }
+      }
+    }
+  ],
+  "errorMessage": "Select at least one income type."
+}
