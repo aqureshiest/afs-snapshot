@@ -11,6 +11,8 @@ fragment ApplicantFragment on Application {
     serialization
     status
   }
+  primary {id}
+  cosigner {id}
   lenderId
   lendingCheckoutID
   lendingDecisionID

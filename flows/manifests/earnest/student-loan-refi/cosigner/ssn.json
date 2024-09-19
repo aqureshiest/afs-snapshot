@@ -1,0 +1,48 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "env": "inputs/env.pii-token",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi-cosigner",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/ssn.full-refi"
+      ],
+      "rows": [
+        "info/student-info.ssn",
+        "questions/cosigner/ssn.default"
+      ],
+      "decryptPiiSsn": "pii.get-token",
+      "back-button": "actions/back-buttons/full-refi/cosigner.income",
+      "save_details_action": "actions/save-details/full-refi/cosigner.ssn",
+      "cosigner_ssn_input_status": "questions/cosigner/ssn.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]
