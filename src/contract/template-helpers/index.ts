@@ -349,6 +349,20 @@ export function getAdditionalIncomeSourceTypes(v1) {
   return v1 ? v1.filter((i) => i.type).map((i) => i.type) : undefined;
 }
 
+export function getAdditionalIncomeSourceTypesAsString(v1) {
+  const mapping_arr = {
+    rental: "Rental income",
+    k1: "K-1 income",
+    social_security_or_pension: "Social security / Pension",
+    child_support_or_alimony: "Child support / alimony",
+    disability: "Disability",
+  };
+  return v1.slice(1)
+    .filter((i) => i.type)
+    .map((i) => i.type)
+    .reduce((a, i) => `${a}\n${mapping_arr[`${i}`]}`, "");
+}
+
 /**
  * Test if at least one financial account is selected
  */

@@ -8,8 +8,10 @@
         {{#if annualIncome}}
           {"annualIncome": {{annualIncome}} }
         {{/if}}
-        {{#if additionalAmount.[0]}}
-          {"additionalAmount": {{additionalAmount.[0].value}} }
+        {{#if additionalAmount}}
+          {"additionalAmount": {{additionalAmount}} }
+        {{else}}
+          {"additionalAmount": null }
         {{/if}}
       {{/obj}}
     {{/with}}

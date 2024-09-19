@@ -8,8 +8,8 @@
     "student-info-income-rows": [
       "info/student-info.income",
       "questions/primary/income/amount/annual-income.refi",
-      "questions/primary/income/amount/claimed-assets.refi",
-      "questions/primary/income/amount/additional-income.refi"
+      "questions/primary/income/amount/claimed-assets.full-refi",
+      "questions/primary/income/amount/additional-income/full-refi.default"
     ],
     "back-button": "actions/back-buttons/full-refi.citizenship",
     "save_income_details_action": "actions/save-details/full-refi.income",

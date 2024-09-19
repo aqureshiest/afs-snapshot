@@ -36,7 +36,9 @@
       ],
       "rows": [
         "info/student-info.ssn",
-        "questions/primary/ssn/full-refi.default"
+        "questions/primary/ssn/full-refi.default",
+        "info/callout.ssn",
+        "questions/primary/disclosure.ssn-disclaimer"
       ],
       "decryptPiiSsn": "pii.get-token",
       "back-button": "actions/back-buttons/full-refi.amount",

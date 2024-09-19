@@ -15,9 +15,7 @@
           {{/if}}
           {{#if additionalAmount}}
             {"income": {{#list}}
-                {{#if additionalAmount.[0]}}
-                    {"index": 1, "amount": {{{formatDollarsToCents additionalAmount.0.value}}} }
-                {{/if}}
+                    {"index": 1, "amount": {{{formatDollarsToCents additionalAmount}}} }
               {{/list}} }
           {{/if}}
         {{/with}}

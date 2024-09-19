@@ -38,13 +38,79 @@
                 "properties": {
                     "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
                     "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}}
-                }
+                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "additionalAmount": { "const": "" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {}
+                        },
+                        "else": {
+                            "properties": {
+                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income/full-refi')}}}
+                            }
+                        }
+                    }
+                ]
             },
             "citizenship": {
                 "type": "object",
                 "properties": {
                     "citizenship": {{{json (schema 'questions/primary/citizenship')}}}
                 }
+            },
+            "incomeSource": {
+                "type": "object",
+                "properties": {
+                    "employmentType": {{{json (schema 'questions/primary/employment')}}},
+                    "additionalIncomeSource": {{{json (schema 'questions/primary/income/amount/additional-income/full-refi/income-source')}}}
+                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "employed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                                "jobTitle": {{{json (schema 'questions/primary/employment/job-title')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "self_employed" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "jobTitle": {{{json (schema 'questions/primary/employment/job-title')}}},
+                                "startDate": {{{json (schema 'questions/primary/employment/start-date')}}}
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "employmentType": { "const": "future" } 
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
+                                "jobTitle": {{{json (schema 'questions/primary/employment/job-title')}}},
+                                "startDate": {{{json (schema 'questions/primary/employment/start-date')}}}
+                            }
+                        }
+                    }
+                ]
             }
         }
     }

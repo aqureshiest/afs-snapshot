@@ -4,14 +4,18 @@
     "first": {
       "type": "string",
       "pattern": "^[a-zA-Z\\s'-]*$",
+      "minLength": 1,
       "errorMessage": {
+        "minLength": "First name is required.",
         "pattern": "First name contains invalid characters."
       }
     },
     "last": {
       "type": "string",
+      "minLength": 1,
       "pattern": "^[a-zA-Z\\s'-]*$",
       "errorMessage": {
+        "minLength": "Last name is required.",
         "pattern": "Last name contains invalid characters."
       }
     },
@@ -33,5 +37,16 @@
   "required": [
     "first",
     "last"
-  ]
+  ],
+  "errorMessage":{
+    "type": "First name is required",
+    "required":{
+      "first" : "First name is required.",
+      "last" : "Last name is required."
+    },
+    "properties":{
+      "first" : "First name is required.",
+      "last" : "Last name is required."
+    }
+  }
 }

@@ -9,5 +9,9 @@
         "action": {{{json (contract 'save_details_action')}}}
     },
     "progress": 81,
-    "rows": {{{json (contract 'student-info-income-source-rows')}}}
+    {{#if userState.additionalAmount}}
+        "rows": {{{json (contract 'income-source-rows')}}}
+    {{else}}
+        "rows": {{{json (contract 'income-source-rows-without-additional-income')}}}
+    {{/if}}
 }
