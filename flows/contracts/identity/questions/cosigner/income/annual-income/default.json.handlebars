@@ -1,0 +1,20 @@
+{{#with application.cosigner}}
+{
+  "type": "input",
+  "definition": {
+      "key": "annualIncome",
+      "type": "inputMoney",
+      {{#if details.income.0.amount}}
+        "value": {{formatCentsToDollars details.income.0.amount}},
+      {{else}}
+        "value": "",
+      {{/if}}
+      "status": {{{json (contract 'cosigner_income_annual_income_input_status')}}},
+      "label": {
+        "copy": "Annual income before taxes"
+      },
+      "error": "{{{ ajv 'errors' 'questions/cosigner/income/annual-income' details.income.0.amount }}}",
+      "hint": "This could include wage income, bonuses, and commissions, subject to verification later."
+  }
+}
+{{/with}}

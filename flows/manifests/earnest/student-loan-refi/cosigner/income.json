@@ -8,7 +8,7 @@
     "inputs": {
       "*": "inputs",
       "application": {
-        "*": "application/single.flattened",
+        "*": "application/cosigned.flattened",
         "application": "application-by-id-param"
       },
       "auth": {
@@ -27,23 +27,23 @@
     },
     "outputs": {
       "*": "full-refi",
-      "stage": "student-info-stage.full-refi",
+      "stage": "student-info-stage.full-refi-cosigner",
       "pageLayout": "layout.sidebar",
       "steps": [
         "student-info-form/income.full-refi"
       ],
       "student-info-income-rows": [
         "info/student-info.income",
-        "questions/primary/income/amount/annual-income.refi",
-        "questions/primary/income/amount/claimed-assets.full-refi",
-        "questions/primary/income/amount/additional-income/full-refi.default",
+        "questions/cosigner/income/annual-income.default",
+        "questions/cosigner/income/claimed-assets.default",
+        "questions/cosigner/income/additional-income.default",
         "info/student-income/additional-income-hint.full-refi"
       ],
-      "back-button": "actions/back-buttons/full-refi.citizenship",
-      "save_income_details_action": "actions/save-details/full-refi.income",
-      "primary_income_annual_income_input_status": "questions/primary/income/amount/annual-income.status",
-      "primary_income_claimed_assets_input_status": "questions/primary/income/amount/claimed-assets.status",
-      "primary_income_additional_income_input_status": "questions/primary/income/amount/additional-income.status",
+      "back-button": "actions/back-buttons/full-refi/cosigner.citizenship",
+      "save_income_details_action": "actions/save-details/full-refi/cosigner.income",
+      "cosigner_income_annual_income_input_status": "questions/cosigner/income/annual-income.status",
+      "cosigner_income_claimed_assets_input_status": "questions/cosigner/income/claimed-assets.status",
+      "cosigner_income_additional_income_input_status": "questions/cosigner/income/additional-income.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

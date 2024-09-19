@@ -32,6 +32,13 @@
                 "properties": {
                     "ssn": {{{json (schema 'questions/cosigner/ssn')}}}
                 }
+            },
+            "income": {
+                "type": "object",
+                "properties": {
+                    "annualIncome": {{{json (schema 'questions/cosigner/income/annual-income')}}},
+                    "claimedAssets": {{{json (schema 'questions/cosigner/income/claimed-assets')}}}
+                }
             }
         }
     }

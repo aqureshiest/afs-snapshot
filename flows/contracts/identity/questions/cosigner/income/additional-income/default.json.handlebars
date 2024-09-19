@@ -1,0 +1,19 @@
+{{#with application.cosigner}}
+{
+  "type": "input",
+  "definition": {
+    "key": "additionalAmount",
+    "type": "inputMoney",
+    {{#if (or details.income.[1].amount details.income.[2].amount details.income.[3].amount details.income.[4].amount details.income.[5].amount)}}
+      "value":  {{{formatCentsToDollars (sumIncomeAmountRange details.income 'amount' 1 5) }}}
+    {{else}}
+      "value": ""
+    {{/if}},
+    "status": {{{json (contract 'cosigner_income_additional_income_input_status')}}},
+    "error": "{{{ ajv 'errors' 'questions/cosigner/income/additional-income' additionalAmount }}}",
+    "label": {
+      "copy": "Total annual additional income (optional)"
+    }
+  }
+}
+{{/with}}
