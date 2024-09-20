@@ -26,7 +26,7 @@
         {{/if}}
       {{/with}}
     {{/list}}
-    {{#with request.query}}
+    {{#with @root.request.query}}
       {{#if limit}}
         ,"limit": {{{json limit}}}
       {{/if}}

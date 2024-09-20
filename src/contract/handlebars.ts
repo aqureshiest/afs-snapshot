@@ -15,6 +15,7 @@ export const DEFAULT_OPTIONS = {
      */
     headers: true,
     body: true,
+    query: true,
     hostname: true,
   },
 };

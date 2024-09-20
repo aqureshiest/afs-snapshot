@@ -49,6 +49,9 @@ query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: 
       applicants
       status
     }
+    details {
+      email
+    }
     ...Applicant
     relationships {
       id
