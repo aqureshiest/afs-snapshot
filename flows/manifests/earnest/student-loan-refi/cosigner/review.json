@@ -11,6 +11,9 @@
           "*": "application/cosigned.flattened",
           "application": "application-by-id-param"
         },
+        "applications": [],
+        "applicationState": "application-state",
+        "userState": "user-state",
         "env": "inputs/env.pii-token",
         "auth": {
           "*": "auth-artifacts",

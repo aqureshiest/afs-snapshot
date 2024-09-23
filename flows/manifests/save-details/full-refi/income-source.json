@@ -31,7 +31,8 @@
       "*": "actions/result.results",
       "actions": [
         "full-refi.clear-income-details",
-        "full-refi.add-employment-income-details"
+        "full-refi.add-employment-income-details",
+        "redis.set-volatile-answers"
       ]
     }
   }

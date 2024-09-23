@@ -11,6 +11,7 @@
         "*": "application/cosigned.flattened",
         "application": "application-by-id-param"
       },
+      "userState": "user-state",
       "auth": {
         "*": "auth-artifacts",
         "strategies": [
@@ -47,8 +48,7 @@
         "questions/cosigner/employment.default",
         "questions/cosigner/employment/employer-name.full-refi",
         "questions/cosigner/employment/job-title.full-refi",
-        "questions/cosigner/employment/start-date.full-refi",
-        "questions/cosigner/income/additional-income/income-source.default"
+        "questions/cosigner/employment/start-date.full-refi"
       ],
       "back-button": "actions/back-buttons/full-refi/cosigner.prev-address",
       "save_details_action": "actions/save-details/full-refi/cosigner.income-source",

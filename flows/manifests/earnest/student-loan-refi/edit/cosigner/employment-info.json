@@ -11,6 +11,9 @@
         "*": "application/cosigned.flattened",
         "application": "application-by-id-param"
       },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
       "auth": {
         "*": "auth-artifacts",
         "strategies": [

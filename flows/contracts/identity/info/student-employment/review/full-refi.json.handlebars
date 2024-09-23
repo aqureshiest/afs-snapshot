@@ -40,7 +40,7 @@
         {{else if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
           {"id": "additionalIncome", "label": "Additional income (optional)", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
         {{/if}}
-        {{#if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
+        {{#if (checkAdditionalIncomeSourceExists details.income)}}
           {"id": "additionalIncomeSource", "label": "Sources of additional income", "value": "{{getAdditionalIncomeSourceTypesAsString details.income}}"}
         {{/if}}
     {{/list}},

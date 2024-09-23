@@ -7,6 +7,7 @@
       "*": "application/cosigned.flattened",
       "application": "application-by-id-param"
     },
+    "userState": "user-state",
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
@@ -29,7 +30,8 @@
       "*": "actions/result.results",
       "actions": [
         "clear-income-details-review", 
-        "add-employment-details-review"
+        "add-employment-details-review",
+        "redis.set-volatile-answers"
       ]
     }
   }

@@ -14,7 +14,7 @@
                     {{else if (eq req.employmentType 'future')}}
                       {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" {{#if req.jobTitle}}, "title": "{{req.jobTitle}}" {{/if}} {{#if ../userState.annualIncome}}, "amount": {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} {{#if req.employerName}}, "employer": "{{req.employerName}}" {{/if}} {{#if (and req.startDate (hasValues req.startDate) )}}, "start": "{{{dateObjToString startDate}}}" {{/if}} }
                     {{else if (eq req.employmentType 'retired')}}
-                      {"index": 0, {{#if ../userState.annualIncome}}, "amount": {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} }
+                      {"index": 0, "amount": {{#if ../userState.annualIncome}} {{{formatDollarsToCents ../userState.annualIncome}}} {{/if}} }
                     {{else if (eq req.employmentType 'unemployed')}}
                       {"index": 0, "type": "{{{mapEmploymentStatusType req.employmentType}}}" }
                     {{else}}
