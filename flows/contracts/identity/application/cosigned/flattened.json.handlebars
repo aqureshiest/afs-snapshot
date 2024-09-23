@@ -1,17 +1,11 @@
-{{!
-  Given an 'application' contract with a single root application, use the first applicant
-	as the default primary
-}}
 {{#with (contract 'application') as |application|}}
   {{#obj}}
+    {{#if (eq application.primary.id ../request.params.id)}}
+      { "applicant": { {{#spread}}  {{{ json application.primary }}} {{/spread}} "role": "primary" }  }
+    {{else if (eq application.cosigner.id ../request.params.id)}}
+      { "applicant": { {{#spread}}  {{{ json application.cosigner }}} {{/spread}} "role": "cosigner" }  }
+    {{/if}}
     {{{ json application }}}
-    {{#each application.applicants as |applicant|}}
-      {{#if (and applicant.cosigner.id (eq ../../request.params.id applicant.id))}}
-        { "applicant": { {{#spread}}  {{{ json applicant }}} {{/spread}} "role": "primary" }  }
-      {{else if (and applicant.primary.id (eq ../../request.params.id applicant.id))}}
-        { "applicant": { {{#spread}}  {{{ json applicant }}} {{/spread}} "role": "cosigner" }  }
-      {{/if}}
-    {{/each}}
   {{/obj}}
 {{else}}
   null

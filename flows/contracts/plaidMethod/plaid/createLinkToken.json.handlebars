@@ -10,9 +10,12 @@
     {{/if}}
   }
 }
-{{else}} 
- {
-  "status": "failed",
-  "error": "Application missing cognitoID or monolithUserID"
- }
+{{else if auth.artifacts.userId}} 
+{
+  "plaidMethod": "createLinkToken",
+  "id": "{{{request.params.id}}}",
+  "payload": {
+    "userId": "{{{auth.artifacts.userId}}}"
+  }
+}
 {{/if}}

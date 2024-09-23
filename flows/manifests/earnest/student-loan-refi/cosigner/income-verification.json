@@ -1,0 +1,46 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "env": "inputs/env.plaid",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "income-verification",
+      "stage": "plaid-income-verification.full-refi",
+      "plaid-link-token-method": "plaid.generate-link-token",
+      "section": "refi-primary-only-section",
+      "back-button": "actions/back-buttons.employed",
+      "back-button-unemployed": "actions/back-buttons.unemployed",
+      "back-button-retired": "actions/back-buttons.retired",
+      "back-button-future": "actions/back-buttons.future",
+      "pageLayout": "sidebar",
+      "onError": ["onError.unauthorized"],
+      "redirect_homebase": "actions/homebase.default"
+    }
+  }
+]
