@@ -1,0 +1,93 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "env": "inputs/env.pii-token",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "refi-student-info",
+      "stage": "student-info-stage.refi-edit-cosigner",
+      "pageLayout": "header/refi-edit.default",
+      "steps": [
+        "student-info-form/basic.refi-edit"
+      ],
+      "student-info-basic-rows": [
+        "info/student-info/edit.default",
+        "questions/cosigner/name.default",
+        "questions/cosigner/dateOfBirth.default",
+        "questions/cosigner/phone.default",
+        "questions/cosigner/email.default",
+        {"*": "questions/primary/address", "reviewStyle": {"@": "true"}},
+        "questions/cosigner/citizenship.default",
+        "questions/cosigner/ssn.default"
+      ],
+      "back-button": "actions/back-buttons/full-refi/cosigner.review",
+      "student-info-basic-withprevAddress-rows": [
+        "info/student-info/edit.default",
+        "questions/cosigner/name.default",
+        "questions/cosigner/dateOfBirth.default",
+        "questions/cosigner/phone.default",
+        "questions/cosigner/email.default",
+        {"*": "questions/primary/address", "reviewStyle": {"@": "true"}},
+        {
+          "*": "questions/primary/address",
+          "key": {
+            "@": "previousAddress",
+            "previousValue": {"@": "true"}
+          }
+        },
+        "questions/cosigner/citizenship.default",
+        "questions/cosigner/ssn.default"
+      ],
+      "save_edited_details_action": "actions/save-details/full-refi/cosigner.edit-full-refi",
+      "cosigner_dob_input_status": "questions/cosigner/dateOfBirth.status",
+      "cosigner_phone_input_status": "questions/cosigner/phone.status",
+      "cosigner_address_input_status": "questions/primary/address.status",
+      "cosigner_citizenship_input_status": "questions/cosigner/citizenship.status",
+      "cosigner_name_input_status": "questions/cosigner/name.status",
+      "cosigner_email_input_status": "questions/cosigner/email.status",
+      "decryptPiiSsn": "pii.get-token",
+      "current-address-validation": {
+        "*": "questions/primary/address/validation",
+        "matchesAgainstPath": {
+            "@": "editPersonalInfo.previousAddress"
+          },
+          "matchesError": {
+            "@": "Your current address cannot match your previous address."
+          }
+      },
+      "previous-address-validation": {
+        "*": "questions/primary/address/validation",
+        "matchesAgainstPath": {
+            "@": "editPersonalInfo.currentAddress"
+          },
+          "matchesError": {
+            "@": "Your previous address cannot match your current address."
+          }
+      },
+      "redirect_homebase": "actions/homebase.default"
+    }
+  }
+]

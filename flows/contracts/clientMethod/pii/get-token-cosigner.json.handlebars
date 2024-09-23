@@ -1,0 +1,18 @@
+{{#if application.cosigner.ssnTokenURI}}
+  {
+    "action": "getTokenValue",
+    "client": "piiTokenServiceClient",
+    "method": "get",
+    "uri": "/tokens?uri={{encodeURIStr application.cosigner.ssnTokenURI}}",
+    "headers": {
+      "Authorization" : "Bearer {{{env.PII_TOKEN_SERVICE_KEY}}}"
+    },
+    "resiliency": {
+      "attempts": 3,
+      "delay": 100,
+      "timeout": 100000
+    }
+  }
+{{else}}
+  null
+{{/if}} 

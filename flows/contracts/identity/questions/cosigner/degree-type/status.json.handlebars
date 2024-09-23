@@ -1,4 +1,4 @@
-{{#with application.primary}}
+{{#with application.cosigner}}
   {{#if (ajv 'validate' 'questions/cosigner/degree-type' details.education) }}
      "completed"
   {{else}} 

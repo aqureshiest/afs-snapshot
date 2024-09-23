@@ -1,0 +1,80 @@
+{{#with application.cosigner}}
+{
+  "type": "input",
+  "definition": {
+    "key": "additionalAmount",
+    "type": "inputMoneyArray",
+    {{#if (or details.income.[1].amount details.income.[2].amount details.income.[3].amount details.income.[4].amount details.income.[5].amount)}}
+      "value":  {{#list}}
+        {{#if details.income.[1]}}
+          {"value": {{{formatCentsToDollars details.income.[1].amount}}}, "type": "{{details.income.[1].type}}"}
+        {{/if}}
+        {{#if details.income.[2]}}
+          {"value": {{{formatCentsToDollars details.income.[2].amount}}}, "type": "{{details.income.[2].type}}"}
+        {{/if}}
+        {{#if details.income.[3]}}
+          {"value": {{{formatCentsToDollars details.income.[3].amount}}}, "type": "{{details.income.[3].type}}"}
+        {{/if}}
+        {{#if details.income.[4]}}
+          {"value": {{{formatCentsToDollars details.income.[4].amount}}}, "type": "{{details.income.[4].type}}"}
+        {{/if}}
+        {{#if details.income.[5]}}
+          {"value": {{{formatCentsToDollars details.income.[5].amount}}}, "type": "{{details.income.[5].type}}"}
+        {{/if}}
+        {{/list}},
+    {{else}}
+      "value": "",
+    {{/if}}
+    "types": {
+      "items": {{#list}}
+        {"id": "rental", "label": "Rental income", "value": "rental"}
+        {"id": "k1", "label": "K-1 income", "value": "k1"}
+        {"id": "social_security_or_pension", "label": "Social security / Pension", "value": "social_security_or_pension"}
+        {"id": "child_support_or_alimony", "label": "Child support / alimony", "value": "child_support_or_alimony"}
+        {"id": "disability", "label": "Disability", "value": "disability"}
+      {{/list}},
+      "label": {
+        "copy": "Sources of additional income",
+        "subCopy": "Select all that apply"
+      }
+    },
+    "callout": ":IconWithText[:props[{ icon: 'LightBulbIcon', text: 'What is additional income?'}]] \n\n Any income in addition to a primary job, such as rental income, social security, pension, etc. You can also enter alimony, child support, or separate maintenance income but it’s not required. ",
+    "status": {{{json (contract 'cosigner_income_additional_income_input_status')}}},
+    "error": "{{{ ajv 'errors' 'questions/cosigner/income/additional-income/review' additionalAmount }}}",
+    "label": {
+      "copy": "Total annual additional income (optional)"
+    },
+    "conditional": [
+      [
+        {
+          "field": "editEmploymentInfo.employmentType",
+          "op": "valueEquals",
+          "value": "employed"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType",
+          "op": "valueEquals",
+          "value": "self_employed"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType",
+          "op": "valueEquals",
+          "value": "future"
+        }
+      ],
+      [
+        {
+          "field": "editEmploymentInfo.employmentType",
+          "op": "valueEquals",
+          "value": "unemployed"
+        }
+      ]
+    ]
+    {{! TODO add error field for schema validation}}
+  }
+}
+{{/with}}

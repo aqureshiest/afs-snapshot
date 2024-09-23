@@ -1,0 +1,9 @@
+{{#if (and request.params.id application.cosigner.ssnTokenURI)}}
+  {
+    "piiRequestMethod": "getTokenValue",
+    "id": "{{request.params.id}}",
+    "value": "{{application.cosigner.ssnTokenURI}}"
+  }
+{{else}}
+  null
+{{/if}} 

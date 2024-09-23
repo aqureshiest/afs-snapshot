@@ -4,10 +4,9 @@
   "inputs": {
     "*": "inputs",
     "application": {
-      "*": "application/single.flattened",
+      "*": "application/cosigned.flattened",
       "application": "application-by-id-param"
     },
-    "userState": "user-state",
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
@@ -24,11 +23,13 @@
   },
   "outputs": {
     "*": "redirect",
-    "redirect": "redirect/full-refi.review",
+    "redirect": "redirect/full-refi/cosigner.review",
+    "no-income-error": "error.no-income",
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "full-refi.add-details-education"
+        "clear-income-details-review", 
+        "add-employment-details-review"
       ]
     }
   }

@@ -4,13 +4,13 @@
   "definition": {
       "key": "school",
       "type": "inputSchool",
-      "status": {{{json (contract 'primary_school_input_status')}}},
+      "status": {{{json (contract 'cosigner_school_input_status')}}},
       {{! TODO: request school name based on opeid from accredited-school-service}}
       "value": {{{json ( getSchool details.education.0.opeid (contract 'getSchools'))}}},
       "label": {
           "copy": "College or school name"
       },
-      "error": "{{{ ajv 'errors' 'questions/primary/school' (getSchool details.education.0.opeid (contract 'getSchools')) }}}"
+      "error": "{{{ ajv 'errors' 'questions/cosigner/school' (getSchool details.education.0.opeid (contract 'getSchools')) }}}"
   }
 }
 {{/with}}

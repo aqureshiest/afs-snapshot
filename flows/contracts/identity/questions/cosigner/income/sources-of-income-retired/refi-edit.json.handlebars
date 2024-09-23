@@ -1,0 +1,43 @@
+{{#with application.cosigner}}
+{
+    "type": "input",
+    "definition": {
+        "key": "sourcesOfIncome",
+        "type": "inputRadio",
+        "layout": "copyWithIcon",
+        "direction": "column",
+        {{#if details.income.1.type}}
+            "value": "{{details.income.1.type}}",
+        {{else}}
+            "value": "",
+        {{/if}}
+        "items": [
+            {
+                "id": "social_security_pension",
+                "label": "Social Security / Pension",
+                "value": "social_security_or_pension"
+            },
+            {
+                "id": "401k",
+                "label": "401k",
+                "value": "investment"
+            }
+        ],
+        "conditional": [
+            [
+                {
+                    "field": "editEmploymentInfo.employmentType",
+                    "op": "valueEquals",
+                    "value": "retired"
+                }
+            ]
+
+        ],
+        "status": {{{json (contract 'cosigner_income_sources_of_income_input_status')}}},
+        "error": "{{{ ajv 'errors' 'questions/cosigner/income/sources-of-income-retired' sourcesOfIncome }}}",
+        "label": {
+            "copy": "What are your sources of income"
+        }
+    }
+}
+{{/with}}

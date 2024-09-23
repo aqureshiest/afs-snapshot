@@ -1,0 +1,63 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/cosigned.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "refi-student-info",
+      "stage": "student-info-stage.refi-edit-cosigner",
+      "pageLayout": "header/refi-edit.default",
+      "steps": [
+        "student-info-form/employment.refi-edit"
+      ],
+      "student-employment-income-rows": [
+        "info/student-employment/edit.default",
+        "questions/cosigner/employment.default",
+        "questions/cosigner/employment/employer-name.default",
+        "questions/cosigner/employment/job-title.default",
+        "questions/cosigner/employment/start-date.default",
+        "info/student-income/additional-income-hint.default",
+        "questions/cosigner/income/additional-income.refi-retired",
+        "questions/cosigner/income/annual-income.default",
+        "questions/cosigner/income/claimed-assets.default",
+        "questions/cosigner/income/additional-income/review.default"
+      ],
+      "back-button": "actions/back-buttons/full-refi/cosigner.review",
+      "onError": [
+        "onError.no-income"
+      ],
+      "save_edited_employment_details_action": "actions/save-details/full-refi/cosigner.edit-employment-refi",
+      "cosigner_employment_input_status": "questions/cosigner/employment.status",
+      "cosigner_income_employer_name_input_status": "questions/cosigner/employment/employer-name.status",
+      "cosigner_income_job_title_input_status": "questions/cosigner/employment/job-title.status",
+      "cosigner_income_start_date_input_status": "questions/cosigner/employment/start-date.status",
+      "cosigner_income_annual_income_input_status": "questions/cosigner/income/annual-income.status",
+      "cosigner_income_claimed_assets_input_status": "questions/cosigner/income/claimed-assets.status",
+      "cosigner_income_additional_income_input_status": "questions/cosigner/income/additional-income/review.status",
+      "cosigner_income_sources_of_income_input_status": "questions/cosigner/income/sources-of-income-retired.status",
+      "redirect_homebase": "actions/homebase.default"
+    }
+  }
+]

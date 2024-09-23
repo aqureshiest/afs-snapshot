@@ -1,0 +1,35 @@
+{{#with (contract 'decryptPiiSsn') as |result|}}
+{{#with ../application.cosigner}}
+{
+    "type": "info",
+    "definition": {
+        "key": "basicInfoReview",
+        "type": "infoReview",
+        "label": "Basic Info",
+        "items": 
+        {{#list}}
+            {"id": "name", "label": "Full Name", "value": "{{details.name.first}} {{details.name.last}}"}
+            {"id": "dateOfBirth", "label": "Date of Birth", "value": "{{reviewDateFormatter details.dateOfBirth}}"}
+            {"id": "phone", "label": "Phone Number", "value": "{{formatPhoneNumber details.phone.0.number}}"}
+            {"id": "email", "label": "Email", "value": "{{details.email}}"}
+            {"id": "address", "label": "Address", "value": "{{formatAddress (findCurrentAddress details.location)}}"}
+            {{#if (findPreviousAddress details.location) }}
+                {"id": "previousAddress", "label": "Previous Address", "value": "{{formatAddress (findPreviousAddress details.location)}}"}
+            {{/if}}
+            {"id": "citizenship", "label": "Citizenship", "value": {{{json (mapCitizenship details.location.0.citizenship) }}} }
+            {"id": "ssn", "label": "Social Security Number", "value": "{{maskValue 'ssn' result.results.value}}"}
+        {{/list}},
+        "editAction": {
+            "key": "",
+            "type": "navigate",
+            "properties": {
+                 "analytics": {},
+                "goTo": "earnest/student-loan-refi/edit/cosigner/personal-info/{{id}}"
+            }
+        }
+    }
+}
+{{/with}}
+{{else}}
+{}
+{{/with}}

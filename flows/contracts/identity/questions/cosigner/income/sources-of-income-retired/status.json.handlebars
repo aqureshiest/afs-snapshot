@@ -1,0 +1,7 @@
+{{#with application.cosigner}}
+  {{#if (ajv 'validate' 'questions/cosigner/income/sources-of-income-retired' details.income.1.type) }}
+     "completed"
+  {{else}} 
+     "incomplete"
+  {{/if}}
+{{/with}}

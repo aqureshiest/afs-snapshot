@@ -1,8 +1,8 @@
-{{#with application.primary}}
+{{#with application.cosigner}}
 {
     "key": "student-personal-info-edit",
     "type": "form",
-    "label": "Edit Primary Info",
+    "label": "Edit Cosigner Info",
     "status": "notStarted",
     "showProgress": true,
     "pageLayout":{{{json (contract 'pageLayout')}}},
@@ -13,10 +13,10 @@
             "editPersonalInfo": {
                 "type": "object",
                 "properties": {
-                    "name": {{{json (schema 'questions/primary/name')}}},
-                    "dateOfBirth": {{{json (schema 'questions/primary/dateOfBirth')}}},
-                    "phone": {{{json (schema 'questions/primary/phone')}}},
-                    "email": {{{json (schema 'questions/primary/email')}}},
+                    "name": {{{json (schema 'questions/cosigner/name')}}},
+                    "dateOfBirth": {{{json (schema 'questions/cosigner/dateOfBirth')}}},
+                    "phone": {{{json (schema 'questions/cosigner/phone')}}},
+                    "email": {{{json (schema 'questions/cosigner/email')}}},
                     {{#with (contract 'current-address-validation') as |result|}}
                         "currentAddress": {{{json result}}},
                     {{/with}}
@@ -25,8 +25,8 @@
                             "previousAddress": {{{json result}}},
                         {{/with}}
                     {{/if}}
-                    "citizenship": {{{json (schema 'questions/primary/citizenship')}}},
-                    "ssn": {{{json (schema 'questions/primary/ssn')}}}
+                    "citizenship": {{{json (schema 'questions/cosigner/citizenship')}}},
+                    "ssn": {{{json (schema 'questions/cosigner/ssn')}}}
                 }
             },
             "editEducationInfo": {
@@ -37,16 +37,10 @@
                     "graduationDate": {{{json (schema 'questions/primary/graduationDate')}}}
                 }
             },
-            "editLoanlDetails": {
-                "type": "object",
-                "properties": {
-                    "loanAmount": {{{json (schema 'questions/primary/loan')}}}
-                }
-            },
             "editEmploymentInfo": {
                 "type": "object",
                 "properties": {
-                    "employmentType": {{{json (schema 'questions/primary/employment')}}}
+                    "employmentType": {{{json (schema 'questions/cosigner/employment')}}}
                 },
                 "allOf": [
                     {
@@ -57,11 +51,11 @@
                         },
                         "then": {
                             "properties": {
-                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
-                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
-                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
-                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                                "employerName": {{{json (schema 'questions/cosigner/employment/employer-name')}}},
+                                "jobTitle": {{{ json (schema 'questions/cosigner/employment/job-title')}}},
+                                "annualIncome": {{{json (schema 'questions/cosigner/income/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/cosigner/income/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/cosigner/income/additional-income/review')}}}
                             }
                         }
                     },
@@ -73,11 +67,11 @@
                         },
                         "then": {
                             "properties": {
-                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
-                                "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
-                                "annualIncome": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
-                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                                "jobTitle": {{{ json (schema 'questions/cosigner/employment/job-title')}}},
+                                "startDate": {{{ json (schema 'questions/cosigner/employment/start-date')}}},
+                                "annualIncome": {{{json (schema 'questions/cosigner/income/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/cosigner/income/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/cosigner/income/additional-income/review')}}}
                             }
                         }
                     },
@@ -89,12 +83,12 @@
                         },
                         "then": {
                             "properties": {
-                                "employerName": {{{json (schema 'questions/primary/employment/employer-name')}}},
-                                "jobTitle": {{{ json (schema 'questions/primary/employment/job-title')}}},
-                                "startDate": {{{ json (schema 'questions/primary/employment/start-date')}}},
-                                "annualIncomeFuture": {{{json (schema 'questions/primary/income/amount/annual-income')}}},
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
-                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                                "employerName": {{{json (schema 'questions/cosigner/employment/employer-name')}}},
+                                "jobTitle": {{{ json (schema 'questions/cosigner/employment/job-title')}}},
+                                "startDate": {{{ json (schema 'questions/cosigner/employment/start-date')}}},
+                                "annualIncomeFuture": {{{json (schema 'questions/cosigner/income/annual-income')}}},
+                                "claimedAssets": {{{json (schema 'questions/cosigner/income/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/cosigner/income/additional-income/review')}}}
                             }
                         }
                     },
@@ -106,7 +100,7 @@
                         },
                         "then": {
                             "properties": {
-                                "additionalAmountRetired": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                                "additionalAmountRetired": {{{json (schema 'questions/cosigner/income/additional-income/review')}}}
                             }
                         }
                     },
@@ -118,8 +112,8 @@
                         },
                         "then": {
                             "properties": {
-                                "claimedAssets": {{{json (schema 'questions/primary/income/amount/claimed-assets')}}},
-                                "additionalAmount": {{{json (schema 'questions/primary/income/amount/additional-income')}}}
+                                "claimedAssets": {{{json (schema 'questions/cosigner/income/claimed-assets')}}},
+                                "additionalAmount": {{{json (schema 'questions/cosigner/income/additional-income/review')}}}
                             }
                         }
                     }

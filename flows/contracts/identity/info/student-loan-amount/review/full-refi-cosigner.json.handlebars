@@ -1,0 +1,14 @@
+
+{{#with application}}
+{
+    "type": "info",
+    "definition": {
+        "key": "loanAmountReview",
+        "type": "infoReview",
+        "label": "Loan Details",
+        "items": [
+            {"id": "refinanceAmount", "label": "Refinance amount", "value": "{{formatToUSCurrency details.amount.requested}}"}
+        ]
+    }
+}
+{{/with}}

@@ -1,0 +1,9 @@
+{{#if (and request.params.id application.cosigner.details.education)}}
+  {
+    "accreditedSchoolServiceRequestMethod": "getSchools",
+    "id": "{{request.params.id}}",
+    "opeid": "{{application.cosigner.details.education.0.opeid}}"
+  }
+{{else}}
+  null
+{{/if}} 

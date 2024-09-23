@@ -11,6 +11,7 @@
         "*": "application/single.flattened",
         "application": "application-by-id-param"
       },
+      "userState": "user-state",
       "auth": {
         "*": "auth-artifacts",
         "strategies": [
@@ -34,9 +35,12 @@
       ],
       "student-education-info-rows": [
         "info/student-education/edit.default",
-        "questions/primary/school.refi-edit",
-        "questions/primary/degree.refi-edit",
-        "questions/primary/graduationDate.default"
+        "questions/primary/degree-type.default",
+        "questions/primary/school.full-refi-graduate",
+        "questions/primary/school.full-refi-undergraduate",
+        "questions/primary/degree-type-undergraduate",
+        "questions/primary/degree-type-graduate",
+        "questions/primary/graduationDate.full-refi"
       ],
   
       "back-button": "actions/back-buttons/full-refi.review",

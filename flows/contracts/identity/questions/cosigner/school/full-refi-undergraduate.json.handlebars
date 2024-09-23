@@ -4,7 +4,7 @@
   "definition": {
       "key": "school-undergraduate",
       "type": "inputSchool",
-      "status": {{{json (contract 'primary_school_input_status')}}},
+      "status": {{{json (contract 'cosigner_school_input_status')}}},
       {{! TODO: request school name based on opeid from accredited-school-service}}
       "value": "{{{details.education.0.opeid}}}",
       "label": {
@@ -13,6 +13,11 @@
       "conditional": [
         [{
           "field": "refi-degree.degree-type",
+          "op": "valueEquals",
+          "value": "undergraduate"
+        }],
+        [{
+          "field": "editEducationInfo.degree-type",
           "op": "valueEquals",
           "value": "undergraduate"
         }]

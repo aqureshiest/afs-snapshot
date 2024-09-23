@@ -11,8 +11,6 @@
         "*": "application/cosigned.flattened",
         "application": "application-by-id-param"
       },
-      "applications": [],
-      "applicationState": "application-state",
       "userState": "user-state",
       "auth": {
         "*": "auth-artifacts",
@@ -22,23 +20,21 @@
             "response": "neas.verify-token",
             "authorization": [
               "inputs/auth.neas-application-auth",
-              "inputs/auth.neas-user-auth",
-              "inputs/auth.neas-monolith-auth"
+              "inputs/auth.neas-user-auth"
             ]
           }
         ]
       }
     },
     "outputs": {
-      "*": "full-refi",
-      "stage": "student-loan-refi/education",
-      "pageLayout": "layout.sidebar",
+      "*": "refi-student-info",
+      "stage": "student-info-stage.refi-edit-cosigner",
+      "pageLayout": "header/refi-edit.default",
       "steps": [
-        "student-info-form/education.full-refi"
+        "student-info-form/education.refi-edit"
       ],
-      "back-button": "actions/back-buttons.education",
       "student-education-info-rows": [
-        "info/student-education.full-refi",
+        "info/student-education/edit.default",
         "questions/cosigner/degree-type.default",
         "questions/cosigner/school.full-refi-graduate",
         "questions/cosigner/school.full-refi-undergraduate",
@@ -46,8 +42,18 @@
         "questions/cosigner/degree-type-graduate",
         "questions/cosigner/graduationDate.full-refi"
       ],
+  
+      "back-button": "actions/back-buttons/full-refi/cosigner.review",
+      "save_edited_details_action": "actions/save-details/full-refi/cosigner.edit-education",
+      "onError": ["onError.unauthorized"],
       "cosigner_school_input_status": "questions/cosigner/school.status",
-      "save-education-details": "actions/save-details/full-refi/cosigner.education"
+      "cosigner_degree_input_status": "questions/cosigner/degree-type.status",
+      "cosigner_gradDate_input_status": "questions/cosigner/graduationDate.status",
+      "decryptPiiSsn": "pii-get-cosigner-ssn",
+      "getSchools": "get-schools-cosigner",
+      "getDegrees": "questions/primary/degree.get-degrees",
+      "getPrimarySchoolName": "cosigner-get-school-name",
+      "redirect_homebase": "actions/homebase.default"
     }
   }
 ]

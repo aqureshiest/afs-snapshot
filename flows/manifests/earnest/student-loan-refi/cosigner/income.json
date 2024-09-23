@@ -36,7 +36,7 @@
         "info/student-info.income",
         "questions/cosigner/income/annual-income.default",
         "questions/cosigner/income/claimed-assets.default",
-        "questions/cosigner/income/additional-income.default",
+        "questions/cosigner/income/additional-income.full-refi",
         "info/student-income/additional-income-hint.full-refi"
       ],
       "back-button": "actions/back-buttons/full-refi/cosigner.citizenship",

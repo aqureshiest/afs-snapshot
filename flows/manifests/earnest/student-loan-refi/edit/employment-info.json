@@ -46,7 +46,6 @@
         "questions/primary/income/amount/additional-income.default"
       ],
       "back-button": "actions/back-buttons/full-refi.review",
-      "save_edited_details_action": "actions/save-details.save-review",
       "onError": [
         "onError.no-income"
       ],
