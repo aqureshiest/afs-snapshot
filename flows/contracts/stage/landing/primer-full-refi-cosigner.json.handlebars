@@ -1,3 +1,4 @@
+{{{jsona application.primary.details.name "primary details"}}}
 {
   "type": "view",
   "label": "full-refi-primer",
@@ -16,7 +17,7 @@
               "key": "header1",
               "type": "header",
               "componentProps": {
-                  "copy": {{{json (contract 'headerLabel')}}}
+                  "copy": "You’ve been invited by {{application.primary.details.name.first}} to be a cosigner."
               }
           },
           {
@@ -174,7 +175,7 @@
       "bottomNavigation": {
           "buttons": [
               {
-                "copy": "Get your rates",
+                "copy": "Get Your Rates",
                 "action": {
                     "key": "cosigner-basic-info-request",
                     "type": "navigate",
