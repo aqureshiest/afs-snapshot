@@ -1295,7 +1295,7 @@ export default class LendingDecisionServiceClient extends Client {
       entityEmployemnts &&
       entityEmployemnts.length === 0 &&
       entityIncomes &&
-      entityIncomes.length > 0
+      entityIncomes.length >= 0
     ) {
       return [
         {

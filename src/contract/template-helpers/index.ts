@@ -349,7 +349,12 @@ export function getAdditionalIncomeSourceTypes(v1) {
   return v1 ? v1.filter((i) => i.type).map((i) => i.type) : undefined;
 }
 export function checkAdditionalIncomeSourceExists(v1) {
-  return v1 ? v1.slice(1).filter((i) => i.type).map((i) => i.type) : undefined;
+  return v1
+    ? v1
+        .slice(1)
+        .filter((i) => i.type)
+        .map((i) => i.type)
+    : undefined;
 }
 
 export function getAdditionalIncomeSourceTypesAsString(v1) {
