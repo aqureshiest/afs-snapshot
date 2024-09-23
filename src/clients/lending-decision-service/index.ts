@@ -421,6 +421,7 @@ export default class LendingDecisionServiceClient extends Client {
       context,
       results.data.artifacts.priceCurve,
     );
+
     const prices = filteredPrices.map((filteredPrice, index) => {
       return {
         rateInBps: filteredPrice.rate,
@@ -451,6 +452,7 @@ export default class LendingDecisionServiceClient extends Client {
         minPaymentAmountInCents: price.minimumPaymentAmountInCents,
       };
     });
+
     return ratesAndPayments;
   }
 
@@ -1256,8 +1258,8 @@ export default class LendingDecisionServiceClient extends Client {
           amount = 0;
         }
         return {
-          employerName: employment?.employer,
-          jobTitle: employment?.title,
+          employerName: employment?.employer ? employment.employer : "",
+          jobTitle: employment?.title ? employment.title : "",
           employmentStatus: status,
           ...(["self_employed", "future"].includes(status)
             ? {
@@ -1266,7 +1268,7 @@ export default class LendingDecisionServiceClient extends Client {
                   : "",
               }
             : {}),
-          amount: amount,
+          amount: Number(amount),
         };
       });
   }
@@ -1330,8 +1332,8 @@ export default class LendingDecisionServiceClient extends Client {
       .filter((income) => income)
       .map((income) => {
         return {
-          incomeType: income?.type,
-          value: income?.amount,
+          incomeType: income?.type ? income.type : "",
+          value: Number(income?.amount),
         };
       });
   }
@@ -1349,8 +1351,8 @@ export default class LendingDecisionServiceClient extends Client {
         .filter((asset) => asset)
         .map((asset) => {
           return {
-            assetType: asset?.type,
-            value: asset?.amount,
+            assetType: asset?.type ? asset.type : "",
+            value: Number(asset?.amount),
           };
         });
     }
