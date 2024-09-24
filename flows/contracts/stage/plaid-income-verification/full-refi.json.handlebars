@@ -181,7 +181,7 @@
                 }
               }
             ],
-            "manifest": "save-details/full-refi/financials/{{{request.params.id}}}"
+            "manifest": "save-details/full-refi{{#if (eq application.applicant.role "cosigner")}}/cosigner{{/if}}/financials/{{{request.params.id}}}"
           }
         }
       },
