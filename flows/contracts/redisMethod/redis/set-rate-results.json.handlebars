@@ -1,0 +1,21 @@
+{{#if auth.artifacts.userId}}
+{
+  "redisMethod": "setUserState",
+  "key": "{{{auth.artifacts.userId}}}",
+  "value": {
+    {{#with (contract 'actions' 0) as |rateResult|}}
+        {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
+            "latestRateResult":  "rateApproved"
+        {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (searchDeniedArtifactTags rateResult.data.artifacts.tags))}}
+            "latestRateResult":  "rateDeclined"
+        {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable"))}}
+            "latestRateResult":  "rateFrozen"
+        {{else}}
+            "latestRateResult":  "rateUnable"
+        {{/if}}
+    {{/with}}
+  }
+}
+{{else}}
+  null
+{{/if}}

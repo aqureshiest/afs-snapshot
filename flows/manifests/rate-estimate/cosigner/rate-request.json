@@ -7,7 +7,7 @@
     "inputs":{
         "*": "inputs",
         "application": {
-            "*": "application/single.flattened",
+            "*": "application/cosigned.flattened",
             "application": "application-by-id-param"
         },
         "applications": [],
@@ -35,7 +35,7 @@
     },
     "outputs": {
         "*": "response.rate-interstitial",
-        "actions": ["rate-estimate-request"],
+        "actions": ["rate-estimate-request", "redis.set-rate-results"],
         "rateDeclined": "actions/rate-estimate-request/cosigner.declined",
         "rateUnable": "actions/rate-estimate-request/cosigner.unable",
         "rateFrozen": "actions/rate-estimate-request/cosigner.frozen",
