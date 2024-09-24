@@ -1299,8 +1299,8 @@ export default class LendingDecisionServiceClient extends Client {
     ) {
       return [
         {
-          employerName: null,
-          jobTitle: null,
+          employerName: "",
+          jobTitle: "",
           employmentStatus: "retired",
           // for a retired user, they may have entered an annual income at index 0 of income schema,
           // if there is a value, use that value instead of 0
