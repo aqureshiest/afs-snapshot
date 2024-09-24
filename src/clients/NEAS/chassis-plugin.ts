@@ -8,8 +8,9 @@ export const plugin: Plugin<NeasClient> = {
   version: "1.0.0",
   registerOrder: 0,
   register: async (context: PluginContext) => {
-    const key = SensitiveString.ExtractValue(context.env.NEAS_S2S_KEY) || "";
-    const accessKey = Buffer.from(key).toString("base64");
+    const accessKey =
+      SensitiveString.ExtractValue(context.env.S2S_APPLICATION_SERVICES_KEY) ||
+      "";
     const baseUrl =
       SensitiveString.ExtractValue(context.env.NEAS_BASE_URL) || "";
 

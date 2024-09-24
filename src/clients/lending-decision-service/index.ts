@@ -195,6 +195,7 @@ export default class LendingDecisionServiceClient extends Client {
       application = flattenApplication(result["applications"][0]);
       this.log(
         {
+          id,
           message: `[6da39e53] decision request update application: ${JSON.stringify(application)}`,
         },
         context,
@@ -214,6 +215,7 @@ export default class LendingDecisionServiceClient extends Client {
     try {
       this.log(
         {
+          id,
           message: `[478f644d] decision request update payload: ${JSON.stringify(payload)}`,
         },
         context,
@@ -221,6 +223,7 @@ export default class LendingDecisionServiceClient extends Client {
       const status = this.deriveStatusFromEvent(payload);
       this.log(
         {
+          id,
           message: `[bb2d0cbd] decision request update status: ${JSON.stringify(status)}`,
         },
         context,
@@ -417,19 +420,30 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    const filteredPrices = this.filterPriceCurve(
-      context,
-      results.data.artifacts.priceCurve,
-    );
+    const priceCurve =
+      results.data.artifacts?.cosignerPriceCurve &&
+      results.data.artifacts.cosignerPriceCurve.length > 0
+        ? results.data.artifacts.cosignerPriceCurve
+        : results.data.artifacts.priceCurve;
+
+    const softApprovedAmount = results.data.artifacts
+      ?.cosignerSoftApprovedAmount
+      ? results.data.artifacts.cosignerSoftApprovedAmount
+      : results.data.artifacts.softApprovedAmount;
+
+    const softInquiryDate = results.data.artifacts?.cosignerSoftInquiryDate
+      ? results.data.artifacts.cosignerSoftInquiryDate
+      : results.data.artifacts.softInquiryDate;
+
+    const filteredPrices = this.filterPriceCurve(context, priceCurve);
 
     const prices = filteredPrices.map((filteredPrice, index) => {
       return {
         rateInBps: filteredPrice.rate,
         uwLoanTermInMonths: filteredPrice.term,
         rateType: filteredPrice.rateType,
-        startingPrincipalBalanceInCents:
-          results.data.artifacts.softApprovedAmount,
-        date: results.data.artifacts.softInquiryDate.split("T")[0],
+        startingPrincipalBalanceInCents: softApprovedAmount,
+        date: softInquiryDate.split("T")[0],
         dateType: "fti",
         priceId: index,
       };
@@ -459,18 +473,23 @@ export default class LendingDecisionServiceClient extends Client {
   /**
    * Sends a POST request on the decision endpoint to LDS
    * @param context PluginContext
-   * @param applicationId string Root Application ID
+   * @param applicationId string Applicant ID
    * @returns {Promise<DecisionPostResponse>}
    */
   async postDecisionRequest(
     input: Input<unknown>,
     context: PluginContext,
-    applicationId: string, // Assuming root app ID
+    applicationId: string,
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
   ): Promise<DecisionPostResponse> {
     const decisionType = "application";
     let decisionAPIVersion = "v1";
     let application = input["application"];
+
+    const currentApplicant = application?.applicant?.role
+      ? application.applicant.role
+      : "primary";
+
     if (!application) {
       application = (await this.getApplication(
         context,
@@ -483,12 +502,17 @@ export default class LendingDecisionServiceClient extends Client {
      * The monolith references have breached containment
      * May god help us all
      * ============================== */
-
-    const monolithUserID = application[APPLICANT_TYPES.Primary]?.monolithUserID
-      ? application[APPLICANT_TYPES.Primary].monolithUserID
-      : application?.monolithUserID;
-    const monolithApplicationID =
-      application[APPLICANT_TYPES.Primary]?.monolithApplicationID;
+    const monolithUserID = application[currentApplicant]?.monolithUserID
+      ? application[currentApplicant].monolithUserID
+      : application?.applicant?.monolithUserID
+        ? application.applicant.monolithUserID
+        : application?.monolithUserID;
+    const monolithApplicationID = application[currentApplicant]
+      ?.monolithApplicationID
+      ? application[currentApplicant].monolithApplicationID
+      : application?.applicant?.monolithApplicationID
+        ? application.applicant.monolithApplicationID
+        : application?.monolithApplicationID;
     const monolithLoanID = application.monolithLoanID;
 
     if (!monolithUserID && !monolithApplicationID) {
@@ -504,29 +528,27 @@ export default class LendingDecisionServiceClient extends Client {
       };
       await this.legacyDataSync(input, context, monolithIDs);
     }
-
+    const appType = await this.getApplicationType(context, applicationId);
     const applicationDecisionDetails = {};
-    for (const applicant of [
+    for (const userApplicant of [
       APPLICANT_TYPES.Primary,
       APPLICANT_TYPES.Cosigner,
     ]) {
-      if (application[applicant]) {
-        applicationDecisionDetails[applicant] = await this.formatRequestPayload(
-          input,
-          context,
-          application as typings.Application, // Pass full application. We need loan amount and rates details from root
-          applicant,
-          decisionType,
-          decisionAPIVersion,
-        );
+      if (application[userApplicant]) {
+        applicationDecisionDetails[userApplicant] =
+          await this.formatRequestPayload(
+            input,
+            context,
+            application as typings.Application & {
+              applicant: typings.Application;
+            }, // Pass full application. We need loan amount and rates details from root
+            userApplicant,
+            decisionType,
+            appType,
+            decisionAPIVersion,
+          );
       }
     }
-
-    /* ============================== *
-     * TODO: applications with multiple applicants will need more information
-     * to determine which applicants are submitted
-     * ============================== */
-    await this.setSubmittedStatus(context, application, applicationId);
 
     let decisionPayload;
     let lendingDecisionURI;
@@ -550,44 +572,22 @@ export default class LendingDecisionServiceClient extends Client {
         appInfo: applicationDecisionDetails,
       } as unknown as DecisionRequestDetails;
     } else {
-      /**
-       * For v2 accountless applications, the 'candidateUserId' is needed by Checkout Service.
-       * In the auth artifacts we store either the 'userId' or the 'candidateUserId' under
-       * the field auth.artifacts.userId.
-       *
-       * We can determine what value is stored in the field ' auth.artifacts.userId' by the 'verified' field in the artifacts
-       * If this field is 'true' this indicates that a user has verified who they are either through PII-verification or signing in
-       * and the value in 'auth.artifacts.userId' is the authenticated 'userID'
-       * else if 'false' this is the 'candidateUserId'
-       *
-       * Use the 'verified' key in setUserID() to determine under what reference key
-       * we save the auth.artifacts.userId
-       */
-      const userId = input?.auth?.artifacts?.userId;
-      const isVerified = Boolean(input?.auth?.artifacts?.verified);
-      assert(userId, "[3a97066b] Missing 'userId' from artifacts");
-
-      await this.setUserID(
+      await this.setUserID(input, context, applicationId);
+      const requestMetaDataIDs = await this.buildRequestMetaDataIDs(
+        input,
         context,
-        application[APPLICANT_TYPES.Primary].id,
-        userId,
-        isVerified,
+        appType,
+        application,
+        applicationId,
       );
-      /**
-       * Application Tags is an array of strings, where the first element is overall application status
-       * and last element is the application type
-       */
-      const appType = await this.getApplicationType(context, applicationId);
+
       lendingDecisionURI = `/v2/decisioning-request/${application?.product}/${decisionType}`;
       decisionPayload = {
         applicationType: ApplicationTypes[appType],
         initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
         decisionSource: "apply-flow-service",
         requestMetadata: {
-          rootApplicationId: application.id,
-          applicationRefId: Number(application.refId), // refId is string in DB, they expect a Number
-          applicationId: application[APPLICANT_TYPES.Primary].id,
-          userId: input?.auth?.artifacts?.userId, // Should we assert, at this point should have been authenticated
+          ...requestMetaDataIDs,
         },
         isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
         isMedicalResidency: false,
@@ -595,9 +595,14 @@ export default class LendingDecisionServiceClient extends Client {
       } as unknown as DecisionRequestDetails;
     }
 
+    /* ============================== *
+     * TODO: applications with multiple applicants will need more information
+     * to determine which applicants are submitted
+     * ============================== */
+    await this.setSubmittedStatus(context, application, application.id);
     this.log(
       {
-        appID: applicationId,
+        appID: application.id,
         message: `[ad9489fd] requesting decision ${lendingDecisionURI}`,
       },
       context,
@@ -628,6 +633,7 @@ export default class LendingDecisionServiceClient extends Client {
       );
       this.log(
         {
+          rootID: application.id,
           appID: applicationId,
           error,
           message: response.statusMessage, // Log the actual status message from LDS
@@ -636,6 +642,8 @@ export default class LendingDecisionServiceClient extends Client {
         },
         context,
       );
+
+      await this.revertStatus(context, application.id, applicationId);
       throw error;
     }
 
@@ -644,10 +652,11 @@ export default class LendingDecisionServiceClient extends Client {
      */
     await this.saveLendingDecisionId(
       context,
+      application.id,
       applicationId,
-      application[APPLICANT_TYPES.Primary].id, // TODO: Send application id of initiator
       results.data.decisioningToken,
       decisionType,
+      results.data.expirationDate,
     );
 
     return results;
@@ -656,11 +665,13 @@ export default class LendingDecisionServiceClient extends Client {
   async rateCheckRequest(
     input: Input<unknown>,
     context: PluginContext,
-    applicationId: string, // Assuming root app ID
+    applicationId: string, // Applicant ID
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
   ): Promise<RateRequestResponse> {
     const decisionType = "rate-check";
+    const decisionAPIVersion = "v2";
     let application = input["application"];
+
     if (!application) {
       application = (await this.getApplication(
         context,
@@ -670,36 +681,39 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     const applicationDecisionDetails = {};
-    for (const applicant of [
-      APPLICANT_TYPES.Primary,
-      APPLICANT_TYPES.Cosigner,
-    ]) {
-      if (application[applicant]) {
-        applicationDecisionDetails[applicant] = await this.formatRequestPayload(
-          input,
-          context,
-          application as typings.Application, // Pass full application. We need loan amount and rates details from root
-          applicant,
-          decisionType,
-          "v2",
-        );
-      }
-    }
+    const currentApplicant = application?.applicant?.role
+      ? application.applicant.role
+      : "primary";
 
     /**
      * Application Tags is an array of strings, where the first element is overall application status
      * and last element is the application type
      */
     const appType = await this.getApplicationType(context, applicationId);
+    const requestMetaDataIDs = await this.buildRequestMetaDataIDs(
+      input,
+      context,
+      appType,
+      application,
+      applicationId,
+    );
+
+    applicationDecisionDetails[currentApplicant] =
+      await this.formatRequestPayload(
+        input,
+        context,
+        application as typings.Application & { applicant: typings.Application }, // Pass full application. We need loan amount and rates details from root
+        currentApplicant,
+        decisionType,
+        appType,
+        decisionAPIVersion,
+      );
 
     const rateRequestPayload = {
       applicationType: ApplicationTypes[appType],
       initiator: APPLICANT_TYPES.Primary, // TODO: determine who is initiator, maybe look at created at tag for cosigner/primary. Oldest is init
       requestMetadata: {
-        rootApplicationId: application.id,
-        applicationRefId: Number(application[APPLICANT_TYPES.Primary].refId), // refId is string in DB, they expect a Number
-        applicationId: application[APPLICANT_TYPES.Primary].id,
-        userId: input?.auth?.artifacts?.userId, // Should we assert, at this point should have been authenticated
+        ...requestMetaDataIDs,
       },
       isInternational: false, // TODO: FOR Decision, what happens if international and SSNs?
       isMedicalResidency: false,
@@ -736,6 +750,7 @@ export default class LendingDecisionServiceClient extends Client {
       );
       this.log(
         {
+          rootID: application.id,
           appID: applicationId,
           error,
           message: response.statusMessage, // Log the actual status message from LDS
@@ -752,10 +767,11 @@ export default class LendingDecisionServiceClient extends Client {
      */
     await this.saveLendingDecisionId(
       context,
+      application.id,
       applicationId,
-      application[APPLICANT_TYPES.Primary].id,
       results.data.decisioningToken,
       decisionType,
+      results.data.expirationDate,
     );
 
     return results;
@@ -822,15 +838,20 @@ export default class LendingDecisionServiceClient extends Client {
   private async formatRequestPayload(
     input: Input<unknown>,
     context: PluginContext,
-    application: typings.Application,
+    application: typings.Application & { applicant: typings.Application },
     applicant: string,
     decisionType: string,
+    appType: string,
     decisionAPIVersion: string = "v1", // needed to support v1 and v2 full app submission
   ): Promise<DecisionEntity> {
-    const { details } = application[applicant];
-    const applicantSSN = application[applicant].ssnTokenURI
+    const { details } = application[applicant]
+      ? application[applicant]
+      : application.applicant;
+    const applicantSSN = application[applicant]
       ? application[applicant].ssnTokenURI
-      : "";
+      : application?.applicant
+        ? application.applicant.ssnTokenURI
+        : "";
 
     if (!details) {
       throw new Error(
@@ -881,6 +902,29 @@ export default class LendingDecisionServiceClient extends Client {
       incomeDetails,
     );
 
+    /**
+     * Special case income details for V2 full app submission
+     */
+    if (
+      decisionType === "application" &&
+      decisionAPIVersion === "v2" &&
+      appType !== "primary_only"
+    ) {
+      if (
+        incomeDetails &&
+        incomeDetails.length === 0 &&
+        employmentDetails &&
+        employmentDetails.length >= 1
+      ) {
+        incomeDetails = [
+          {
+            incomeType: "claimed_annual_income",
+            value: employmentDetails[0].amount,
+          },
+        ];
+      }
+    }
+
     const assetsDetails = this.applicantAssets(details.asset);
 
     const financialAccountDetails = await this.applicantFinancialInfo(
@@ -921,9 +965,14 @@ export default class LendingDecisionServiceClient extends Client {
       educations: educationDetails,
       incomes: incomeDetails,
       assets: assetsDetails,
-      loanInfo: {
-        claimedLoanAmount: application.details?.amount?.requested,
-      },
+      // Full app submission on cosigner applicant should NOT include loan info
+      ...(decisionType === "application" && applicant === "cosigner"
+        ? {}
+        : {
+            loanInfo: {
+              claimedLoanAmount: application.details?.amount?.requested,
+            },
+          }),
     } as DecisionEntity;
 
     /**
@@ -1571,7 +1620,7 @@ export default class LendingDecisionServiceClient extends Client {
   private async setSubmittedStatus(
     context: PluginContext,
     application: typings.Application,
-    applicationId: string,
+    rootApplicationId: string,
   ): Promise<void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
@@ -1604,7 +1653,7 @@ export default class LendingDecisionServiceClient extends Client {
           }
         }`,
         variables: {
-          id: applicationId,
+          id: rootApplicationId,
           status: "submitted",
           meta: { service: "apply-flow-service" },
         },
@@ -1615,9 +1664,60 @@ export default class LendingDecisionServiceClient extends Client {
     const setStatusError = setStatusResult?.setStatus?.error;
 
     if (setStatusError) {
-      const error = new Error("Failed to mark application as 'submitted'");
+      const error = new Error(
+        "[613a5fdf] Failed to mark application as 'submitted'",
+      );
       context.logger.warn({
         message: setStatusError,
+      });
+      throw error;
+    }
+  }
+
+  private async revertStatus(
+    context: PluginContext,
+    rootApplicationId: string,
+    applicantID: string,
+  ): Promise<void> {
+    const applicationServiceClient =
+      context.loadedPlugins.applicationServiceClient?.instance;
+    if (!applicationServiceClient)
+      throw new Error(
+        "[921466c6] Application Service client instance not found",
+      );
+    const revertStatusResult = (await applicationServiceClient["sendRequest"](
+      {
+        query: String.raw`mutation (
+          $id: UUID!
+          $meta: EventMeta
+          $applicantID: UUID!
+        ) {
+          revertStatus(id: $id, meta: $meta) {
+            id,
+            error,
+          }
+          revertApplicant: revertStatus(id: $applicantID, meta: $meta) {
+            id,
+            error,
+          }
+        }`,
+        variables: {
+          id: rootApplicationId,
+          applicantID: applicantID,
+          meta: { service: "apply-flow-service" },
+        },
+      },
+      context,
+    )) as { revertStatus: { error: string | null } };
+
+    const revertStatusError = revertStatusResult?.revertStatus?.error;
+
+    if (revertStatusError) {
+      const error = new Error(
+        "[281bdce9] Failed to mark application as 'incomplete'",
+      );
+      context.logger.warn({
+        message: revertStatusError,
       });
       throw error;
     }
@@ -1632,10 +1732,9 @@ export default class LendingDecisionServiceClient extends Client {
    * @param isVerified
    */
   private async setUserID(
+    input: Input<unknown>,
     context: PluginContext,
     applicationId: string,
-    userID: string,
-    isVerified: boolean,
   ): Promise<void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
@@ -1643,6 +1742,24 @@ export default class LendingDecisionServiceClient extends Client {
       throw new Error(
         "[0f4e75fe] Application Service client instance not found",
       );
+
+    /**
+     * For v2 accountless applications, the 'candidateUserId' is needed by Checkout Service.
+     * In the auth artifacts we store either the 'userId' or the 'candidateUserId' under
+     * the field auth.artifacts.userId.
+     *
+     * We can determine what value is stored in the field ' auth.artifacts.userId' by the 'verified' field in the artifacts
+     * If this field is 'true' this indicates that a user has verified who they are either through PII-verification or signing in
+     * and the value in 'auth.artifacts.userId' is the authenticated 'userID'
+     * else if 'false' this is the 'candidateUserId'
+     *
+     * Use the 'verified' key in setUserID() to determine under what reference key
+     * we save the auth.artifacts.userId
+     */
+    const userId = input?.auth?.artifacts?.userId;
+    const isVerified = Boolean(input?.auth?.artifacts?.verified);
+    assert(userId, "[3a97066b] Missing 'userId' from artifacts");
+
     let referenceType = "userID";
 
     if (!isVerified) {
@@ -1665,7 +1782,7 @@ export default class LendingDecisionServiceClient extends Client {
           id: applicationId,
           references: [
             {
-              referenceId: userID,
+              referenceId: userId,
               referenceType: referenceType,
             },
           ],
@@ -1698,6 +1815,7 @@ export default class LendingDecisionServiceClient extends Client {
     applicantApplicationId: string,
     decisionToken: string,
     decisionType: string,
+    expiresAt: string,
   ): Promise<void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
@@ -1726,6 +1844,7 @@ export default class LendingDecisionServiceClient extends Client {
               decision: {
                 decisionID: decisionToken,
                 type: decisionType,
+                expiresAt: expiresAt,
               },
             },
             id: applicantApplicationId,
@@ -1816,5 +1935,59 @@ export default class LendingDecisionServiceClient extends Client {
       );
       throw error;
     }
+  }
+
+  private async getNEASUserID(
+    context: PluginContext,
+    applicant: typings.Application,
+  ): Promise<string> {
+    const neasClientService = context.loadedPlugins.NeasClient?.instance;
+    assert(
+      neasClientService,
+      "[2eccab8f] Neas Service client not instantiated",
+    );
+    const emailId = applicant.details?.email;
+
+    const userID = emailId
+      ? await neasClientService["getUserID"](context, emailId)
+      : "";
+
+    return userID;
+  }
+
+  private async buildRequestMetaDataIDs(
+    input: Input<unknown>,
+    context: PluginContext,
+    appType: string,
+    application: typings.Application & { applicant: typings.Application },
+    applicationId: string,
+  ): Promise<DecisionRequestDetails["requestMetadata"]> {
+    const requestMetaDataIDs = {
+      rootApplicationId: application.id,
+      applicationRefId: Number(application.refId),
+    } as DecisionRequestDetails["requestMetadata"];
+    if (appType === "cosigned") {
+      assert(application["primary"], "[335eb556] Missing Primary Application");
+
+      requestMetaDataIDs["applicationId"] = application["primary"].id;
+      requestMetaDataIDs["userId"] = application["primary"].reference?.userID
+        ? application["primary"].reference.userID
+        : await this.getNEASUserID(context, application["primary"]);
+
+      assert(application["cosigner"], "[da148eac] Missing Primary Application");
+
+      requestMetaDataIDs["cosignerUserId"] = application["cosigner"].reference
+        ?.userID
+        ? application["cosigner"].reference.userID
+        : await this.getNEASUserID(context, application["cosigner"]);
+      requestMetaDataIDs["cosignerApplicationId"] = application["cosigner"].id;
+    } else {
+      requestMetaDataIDs["applicationId"] = applicationId;
+      requestMetaDataIDs["userId"] = input?.auth?.artifacts?.userId
+        ? input.auth.artifacts.userId
+        : await this.getNEASUserID(context, application.applicant);
+    }
+
+    return requestMetaDataIDs;
   }
 }

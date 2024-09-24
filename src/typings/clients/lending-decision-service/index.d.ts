@@ -119,22 +119,40 @@ type IScoreCurve = {
 
 type IArtifacts = {
   priceCurve: Array<IPriceCurve>;
+  cosignerPriceCurve?: Array<IPriceCurve>;
   scoreCurve: Array<IScoreCurve>;
+  cosignerScoreCurve?: Array<IScoreCurve>;
   creditReport: { [key: string]: unknown };
+  cosignerCreditReport?: { [key: string]: unknown };
   ficoScore: number;
+  cosignerFicoScore?: number;
   number: string;
   tags: Array<string>;
+  cosignerTags?: Array<string>;
   softApprovedAmount: number;
+  cosignerSoftApprovedAmount?: number;
   softInquiryDate: string;
+  cosignerSoftInquiryDate?: string;
   modelVersion: string;
+  cosignerModelVersion?: string;
   rateMapVersion: string;
+  cosignerRateMapVersion?: string;
   stateLimitsVersion: string;
+  cosignerStateLimitsVersion?: string;
   variableCapsVersion: string;
+  cosignerVariableCapsVersion?: string;
   rateMapTag: string;
+  cosignerRateMapTag?: string;
   grossAnnualIncome: number;
   netAnnualIncome: number;
   assetsAmount: number;
   monthlyHousingExpense: number;
+  cosignerRateAdjustmentName?: string;
+  cosignerRateAdjustmentAmount?: number;
+  cosignerGrossAnnualIncome?: number;
+  cosignerNetAnnualIncome?: number;
+  cosignerAssetsAmount?: number;
+  cosignerMonthlyHousingExpense?: number;
 };
 
 interface IDecisionEntity {
@@ -156,20 +174,21 @@ interface IApplicationDecisionDetails {
   parent?: IDecisionEntity;
 }
 
+interface IRequestMetadata {
+  rootApplicationId?: string;
+  applicationRefId?: number;
+  userId: string;
+  applicationId: string;
+  cosignerApplicationId?: string;
+  cosignerUserId?: string;
+}
 interface IDecisionRequestDetails {
   product?: string;
   decisioningWorkflowName?: string;
   decisionSource?: string;
   initiator?: string;
   applicationType: string;
-  requestMetadata: {
-    rootApplicationId?: string;
-    applicationRefId?: number;
-    userId: string;
-    applicationId: string;
-    cosignerApplicationId?: string;
-    cosignerUserId?: string;
-  };
+  requestMetadata: IRequestMetadata;
   isInternational: boolean;
   isMedicalResidency?: boolean;
   appInfo: IApplicationDecisionDetails;
@@ -178,14 +197,7 @@ interface IDecisionRequestDetails {
 interface IRateRequestDetails {
   applicationType: string;
   initiator: string;
-  requestMetadata: {
-    rootApplicationId: string;
-    userId: string;
-    applicationId: string;
-    applicationRefId?: string;
-    cosignerApplicationId?: string;
-    cosignerUserId?: string;
-  };
+  requestMetadata: IRequestMetadata;
   isInternational: boolean;
   isMedicalResidency: boolean;
   appInfo: IApplicationDecisionDetails;
@@ -201,6 +213,7 @@ interface IDecisionPostResponse {
     decisionOutcome: string;
     journeyToken: string;
     journeyApplicationToken: string;
+    expirationDate: string;
   };
 }
 

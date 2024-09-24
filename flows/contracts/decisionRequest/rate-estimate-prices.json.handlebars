@@ -1,11 +1,15 @@
 {{#if request.params.id}}
-  {
-    "decisionRequestMethod": "getPaymentsAndRates",
-    "id": "{{application.lendingDecisionID.[0]}}", {{!-- TODO: Get latest rate estimate decision id  --}}
-    "payload": {
-      "type": "decisioning-request"
-    }
-  }
+  {{#each application.applicant.details.decision as |decision| }}
+    {{#if (eq decision.type 'rate-check')}}
+      {
+        "decisionRequestMethod": "getPaymentsAndRates",
+        "id": "{{decision.decisionID}}", {{!-- TODO: Get latest rate estimate decision id  --}}
+        "payload": {
+          "type": "decisioning-request"
+        }
+      }
+    {{/if}}
+  {{/each}}
 {{else}}
   null
 {{/if}}

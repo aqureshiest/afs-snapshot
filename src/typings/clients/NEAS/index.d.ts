@@ -18,8 +18,25 @@ export type NeasClaims = {
   isValid: boolean;
 };
 
+export type NeasUserIdMap = {
+  userIdMap: {
+    uuid: string;
+    cognito_ref_id: string;
+    user_id: string;
+    unauthenticated_id: string;
+    email_id: string;
+    created_at: string;
+    updated_at: string;
+    monolith_user_ref_id: string;
+    cin_ref_id: string;
+    gm_account_ref_id: string;
+    user_ref_id: string;
+  };
+};
+
 declare module "clients/NEAS/index.js" {
   type Claims = NeasClaims;
+  type UserIDs = NeasUserIdMap;
   type ClientResponse<T> = Client.Response<T>;
   type Input = IContractInput<unknown>;
 }

@@ -30,6 +30,7 @@ export default class NeasClient extends Client {
       ...super.headers,
       "Content-Type": "application/json",
       Accept: "application/json",
+      Authorization: `Bearer ${this.#accessKey}`,
       // [TODO: INF-8996] this is a temporary workaround until NEAS gets an internal api gateway
       ...(this.#TEMP_cloudflareKey
         ? { cf_neas_token: this.#TEMP_cloudflareKey }
@@ -163,5 +164,29 @@ export default class NeasClient extends Client {
       },
       context,
     );
+  }
+
+  /**
+   * Retrieves the userID from NEAS of the given user email
+   * @param context PluginContext
+   * @param emailId string
+   * @returns string
+   */
+  async getUserID(context: PluginContext, emailId: string): Promise<string> {
+    const { results, response } = await this.post<UserIDs>(
+      {
+        uri: "/auth/users",
+        body: {
+          emailId: emailId,
+        },
+        ...this.options,
+      },
+      context,
+    );
+
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new Error(response.statusMessage);
+    }
+    return results?.userIdMap?.user_id ? results.userIdMap.user_id : "";
   }
 }

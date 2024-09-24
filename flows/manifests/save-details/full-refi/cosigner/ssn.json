@@ -23,7 +23,7 @@
   },
   "outputs": {
     "*": "response.rate-check-interstitial",
-    "rate-check-action": "actions/rate-estimate-request/primary.rate-check",
+    "rate-check-action": "actions/rate-estimate-request/cosigner.rate-check",
     "actions": {
       "*": "actions/result.results",
       "actions": [

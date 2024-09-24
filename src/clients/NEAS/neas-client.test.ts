@@ -1,6 +1,6 @@
 import { before, describe, it, mock } from "node:test";
 import assert from "node:assert";
-
+import { v4 as uuidv4 } from "uuid";
 import createPluginContext from "@earnest-labs/microservice-chassis/createPluginContext.js";
 import registerChassisPlugins from "@earnest-labs/microservice-chassis/registerChassisPlugins.js";
 import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
@@ -163,5 +163,28 @@ describe("[fab1071e] NeasClient", () => {
       throw new Error("error");
     });
     await assert.rejects(client.verifyToken("idToken", context));
+  });
+
+  it("[3177f8c4] should return a userID for a given applicant email", async () => {
+    const emailId = "testEmail@email.com";
+    const userID = uuidv4();
+    mock.method(client, "post", () => {
+      return {
+        results: {
+          userIdMap: {
+            uuid: "f5a24fc9-2dc8-4178-ac20-ea0d7998e503",
+            user_id: userID,
+            email_id: emailId,
+            created_at: "2024-09-24T07:34:02.805Z",
+            updated_at: "2024-09-24T07:34:02.805Z",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+    const result = await client.getUserID(context, emailId);
+    assert.equal(result, userID);
   });
 });

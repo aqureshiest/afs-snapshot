@@ -65,6 +65,11 @@ fragment ApplicantFragment on Application {
       first
       last
     }
+    decision{
+      decisionID
+      type
+      expiresAt
+    }
     dateOfBirth
     email
     location {

@@ -1,4 +1,4 @@
-
+{{#noop }}{{{contract 'set-timestamp'}}}{{/noop}}
 {{#with (contract 'actions' 0) as |rateResult|}}
 {
   "action":
@@ -13,6 +13,7 @@
       {{/if}}
   "result": ["{{rateResult.data.decisionOutcome}}"],
   "error": {{{json error}}}
+  {{#noop}} {{contract 'actions' 1}} {{/noop}}
 }
 {{else}}
   null

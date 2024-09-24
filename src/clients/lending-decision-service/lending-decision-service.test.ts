@@ -15,6 +15,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
   let client;
   let calcClient;
   let key;
+  let neasClient;
   const input = {
     auth: {
       strategies: ["internal"],
@@ -318,6 +319,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     client = new LendingDecisionServiceClient(accessKey, baseUrl);
     calcClient = context.loadedPlugins.calculatorServiceClient.instance;
+    neasClient = context.loadedPlugins.NeasClient.instance;
   });
 
   describe("[03df6e1e] Lending Decision Client Error tests", () => {
@@ -1006,7 +1008,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
 
     await client.postDecisionRequest(input, context, root);
 
-    const { body } = mockFn.mock.calls[3].arguments.at(0) as unknown as {
+    const { body } = mockFn.mock.calls[5].arguments.at(0) as unknown as {
       body: { variables: { id: string; status: string } };
     };
 
@@ -1728,5 +1730,33 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     );
 
     assert.deepEqual(results, filteredPrices);
+  });
+
+  it("[61ae1ac5] get userID from NEAS", async () => {
+    const emailId = "someemail@email.com";
+    const userID = uuidv4();
+
+    mock.method(neasClient, "post", async () => {
+      return {
+        results: {
+          userIdMap: {
+            uuid: "f5a24fc9-2dc8-4178-ac20-ea0d7998e503",
+            user_id: userID,
+            email_id: emailId,
+            created_at: "2024-09-24T07:34:02.805Z",
+            updated_at: "2024-09-24T07:34:02.805Z",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const result = await client.getNEASUserID(
+      context,
+      primaryAppData.applicants[0],
+    );
+    assert.deepEqual(result, userID);
   });
 });

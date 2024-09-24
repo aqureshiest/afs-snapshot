@@ -7,7 +7,7 @@
     "inputs":{
         "*": "inputs",
         "application": {
-            "*": "application/single.flattened",
+            "*": "application/cosigned.flattened",
             "application": "application-by-id-param"
         },
         "applications": [],

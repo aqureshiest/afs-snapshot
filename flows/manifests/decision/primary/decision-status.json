@@ -34,11 +34,10 @@
         }
     },
     "outputs": {
-        "*": "response.interstitial",
-        "actions": ["decision-request", "decision-backfill"],
-        "set-timestamp": "redis.set-decision-request-timestamp",
+        "*": "response.response-decision-status",
+        "checkoutAction": "actions/checkout.default",
+        "homebaseAction": "actions/homebase.default",
         "statusAction": "actions/decision-request.applicationStatus",
-        "redirect_homebase": "actions/homebase.default"
+        "goToInterstitial": "actions/decision-request.applicationStatus"
     }
-
 }]
