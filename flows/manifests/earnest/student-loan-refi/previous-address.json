@@ -54,7 +54,7 @@
         ],
         "stepBackAction": {
           "*": "actions/navigate",
-          "goTo": "earnest-student-loan-refi/urls.degree"
+          "goTo": "earnest-student-loan-refi/urls.rates-results"
         },
         "stepSaveAction": {
           "*": "actions/request",
@@ -96,7 +96,18 @@
             },
             "direction": {
               "@": "row"
-            }
+            },
+            "hint": [{
+              "*": "flexible-content/items/md",
+              "item-key": {
+                "@": "prev-hint"
+              },
+              "conditional": "earnest-student-loan-refi/pages/previous-address.input-conditional",
+              "size": { "@": "small"},
+              "content": {
+                "@": "We’ll need your previous address where you’ve lived over 6 months in order to identify the right credit report."
+              }
+            }]
           },
           {
             "*": "questions/primary/address",
@@ -104,6 +115,9 @@
               "@": "previousAddress"
             },
             "expanded": {
+              "@": "true"
+            },
+            "previousValue": {
               "@": "true"
             },
             "streetLabel": {

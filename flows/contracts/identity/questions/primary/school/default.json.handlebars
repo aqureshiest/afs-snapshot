@@ -1,17 +1,31 @@
-{{#with application.primary}}
+{{#applicantById}}
 {
   "type": "input",
   "definition": {
-      "key": "school",
+      "key": {{{maybe (json (contract 'key')) "school"}}},
       "type": "inputSchool",
-      "status": {{{json (contract 'primary_school_input_status')}}},
       {{! TODO: request school name based on opeid from accredited-school-service}}
-      "value": {{{details.education.0.opeid}}},
+      {{#if applicant.details.education.0.opeid}}
+      "value": {{{json applicant.details.education.0.opeid}}},
+      {{else}}
+      "value": "",
+      {{/if}}
+      "conditional": {{{maybe (json (contract 'conditional')) []}}},
+      {{#if (contract "label")}}
+        "label": {
+          {{#if (contract "subLabel")}}
+          "subCopy": {{{json (contract 'subCopy')}}},
+          {{/if}}
+          "copy": {{{json (contract 'label')}}}
+        },
+      {{else}}
       {{! TODO: the placeholder should depend on the degree type: Graduate school or Undergraduate school}}
       "placeholder": "School to be attended",
       "label": {
-          "copy": "School to be attended"
+          "copy": "School to be attended {{userState.degree-type}}"
       },
-      "error": "{{{ ajv 'errors' 'questions/primary/school' details.education.0.opeid }}}"
+      {{/if}}
+      "error": "{{{ ajv 'errors' 'questions/primary/school' applicant.details.education.0.opeid }}}"
   }
 }
+{{/applicantById}}

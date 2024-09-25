@@ -1,0 +1,7 @@
+{{#applicantById}}
+{{#if ../userState.latestRateResult}}
+  "{{../application.reference.brand}}/student-loan-refi/rate-estimate-result/{{#if isCosigner}}cosigner/{{else}}primary/{{/if}}{{../userState.latestRateResult}}/{{{applicant.id}}}"
+{{else}}
+  "{{../application.reference.brand}}/student-loan-refi/{{#if isCosigner}}cosigner/{{/if}}ssn/{{{applicant.id}}}"
+{{/if}}
+{{/applicantById}}

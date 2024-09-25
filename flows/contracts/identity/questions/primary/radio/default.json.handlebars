@@ -12,11 +12,13 @@
       },
     {{/if}}
     "type": "inputRadio",
+    "conditional": {{{maybe (json (contract 'conditional')) []}}},
     "layout": {{#if (contract "layout")}}{{{json (contract 'layout')}}}{{else}}"default"{{/if}},
     "direction":{{#if (contract "direction")}}{{{json (contract 'direction')}}}{{else}}"column"{{/if}},
     "value":{{#if (contract "value")}}{{{json (contract 'value')}}}{{else}}""{{/if}},
+    "hint":{{#if (contract "hint")}}{{{json (contract 'hint')}}}{{else}}[]{{/if}},
     "items":{{#if (contract "items")}}
-      {{{json (contract 'items')}}}
+      {{{json (contract 'items')}}},
     {{else}}
       [{ "id": "yes", "label": "Yes", "value": "true" }, { "id": "no", "label": "No", "value": "false" }],
     {{/if}}

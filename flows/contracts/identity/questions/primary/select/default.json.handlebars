@@ -1,0 +1,26 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+    "key": {{#if (contract "key")}}{{{json (contract 'key')}}}{{else}}"input-select"{{/if}},
+    {{#if (contract "label")}}
+      "label": {
+        {{#if (contract "subLabel")}}
+        "subCopy": {{{json (contract 'subCopy')}}},
+        {{/if}}
+        "copy": {{{json (contract 'label')}}}
+      },
+    {{/if}}
+    "type": "inputSelect",
+    "conditional": {{{maybe (json (contract 'conditional')) []}}},
+    "value":{{#if (contract "value")}}{{{json (contract 'value')}}}{{else}}""{{/if}},
+    "hint":{{#if (contract "hint")}}{{{json (contract 'hint')}}}{{else}}[]{{/if}},
+    "items":{{#if (contract "items")}}
+      {{{json (contract 'items')}}},
+    {{else}}
+      [{ "id": "yes", "label": "Yes", "value": "true" }, { "id": "no", "label": "No", "value": "false" }],
+    {{/if}}
+    "error": {{{json (contract 'error')}}}
+  }
+}
+{{/with}}

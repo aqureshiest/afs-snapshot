@@ -39,6 +39,17 @@
         "questions/primary/income/amount/additional-income/full-refi.default",
         "info/student-income/additional-income-hint.full-refi"
       ],
+      "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Get Rates"
+        },
+        "value": {
+          "@": "75"
+        }
+      }
+    ],
       "back-button": "actions/back-buttons/full-refi.citizenship",
       "save_income_details_action": "actions/save-details/full-refi.income",
       "primary_income_annual_income_input_status": "questions/primary/income/amount/annual-income.status",

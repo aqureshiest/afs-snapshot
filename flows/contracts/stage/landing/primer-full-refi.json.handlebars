@@ -11,6 +11,7 @@
     "type": "landing",
     "definition": {
       "key": "landing",
+      "progress": {{{json (contract 'progress')}}},
       "content": [
           {
               "key": "header1",
@@ -136,27 +137,8 @@
           },
           {
               "key": "trustpilot",
-              "type": "row",
-              "componentProps": {
-                  "stackOnMobile": true,
-                  "content": [
-                      {
-                          "key": "trustpilotCo1",
-                          "type": "callout",
-                          "componentProps": {
-                              "marginTop": "12px",
-                              "padding": "20px",
-                              "content": [
-                                  {
-                                      "key": "trustpilotmd1",
-                                      "type": "trustPilot",
-                                      "componentProps": {}
-                                  }
-                              ]
-                          }
-                      }
-                  ]
-              }
+              "type": "trustPilot",
+              "componentProps": {}
           }
       ],
       "bottomNavigation": {

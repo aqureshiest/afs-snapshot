@@ -1,0 +1,86 @@
+{{#applicantById}}
+{
+  "type": "object",
+  "properties": {
+    "education": {
+      "type": "object",
+      "properties": {
+        "degree-type": {
+          "type": "string",
+          "enum": ["undergraduate", "graduate", "high_school"],
+          "errorMessage": {
+            "enum": "Select an option"
+          }
+        },
+        {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+        "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+      },
+      "allOf": [{
+        "if": {
+            "properties": {
+            "degree-type": {
+                "const": "undergraduate"
+            }
+            }
+        },
+        "then": {
+            "properties": {
+            "school-undergraduate": {{{json (schema 'questions/primary/school')}}},
+            "undergraduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}},
+            {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+            "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+            }
+        }
+      }, {
+        "if": {
+            "properties": {
+            "degree-type": {
+                "const": "graduate"
+            }
+            }
+        },
+        "then": {
+            "properties": {
+            "school-graduate": {{{json (schema 'questions/primary/school')}}},
+            "graduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/graduate-degree-types')}}},
+            {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+            "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+            }
+        }
+      }, {
+        "if": {
+            "properties": {
+              "degree-type": {
+                "const": "high_school"
+              } 
+            }
+        },
+        "then": {
+            "properties": {
+              {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+              "graduation-date": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+            },
+            "if": {
+                "properties": {
+                  "isParentDriven": {
+                    "const": "false"
+                  } 
+                }
+            },
+            "then": {
+                "properties": {
+                  "isParentDriven": {
+                        "type": "string",
+                        "enum": ["true"],
+                        "errorMessage": {
+                        "enum": "If you’re not refinancing a parent plus loan, you must have at least an undergraduate degree"
+                        }
+                    }
+                }
+            }
+        }
+      }]
+    }
+  }
+}
+{{/applicantById}}

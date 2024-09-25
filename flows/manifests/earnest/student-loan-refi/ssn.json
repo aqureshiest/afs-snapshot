@@ -40,6 +40,17 @@
         "info/callout.ssn",
         "questions/primary/disclosure.ssn-disclaimer"
       ],
+      "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Get Rates"
+        },
+        "value": {
+          "@": "100"
+        }
+      }
+    ],
       "decryptPiiSsn": "pii.get-token",
       "back-button": "actions/back-buttons/full-refi.amount",
       "save_details_action": "actions/save-details/full-refi.ssn",

@@ -140,19 +140,7 @@
           }
         ]
       },
-      {{#if application.applicant.details.income}}
-        {{#if (eq 'unemployed' ( mapIncomeTypeToEmplStatus application.applicant.details.income ))}}
-          "backAction": {{{ json (contract 'back-button-unemployed') }}},
-        {{else if (eq 'retired' ( mapIncomeTypeToEmplStatus application.applicant.details.income ))}}
-          "backAction": {{{ json (contract 'back-button-retired') }}},
-        {{else if (eq 'future' ( mapIncomeTypeToEmplStatus application.applicant.details.income ))}}
-          "backAction": {{{ json (contract 'back-button-future') }}},
-        {{else}}
-          "backAction": {{{ json (contract 'back-button') }}},
-        {{/if}}
-      {{else}}
-          "backAction": {{{ json (contract 'back-button') }}},
-      {{/if}}
+      "backAction": {{{ json (contract 'back-button') }}},
       "primaryAction": {
         "copy": "Review Application",
         "action": {

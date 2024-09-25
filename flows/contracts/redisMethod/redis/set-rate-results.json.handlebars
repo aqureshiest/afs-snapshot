@@ -5,13 +5,13 @@
   "value": {
     {{#with (contract 'actions' 0) as |rateResult|}}
         {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
-            "latestRateResult":  "rateApproved"
+            "latestRateResult":  "approved"
         {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (searchDeniedArtifactTags rateResult.data.artifacts.tags))}}
-            "latestRateResult":  "rateDeclined"
+            "latestRateResult":  "declined"
         {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable"))}}
-            "latestRateResult":  "rateFrozen"
+            "latestRateResult":  "frozen"
         {{else}}
-            "latestRateResult":  "rateUnable"
+            "latestRateResult":  "unable"
         {{/if}}
     {{/with}}
   }

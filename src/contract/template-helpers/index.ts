@@ -10,7 +10,7 @@ export { default as spread } from "./spread.js";
 export { default as maskValue } from "./maskValue.js";
 export { default as getSchool } from "./getSchool.js";
 export { default as mapLoanType } from "./mapLoanType.js";
-export { default as mapProduct } from "./mapProduct.js";
+export { mapProduct, getProductName } from "./mapProduct.js";
 export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
 export { default as findInArray } from "./array.js";
 export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationMethod.js";

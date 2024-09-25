@@ -1,5 +1,4 @@
 
-
 {{#if (and auth.artifacts.userId (or request.body.values.degree-type request.body.values.graduate-degree-type request.body.values.undergraduate-degree-type request.body.values.isParentDriven))}}
   {
     "redisMethod": "setUserState",

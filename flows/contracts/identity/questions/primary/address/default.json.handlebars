@@ -27,11 +27,7 @@
           }
         {{/if}}
       {{/if}},
-      {{#if (contract 'conditional')}}
-        {{#spread trailingComma=true}}
-            {{{json (contract 'conditional')}}}
-        {{/spread}}
-      {{/if}}
+      "conditional": {{{maybe (json (contract 'conditional')) []}}},
       "labels": {
           "base": {
               "copy": {{#if (contract 'baseLabel')}} {{{ json (contract 'baseLabel') }}} {{else}} "Your address" {{/if}}

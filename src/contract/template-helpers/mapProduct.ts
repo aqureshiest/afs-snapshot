@@ -13,4 +13,13 @@ const mapProduct = function (applyProduct) {
   }
 };
 
-export default mapProduct;
+const getProductName = function (acronym) {
+  for (const [key, val] of Object.entries(productMap)) {
+    if (val === acronym) {
+      return key;
+    }
+  }
+  return undefined;
+}
+
+export { getProductName, mapProduct };

@@ -1,0 +1,26 @@
+{{#applicantById}}
+{
+    "type": "input",
+    "definition": {
+        "key": {{{json (contract 'key')}}},
+        "conditional": {{{maybe (json (contract 'conditional')) []}}},
+        {{#if (contract "value")}}
+          "value": {{{json (contract 'value')}}},
+        {{else}}
+          "value": {
+            "month": "",
+            "day": "",
+            "year": ""
+          },
+        {{/if}}
+        "label": {
+          "copy": {{{json (contract 'label')}}}
+        },
+        "omitDay": {{{json (contract 'omitDay')}}},
+        {{#if (contract 'error')}}
+          "error": {{{json (contract 'error')}}},
+        {{/if}}
+        "type": "inputDate"
+    }
+}
+{{/applicantById}}

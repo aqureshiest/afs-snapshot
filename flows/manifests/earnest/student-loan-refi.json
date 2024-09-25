@@ -23,7 +23,36 @@
       "*": "landing.primer-full-refi", 
       "headerLabel": {
         "@": "Let's get started refinancing your loans."
-      }
+      },
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Get Rates"
+          },
+          "value": {
+            "@": "0"
+          }
+        },
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Apply"
+          },
+          "value": {
+            "@": "0"
+          }
+        },
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Choose Plan"
+          },
+          "value": {
+            "@": "0"
+          }
+        }
+      ]
     },
     "layout": "layout.full-refi-primer",
     "redirect_homebase": "actions/homebase.default"

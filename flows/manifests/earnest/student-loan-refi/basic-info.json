@@ -13,6 +13,17 @@
       "questions/primary/email.full-refi",
       "info/student-disclaimer.full-refi"
     ],
+    "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Get Rates"
+        },
+        "value": {
+          "@": "15"
+        }
+      }
+    ],
     "back-button": "actions/back-buttons/full-refi.basic-info",
     "save_basic_info_details_action": "actions/save-details/full-refi.basic-info",
     "primary_dob_input_status": "questions/primary/dateOfBirth.status",

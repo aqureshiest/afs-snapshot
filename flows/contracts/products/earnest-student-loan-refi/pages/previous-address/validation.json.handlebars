@@ -12,31 +12,34 @@
           }
         }
       },
-      "if": {
-        "properties": {
-          "sixMonthResidence": {
-            "const": "true"
+      "allOf": [{
+        "if": {
+          "properties": {
+            "sixMonthResidence": {
+              "const": "true"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "currentAddress": {{{json (contract 'current-address-validation')}}}
           }
         }
-      },
-      "then": {
-        "properties": {
-          "currentAddress": {{{json (contract 'current-address-validation')}}}
-        }
-      },
-      "if": {
-        "properties": {
-          "sixMonthResidence": {
-            "const": "false"
+      }, {
+        "if": {
+          "properties": {
+            "sixMonthResidence": {
+              "const": "false"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "currentAddress": {{{json (contract 'current-address-validation')}}},
+            "previousAddress": {{{json (contract 'previous-address-validation') }}}
           }
         }
-      },
-      "then": {
-        "properties": {
-          "currentAddress": {{{json (contract 'current-address-validation')}}},
-          "previousAddress": {{{json (contract 'previous-address-validation') }}}
-        }
-      }
+      }]
     }
   }
 }

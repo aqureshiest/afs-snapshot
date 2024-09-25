@@ -1,10 +1,14 @@
 [
   {
-    "methods": ["get"],
-    "parameters": [{
-      "key": "id",
-      "format": "uuid"
-    }],
+    "methods": [
+      "get"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid"
+      }
+    ],
     "inputs": {
       "*": "inputs",
       "application": {
@@ -30,27 +34,174 @@
       }
     },
     "outputs": {
-      "*": "full-refi",
-      "stage": "student-loan-refi/education",
-      "pageLayout": "layout.sidebar",
-      "steps": [
-        "student-info-form/education.full-refi"
-      ],
-      "back-button": "actions/back-buttons.education",
-      "student-education-info-rows": [
-        "info/student-education.full-refi",
-        "questions/primary/degree-type.default",
-        "questions/primary/school.full-refi-graduate",
-        "questions/primary/school.full-refi-undergraduate",
-        "questions/primary/degree-type-undergraduate",
-        "questions/primary/degree-type-graduate",
-        "questions/primary/graduationDate.full-refi",
-        "questions/primary/residency-end-date",
-        "questions/primary/is-parent-driven"
-
-      ],
-      "primary_school_input_status": "questions/primary/school.status",
-      "save-education-details": "actions/save-details/full-refi.education"
+      "*": "stage",
+      "stage": {
+        "*": "stage.form",
+        "stageKey": {
+          "@": "get-rates"
+        },
+        "stageLabel": {
+          "@": "Education"
+        },
+        "stageValidation": "earnest-student-loan-refi/pages/degree.validation",
+        "stageLayout": {
+          "*": "stage/layout",
+          "header": [
+            {
+              "*": "stage/layout/header.logo",
+              "action": "actions/navigate.homebase"
+            }
+          ]
+        },
+        "conditionPresets": "earnest-student-loan-refi/pages/degree/conditionals.presets",
+        "stageSteps": [
+          {
+            "*": "stage.form-step",
+            "stepKey": {
+              "@": "education"
+            },
+            "stepLabel": {
+              "@": "Education"
+            },
+            "stepProgress": [
+              {
+                "*": "stage.progress-item",
+                "label": {
+                  "@": "Get Rates"
+                },
+                "value": {
+                  "@": "30"
+                }
+              }
+            ],
+            "stepBackAction": {
+              "*": "actions/navigate",
+              "goTo": "earnest-student-loan-refi/urls.basic-info"
+            },
+            "stepSaveAction": {
+              "*": "actions/request",
+              "key": {
+                "@": "save-address"
+              },
+              "manifest": "earnest-student-loan-refi/urls/save.education"
+            },
+            "onError": [],
+            "stepSaveCopy": {
+              "@": "Address"
+            },
+            "stepRows": [
+              {
+                "*": "info/header",
+                "key": {
+                  "@": "header"
+                },
+                "copy": {
+                  "@": "Highest degree pursued?"
+                }
+              },
+              {
+                "*": "questions/primary/radio",
+                "key": {
+                  "@": "degree-type"
+                },
+                "label": {
+                  "@": "Degree type"
+                },
+                "value": "earnest-student-loan-refi/values.degree-type",
+                "items": "questions/primary/radio/items/degree-types"
+              },
+              {
+                "*": "questions/primary/school",
+                "label": {
+                  "@": "Graduate School"
+                },
+                "key": {
+                  "@": "school-graduate"
+                },
+                "conditional": {
+                  "@": [["primaryGraduate"]]
+                }
+              },
+              {
+                "*": "questions/primary/school",
+                "label": {
+                  "@": "Undergraduate School"
+                },
+                "key": {
+                  "@": "school-undergraduate"
+                },
+                "conditional": {
+                  "@": [["primaryUndergraduate"]]
+                }
+              },
+              {
+                "*": "questions/primary/select",
+                "key": {
+                  "@": "graduate-degree-type"
+                },
+                "label": {
+                  "@": "Graduate degree type"
+                },
+                "value": "earnest-student-loan-refi/values.graduate-degree-type",
+                "items": "questions/primary/radio/items/degree-types.graduate",
+                "conditional": {
+                  "@": [["primaryGraduate"]]
+                }
+              },
+              {
+                "*": "questions/primary/radio",
+                "key": {
+                  "@": "undergraduate-degree-type"
+                },
+                "label": {
+                  "@": "Undergraduate degree type"
+                },
+                "value": "earnest-student-loan-refi/values.undergraduate-degree-type",
+                "items": "questions/primary/radio/items/degree-types.undergraduate",
+                "conditional": {
+                  "@": [["primaryUndergraduate"]]
+                }
+              },
+              {
+                "*": "questions/primary/date",
+                "key": {
+                  "@": "graduationDate"
+                },
+                "label": {
+                  "@": "Graduation date or last attendance date"
+                },
+                "value": "earnest-student-loan-refi/values.graduation-date"
+              },
+              {
+                "*": "questions/primary/date",
+                "key": {
+                  "@": "residencyEndDate"
+                },
+                "label": {
+                  "@": "Residency end date"
+                },
+                "value": "earnest-student-loan-refi/values.residency-end-date",
+                "conditional": {
+                  "@": [["showResidencyDate"]]
+                }
+              },
+              {
+                "*": "questions/primary/radio",
+                "label": {
+                  "@": "Are you a parent refinancing a Parent Plus loan?"
+                },
+                "direction": {
+                  "@": "row"
+                },
+                "value": "earnest-student-loan-refi/values.parent-plus",
+                "key": {
+                  "@": "isParentDriven"
+                }
+              }
+            ]
+          }
+        ]
+      }
     }
   }
 ]

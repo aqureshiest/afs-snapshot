@@ -1,0 +1,14 @@
+{
+  "key": {{{json (contract "item-key")}}},
+  "type": "md",
+  {{#if (contract "containerProps")}}
+    "containerProps": {{{json (contract "containerProps")}}},
+  {{/if}}
+  "conditional": {{{maybe (json (contract 'conditional')) []}}},
+  "componentProps": {
+    {{#if (contract "size")}}
+       "size":  {{{json (contract 'size')}}},
+    {{/if}}
+    "content": {{{json (contract "content")}}}
+  }
+}

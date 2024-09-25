@@ -32,6 +32,17 @@
       "steps": [
         "student-info-form/citizenship.full-refi"
       ],
+      "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Get Rates"
+        },
+        "value": {
+          "@": "60"
+        }
+      }
+    ],
       "student-info-citizenship-rows": [
         "info/student-info.citizenship",
         "questions/primary/citizenship.refi"
