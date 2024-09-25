@@ -1,0 +1,12 @@
+{
+  "action": "identify-user-by-email",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/users",
+  "headers": {
+    "Authorization": "Bearer {{env.S2S_APPLICATION_SERVICES_KEY}}"
+  },
+  "body": {
+    "emailId": {{{json request.body.values.email}}}
+  }
+}

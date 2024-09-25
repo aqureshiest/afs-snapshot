@@ -1,0 +1,19 @@
+{{!
+  If there is a contract key for role and a contract for that role, add it
+  as a dependency to ensure that it completes successfully 
+}}
+{{#with (contract (coalesce (contract 'role') 'primary'))}}
+  {
+    "action": "identify-user",
+    "client": "NeasClient",
+    "method": "post",
+    "uri": "/auth/identity/user",
+    "headers": {
+    "Authorization": "Bearer {{json (btoa ../env.S2S_APPLICATION_SERVICES_KEY)}}"
+    },
+    "body": {
+      "email": {{{json ../request.body.values.email}}}
+    }
+  }
+{{else}} null {{/with}}
+

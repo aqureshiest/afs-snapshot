@@ -1,0 +1,22 @@
+{
+  "action": {{{json (contract 'action')}}},
+  {{#with (contract 'attempt') as |attempt|}}
+    {{#if (and (gte attempt.response.statusCode 200) (lt attempt.response.statusCode 400))}}
+      "success": true,
+      "results": {{{json attempt.results}}}
+    {{else}}
+      {{#with (contract 'fallback') as |fallback|}}
+        {{#if (and (gte attempt.response.statusCode 200) (lt attempt.response.statusCode 400))}}
+          "success": true,
+          "results": {{{json fallback.results}}}
+        {{else}}
+          "success": false
+        {{/if}}
+      {{else}}
+        "success": false
+      {{/with}}
+    {{/if}}
+  {{else}}
+    "success": null
+  {{/with}}
+}

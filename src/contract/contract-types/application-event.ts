@@ -75,6 +75,7 @@ class ApplicationEvent extends ContractExecutable<
   /**
    */
   condition = (_, __, input: Input, definition: Definition) => {
+    if (!definition) return false;
     const method = input.request?.method;
 
     const { event, payload } = definition;

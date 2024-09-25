@@ -95,6 +95,80 @@
           }
         }
       ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "body": {
+              "userId": "1"
+            },
+            "statusCode": 201,
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:3000",
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/auth/identity/user"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "body": {
+              "userIdMap": {
+                "user_id": "1"
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:3000",
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/auth/users"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:3000",
+              "Content-Type": "application/json"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/auth/identity/send-invite"
+          }
+        }
+      ]
     }
   ]
 }

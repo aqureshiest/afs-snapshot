@@ -37,7 +37,11 @@ class ClientMethod extends ContractExecutable<
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   condition = (_, __, ___, transformation: Transformation | null) => {
-    return Boolean(transformation);
+    const incompleteDependencies = Object.values(this.dependencies).some(
+      (dependency) => dependency.isIncomplete(_, __, ___),
+    );
+
+    return !incompleteDependencies && Boolean(transformation);
   };
 
   /**
