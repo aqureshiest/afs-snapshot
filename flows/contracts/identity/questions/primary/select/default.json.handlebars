@@ -15,6 +15,7 @@
     "conditional": {{{maybe (json (contract 'conditional')) []}}},
     "value":{{#if (contract "value")}}{{{json (contract 'value')}}}{{else}}""{{/if}},
     "hint":{{#if (contract "hint")}}{{{json (contract 'hint')}}}{{else}}[]{{/if}},
+    {{#if (contract "deps")}}"deps":{{{json (contract 'deps')}}},{{/if}}
     "items":{{#if (contract "items")}}
       {{{json (contract 'items')}}},
     {{else}}

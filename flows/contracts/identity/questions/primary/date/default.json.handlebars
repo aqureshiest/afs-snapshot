@@ -17,6 +17,7 @@
           "copy": {{{json (contract 'label')}}}
         },
         "omitDay": {{{json (contract 'omitDay')}}},
+        {{#if (contract "deps")}}"deps":{{{json (contract 'deps')}}},{{/if}}
         {{#if (contract 'error')}}
           "error": {{{json (contract 'error')}}},
         {{/if}}

@@ -138,6 +138,7 @@
                 "label": {
                   "@": "Graduate degree type"
                 },
+                "deps": [{"@": "education.residencyEndDate"}],
                 "value": "earnest-student-loan-refi/values.graduate-degree-type",
                 "items": "questions/primary/radio/items/degree-types.graduate",
                 "conditional": {
@@ -166,6 +167,7 @@
                 "label": {
                   "@": "Graduation date or last attendance date"
                 },
+                "deps": [{"@": "education.residencyEndDate"}],
                 "value": "earnest-student-loan-refi/values.graduation-date"
               },
               {
@@ -173,6 +175,7 @@
                 "key": {
                   "@": "residencyEndDate"
                 },
+                "deps": [{"@": "education.graduate-degree-type"}, {"@": "education.graduationDate"}],
                 "label": {
                   "@": "Residency end date"
                 },

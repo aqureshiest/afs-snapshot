@@ -45,6 +45,32 @@
             "graduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/graduate-degree-types')}}},
             {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
             "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+            },
+            "if": {
+              "allOf": [{
+                "properties": {
+                  "graduate-degree-type": {
+                    "enum": ["dvm", "do", "md", "dds", "pharmd"]
+                  }
+                }
+              }, 
+              {
+                "properties": {
+                  "graduationDate": {
+                    "type": "object",
+                    "properties": {
+                      "year": {
+                        "enum": [{{{last8Years}}}] 
+                      }
+                    }
+                  }
+                }
+              }]
+            },
+            "then": {
+              "properties": {
+                "residencyEndDate": {{{json (schema 'questions/primary/date/schemas/residency-end')}}}
+              }
             }
         }
       }, {
@@ -69,9 +95,9 @@
             },
             "then": {
                 "properties": {
-                  "isParentDriven": {
+                  "degree-type": {
                         "type": "string",
-                        "enum": ["true"],
+                        "enum": ["undergraduate", "graduate"],
                         "errorMessage": {
                         "enum": "If you’re not refinancing a parent plus loan, you must have at least an undergraduate degree"
                         }
