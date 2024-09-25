@@ -20,6 +20,6 @@ const getProductName = function (acronym) {
     }
   }
   return undefined;
-}
+};
 
 export { getProductName, mapProduct };

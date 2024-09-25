@@ -1197,6 +1197,8 @@ describe("[462fd166] manifest.execute", () => {
                 type: "employment",
               },
             ],
+            loanType: "primary_only",
+            applyProduct: "student-refi",
             tags: ["RC_Primary_Decline"],
           },
         },
@@ -1243,6 +1245,8 @@ describe("[462fd166] manifest.execute", () => {
               "hasValues": {{{hasValues request.body.values.dateOfBirth}}},
               "reachedTimeout": {{{reachedTimeout request.body.values.date 60000}}},
               "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.EmployedIncomes}}}",
+              "loanType": "{{{mapLoanType request.body.values.loanType}}}",
+              "applyProduct": "{{{mapProduct request.body.values.applyProduct}}}",
               "searchDeniedArtifactTags": {{{searchDeniedArtifactTags request.body.values.tags}}}
             }
         `,
@@ -1286,6 +1290,8 @@ describe("[462fd166] manifest.execute", () => {
       hasValues: true,
       reachedTimeout: true,
       employed: "employed",
+      loanType: "independent",
+      applyProduct: "slr",
       searchDeniedArtifactTags: true,
     });
   });

@@ -1759,4 +1759,35 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     );
     assert.deepEqual(result, userID);
   });
+
+  it("[8b4a8bb6] Should throw 404 when user id not found", async () => {
+    mock.method(neasClient, "post", async () => {
+      return {
+        results: {
+          message: "User not found",
+        },
+        response: {
+          statusCode: 404,
+        },
+      };
+    });
+    await assert.rejects(
+      client.getNEASUserID(context, primaryAppData.applicants[0]),
+    );
+  });
+
+  it("[cc129277] Should throw when no email given", async () => {
+    const missingEmailApplicant = {
+      ...primaryAppData.applicants[0],
+      details: {
+        ...primaryAppData.applicants[0].details,
+        email: null,
+      },
+    };
+    try {
+      await client.getNEASUserID(context, missingEmailApplicant);
+    } catch (error) {
+      assert.strictEqual(error.message, "[84338d44] Missing applicant Email");
+    }
+  });
 });

@@ -1946,13 +1946,25 @@ export default class LendingDecisionServiceClient extends Client {
       neasClientService,
       "[2eccab8f] Neas Service client not instantiated",
     );
-    const emailId = applicant.details?.email;
-
-    const userID = emailId
-      ? await neasClientService["getUserID"](context, emailId)
-      : "";
-
-    return userID;
+    let userID;
+    try {
+      const emailId = applicant.details?.email;
+      if (!emailId) {
+        throw new Error("[84338d44] Missing applicant Email");
+      }
+      userID = await neasClientService["getUserID"](context, emailId);
+    } catch (error) {
+      this.log(
+        {
+          error,
+          message: `[b1a276bf] Failed to get userID`,
+          stack: error.stack,
+        },
+        context,
+      );
+      throw error;
+    }
+    return userID ? userID : "";
   }
 
   private async buildRequestMetaDataIDs(
@@ -1974,7 +1986,10 @@ export default class LendingDecisionServiceClient extends Client {
         ? application["primary"].reference.userID
         : await this.getNEASUserID(context, application["primary"]);
 
-      assert(application["cosigner"], "[da148eac] Missing Primary Application");
+      assert(
+        application["cosigner"],
+        "[da148eac] Missing Cosigner Application",
+      );
 
       requestMetaDataIDs["cosignerUserId"] = application["cosigner"].reference
         ?.userID
