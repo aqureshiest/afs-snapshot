@@ -21,6 +21,11 @@ export { default as json } from "./json.js";
 export { default as applicantById } from "./applicantById.js";
 export { default as maybe } from "./maybe.js";
 
+export function every(array: string[], condition: string, ...args: unknown[]) {
+  if (array && Array.isArray(array)) {
+    return array.every((item) => item === condition);
+  }
+}
 /**
  * Convert raw multi-line text into JSON-compatible string
  */
@@ -112,11 +117,11 @@ export function year(v1) {
   return new Date(v1).getFullYear();
 }
 
-export function last8Years () {
+export function last8Years() {
   const currentYear = new Date().getFullYear();
-  const a =  Array.from({ length: 8 }, (_, i) => `"${currentYear - i}"`);
-  console.log('LAST8', a)
-  return a
+  const a = Array.from({ length: 8 }, (_, i) => `"${currentYear - i}"`);
+  console.log("LAST8", a);
+  return a;
 }
 
 export function getCurrentTime() {

@@ -35,8 +35,14 @@
     },
     "outputs": {
         "*": "response.interstitial",
-        "actions": ["decision-request", "decision-backfill"],
+        "updatedApplication": {
+            "*": "application/single.flattened",
+            "application": "application-by-id-param"
+        },
+        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill"],
+        "get-statuses": "applicants/status.get-applicant-status",
         "set-timestamp": "redis.set-decision-request-timestamp",
+        "syllabus": "actions/decision-request.syllabus",
         "statusAction": "actions/decision-request.applicationStatus",
         "redirect_homebase": "actions/homebase.default"
     }

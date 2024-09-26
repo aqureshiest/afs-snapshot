@@ -1,8 +1,16 @@
-{{#if request.params.id}}
-  {
-    "decisionRequestMethod": "postDecisionRequest",
-    "id": "{{request.params.id}}"
-  }
+{{#if (contract 'actions' 0)  }}
+  {{#if request.params.id}}
+    {{#if (eq (every (contract 'get-statuses') 'submitted') true)}}
+      {
+        "decisionRequestMethod": "postDecisionRequest",
+        "id": "{{request.params.id}}"
+      }
+    {{else}}
+      null
+    {{/if}}
+  {{else}}
+    null
+  {{/if}}
 {{else}}
   null
 {{/if}} 

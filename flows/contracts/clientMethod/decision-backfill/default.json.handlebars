@@ -11,8 +11,8 @@
   instructions
 }}
 {{#if (and
-  (contract 'actions' 0)
-  (not (lookup (contract 'actions' 0) "decisionRequestMethod"))
+  (contract 'actions' 1)
+  (not (lookup (contract 'actions' 1) "decisionRequestMethod"))
   application.monolithLoanID
 )}}
   {
@@ -21,7 +21,7 @@
     "uri": "/apply-flow-service/lending-decisioning",
     "body": {
       "loan_id": {{{json application.monolithLoanID}}},
-        {{#with (contract 'actions' 0) }}
+        {{#with (contract 'actions' 1) }}
           {{#spread}}
             {
               "journey_application_token": {{{json data.journeyApplicationToken}}},

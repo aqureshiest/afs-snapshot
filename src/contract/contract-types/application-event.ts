@@ -193,31 +193,7 @@ class ApplicationEvent extends ContractExecutable<
         this.error(executionContext, error);
         return { event: definition.event };
       }
-      /* ============================== *
-       * Rehydration: when application-event evaluates, it should re-hydrate the
-       * input parameters for re-evaluation
-       * ============================== */
-      const rehydrationId = eventResult[definition.event]?.application?.id;
 
-      if (rehydrationId) {
-        try {
-          const { application } = (await applicationServiceClient.sendRequest(
-            {
-              query: TEMP_DEFAULT_APPLICATION_QUERY,
-              variables: { id: rehydrationId },
-            },
-            context,
-          )) as unknown as { application: types.Application };
-
-          Object.defineProperty(input, "application", { value: application });
-        } catch (error) {
-          this.log(context, {
-            message: "failed to rehydrate application",
-            error,
-            level: "warn",
-          });
-        }
-      }
       return {
         ...eventResult[definition.event],
         event: definition.event,
