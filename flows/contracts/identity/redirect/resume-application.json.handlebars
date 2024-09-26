@@ -8,8 +8,7 @@
       {{/if}}
     {{/with}}
   {{else}}
-    "{{application.brand}}/{{{json (mapProductForRedirect application.product)}}}{{#if (eq application.applicant.role "cosigner")}}/cosigner{{/if}}/{{application.id}}"
-  {{/if}}
+  "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if (eq application.cosigner.id (lookup (getApplicantByEmail auth.artifacts.email) "id"))}}/cosigner{{/if}}/{{(lookup (getApplicantByEmail auth.artifacts.email) "id")}}"
 {{else}}
   null
 {{/if}}
