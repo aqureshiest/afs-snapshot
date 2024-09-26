@@ -1,7 +1,7 @@
 {{#if (and auth.artifacts.userId (eq request.body.values.type "page"))}}
   {
     "redisMethod": "setApplicationState",
-    "key": "{{application.id}}_{{auth.artifacts.userId}}"
+    "key": "{{application.id}}_{{auth.artifacts.userId}}",
     "value": {
       {{#if request.body.flow.manifest}}
         "manifest": "{{{request.body.flow.manifest}}}",
