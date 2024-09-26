@@ -1,4 +1,30 @@
-{
-  "*": "redirect",
-  "redirect": "redirect.resume-application"
-}
+[{
+  "methods": ["get"],
+  "parameters": [{
+    "key": "id",
+    "format": "uuid"
+  }],
+  "inputs": {
+    "*": "inputs",
+    "application": {
+      "*": "application/cosigned.flattened",
+      "application": "application-by-id-param"
+    },
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": "neas.verify-token",
+          "authorization": [
+            "inputs/auth.neas-application-auth"
+          ]
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "redirect",
+    "redirect": "redirect.resume-application"
+  }
+}]

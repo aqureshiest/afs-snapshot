@@ -8,6 +8,6 @@
       {{/if}}
     {{/with}}
   {{else}}
-    "{{application.brand}}/{{application.product}}/{{application.id}}"
+    "{{application.brand}}/{{application.product}}{{#if (eq application.applicant.role "cosigner")}}/cosigner{{/if}}/{{application.id}}"
   {{/if}}
 {{/if}}
