@@ -1,5 +1,5 @@
 [{
-  "methods": ["get"],
+  "methods": ["post"],
   "parameters": [{
     "key": "id",
     "format": "uuid"
