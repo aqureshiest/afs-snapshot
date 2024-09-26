@@ -1,5 +1,6 @@
 {
   "PLAID_CLIENT_ID": {{{json (extractSensitiveString env.PLAID_CLIENT_ID)}}},
   "PLAID_SECRET": {{{json (extractSensitiveString env.PLAID_SECRET)}}},
-  "PLAID_ASSETS_REPORT_DAYS_REQUESTED": {{{json (extractSensitiveString env.PLAID_ASSETS_REPORT_DAYS_REQUESTED)}}}
+  "PLAID_ASSETS_REPORT_DAYS_REQUESTED": {{{json (extractSensitiveString env.PLAID_ASSETS_REPORT_DAYS_REQUESTED)}}},
+  "CORS_DOMAIN": {{{ json (extractSensitiveString env.CORS_DOMAIN) }}}
 }

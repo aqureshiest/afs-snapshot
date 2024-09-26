@@ -1,4 +1,5 @@
 {
   "BASE_URL": {{{json env.BASE_URL}}},
-  "LEGACY_RATES_URL": {{{json env.LEGACY_RATES_URL}}}
+  "LEGACY_RATES_URL": {{{json env.LEGACY_RATES_URL}}},
+  "CORS_DOMAIN": {{{ json (extractSensitiveString env.CORS_DOMAIN) }}}
 }
