@@ -35,15 +35,9 @@
     },
     "outputs": {
         "*": "response.interstitial",
-        "updatedApplication": {
-            "*": "application/cosigned.flattened",
-            "application": "application-by-id-param"
-        },
-        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill"],
-        "get-statuses": "applicants/status.get-applicant-status",
+        "actions": ["decision-request", "decision-backfill"],
         "set-timestamp": "redis.set-decision-request-timestamp",
         "statusAction": "actions/decision-request.applicationStatus",
-        "syllabus": "actions/decision-request.syllabus",
         "redirect_homebase": "actions/homebase.default"
     }
 

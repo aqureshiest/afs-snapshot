@@ -599,7 +599,7 @@ export default class LendingDecisionServiceClient extends Client {
      * TODO: applications with multiple applicants will need more information
      * to determine which applicants are submitted
      * ============================== */
-    await this.setSubmittedStatusRoot(context, application.id);
+    await this.setSubmittedStatus(context, application, application.id);
     this.log(
       {
         appID: application.id,
@@ -672,10 +672,6 @@ export default class LendingDecisionServiceClient extends Client {
     const decisionAPIVersion = "v2";
     let application = input["application"];
 
-    const currentApplicant = application?.applicant?.role
-      ? application.applicant.role
-      : "primary";
-
     if (!application) {
       application = (await this.getApplication(
         context,
@@ -685,6 +681,10 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     const applicationDecisionDetails = {};
+    const currentApplicant = application?.applicant?.role
+      ? application.applicant.role
+      : "primary";
+
     /**
      * Application Tags is an array of strings, where the first element is overall application status
      * and last element is the application type
@@ -1617,8 +1617,9 @@ export default class LendingDecisionServiceClient extends Client {
    * @param application Application
    * @param applicationId Application ID
    */
-  private async setSubmittedStatusRoot(
+  private async setSubmittedStatus(
     context: PluginContext,
+    application: typings.Application,
     rootApplicationId: string,
   ): Promise<void> {
     const applicationServiceClient =
@@ -1637,6 +1638,18 @@ export default class LendingDecisionServiceClient extends Client {
           setStatus(id: $id, meta: $meta, status: $status) {
             id,
             error,
+          }
+          ${
+            application?.applicants?.map((applicant, i) =>
+              applicant
+                ? `
+          setApplicantStatus_${i}: setStatus(id: "${applicant.id}", meta: $meta, status: $status) {
+            id,
+            error
+          }
+          `
+                : "",
+            ) || ""
           }
         }`,
         variables: {

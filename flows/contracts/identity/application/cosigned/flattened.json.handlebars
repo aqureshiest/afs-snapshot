@@ -1,9 +1,9 @@
 {{#with (contract 'application') as |application|}}
   {{#obj}}
     {{#if (eq application.primary.id ../request.params.id)}}
-      { "applicant": { "role": "primary", {{#spread leadingComma=false trailingComma=false}}  {{{ json application.primary }}} {{/spread}} } }
+      { "applicant": { {{#spread}}  {{{ json application.primary }}} {{/spread}} "role": "primary" }  }
     {{else if (eq application.cosigner.id ../request.params.id)}}
-      { "applicant": { "role": "cosigner", {{#spread leadingComma=false trailingComma=false}}  {{{ json application.cosigner }}} {{/spread}} } }
+      { "applicant": { {{#spread}}  {{{ json application.cosigner }}} {{/spread}} "role": "cosigner" }  }
     {{/if}}
     {{{ json application }}}
   {{/obj}}
