@@ -1200,6 +1200,7 @@ describe("[462fd166] manifest.execute", () => {
             loanType: "primary_only",
             applyProduct: "student-refi",
             tags: ["RC_Primary_Decline"],
+            statuses: ["submitted", "submitted"],
           },
         },
       },
@@ -1247,7 +1248,9 @@ describe("[462fd166] manifest.execute", () => {
               "employed": "{{{mapIncomeTypeToEmplStatus request.body.values.EmployedIncomes}}}",
               "loanType": "{{{mapLoanType request.body.values.loanType}}}",
               "applyProduct": "{{{mapProduct request.body.values.applyProduct}}}",
-              "searchDeniedArtifactTags": {{{searchDeniedArtifactTags request.body.values.tags}}}
+              "searchDeniedArtifactTags": {{{searchDeniedArtifactTags request.body.values.tags}}},
+              "every": {{{ every request.body.values.statuses 'submitted' }}},
+              "reviewDateFormatter": "{{{ reviewDateFormatter '2024-09-26' }}}"
             }
         `,
           }),
@@ -1293,6 +1296,8 @@ describe("[462fd166] manifest.execute", () => {
       loanType: "independent",
       applyProduct: "slr",
       searchDeniedArtifactTags: true,
+      every: true,
+      reviewDateFormatter: "09/26/2024",
     });
   });
 

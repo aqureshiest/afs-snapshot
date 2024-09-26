@@ -484,18 +484,19 @@ export default class LendingDecisionServiceClient extends Client {
   ): Promise<DecisionPostResponse> {
     const decisionType = "application";
     let decisionAPIVersion = "v1";
-    let application = input["application"];
 
-    const currentApplicant = application?.applicant?.role
-      ? application.applicant.role
-      : "primary";
+    let application = (await this.getApplication(
+      context,
+      applicationId,
+    )) as typings.Application;
+    application = flattenApplication(application);
 
-    if (!application) {
-      application = (await this.getApplication(
-        context,
-        applicationId,
-      )) as typings.Application;
-      application = flattenApplication(application);
+    let currentApplicant;
+
+    if (application?.cosigner && application.cosigner.id === applicationId) {
+      currentApplicant = "cosigner";
+    } else {
+      currentApplicant = "primary";
     }
 
     /* ============================== *
@@ -504,15 +505,11 @@ export default class LendingDecisionServiceClient extends Client {
      * ============================== */
     const monolithUserID = application[currentApplicant]?.monolithUserID
       ? application[currentApplicant].monolithUserID
-      : application?.applicant?.monolithUserID
-        ? application.applicant.monolithUserID
-        : application?.monolithUserID;
+      : application?.monolithUserID;
     const monolithApplicationID = application[currentApplicant]
       ?.monolithApplicationID
       ? application[currentApplicant].monolithApplicationID
-      : application?.applicant?.monolithApplicationID
-        ? application.applicant.monolithApplicationID
-        : application?.monolithApplicationID;
+      : application?.monolithApplicationID;
     const monolithLoanID = application.monolithLoanID;
 
     if (!monolithUserID && !monolithApplicationID) {
@@ -578,6 +575,7 @@ export default class LendingDecisionServiceClient extends Client {
         context,
         appType,
         application,
+        currentApplicant,
         applicationId,
       );
 
@@ -599,7 +597,7 @@ export default class LendingDecisionServiceClient extends Client {
      * TODO: applications with multiple applicants will need more information
      * to determine which applicants are submitted
      * ============================== */
-    await this.setSubmittedStatus(context, application, application.id);
+    await this.setSubmittedStatusRoot(context, application.id);
     this.log(
       {
         appID: application.id,
@@ -670,21 +668,22 @@ export default class LendingDecisionServiceClient extends Client {
   ): Promise<RateRequestResponse> {
     const decisionType = "rate-check";
     const decisionAPIVersion = "v2";
-    let application = input["application"];
 
-    if (!application) {
-      application = (await this.getApplication(
-        context,
-        applicationId,
-      )) as typings.Application;
-      application = flattenApplication(application);
+    let application = (await this.getApplication(
+      context,
+      applicationId,
+    )) as typings.Application;
+    application = flattenApplication(application);
+
+    let currentApplicant;
+
+    if (application?.cosigner && application.cosigner.id === applicationId) {
+      currentApplicant = "cosigner";
+    } else {
+      currentApplicant = "primary";
     }
 
     const applicationDecisionDetails = {};
-    const currentApplicant = application?.applicant?.role
-      ? application.applicant.role
-      : "primary";
-
     /**
      * Application Tags is an array of strings, where the first element is overall application status
      * and last element is the application type
@@ -695,6 +694,7 @@ export default class LendingDecisionServiceClient extends Client {
       context,
       appType,
       application,
+      currentApplicant,
       applicationId,
     );
 
@@ -1617,9 +1617,8 @@ export default class LendingDecisionServiceClient extends Client {
    * @param application Application
    * @param applicationId Application ID
    */
-  private async setSubmittedStatus(
+  private async setSubmittedStatusRoot(
     context: PluginContext,
-    application: typings.Application,
     rootApplicationId: string,
   ): Promise<void> {
     const applicationServiceClient =
@@ -1638,18 +1637,6 @@ export default class LendingDecisionServiceClient extends Client {
           setStatus(id: $id, meta: $meta, status: $status) {
             id,
             error,
-          }
-          ${
-            application?.applicants?.map((applicant, i) =>
-              applicant
-                ? `
-          setApplicantStatus_${i}: setStatus(id: "${applicant.id}", meta: $meta, status: $status) {
-            id,
-            error
-          }
-          `
-                : "",
-            ) || ""
           }
         }`,
         variables: {
@@ -1971,7 +1958,8 @@ export default class LendingDecisionServiceClient extends Client {
     input: Input<unknown>,
     context: PluginContext,
     appType: string,
-    application: typings.Application & { applicant: typings.Application },
+    application: typings.Application & { applicant?: typings.Application },
+    currentApplicant: string,
     applicationId: string,
   ): Promise<DecisionRequestDetails["requestMetadata"]> {
     const requestMetaDataIDs = {
@@ -2000,7 +1988,7 @@ export default class LendingDecisionServiceClient extends Client {
       requestMetaDataIDs["applicationId"] = applicationId;
       requestMetaDataIDs["userId"] = input?.auth?.artifacts?.userId
         ? input.auth.artifacts.userId
-        : await this.getNEASUserID(context, application.applicant);
+        : await this.getNEASUserID(context, application[currentApplicant]);
     }
 
     return requestMetaDataIDs;

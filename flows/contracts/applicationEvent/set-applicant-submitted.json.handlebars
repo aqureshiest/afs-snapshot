@@ -1,0 +1,12 @@
+{{#if request.params.id}}
+  {
+    "event": "setStatus",
+    "payload": {
+      "id": "{{request.params.id}}",
+      "status": "submitted"
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}

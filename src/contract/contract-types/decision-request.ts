@@ -11,7 +11,7 @@ class DecisionRequest extends ContractExecutable<
   }
 
   condition = (_, __, ___, definition: Definition) => {
-    return Boolean(definition.id);
+    return Boolean(definition && definition.id);
   };
 
   evaluate = async (

@@ -1790,4 +1790,81 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       assert.strictEqual(error.message, "[84338d44] Missing applicant Email");
     }
   });
+
+  it("[f4035eef] buil request meta dataIDs", async () => {
+    const primaryUserID = uuidv4();
+    const primaryAppID = uuidv4();
+    const cosignerAppID = uuidv4();
+    const cosignerUserID = uuidv4();
+    const applicationRefID = 1;
+    const applicationID = uuidv4();
+
+    const primaryApplicants = {
+      id: primaryAppID,
+      reference: {
+        userID: primaryUserID,
+      },
+    };
+
+    const cosingerApplicants = {
+      id: cosignerAppID,
+      reference: {
+        userID: cosignerUserID,
+      },
+    };
+
+    const application = {
+      id: applicationID,
+      refId: applicationRefID,
+      primary: primaryApplicants,
+      cosigner: cosingerApplicants,
+    };
+    const expected = {
+      rootApplicationId: applicationID,
+      applicationRefId: applicationRefID,
+      applicationId: primaryAppID,
+      userId: primaryUserID,
+      cosignerUserId: cosignerUserID,
+      cosignerApplicationId: cosignerAppID,
+    };
+    const result = await client.buildRequestMetaDataIDs(
+      input,
+      context,
+      "cosigned",
+      application,
+      "cosigner",
+      uuidv4(),
+    );
+    assert.deepEqual(result, expected);
+  });
+
+  it("[18618dc3] assert for missing primary in buildRequestMetaDataIDs", async () => {
+    const cosignerAppID = uuidv4();
+    const cosignerUserID = uuidv4();
+    const applicationRefID = uuidv4();
+    const applicationID = uuidv4();
+
+    const cosingerApplicants = {
+      id: cosignerAppID,
+      reference: {
+        userID: cosignerUserID,
+      },
+    };
+
+    const application = {
+      id: applicationID,
+      refId: applicationRefID,
+      cosigner: cosingerApplicants,
+    };
+    await assert.rejects(
+      client.buildRequestMetaDataIDs(
+        input,
+        context,
+        "cosigned",
+        application,
+        "cosigner",
+        uuidv4(),
+      ),
+    );
+  });
 });
