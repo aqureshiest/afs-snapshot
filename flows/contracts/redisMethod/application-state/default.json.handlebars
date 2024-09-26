@@ -1,7 +1,7 @@
-{{#if request.params.id}}
+{{#if auth.artifacts.userId}}
   {
     "redisMethod": "getApplicationState",
-    "key": {{{ json request.params.id }}}
+    "key": "{{application.id}}_{{auth.artifacts.userId}}"
   }
 {{else}}
   null

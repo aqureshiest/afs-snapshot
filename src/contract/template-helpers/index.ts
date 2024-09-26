@@ -436,7 +436,7 @@ export function hasActiveIncompleteApplication(
   id: string,
   applications: typings.Application[],
 ) {
-  if (Array.isArray(applications) && !applications.length) {
+  if (!id || (Array.isArray(applications) && !applications.length)) {
     return null;
   }
 
@@ -487,4 +487,19 @@ export function mapCitizenship(citizenship: string): string | null {
   });
 
   return citizenshipMapping[citizenship] || null;
+}
+
+export function getApplicantByEmail(email: string, application: typings.Application) {
+  return (application.applicants || []).find(
+    (applicant) => applicant && applicant?.details && applicant.details.email === email,
+  );
+}
+
+export function mapProductForRedirect(product: string): string {
+  const productMapping = Object.freeze({
+    "student-refi": "student-refi",
+    slr: "student-loan-refi",
+  });
+
+  return productMapping[product];
 }

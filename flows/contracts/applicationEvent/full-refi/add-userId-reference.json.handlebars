@@ -1,0 +1,16 @@
+{{#if (and
+  auth.artifacts.userId
+  auth.artifacts.verified
+  (not (lookup (lookup (getApplicantByEmail auth.artifacts.email application) "reference") "userID"))
+)}}
+  {
+    "event": "reference",
+    "payload": {
+      "id": {{{json (lookup (getApplicantByEmail auth.artifacts.email application) "id") }}},
+      "reference": { "userID": {{{ json auth.artifacts.userId }}} }
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  {}
+{{/if}}

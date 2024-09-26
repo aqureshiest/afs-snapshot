@@ -1,12 +1,13 @@
 {{! Standard input specifications for v1 manifests }}
 {
+{{! The auth contract is placed first to ensure its values can be referenced in subsequent contracts}}
+  "auth": {{{ json (contract 'auth') }}},
   {{! contract that evaluates a single application graph as an object}}
   "application": {{{ json (contract 'application') }}},
   {{! contract that evaluates an array of applications }}
   "applications": {{{ json (contract 'applications') }}},
   "applicationState": {{{ json (contract 'applicationState') }}},
   "userState": {{{ json (contract 'userState') }}},
-  "auth": {{{ json (contract 'auth') }}},
   "env": {{{ json (contract 'env')}}}
 }
 

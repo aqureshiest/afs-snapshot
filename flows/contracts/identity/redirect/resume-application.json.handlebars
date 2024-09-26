@@ -1,3 +1,4 @@
+{{noop (contract 'actions')}}
 {{#if request.params.id }}
   {{#if (hasValues applicationState) }}
     {{#with applicationState }}
@@ -8,6 +9,8 @@
       {{/if}}
     {{/with}}
   {{else}}
-    "{{application.brand}}/{{application.product}}{{#if (eq application.applicant.role "cosigner")}}/cosigner{{/if}}/{{application.id}}"
+    "{{application.brand}}/{{{json (mapProductForRedirect application.product)}}}{{#if (eq application.applicant.role "cosigner")}}/cosigner{{/if}}/{{application.id}}"
   {{/if}}
+{{else}}
+  null
 {{/if}}
