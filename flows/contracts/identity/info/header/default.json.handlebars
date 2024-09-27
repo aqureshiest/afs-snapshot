@@ -3,7 +3,6 @@
     "definition": {
         "key": {{#if (contract "key")}}{{{json (contract "key")}}}{{else}}"header"{{/if}},
         "type": "infoHeader",
-        "conditional": {{{maybe (json (contract 'conditional')) []}}},
         "header": {
             "copy": {{#if (contract "copy")}}{{{json (contract "copy")}}}{{else}}"Header"{{/if}},
             "subCopy": {{#if (contract "subCopy")}}{{{json (contract "subCopy")}}}{{else}}""{{/if}}

@@ -32,7 +32,6 @@
       "*": "actions/result.results",
       "actions": [
         "full-refi.add-details-education",
-        {"*": "create.beneficiary", "details": "earnest-student-loan-refi/save.beneficiary-details"},
         "redis.full-refi"
       ]
     }

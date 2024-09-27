@@ -10,14 +10,13 @@ const applicantById = function (options) {
       isCosigner: false,
     };
 
-    if (id === primaryApplicant?.id) {
+    if (id === primaryApplicant.id) {
       context.applicant = primaryApplicant;
       context.isPrimary = true;
-    } else if (id === cosignerApplicant?.id) {
+    } else if (id === cosignerApplicant.id) {
       context.applicant = cosignerApplicant;
       context.isCosigner = true;
     }
-
     return options.fn(context);
   }
 

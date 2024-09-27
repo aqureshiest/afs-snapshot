@@ -13,8 +13,6 @@ fragment ApplicantFragment on Application {
   }
   primary {id}
   cosigner {id}
-  benefactor {id}
-  beneficiary {id}
   lenderId
   lendingCheckoutID
   lendingDecisionID
@@ -175,12 +173,6 @@ fragment MetaFragment on Application {
     ...ApplicantFragment
   }
   primary {
-    ...ApplicantFragment
-  }
-  benefactor {
-    ...ApplicantFragment
-  }
-  beneficiary {
     ...ApplicantFragment
   }
   applicants {

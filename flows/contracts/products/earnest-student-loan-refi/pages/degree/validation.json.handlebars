@@ -16,11 +16,6 @@
         "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
       },
       "allOf": [{
-        {{!-- =============================================================================
-        IF Undergraduate - require: 
-        - undergrdauate school
-        - undergraduate degree type 
-        ============================================================================= --}}
         "if": {
             "properties": {
             "degree-type": {
@@ -29,154 +24,86 @@
             }
         },
         "then": {
-          "properties": {
+            "properties": {
             "school-undergraduate": {{{json (schema 'questions/primary/school')}}},
-            "undergraduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}}
-          }
+            "undergraduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}},
+            {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+            "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+            }
         }
       }, {
-        {{!-- =============================================================================
-        IF Graduate - require: 
-        - grdauate school
-        - graduate degree type 
-        ============================================================================= --}}
         "if": {
-          "properties": {
+            "properties": {
             "degree-type": {
-              "const": "graduate"
+                "const": "graduate"
             }
-          }
+            }
         },
         "then": {
-          "properties": {
+            "properties": {
             "school-graduate": {{{json (schema 'questions/primary/school')}}},
-            "graduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/graduate-degree-types')}}}
-          },
-          {{!-- =============================================================================
-            IF Graduate && graduationDate within last 8 years && graduate-degree-type is medical - require:
-            - residency end date
-            ============================================================================= --}}
-          "if": {
-            "allOf": [{
-              "properties": {
-                "graduate-degree-type": {
-                  "enum": ["dvm", "do", "md", "dds", "pharmd"]
+            "graduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/graduate-degree-types')}}},
+            {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+            "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+            },
+            "if": {
+              "allOf": [{
+                "properties": {
+                  "graduate-degree-type": {
+                    "enum": ["dvm", "do", "md", "dds", "pharmd"]
+                  }
                 }
-              }
-            }, 
-            {
-              "properties": {
-                "graduationDate": {
-                  "type": "object",
-                  "properties": {
-                    "year": {
-                      "enum": [{{{last8Years}}}] 
+              }, 
+              {
+                "properties": {
+                  "graduationDate": {
+                    "type": "object",
+                    "properties": {
+                      "year": {
+                        "enum": [{{{last8Years}}}] 
+                      }
                     }
                   }
                 }
+              }]
+            },
+            "then": {
+              "properties": {
+                "residencyEndDate": {{{json (schema 'questions/primary/date/schemas/residency-end')}}}
               }
-            }]
-          },
-          "then": {
-            "properties": {
-              "residencyEndDate": {{{json (schema 'questions/primary/date/schemas/residency-end')}}}
             }
-          }
         }
       }, {
-        {{!-- =============================================================================
-            IF High School && not parent driven - error
-            - adds error to degree type field
-        ============================================================================= --}}
         "if": {
-          "allOf": [{
             "properties": {
               "degree-type": {
                 "const": "high_school"
               } 
             }
-          }, {
-            "properties": {
-              "isParentDriven": {
-                "const": "false"
-              } 
-            }
-          }]
         },
         "then": {
-          "properties": {
-            "degree-type": {
-              "type": "string",
-              "enum": ["undergraduate", "graduate"],
-              "errorMessage": {
-              "enum": "If you’re not refinancing a parent plus loan, you must have at least an undergraduate degree"
-              }
-            }
-          }
-        }
-      }, {
-        {{!-- =============================================================================
-            IF Parent Plus - require
-            - student degree type
-            - student graduation date
-        ============================================================================= --}}
-        "if": {
-          "properties": {
-            "isParentDriven": {
-              "const": "true"
-            } 
-          }
-        }, 
-        "then": {
-          "properties": {
-            "student-degree-type": {
-              "type": "string",
-              "enum": ["undergraduate", "graduate", "high_school"],
-              "errorMessage": {
-                "enum": "Select an option"
-              }
+            "properties": {
+              {{#if isPrimary }}"isParentDriven": {{{json (schema 'questions/primary/radio/schemas/parent-plus')}}},{{/if}}
+              "graduation-date": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
             },
-            "student-graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
-          },
-          "allOf": [{
-            {{!-- =============================================================================
-            IF Student Undergraduate - require: 
-            - undergrdauate school
-            - undergraduate degree type 
-            ============================================================================= --}}
             "if": {
                 "properties": {
-                "student-degree-type": {
-                    "const": "undergraduate"
-                }
+                  "isParentDriven": {
+                    "const": "false"
+                  } 
                 }
             },
             "then": {
-              "properties": {
-                "student-school-undergraduate": {{{json (schema 'questions/primary/school')}}},
-                "student-undergraduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}}
-              }
-            }
-          }, {
-            {{!-- =============================================================================
-            IF Student Graduate - require: 
-            - graduate school
-            - graduate degree type 
-            ============================================================================= --}}
-            "if": {
                 "properties": {
-                "student-degree-type": {
-                    "const": "graduate"
+                  "degree-type": {
+                        "type": "string",
+                        "enum": ["undergraduate", "graduate"],
+                        "errorMessage": {
+                        "enum": "If you’re not refinancing a parent plus loan, you must have at least an undergraduate degree"
+                        }
+                    }
                 }
-                }
-            },
-            "then": {
-              "properties": {
-                "student-school-graduate": {{{json (schema 'questions/primary/school')}}},
-                "student-graduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}}
-              }
             }
-          }]
         }
       }]
     }
