@@ -59,6 +59,9 @@ query Applications($criteria: [ApplicationSearchCriteria]!, $limit: Int, $page: 
       ...Applicant
       ...Root
     }
+    root {
+      id
+    }
   }
 }
 {{~/multiline}}
