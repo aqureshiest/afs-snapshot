@@ -22,7 +22,11 @@ async function verify(request, state, logger) {
     body: {
       ...session,
       isValid: true,
-      exp: Math.floor(Date.now() / 1000) + (60 * 30)
+      exp: Math.floor(Date.now() / 1000) + (60 * 30),
+      payload: {
+        ...session,
+        iat: Date.now()
+      }
     }
   }
 }

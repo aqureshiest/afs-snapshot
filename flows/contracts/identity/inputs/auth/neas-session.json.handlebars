@@ -15,8 +15,17 @@
       {
         "message": "neas authorization",
         "isValid": {{{json response.results.isValid}}},
+        {{!
+          TODO [LA-1350]: candidateUserId will eventually be removed from
+          the NEAS claims; clean this up after that change has been made in NEAS
+        }}
         "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}},
-        "applicationId": {{{json response.results.applicationId}}}
+        "applicationId": {{{json response.results.applicationId}}},
+        "claims": {{#obj}}
+          {{#each response.results.payload}}
+            { "{{@key}}": {{#if . includeZero=true}}true{{else}}false{{/if}} }
+          {{/each}}
+        {{/obj}}
       }
     {{/log}}
     {{#if (and response.results.isValid (lt response.response.statusCode 400))}}
@@ -28,7 +37,11 @@
           { "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}} }
           { "email": {{{ json (coalesce response.results.emailId response.results.email) }}} }
           {{! A userId in the response indicates that a user has verified who they are either through PII-verification or signing in }}
-          {{#if response.results.userId}}
+          {{!
+            LA-1350: userId indicates a verified session UNLESS the claims
+            includes a `verified` flag that is explicitly false
+          }}
+          {{#if (and response.results.userId (ne response.results.notVerified true))}}
             { "verified": true }
           {{else}}
             { "verified": false }
