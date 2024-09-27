@@ -1159,6 +1159,57 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
 
+  it("[15d54g5s] keyString Helper", async () => {
+    const input = {} as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `{{{keyString "testkey1"}}}`,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result)) as string;
+    const splitKey = parsed.split("-");
+
+    assert.equal(splitKey.length, 2);
+    assert.equal(splitKey[0], "testkey1");
+    assert.equal(splitKey[1].length, 8);
+  });
+
+  it("[1h5a4g5s] last8Years Helper", async () => {
+    const input = {} as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `{
+              "last8Years": [{{{last8Years}}}]
+            }`,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const { last8Years } = JSON.parse(JSON.stringify(result)) || {};
+
+    assert.equal(last8Years.length, 8);
+  });
+
   it("[0cc7ae75] simple template helpers", async () => {
     const input = {
       request: {

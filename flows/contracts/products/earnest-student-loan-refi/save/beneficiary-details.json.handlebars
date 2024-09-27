@@ -1,0 +1,23 @@
+{{#with request.body.values}}
+{
+  "education": [{
+    "degree": {{#if (eq student-degree-type "graduate")}} 
+        "{{student-graduate-degree-type}}", 
+      {{else if (eq student-degree-type "undergraduate")}} 
+        "{{student-undergraduate-degree-type}}",
+      {{else}} "high_school",
+    {{/if}}
+    {{#if (and (ne student-degree-type "high_school") (or student-school-graduate student-school-undergraduate))}} 
+      "opeid": {{#if (eq student-degree-type "graduate")}} 
+          "{{student-school-graduate.opeid8}}",
+        {{else if (eq student-degree-type "undergraduate")}} 
+          "{{student-school-undergraduate.opeid8}}",
+      {{/if}}
+    {{/if}}
+    {{#if student-graduationDate}}
+      "graduationDate": "{{dateObjToString student-graduationDate}}",
+    {{/if}}
+    "index": 0
+  }]
+}
+{{/with}}

@@ -1,0 +1,20 @@
+{{! cosigner creation requested }}
+{{#if (and (not (includes application.tags "parent_plus")) (eq role "primary") (request.body.values.isParentDriven))}}
+  {
+    "event": "create",
+    "payload": {
+      "application": {
+        "benefactor": {
+          "id": "{{ application.primary.id }}"
+        },
+        "root": {
+          "id": "{{ application.id }}"
+        },
+        "details": {{#if (contract "details")}}{{{json (contract "details")}}}{{else}}{}{{/if}}
+      }
+    },
+    "fields": "application { id root { id } }"
+  }
+{{else}}
+  null
+{{/if}}

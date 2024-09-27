@@ -2,5 +2,8 @@
   "primaryGraduate": [[{"field":"education.degree-type","op":"eq","value":"graduate"}]],
   "primaryUndergraduate": [[{"field":"education.degree-type","op":"eq","value":"undergraduate"}]],
   "primaryHighSchool": [[{"field":"education.degree-type","op":"eq","value":"high_school"}]],
+  "studentGraduate": [[{"field":"education.student-degree-type","op":"eq","value":"graduate"}]],
+  "studentUndergraduate": [[{"field":"education.student-degree-type","op":"eq","value":"undergraduate"}]],
+  "isParentDriven": [[{"field":"education.isParentDriven","op":"eq","value":"true"}]],
   "showResidencyDate": [[{"field":"education.degree-type","op":"eq","value":"graduate"}, {"field":"education.graduationDate","op":"yearsFromNow","value":"-8", "options": {"diffOp": "gte"}}, {"field":"education.graduate-degree-type","op":"oneOf","value":["dvm", "do", "md", "dds", "pharmd"]}]]
 }
