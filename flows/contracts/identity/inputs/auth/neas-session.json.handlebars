@@ -26,7 +26,7 @@
           { "applicationId": {{{ json response.results.applicationId }}} }
           { "exp": {{{ json response.results.exp }}} }
           { "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}} }
-          { "email": {{{ json response.results.emailId }}} }
+          { "email": {{{ json (coalesce response.results.emailId response.results.email) }}} }
           {{! A userId in the response indicates that a user has verified who they are either through PII-verification or signing in }}
           {{#if response.results.userId}}
             { "verified": true }
