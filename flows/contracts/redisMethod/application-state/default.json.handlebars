@@ -1,8 +1,16 @@
-{{#if auth.artifacts.userId}}
-  {
-    "redisMethod": "getApplicationState",
-    "key": "{{application.id}}_{{auth.artifacts.userId}}"
-  }
+{{#with (contract 'auth') as |auth|}}
+  {{#with (contract 'application') as |application|}}
+    {{#if auth.artifacts.userId}}
+      {
+        "redisMethod": "getApplicationState",
+        "key": "{{application.id}}_{{auth.artifacts.userId}}"
+      }
+    {{else}}
+      null
+    {{/if}}
+  {{else}}
+    null
+  {{/with}}
 {{else}}
-  null
-{{/if}}
+ null
+{{/with}}

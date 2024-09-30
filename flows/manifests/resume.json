@@ -10,6 +10,7 @@
       "*": "application/cosigned.flattened",
       "application": "application-by-id-param"
     },
+    "applicationState": "application-state",
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
