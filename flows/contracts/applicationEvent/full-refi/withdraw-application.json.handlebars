@@ -4,9 +4,7 @@
     "event": "setStatus",
     "payload": {
       "status": "withdrawn",
-      "id": {{{json (lookup (lookup (hasActiveIncompleteApplication
-        (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications) "root") "id")
-      }}}
+      "id": "{{ lookup (lookup (hasActiveIncompleteApplication (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications) "root") "id" }}"
     },
     "fields": "application { id }"
   }

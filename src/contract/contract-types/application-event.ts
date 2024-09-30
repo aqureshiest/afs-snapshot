@@ -86,8 +86,10 @@ class ApplicationEvent extends ContractExecutable<
       return false;
     }
 
+    const path = input.request?.url.split("/") || [];
+
     // 2. Any event that can change data cannot run during a GET request
-    if (method === "GET" && MUTATIVE_EVENTS.includes(event)) {
+    if (method === "GET" && MUTATIVE_EVENTS.includes(event) && !path.includes("resume")) {
       return false;
     }
 
@@ -144,7 +146,6 @@ class ApplicationEvent extends ContractExecutable<
     }
 
     let requestResult;
-
     try {
       requestResult = await applicationServiceClient.sendRequest(
         this.buildRequestBody(
@@ -238,3 +239,4 @@ class ApplicationEvent extends ContractExecutable<
 }
 
 export default ApplicationEvent;
+

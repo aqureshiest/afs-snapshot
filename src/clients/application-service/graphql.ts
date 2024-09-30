@@ -10,6 +10,7 @@ fragment ApplicantFragment on Application {
     applicants
     serialization
     status
+    active
   }
   primary {id}
   cosigner {id}

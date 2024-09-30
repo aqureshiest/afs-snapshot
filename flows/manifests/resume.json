@@ -10,6 +10,9 @@
       "*": "application/cosigned.flattened",
       "application": "application-by-id-param"
     },
+    "applications": {
+      "*": "applications-by-email"
+    },
     "applicationState": "application-state",
     "auth": {
       "*": "auth-artifacts",
@@ -26,6 +29,10 @@
   },
   "outputs": {
     "*": "redirect",
-    "redirect": "redirect.resume-application"
+    "redirect": "redirect.resume-application",
+    "actions": [
+      "full-refi.add-userId-reference",
+      "full-refi.withdraw-application"
+    ]
   }
 }]
