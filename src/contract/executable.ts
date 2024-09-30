@@ -153,8 +153,8 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
      * UNLESS it's an async dependency
      */
     if (self) {
-      this.dependents[self.parent.id] = self;
-      self.dependencies[this.parent.id] = this;
+      this.dependents[self.id] = self;
+      self.dependencies[this.id] = this;
     }
     return this;
   }

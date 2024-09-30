@@ -80,8 +80,11 @@ export default class Manifest<I> implements ExecutableParent<I> {
         },
         {
           "*": "inputs/auth.internal-bearer",
-          token: "inputs/auth.bearer-token",
-          authorization: ["inputs/auth.lending-decisioning-webhook"],
+          source: {
+            "*": "inputs/auth.token-source",
+            key: "inputs/auth.bearer-token",
+          },
+          authorization: [{ "@": "lds-apply-flow-service" }],
         },
       ] as ManifestContracts[],
     },
@@ -163,7 +166,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
               // If universal definitions already exist, add them before custom definitions
               if (!(key in methodDefinition)) {
                 Object.assign(methodDefinition, {
-                  [key]: universalDefinition || {},
+                  [key]: { ...universalDefinition } || {},
                 });
               }
 
@@ -314,6 +317,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
               request: req,
               response: res,
               env: context.env,
+              credentials: context.loadedPlugins.credentials.instance,
             },
           );
 

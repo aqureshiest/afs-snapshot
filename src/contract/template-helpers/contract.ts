@@ -78,8 +78,8 @@ const contractHelper: TemplateHelper = function (...args) {
     }
 
     if (inherited) {
-      self.dependencies[inherited.parent.id] = inherited;
-      inherited.dependents[self.parent.id] = self;
+      self.dependencies[inherited.id] = inherited;
+      inherited.dependents[self.id] = self;
 
       return inherited.toJSON();
     }
