@@ -5,17 +5,8 @@
 {{#with (contract 'application') as |application|}}
   {{#obj}}
     {{{ json application }}}
-    {{#unless application.primary}}
-      { "primary": {{{ json application.applicants.[0] }}} }
-    {{/unless}}
     {{#unless application.applicant}}
-      {{#if (eq ../request.params.id application.applicants.[0].id)}}
-        { "applicant": {{{ json application.applicants.[0] }}}, "role": "primary" }
-      {{else if (eq ../request.params.id application.applicants.[1].id)}}
-        { "applicant": {{{ json application.applicants.[1] }}}, "role": "cosigner" }
-      {{else if (eq ../request.params.id application.id)}}
-        { "applicant": {{{ json application.applicants.[0] }}}, "role": "root" }
-      {{/if}}
+      {{{ getApplicantWithRole ../request.params.id application }}}
     {{/unless}}
   {{/obj}}
 {{else}}

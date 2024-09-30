@@ -1,58 +1,93 @@
-{
-  "*": "stage",
-  "stage": {
-    "*": "stage.view",
-    "stageKey": {
-      "@": "reminder-sent"
-    },
-    "stageLabel": {
-      "@": "Reminder Sent"
-    },
-    "stageLayout": {
-      "*": "stage/layout",
-      "header": [
-        {
-          "*": "stage/layout/header.logo",
-          "action": "actions/navigate.homebase"
-        }
-      ]
-    },
-    "bottomNavigation": {
-      "*": "stage.bottom-navigation",
-      "buttons": [{
-        "*": "actions.with-copy",
-        "copy": {
-          "@": "Back to dashboard"
-        },
-        "action": {
-          "*": "actions/navigate",
-          "goTo": "earnest-student-loan-refi/urls.degree"
-        }
-      }]
-    },
-    "stageContent": [
+[
+  {
+    "methods": [
+      "get"
+    ],
+    "parameters": [
       {
-        "*": "flexible-content/items/header",
-        "centered": {
-          "@": "true"
-        },
-        "asset": {
-          "*": "asset/local",
-          "icon": "asset/local/illustrations.success",
-          "centered": {
-            "@": "true"
-          }
-        },
-        "copy": {
-          "@": "Your reminder has been sent!"
-        },
-        "subCopy": {
-          "@": "We sent a reminder to {cosigner.input@email.com} \n\n You’ll be notified once your cosigner has completed their portion of the application."
-        },
-        "containerProps": {
-          "@": { "flexGrow": 1, "alignContent": "center" }
-        }
+        "key": "id",
+        "format": "uuid"
       }
-    ]
+    ],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "stage",
+      "stage": {
+        "*": "stage.view",
+        "stageKey": {
+          "@": "reminder-sent"
+        },
+        "stageLabel": {
+          "@": "Reminder Sent"
+        },
+        "stageLayout": {
+          "*": "stage/layout",
+          "header": [
+            {
+              "*": "stage/layout/header.logo",
+              "action": "actions/navigate.homebase"
+            }
+          ]
+        },
+        "bottomNavigation": {
+          "*": "stage.bottom-navigation",
+          "buttons": [{
+            "*": "actions.with-copy",
+            "copy": {
+              "@": "Back to dashboard"
+            },
+            "action": {
+              "*": "actions/navigate",
+              "goTo": "earnest-student-loan-refi/urls.syllabus"
+            }
+          }]
+        },
+        "stageContent": [
+          {
+            "*": "flexible-content/items/header",
+            "centered": {
+              "@": "true"
+            },
+            "asset": {
+              "*": "asset/local",
+              "icon": "asset/local/illustrations.success",
+              "centered": {
+                "@": "true"
+              }
+            },
+            "copy": {
+              "@": "Your reminder has been sent!"
+            },
+            "subCopy": "earnest-student-loan-refi/pages/reminder-sent.email-copy",
+            "containerProps": {
+              "@": { "flexGrow": 1, "alignContent": "center" }
+            }
+          }
+        ]
+      }
+    }
   }
-}
+]

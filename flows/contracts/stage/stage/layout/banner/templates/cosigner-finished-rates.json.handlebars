@@ -1,3 +1,4 @@
+{{#if (and (eq application.applicant "primary") (application.cosigner.decision))}}
 {
   {{#if (contract "secondaryAction")}}
     "additionalButtonProps": {{{json (contract "secondaryAction")}}},
@@ -8,3 +9,6 @@
   "variant": {{{json (maybe (contract "variant") "contrast")}}},
   "text": {{{json (maybe (contract "copy") "Your cosigner has completed rate check and cosigned rate estimates are available")}}}
 }
+{{else}}
+null
+{{/if}}

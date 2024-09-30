@@ -1,4 +1,4 @@
 {
   "*": "flexible-content",
-  "content": ["flexible-content/items/rates-table"]
+  "content": [{"*": "flexible-content/items/rates-table", "getPaymentsAndRates": "rate-estimate-prices"}]
 }

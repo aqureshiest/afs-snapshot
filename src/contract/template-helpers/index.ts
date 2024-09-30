@@ -18,7 +18,7 @@ export { default as mapRatePayments } from "./mapRatePayments.js";
 export { default as map } from "./map.js";
 export { default as log } from "./log.js";
 export { default as json } from "./json.js";
-export { default as applicantById } from "./applicantById.js";
+export { default as applicantById, getApplicantWithRole } from "./applicantById.js";
 export { default as maybe } from "./maybe.js";
 
 export function every(array: string[], condition: string, ...args: unknown[]) {
