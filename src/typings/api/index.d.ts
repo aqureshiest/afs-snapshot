@@ -24,18 +24,3 @@ declare module "api/chassis-plugin.test.js" {
   type Plugin = ChassisPlugin<void>;
   type Context = ChassisPluginContext;
 }
-
-type Credentials = Record<string, string>;
-type CredentialsPlugin = ChassisPlugin<Credentials>;
-
-import "api/s2s.chassis-plugin.js";
-declare module "api/s2s.chassis-plugin.js" {
-  type Plugin = CredentialsPlugin;
-  type Context = ChassisPluginContext;
-}
-
-declare module "@earnest-labs/microservice-chassis/PluginContext.js" {
-  interface LoadedPlugins {
-    credentials: CredentialsPlugin;
-  }
-}

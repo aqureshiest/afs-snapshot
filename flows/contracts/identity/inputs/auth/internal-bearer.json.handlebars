@@ -2,27 +2,18 @@
 {
   "strategy": "internal",
   "isInternal": true,
-  {{#with (contract 'source') as |source|}}
-    {{! Validity: valid source key}}
-    {{#if request.headers.authorization}}
-      "isValid": {{{ json (boolean source)}}},
-    {{else}}
-      "isValid": null,
-    {{/if}}
-
-    {{! Authority: source is included in the authorization list}}
-    {{#with (contract 'authorization') as |authorization|}}
-      "isAuthorized": {{{ json (includes authorization source) }}},
-    {{else}}
-      "isAuthorized": false,
-    {{/with}}
-
-    {{! Artifacts: just the name of the source }}
+  {{#if request.headers.authorization}}
+    "isValid": {{{ json (boolean (contract "token"))}}},
+  {{else}}
+    "isValid": null,
+  {{/if}}
+  {{#with (contract 'authorization') as |authorization|}}
+    "isAuthorized": {{{ json (or authorization) }}},
     "artifacts": {
-      "source": {{{ json source }}}
+      {{! source will indicate which internal key was used }}
+      "source": {{{ json (coalesce authorization) }}}
     }
   {{else}}
-    "isValid": false,
     "isAuthorized": false,
     "artifacts": {
       "source": null

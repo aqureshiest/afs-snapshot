@@ -80,11 +80,8 @@ export default class Manifest<I> implements ExecutableParent<I> {
         },
         {
           "*": "inputs/auth.internal-bearer",
-          source: {
-            "*": "inputs/auth.token-source",
-            key: "inputs/auth.bearer-token",
-          },
-          authorization: [{ "@": "lds-apply-flow-service" }],
+          token: "inputs/auth.bearer-token",
+          authorization: ["inputs/auth.lending-decisioning-webhook"],
         },
       ] as ManifestContracts[],
     },
@@ -317,7 +314,6 @@ export default class Manifest<I> implements ExecutableParent<I> {
               request: req,
               response: res,
               env: context.env,
-              credentials: context.loadedPlugins.credentials.instance,
             },
           );
 
