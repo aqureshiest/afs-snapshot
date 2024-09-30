@@ -8,7 +8,11 @@
       {{/if}}
     {{/with}}
   {{else}}
-    "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if (eq application.cosigner.id (lookup (getApplicantByEmail auth.artifacts.email application) "id"))}}/cosigner/{{lookup (getApplicantByEmail auth.artifacts.email application) "id"}}{{/if}}"
+    {{#if (eq application.product "student-refi")}}
+      "{{application.brand}}/student-refi/{{request.params.id}}"
+    {{else}}
+      "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if (eq application.cosigner.id (lookup (getApplicantByEmail auth.artifacts.email application) "id"))}}/cosigner/{{lookup (getApplicantByEmail auth.artifacts.email application) "id"}}{{/if}}"
+    {{/if}}
   {{/if}}
 {{else}}
   null
