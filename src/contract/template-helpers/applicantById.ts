@@ -24,14 +24,17 @@ const applicantById = function (options) {
 };
 
 export const getApplicantWithRole = function (id, application) {
+  const applicantIndex0 = application?.applicants?.[0];
   if (id === application?.primary?.id) {
     return JSON.stringify({ applicant: application.primary, role: "primary" });
   } else if (id === application?.cosigner?.id) {
     return JSON.stringify({ applicant: application.cosigner, role: "cosigner" });
   } else if (id === application?.benefactor?.id) {
-    return JSON.stringify({ applicant: application.benefactor, role: "primary" });
+    return JSON.stringify({ primary: application.benefactor, applicant: application.benefactor, role: "primary" });
   } else if (id === application.id) {
-    return JSON.stringify({ applicant: application.primary, role: "root" });
+    return JSON.stringify({ primary: applicantIndex0, applicant: application.primary, role: "root" });
+  } else {
+    return JSON.stringify({ primary: applicantIndex0, applicant: applicantIndex0, role: "none" });
   }
 }
 
