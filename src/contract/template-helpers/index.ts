@@ -121,7 +121,6 @@ export function year(v1) {
 export function last8Years() {
   const currentYear = new Date().getFullYear();
   const a = Array.from({ length: 8 }, (_, i) => `"${currentYear - i}"`);
-  console.log("LAST8", a);
   return a;
 }
 
