@@ -1,0 +1,18 @@
+{{!
+  Generic response for creating a new application resource or returning it
+  from the inputs
+}}
+{{#obj}}
+  {{#with (coalesce (contract 'application') application) as |application|}}
+    {{{ json application }}}
+  {{/with}}
+  {{#with (contract 'extras') as |extras|}}
+    {{#each extras as |extra|}}
+      {{#if extra}}
+        {{#multiline~}}
+          {{{ json extra }}}
+        {{~/multiline}}
+      {{/if}}
+    {{/each}}
+  {{/with}}
+{{/obj}}

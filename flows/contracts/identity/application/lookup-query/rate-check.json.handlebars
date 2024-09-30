@@ -1,0 +1,82 @@
+{{!
+  All relevant information for requesting a rate-check or fetching payment schedules
+}}
+{{#multiline raw=true~}}
+query Application($id: String, $refId: Int, $root: Boolean = false) {
+  application(id: $id, refId: $refId root: $root) {
+    id
+    refId
+    href
+    tag {
+      status
+      applicants
+    }
+    details {
+      amount {
+        requested
+      }
+    }
+    reference {
+      product
+      brand
+      partnerName
+      partnerDiscountAmount
+    }
+    applicants {
+      id
+      details {
+        name {
+          first
+          last
+        }
+        dateOfBirth
+        email
+        phone {
+          number
+        }
+        location {
+          street1
+          street2
+          city
+          state
+          zip
+          country
+          type
+          citizenship
+        }
+        education {
+          opeid
+          degree
+          termStart
+          termEnd
+        }
+        income {
+          amount
+        }
+        asset {
+          amount
+        }
+        decision {
+          type
+          expiresAt
+          decisionID
+        }
+      }
+      reference {
+        ssnTokenURI
+      }
+      relationships {
+        id
+        relationship
+      }
+    }
+    primary {
+      id
+    }
+    cosigner {
+      id
+    }
+  }
+}
+{{~/multiline}}
+

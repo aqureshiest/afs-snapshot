@@ -1,0 +1,90 @@
+{{! Convert the partner-system rate-check contract from request.body into an application-service creation graph }}
+{
+  "details": {
+    "amount": { "requested": {{{json request.body.loanAmount}}} }
+    {{! TODO: Move rate-adjustment input here}}
+  },
+  "reference": {
+    {{#with request.body.rateAdjustment.amount}}
+      {{! TODO: THIS IS THE WRONG PLACE FOR THIS, WHY WAS THIS PUT HERE }}
+      "partnerDiscountAmount": {{{json (string request.body.rateAdjustment.amount)}}},
+    {{/with}}
+    {{! TODO: make this more modular }}
+    "product": "slr",
+    "brand": "earnest"
+  },
+
+  "applicants": [
+    {
+      "details": {{#obj}}
+        {{#with request.body.demographicData}}{{#multiline}}
+          {
+            "name": {
+              "first": {{{json firstName}}},
+              "last": {{{json lastName}}}
+            },
+            "email": {{{json email}}},
+            "dateOfBirth": {{{json dob}}},
+            {{#if phoneNumber}}
+              {{! remove any non-numeric characters, but send as a string }}
+              "phone": [{ "number": {{{json (string (number phoneNumber))}}} }],
+            {{/if}}
+            "location": [{
+              "type": "primary",
+              "street1": {{{json address.addressLine1}}},
+              "street2": {{{json address.addressLine2}}},
+              "city": {{{json address.city}}},
+              "state": {{{json address.state}}},
+              "zip": {{{json address.zip}}},
+              "country": {{{json (coalesce address.country 'US')}}},
+              "citizenship": {{{json citizenshipStatus}}}
+              {{! json claimedHousingPayment }}
+            }]
+          }
+        {{/multiline}}{{/with}}
+        {{#with request.body.education}}{{#multiline}}
+          {
+            "education": [{
+              "degree": {{{json degreeType}}},
+              "termStart": {{{json startDate}}},
+              "termEnd": {{{json endDate}}},
+              "opeid": {{{json opeid}}}
+              {{! json schoolName }}
+            }]
+          }
+        {{/multiline}}{{/with}}
+        {{#with request.body.income}}{{#multiline}}
+          {
+            "income": [{
+              "amount": {{{ json value }}}
+              {{!
+                TODO: mapping between incomeType and income.type?
+                For now, we leave income type unspecified, rather than take
+                in something generic like "claimed annual income"
+              }}
+            }]
+          }
+        {{/multiline}}{{/with}}
+        {{#with request.body.assets}}{{#multiline}}
+          {
+            "asset": [{
+              "amount": {{{ json value }}},
+              {{! unlike income type, asset type is not an enumerated value}}
+              "type": {{{ json assetType }}}
+            }]
+          }
+        {{/multiline}}{{/with}}
+      {{/obj}},
+      "reference": {{#obj}}
+        {{#with (contract 'ssn') as |piiTokenResponse|}}
+          {{#if (and
+            (gte piiTokenResponse.response.statusCode 200)
+            (lt piiTokenResponse.response.statusCode 400)
+          )}}
+            { "ssnTokenURI": {{{json piiTokenResponse.results.uri}}} }
+          {{/if}}
+        {{/with}}
+      {{/obj}}
+    }
+  ]
+}

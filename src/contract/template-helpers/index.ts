@@ -63,9 +63,13 @@ export const notNull = (v1) => v1 !== null;
  */
 export function includes(array: unknown[], ...args: unknown[]) {
   return Array.prototype.slice.call(args, 0, -1).every((arg) => {
-    for (const element of array) {
-      if (arg == element) return true;
+    if (Array.isArray(array)) {
+      for (const element of array || []) {
+        if (arg == element) return true;
+      }
     }
+
+    return false;
   });
 }
 
@@ -248,7 +252,7 @@ export function sum(...args) {
 export function product(...args) {
   return Array.prototype.slice
     .call(args, 0, -1)
-    .reduce((a, b) => a * (Number(b) || 0), 0);
+    .reduce((a, b) => a * (Number(b) || 0), 1);
 }
 
 export function toUpper(value) {

@@ -1,0 +1,41 @@
+{{#list}}
+  {{!
+    The 'rates' contract is expected to be a calculator payment schedule repsonse, e.g.
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    {
+      "prices": [{
+        "rateInBps": 5.27,
+        "uwLoanTermInMonths": 62,
+        "rateType": "fixed",
+        "startingPrincipalBalanceInCents": 5000000,
+        "date": "2024-08-23T00:00:00.000Z",
+        "dateType": "fti",
+        "priceId": 4,
+        "minimumPaymentAmountInCents": null,
+        "paymentSchedule": {
+          "totalPrincipalPaidInDollars": 50000,
+          "totalInterestPaidInDollars": null,
+          "totalAmountPaidInDollars": null,
+          "finalPrincipalBalanceInDollars": 0,
+          "finalInterestBalanceInDollars": 0,
+          "lastPaymentDate": null,
+          "lastPaymentAmountInDollars": null,
+          "totalNumberOfPaymentsMade": 62
+        }
+      }]
+    }
+  }}
+  {{#with (contract 'rates') as |rates|}}
+    {{#if (and (lt rates.response.statusCode 400) (gte rates.response.statusCode 200))}}
+      {{#each rates.results.prices as |rate index|}}{{#multiline}}
+        {
+          "monthlyPayment": {{{ json rate.minimumPaymentAmountInCents}}},
+          "interest": {{{ json rate.rateInBps}}},
+          "length": {{{ json rate.uwLoanTermInMonths }}},
+          "totalAmountPaid": {{{ json (product rate.paymentSchedule.totalAmountPaidInDollars 100)}}},
+          "rateType": {{{ json rate.rateType}}}
+        }
+      {{/multiline}}{{/each}}
+    {{/if}}
+  {{/with}}
+{{/list}}

@@ -1,0 +1,17 @@
+{{#with (lookup (contract 'application') (contract 'role'))}}
+  {{#if details.education.[0].opeid}}
+    {
+      "action": "getSchools",
+      "client": "accreditedSchoolService",
+      "method": "get",
+      "uri": "/schools",
+      "query": {
+	"opeid": {{{json details.education.[0].opeid}}}
+      }
+    }
+  {{else}}
+    null
+  {{/if}}
+{{else}}
+  null
+{{/with}}

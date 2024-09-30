@@ -1,0 +1,18 @@
+{{! Create a new application with applicant based on request body, or the provided contract }}
+{
+  "event": "create",
+  "payload": {
+    {{#if request.params.id}}
+      "id": {{{ json request.params.id }}},
+    {{/if}}
+    "application" : {{#obj}}
+      {{#with (contract 'payload') as |payload|}}
+        {{{ json payload }}}
+      {{else}}
+        {{{ json request.body }}}
+      {{/with}}
+    {{/obj}}
+  },
+  "fields": "application { id applicants { id }}"
+}
+

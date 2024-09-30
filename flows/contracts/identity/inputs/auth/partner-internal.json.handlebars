@@ -1,0 +1,5 @@
+{{#if (eq (contract 'token') (extractSensitiveString env.S2S_KEY_PARTNER_SYSTEM))}}
+  "partner-system"
+{{else}}
+  null
+{{/if}}

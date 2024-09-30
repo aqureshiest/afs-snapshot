@@ -14,7 +14,10 @@ class Log extends ContractExecutable<Definition, unknown, void> {
    * Do not process the authorization error checks until all dependencies have been processed
    */
   condition = function (this: Log, _, __, ___, definition: Definition | null) {
-    return Boolean(definition);
+    const incompleteDependencies = Object.values(this.dependencies).some(
+      (dependency) => dependency.isIncomplete(_, __, ___),
+    );
+    return !incompleteDependencies && Boolean(definition);
   };
 
   /**

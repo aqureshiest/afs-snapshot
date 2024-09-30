@@ -1,0 +1,42 @@
+{{!
+  The 'prices' contract is expected to be a decisioning service artifact response;
+}}
+{{#with (contract 'artifacts') as |artifactsRequest|}}
+  {{#if (and (gte artifactsRequest.response.statusCode 200) (lt artifactsRequest.response.statusCode 400))}}
+    {
+      "client": "calculatorServiceClient",
+      "method": "post",
+      {{! TODO: determine a more default behavior if a product cannot be determined}}
+      {{#with (contract 'application') as |application|}}
+        "uri": "/payment-schedules/{{ coalesce application.product 'slr'}}/ream",
+      {{/with}}
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer {{btoa env.S2S_KEY_AFS_CALCULATOR_SERVICE}}"
+      },
+      "body": {
+        {{#with (contract 'termsToInclude') as |termsToInclude|}}
+            "prices": {{#list}}{{#with artifactsRequest.results.data.artifacts as |artifacts|~}}
+              {{~#each artifacts.priceCurve as |price|~}}{{#each price.rates as |rate|~}}
+                {{~#if (includes termsToInclude price.term_months)~}}{{#multiline}}
+                  {
+                    "rateInBps": {{{ json (product rate.rate 100) }}},
+                    "uwLoanTermInMonths": {{{ json price.term_months }}},
+                    "rateType": {{{ json rate.rate_type }}},
+                    "startingPrincipalBalanceInCents":
+                      {{{ json artifacts.softApprovedAmount }}},
+                      {{! TODO: remove timezone from date? }}
+                    "date": {{{ json artifacts.softInquiryDate }}},
+                    "dateType": "fti",
+                    "priceId": {{{ json @index }}}
+                  }
+              {{/multiline}}{{~/if~}}{{~/each}}{{~/each}}{{~/with}}{{/list}}
+        {{else}}
+          "prices": []
+        {{/with}}
+      }
+    }
+
+  {{else}}null{{/if}}
+{{else}}null{{/with}}
+

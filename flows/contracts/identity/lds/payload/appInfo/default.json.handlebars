@@ -1,0 +1,82 @@
+{{#with (contract 'application') as |application|}}
+{{#multiline}}
+{
+  "appInfo": {
+    {{! TODO: cosigned submissions }}
+    {{{json (coalesce (contract 'role') 'primary')}}}: {
+      "entityInfo": {
+        {{#with application.primary.details}}
+          "firstName": {{{json name.first}}},
+          "lastName": {{{json name.last}}},
+          "dob": {{{json dateOfBirth}}},
+          "email": {{{json email}}},
+          "phoneNumber": {{{json phone.[0].number}}},
+          "citizenshipStatus": {{{json location.[0].citizenship}}},
+          "addresses": {{#list}}{{#each location}}{{#multiline}}
+            {
+              "addressLine1": {{{json street1}}},
+              "addressLine2": {{{json street2}}},
+              "city": {{{json city}}},
+              "state": {{{json state}}},
+              "zip": {{{json zip}}},
+              "country": {{{json country}}},
+              "type": {{{json type}}}
+            }
+          {{/multiline}}{{/each}}{{/list}},
+          "educations": {{#list}}{{#each education}}{{#multiline}}
+            {
+              {{#with (contract 'school')}}
+                {{#with results.schools.[0]}}
+                  "schoolName": {{{json name}}},
+                {{/with}}
+              {{/with}}
+              "degreeType": {{{json degree}}},
+              "startDate": {{{json termStart}}},
+              "endDate": {{{json termEnd}}},
+              "opeid": {{{json opeid}}}
+            }
+          {{/multiline}}{{/each}}{{/list}},
+          "incomes": {{#list}}{{#each income}}{{#multiline}}
+            {
+              {{#if type}}
+                "incomeType": {{{ json type }}},
+              {{else if @first}}
+                "incomeType": "annual_income",
+              {{else}}
+                "incomeType": "annual_additional_income",
+              {{/if}}
+              "value": {{{ json amount }}}
+            }
+          {{/multiline}}{{/each}}{{/list}},
+          "assets": {{#list}}{{#each asset}}{{#multiline}}
+            {
+              {{#if (and @first @last (not type))}}
+                "assetType": "claimed_total_assets",
+              {{else}}
+                "assetType": {{{ json type }}},
+              {{/if}}
+              "value": {{{ json amount }}}
+            }
+          {{/multiline}}{{/each}}{{/list}},
+        {{/with}}
+        {{#with application.primary.reference}}
+          "ssn": {{{json ssnTokenURI}}}
+        {{/with}}
+      },
+      "loanInfo": {
+        "claimedLoanAmount": {{{json application.details.amount.requested}}}
+      },
+      "ratesInfo": {
+        "rateAdjustmentInfo": {
+          {{! TODO: v2 conventions?}}
+          "name": {{{json application.reference.partnerName}}},
+          {{! TODO: THIS IS THE WRONG PLACE FOR THIS, WHY WAS THIS PUT HERE }}
+          "amount": {{{json application.reference.partnerDiscountAmount}}}
+        }
+      }
+    }
+  }
+}
+{{/multiline}}
+{{else}}null{{/with}}
+

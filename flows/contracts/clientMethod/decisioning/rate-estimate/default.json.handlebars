@@ -1,0 +1,18 @@
+{
+  "action": {{{json (contract 'action')}}},
+  "client": "lendingDecisionServiceClient",
+  "method": "post",
+  "uri": "/v2/decisioning-request/{{
+    coalesce application.reference.product 'slr'
+  }}/{{
+    coalesce (contract 'decisionType') 'rate-estimate'
+  }}",
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer {{btoa env.S2S_KEY_LDS_APPLY_FLOW_SERVICE}}"
+  },
+  "body": {{#obj}}
+    {{{ json (contract 'basics') }}}
+    {{{ json (contract 'appInfo') }}}
+  {{/obj}}
+}

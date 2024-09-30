@@ -42,6 +42,24 @@
           }
         }
       ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": "<%- stringify(filename, 'lending-decisioning-service/artifacts.json') %>"
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "startsWith": {
+            "method": "GET",
+            "path": "/v1/artifact"
+          }
+        }
+      ]
     }
   ]
 }

@@ -4,10 +4,13 @@ import createError from "http-errors";
 import { IncomingMessage } from "http";
 
 const VALID_CLIENTS = Object.freeze([
+  "accreditedSchoolService",
   "internalRestServiceClient",
+  "lendingDecisionServiceClient",
   "NeasClient",
   "plaid",
   "piiTokenServiceClient",
+  "calculatorServiceClient",
 ] as const);
 
 class ClientMethod extends ContractExecutable<
@@ -22,7 +25,7 @@ class ClientMethod extends ContractExecutable<
   /**
    * instead of returning invalid contract bodies verbatim that will never be evaluated, return null
    */
-  transform = (_, __, definition: Definition) => {
+  transform(_, __, definition: Definition) {
     if (
       definition &&
       VALID_CLIENTS.includes(
@@ -33,7 +36,7 @@ class ClientMethod extends ContractExecutable<
     }
 
     return null;
-  };
+  }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   condition = (_, __, ___, transformation: Transformation | null) => {

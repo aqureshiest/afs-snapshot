@@ -105,12 +105,12 @@ class ApplicationEvent extends ContractExecutable<
    *
    * This function should probably return some information about the event that was created
    */
-  evaluate = async (
+  evaluate = async function (
     context: Context,
     executionContext,
     input: Input,
     definition: Definition,
-  ) => {
+  ) {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
     assert(

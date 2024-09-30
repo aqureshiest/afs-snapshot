@@ -1,0 +1,232 @@
+{
+  "type": "object",
+  "required": [
+    "partnerId",
+    "loanAmount",
+    "demographicData"
+  ],
+  "properties": {
+    "partnerId": {
+      "type": "string"
+    },
+    "loanAmount": {
+      "type": "number"
+    },
+    "demographicData": {
+      "type": "object",
+      "$ref": "#/$defs/demographicData"
+    },
+    "education": {
+      "type": "object",
+      "$ref": "#/$defs/education"
+    },
+    "income": {
+      "type": "object",
+      "$ref": "#/$defs/income"
+    },
+    "assets": {
+      "type": "object",
+      "$ref": "#/$defs/assets"
+    },
+    "rateAdjustment": {
+      "type": "object",
+      "$ref": "#/$defs/rateAdjustment"
+    }
+  },
+  "$defs": {
+    "address": {
+      "type": "object",
+      "properties": {
+        "addressLine1": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "addressLine2": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "zip": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "demographicData": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dob": {
+          "type": [
+            "object",
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "ssn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phoneNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "address": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "$ref": "#/$defs/address"
+        },
+        "citizenshipStatus": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "claimedHousingPayment": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "education": {
+      "type": "object",
+      "properties": {
+        "degreeType": {
+          "enum": [
+            "associates",
+            "bachelors",
+            "dds",
+            "do",
+            "dvm",
+            "high_school",
+            "jd",
+            "masters_arts",
+            "masters_engineering",
+            "masters_other",
+            "mba",
+            "md",
+            "medical_other",
+            "none",
+            "other",
+            "pharmd",
+            "phd",
+            "incomplete_grads",
+            "grad",
+            "undergrad"
+          ]
+        },
+        "startDate": {
+          "type": [
+            "object",
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "endDate": {
+          "type": [
+            "object",
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "opeid": {
+          "type": "string"
+        },
+        "schoolName": {
+          "type": ["string", "null"]
+        }
+
+      }
+    },
+    "income": {
+      "type": "object",
+      "properties": {
+        "incomeType": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "properties": {
+        "assetType": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        }
+      }
+    },
+    "rateAdjustment": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

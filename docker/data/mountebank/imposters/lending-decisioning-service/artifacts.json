@@ -1,0 +1,194 @@
+{
+  "data": {
+    "applicationId": "95d709d5-c99b-40fb-9f07-7e05f4aa8c0d",
+    "decisioningToken": "724c72ad-f501-4408-a962-1490aba30c1c",
+    "decisionOutcome": "Approved",
+    "artifacts": {
+      "priceCurve": [
+        {
+          "rates": [
+            {
+              "rate": 5.26,
+              "rate_type": "fixed"
+            },
+            {
+              "rate": 6.01,
+              "rate_type": "variable"
+            }
+          ],
+          "score": 6.1581,
+          "term_months": 60
+        },
+        {
+          "rates": [
+            {
+              "rate": 5.26,
+              "rate_type": "fixed"
+            },
+            {
+              "rate": 6.02,
+              "rate_type": "variable"
+            }
+          ],
+          "score": 6.1617,
+          "term_months": 61
+        },
+        {
+          "rates": [
+            {
+              "rate": 5.27,
+              "rate_type": "fixed"
+            },
+            {
+              "rate": 6.02,
+              "rate_type": "variable"
+            }
+          ],
+          "score": 6.165,
+          "term_months": 62
+        },
+        {
+          "rates": [
+            {
+              "rate": 5.27,
+              "rate_type": "fixed"
+            },
+            {
+              "rate": 6.02,
+              "rate_type": "variable"
+            }
+          ],
+          "score": 6.1684,
+          "term_months": 63
+        },
+        {
+          "rates": [
+            {
+              "rate": 6.9,
+              "rate_type": "fixed"
+            },
+            {
+              "rate": 6.87,
+              "rate_type": "variable"
+            }
+          ],
+          "score": 6.2751,
+          "term_months": 239
+        },
+        {
+          "rates": [
+            {
+              "rate": 6.9,
+              "rate_type": "fixed"
+            },
+            {
+              "rate": 6.88,
+              "rate_type": "variable"
+            }
+          ],
+          "score": 6.2753,
+          "term_months": 240
+        }
+      ],
+      "scoreCurve": [
+        {
+          "score": 6.2211,
+          "sub_scores": {
+            "fico": 1.8387,
+            "assets": 0.58,
+            "income": 0.9129,
+            "degree_type": 0,
+            "school_rank": 0,
+            "free_cash_flow": 0.9845,
+            "school_cdr_effect": 0,
+            "assets_to_loan_ratio": 0.8801,
+            "credit_card_to_income_ratio": 0.525
+          },
+          "backend_dti": 0.3525,
+          "term_months": 60,
+          "fixed_expenses_cents": 234992,
+          "free_cash_flow_cents": 290677,
+          "revised_assets_cents": 8000000,
+          "excess_free_cash_flow_cents": 0,
+          "estimated_monthly_payment_cents": 94792
+        },
+        {
+          "score": 6.2234,
+          "sub_scores": {
+            "fico": 1.8387,
+            "assets": 0.58,
+            "income": 0.9129,
+            "degree_type": 0,
+            "school_rank": 0,
+            "free_cash_flow": 0.9867,
+            "school_cdr_effect": 0,
+            "assets_to_loan_ratio": 0.8801,
+            "credit_card_to_income_ratio": 0.525
+          },
+          "backend_dti": 0.3504,
+          "term_months": 61,
+          "fixed_expenses_cents": 233631,
+          "free_cash_flow_cents": 292038,
+          "revised_assets_cents": 8000000,
+          "excess_free_cash_flow_cents": 0,
+          "estimated_monthly_payment_cents": 93431
+        },
+        {
+          "score": 6.2955,
+          "sub_scores": {
+            "fico": 1.8387,
+            "assets": 0.58,
+            "income": 0.9129,
+            "degree_type": 0,
+            "school_rank": 0,
+            "free_cash_flow": 1.0588,
+            "school_cdr_effect": 0,
+            "assets_to_loan_ratio": 0.8801,
+            "credit_card_to_income_ratio": 0.525
+          },
+          "backend_dti": 0.268,
+          "term_months": 240,
+          "fixed_expenses_cents": 178635,
+          "free_cash_flow_cents": 347034,
+          "revised_assets_cents": 8000000,
+          "excess_free_cash_flow_cents": 0,
+          "estimated_monthly_payment_cents": 38435
+        }
+      ],
+      "creditReport": {
+        "NetConnectResponse": {}
+      },
+      "ficoScore": 850,
+      "softInquiryDate": "2024-08-23T00:00:00.000Z",
+      "tags": [
+        "Primary/ParentPlus/NonGrad",
+        "Others",
+        "AV_HBFicoWithin705_Input",
+        "AV_HBAssets_Input",
+        "AV_HAAssets_Input",
+        "BA or Higher",
+        "AV_HAFicoWithin680_Input",
+        "AV_HBScoreAbove4.5_Input",
+        "AV_HBIncome_Input",
+        "AV_HB_Pass",
+        "NEIBelow10Percent",
+        "AV_HA_Fail",
+        "Skip Plaid",
+        "Primary"
+      ],
+      "softApprovedAmount": 5000000,
+      "modelVersion": "1.250-fec5e69",
+      "rateMapVersion": "195.1",
+      "stateLimitsVersion": "2024-02-20",
+      "variableCapsVersion": "2017-06-01",
+      "rateMapTag": "minus_15_bps_test",
+      "rateAdjustmentName": "",
+      "rateAdjustmentAmount": 0,
+      "grossAnnualIncome": 8000000,
+      "netAnnualIncome": 6308030,
+      "assetsAmount": 8000000,
+      "monthlyHousingExpense": 101200,
+      "degreeType": "bachelors"
+    }
+  }
+}

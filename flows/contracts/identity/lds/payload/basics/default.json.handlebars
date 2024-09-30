@@ -1,0 +1,41 @@
+{{!
+  Top-level details for the LDS decision payload
+}}
+{{#with (contract 'application') as |application|}}
+{
+  "applicationType":
+  {{#if (eq application.tag.applicants "cosigned")}}
+  "COSIGNED",
+  {{else if (eq application.tag.applicants "parent_plus")}}
+  "PARENTPLUS",
+  {{else}}
+  "PRIMARY_ONLY",
+  {{/if}}
+  {{! hard-coded? }}
+  "initiator": "primary",
+  "isParentPlus": {{{ json (eq application.tag.applicants "parent_plus") }}},
+  {{! hard-coded? }}
+  "isInternational": false,
+  {{! TODO: use tag for this? }}
+  "isMedicalResidency": false,
+  "requestMetadata": {
+    "referenceApplicationId": {{{json application.refId}}},
+    "applicationId": {{{json application.primary.id}}},
+    {{! TODO: get userId from NEAS?}}
+    "userId": {{{json (
+      coalesce
+      application.primary.reference.userID
+      auth.artifacts.userId
+      )
+    }}}
+    {{#if application.cosigner}},
+    "cosignerApplicationId": {{{json application.cosigner.id}}},
+    "cosignerUserId": {{{json (
+      coalesce
+      application.cosigner.reference.userID
+      )
+    }}}
+    {{/if}}
+  }
+}
+{{else}}null{{/with}}

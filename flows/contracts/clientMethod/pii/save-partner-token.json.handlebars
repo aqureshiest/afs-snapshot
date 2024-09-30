@@ -1,0 +1,11 @@
+{{#if request.body.demographicData.ssn}}
+{
+  "action": "savePartnerToken",
+  "client": "piiTokenServiceClient",
+  "method": "post",
+  "uri": "/tokens",
+  "body": {
+    "value": {{{json (string (number request.body.demographicData.ssn))}}}
+  }
+}
+{{else}}null{{/if}}

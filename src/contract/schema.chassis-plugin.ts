@@ -26,7 +26,11 @@ export const plugin: Plugin<unknown> = {
   version: "1.0.0",
   registerOrder: -1,
   register: async (context: PluginContext) => {
-    const ajv = new Ajv.default({ allErrors: true, $data: true });
+    const ajv = new Ajv.default({
+      allErrors: true,
+      allowUnionTypes: true,
+      $data: true,
+    });
     ajv.addKeyword({
       keyword: "allowFuture",
     });

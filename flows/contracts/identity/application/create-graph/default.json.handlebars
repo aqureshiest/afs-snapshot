@@ -1,0 +1,48 @@
+{{!
+  This contract may be used to combine several different sources for
+  graph-created applications OR applicants. All referenced contracts are optional
+
+  id: if the contract being created needs to be referenced elsewhere OR is an
+  upsert for an existing application relationship, this should be a string that
+  resolves to an identifier or a UUID (respectively)
+
+  ref: If this graph insert is merely a relationship to another application
+  in the graph, reference the ID here
+
+  reference: This contract is expected to be an array of contracts that resolve
+  to key/value pairs of references. They will be assigned in sequential order
+
+  details: This contract is expected to be an array of contracts that resolve
+  to key/value pairs of details. They will be assigned in sequential order
+
+  status: this contract should resolve to a valid application status
+}}
+{{#obj}}
+  {{#with (contract 'id') as |id| }}
+    { "id": {{{ json id }}} }
+  {{/with}}
+  {{#with (contract 'ref') as |ref| }}
+    { "ref": {{{ json ref }}} }
+  {{/with}}
+  {{#multiline}}
+    {
+      "reference": {{#obj}}
+        {{~#each (contract 'references') as |references|~}}
+          {{{ json references }}} 
+        {{~/each~}}
+      {{/obj~}} 
+    }
+  {{/multiline}}
+  {{#multiline}}
+    {
+      "details": {{#obj}}
+        {{#each (contract 'details') as |details| }}
+          {{{ json details }}}
+        {{/each}}
+      {{/obj}}
+    }
+  {{/multiline}}
+  {{#with (contract 'status') as |status| }}
+    { "status": {{{ json status }}} }
+  {{/with}}
+{{/obj}}

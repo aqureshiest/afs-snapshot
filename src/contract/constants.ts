@@ -102,6 +102,11 @@ export const manifestSchema = {
         { required: [SYNC_CONTRACT] },
         { required: [LITERAL_CONTRACT] },
       ],
+      properties: {
+        [LITERAL_CONTRACT]: {
+          type: ["object", "string", "number", "boolean", "array", "null"],
+        },
+      },
       additionalProperties: {
         anyOf: [
           { type: "string" },
