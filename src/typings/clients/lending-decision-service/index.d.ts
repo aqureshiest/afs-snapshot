@@ -35,7 +35,7 @@ type IEducation = Array<{
   schoolType: string;
   schoolCode: string;
   opeid: typings.EducationDetail["opeid"];
-  whoseEduation?: string;
+  whoseEducation?: string;
 }>;
 
 type IEmployment = Array<{
@@ -300,6 +300,8 @@ declare module "../../../clients/lending-decision-service/index.js" {
   const enum APPLICANT_TYPES {
     Cosigner = "cosigner",
     Primary = "primary",
+    Parent = "benefactor",
+    Student = "beneficiary",
   }
 
   /**

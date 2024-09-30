@@ -58,6 +58,7 @@ enum IncomeTypes {
 enum ApplicationTypes {
   "primary_only" = "PRIMARY_ONLY",
   "cosigned" = "COSIGNED",
+  "parent_plus" = "PARENTPLUS",
 }
 
 enum ProductTypes {
@@ -495,6 +496,11 @@ export default class LendingDecisionServiceClient extends Client {
 
     if (application?.cosigner && application.cosigner.id === applicationId) {
       currentApplicant = "cosigner";
+    } else if (
+      application?.benefactor &&
+      application.benefactor.id === applicationId
+    ) {
+      currentApplicant = "benefactor";
     } else {
       currentApplicant = "primary";
     }
@@ -530,9 +536,25 @@ export default class LendingDecisionServiceClient extends Client {
     for (const userApplicant of [
       APPLICANT_TYPES.Primary,
       APPLICANT_TYPES.Cosigner,
+      APPLICANT_TYPES.Parent,
     ]) {
       if (application[userApplicant]) {
-        applicationDecisionDetails[userApplicant] =
+        /* ============ SO HACKY vvvvv. TODO: REDO THIS!!! ============ */
+        /**
+         * special case for parent plus applications going to LDS
+         * They expect applicationDecisionDetails to only be:
+         * {
+         *    cosigner: {...},
+         *    primary: {...}
+         * }
+         * LDS sees primary as parent in the case of parent_plus app type
+         */
+        let entityApplicantLDS = userApplicant;
+        if (appType === "parent_plus" && userApplicant === "benefactor") {
+          entityApplicantLDS = "primary" as APPLICANT_TYPES;
+        }
+        /* ============ SO HACKY ^^^^. TODO: REDO THIS!!! ============ */
+        applicationDecisionDetails[entityApplicantLDS] =
           await this.formatRequestPayload(
             input,
             context,
@@ -679,6 +701,11 @@ export default class LendingDecisionServiceClient extends Client {
 
     if (application?.cosigner && application.cosigner.id === applicationId) {
       currentApplicant = "cosigner";
+    } else if (
+      application?.benefactor &&
+      application.benefactor.id === applicationId
+    ) {
+      currentApplicant = "benefactor";
     } else {
       currentApplicant = "primary";
     }
@@ -698,7 +725,22 @@ export default class LendingDecisionServiceClient extends Client {
       applicationId,
     );
 
-    applicationDecisionDetails[currentApplicant] =
+    /* ============ SO HACKY vvvvv. TODO: REDO THIS!!! ============ */
+    /**
+     * special case for parent plus applications going to LDS
+     * They expect applicationDecisionDetails to only be:
+     * {
+     *    cosigner: {...},
+     *    primary: {...}
+     * }
+     * LDS sees primary as parent in the case of parent_plus app type
+     */
+    let entityApplicantLDS = currentApplicant;
+    if (appType === "parent_plus" && currentApplicant === "benefactor") {
+      entityApplicantLDS = "primary";
+    }
+    /* ============ SO HACKY ^^^^. TODO: REDO THIS!!! ============ */
+    applicationDecisionDetails[entityApplicantLDS] =
       await this.formatRequestPayload(
         input,
         context,
@@ -839,9 +881,9 @@ export default class LendingDecisionServiceClient extends Client {
     input: Input<unknown>,
     context: PluginContext,
     application: typings.Application & { applicant: typings.Application },
-    applicant: string,
+    applicant: string, // primary | cosigner | benefactor | beneficiary
     decisionType: string,
-    appType: string,
+    appType: string, // primary_only | cosigned | parent_plus
     decisionAPIVersion: string = "v1", // needed to support v1 and v2 full app submission
   ): Promise<DecisionEntity> {
     const { details } = application[applicant]
@@ -872,11 +914,34 @@ export default class LendingDecisionServiceClient extends Client {
     /**
      * Format the education details in the Entity education shape
      */
-    const educationDetails = await this.applicantEducation(
+    let educationDetails = await this.applicantEducation(
       input,
       context,
+      applicant,
+      appType,
       details.education,
     );
+
+    /**
+     * Special case for Parent_plus applications
+     * LDS only wants details about the Parent, except for education
+     * details.
+     *
+     * LDS wants BOTH parent and student education details, BUT
+     * these details need to be combined and added to ONLY the
+     * parent entity details...
+     */
+    // TODO: RETHINK THIS!!!!
+    if (appType === "parent_plus") {
+      const studentEducationDetails = await this.applicantEducation(
+        input,
+        context,
+        "beneficiary",
+        appType,
+        application?.beneficiary?.details?.education,
+      );
+      educationDetails = [...educationDetails, ...studentEducationDetails];
+    }
 
     /**
      * Format the applicant income details
@@ -908,7 +973,7 @@ export default class LendingDecisionServiceClient extends Client {
     if (
       decisionType === "application" &&
       decisionAPIVersion === "v2" &&
-      appType !== "primary_only"
+      appType === "cosigned"
     ) {
       if (
         incomeDetails &&
@@ -1145,6 +1210,8 @@ export default class LendingDecisionServiceClient extends Client {
   private async applicantEducation(
     input: Input<unknown>,
     context: PluginContext,
+    applicant: string, // primary | cosigner | benefactor | beneficiary
+    appType: string, // primary_only | cosigned | parent_plus
     edcuationDetails: typings.Details["education"],
   ): Promise<DecisionEntity["educations"] | []> {
     const accreditedSchoolService =
@@ -1199,6 +1266,12 @@ export default class LendingDecisionServiceClient extends Client {
                 ? "for_profit"
                 : "not_for_profit",
               opeid: education?.opeid,
+              ...(appType === "parent_plus"
+                ? {
+                    whoseEducation:
+                      applicant === "benefactor" ? "parent" : "child",
+                  }
+                : {}),
             };
           }) || [];
 

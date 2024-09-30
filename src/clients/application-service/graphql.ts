@@ -178,6 +178,12 @@ fragment MetaFragment on Application {
   applicants {
     ...ApplicantFragment
   }
+  benefactor {
+    ...ApplicantFragment
+  }
+  beneficiary {
+    ...ApplicantFragment
+  }
 }
 `;
 

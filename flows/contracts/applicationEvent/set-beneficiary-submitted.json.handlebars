@@ -1,0 +1,12 @@
+{{#if application.beneficiary.id}}
+  {
+    "event": "setStatus",
+    "payload": {
+      "id": "{{application.beneficiary.id}}",
+      "status": "submitted"
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}
