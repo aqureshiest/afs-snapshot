@@ -1,6 +1,6 @@
 {{#noop}}{{contract 'actions'}}{{/noop}}
 {{#if request.params.id }}
-  {{#if (hasValues applicationState) }}
+  {{#if (and (hasValues applicationState) applicationState.manifest )}}
     {{#with applicationState }}
       {{#if step}}
         "{{manifest}}?step={{step}}"
