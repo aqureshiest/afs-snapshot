@@ -1,4 +1,4 @@
-{{#if (eq application.role "primary")}}
+{{#if (eq application.applicant.role "primary")}}
 "We sent a reminder to {{{application.cosigner.details.email}}} \n\n You’ll be notified once your cosigner has completed their portion of the application."
 {{else}}
 "We sent a reminder to {{{application.primary.details.email}}} \n\n You’ll be notified once your student has completed their portion of the application."

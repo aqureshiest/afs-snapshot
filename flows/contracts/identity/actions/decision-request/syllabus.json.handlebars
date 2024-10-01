@@ -2,7 +2,6 @@
   "key": "syllabus",
   "type": "navigate",
   "properties": {
-    {{!-- TODO: ADD application.brand --}}
-    "goTo": "earnest/student-loan-refi/syllabus/{{application.id}}"
+    "goTo": "{{application.reference.brand}}/student-loan-refi/{{#if (eq application.applicant.role "cosigner")}}cosigner/{{/if}}syllabus/{{{application.applicant.id}}}"
   }
 }
