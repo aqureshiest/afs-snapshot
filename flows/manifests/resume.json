@@ -32,9 +32,6 @@
   "outputs": {
     "*": "redirect",
     "redirect": "redirect.resume-application",
-    "actions": [
-      "full-refi.add-userId-reference",
-      "full-refi.withdraw-application"
-    ]
+    "actions": []
   }
 }]
