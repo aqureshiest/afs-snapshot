@@ -1519,6 +1519,66 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
 
+  it("[60a9197f] test getApplicantWithRole", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            application: {
+              primary: {
+                id: 1,
+              },
+              cosigner: {
+                id: 2,
+              },
+              benefactor: {
+                id: 3,
+              },
+              applicants: [{ id: 1 }, { id: 2 }, { id: 3 }],
+            },
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "primaryRole": {{{getApplicantWithRole 1 request.body.values.application}}},
+              "cosignerRole": {{{getApplicantWithRole 2 request.body.values.application}}},
+              "benefactorRole": {{{getApplicantWithRole 3 request.body.values.application}}},
+              "defaultPrimaryRole": {{{getApplicantWithRole 4 request.body.values.application}}}
+
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      primaryRole: { applicant: { id: 1, role: "primary" } },
+      cosignerRole: { applicant: { id: 2, role: "cosigner" } },
+      benefactorRole: {
+        primary: { id: 3 },
+        applicant: { id: 3, role: "primary" },
+      },
+      defaultPrimaryRole: {
+        primary: { id: 1 },
+        applicant: { id: 1, role: "primary" },
+      },
+    });
+  });
   /*
   it("[1bb916db] sumIncomeAmountRange and totalSum template helper", async () => {
     const input = {

@@ -243,6 +243,11 @@ export default class LendingDecisionServiceClient extends Client {
               }),
         };
       } else {
+        /**
+         * TODO: if tag.applicants = 'parent_plus'
+         * entity role of `primary` is the parent, which
+         * is 'benefactor' in application service
+         */
         queryVars = {
           ...(entity
             ? {
@@ -1030,14 +1035,9 @@ export default class LendingDecisionServiceClient extends Client {
       educations: educationDetails,
       incomes: incomeDetails,
       assets: assetsDetails,
-      // Full app submission on cosigner applicant should NOT include loan info
-      ...(decisionType === "application" && applicant === "cosigner"
-        ? {}
-        : {
-            loanInfo: {
-              claimedLoanAmount: application.details?.amount?.requested,
-            },
-          }),
+      loanInfo: {
+        claimedLoanAmount: application.details?.amount?.requested,
+      },
     } as DecisionEntity;
 
     /**

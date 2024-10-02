@@ -89,7 +89,11 @@ class ApplicationEvent extends ContractExecutable<
     const path = input.request?.url.split("/") || [];
 
     // 2. Any event that can change data cannot run during a GET request
-    if (method === "GET" && MUTATIVE_EVENTS.includes(event) && !path.includes("resume")) {
+    if (
+      method === "GET" &&
+      MUTATIVE_EVENTS.includes(event) &&
+      !path.includes("resume")
+    ) {
       return false;
     }
 
@@ -239,4 +243,3 @@ class ApplicationEvent extends ContractExecutable<
 }
 
 export default ApplicationEvent;
-
