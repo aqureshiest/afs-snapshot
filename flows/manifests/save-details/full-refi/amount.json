@@ -26,12 +26,13 @@
       }
     },
     "outputs": {
-      "*": "redirect",
+      "*": "response.full-refi-amount",
       "redirect": "redirect/full-refi.ssn",
+      "min-refi-amount-error": "onError.min-refi-amount-error",
       "actions": {
         "*": "actions/result.results",
         "actions": [
-          "full-refi.add-details-full-refi"
+          "full-refi.add-details-loan-amount"
         ]
       }
     }

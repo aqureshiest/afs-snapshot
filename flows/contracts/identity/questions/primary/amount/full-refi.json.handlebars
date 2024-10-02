@@ -6,7 +6,7 @@
         "type": "inputMoney",
         "direction": "column",
         {{#if details.amount.requested}}
-            "value": "{{formatCentsToDollars details.amount.requested}}",
+            "value": {{formatCentsToDollars details.amount.requested}},
         {{else}}
             "value": "",
         {{/if}}

@@ -1,0 +1,19 @@
+{{#if request.params.id}}  
+  {{#noop}}{{ contract 'analytics' }}{{/noop}}
+  {
+    "event": "addDetails",
+    "payload": {
+      "id": "{{application.id}}", {{! root id for loan amount}}
+      "details": {{#obj}} {{! make sure to flatten each element into a single line}}
+        {{#with request.body.values}}
+          {{#if amount}}
+              {"amount": {"requested": {{{formatDollarsToCents amount}}} } }
+          {{/if}}
+        {{/with}}
+      {{/obj}}
+    },
+    "fields": "application { id }"
+  }
+{{else}}
+  null
+{{/if}}
