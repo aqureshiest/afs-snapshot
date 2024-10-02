@@ -1,4 +1,3 @@
-{{#with application.primary}}
 {
   "type": "input",
   "definition": {
@@ -19,11 +18,9 @@
     "hint":{{#if (contract "hint")}}{{{json (contract 'hint')}}}{{else}}[]{{/if}},
     {{#if (contract "deps")}}"deps":{{{json (contract 'deps')}}},{{/if}}
     "items":{{#if (contract "items")}}
-      {{{json (contract 'items')}}},
+      {{{json (contract 'items')}}}
     {{else}}
-      [{ "id": "yes", "label": "Yes", "value": "true" }, { "id": "no", "label": "No", "value": "false" }],
+      [{ "id": "yes", "label": "Yes", "value": "true" }, { "id": "no", "label": "No", "value": "false" }]
     {{/if}}
-    "error": "{{{ ajv 'errors' 'questions/primary/address/additional-address' sixMonthResidence }}}"
   }
 }
-{{/with}}
