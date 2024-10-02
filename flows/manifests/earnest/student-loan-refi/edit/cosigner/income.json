@@ -1,0 +1,62 @@
+[
+  {
+    "methods": ["get"],
+    "parameters": [{
+      "key": "id",
+      "format": "uuid"
+    }],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "full-refi",
+      "stage": "student-info-stage.full-refi",
+      "pageLayout": "layout.sidebar",
+      "steps": [
+        "student-info-form/income.full-refi-edit"
+      ],
+      "student-info-income-rows": [
+        "info/student-info.income",
+        "questions/primary/income/amount/annual-income.refi",
+        "questions/primary/income/amount/claimed-assets.full-refi",
+        "questions/primary/income/amount/additional-income/full-refi.default",
+        "info/student-income/additional-income-hint.full-refi"
+      ],
+      "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Get Rates"
+        },
+        "value": {
+          "@": "75"
+        }
+      }
+    ],
+      "back-button": "actions/back-buttons/full-refi/cosigner.income-source",
+      "save_income_details_action": "actions/save-details/full-refi/cosigner.income-edit",
+      "primary_income_annual_income_input_status": "questions/primary/income/amount/annual-income.status",
+      "primary_income_claimed_assets_input_status": "questions/primary/income/amount/claimed-assets.status",
+      "primary_income_additional_income_input_status": "questions/primary/income/amount/additional-income.status",
+      "redirect_homebase": "actions/homebase.default",
+      "onError": []
+    }
+  }
+]
