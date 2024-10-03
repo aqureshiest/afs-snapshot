@@ -1,5 +1,5 @@
 {{! cosigner creation requested }}
-{{#if (and (not (includes application.tags "parent_plus")) (eq application.role "primary") (eq request.body.values.isParentDriven "true"))}}
+{{#if (and (not (includes application.tags "parent_plus")) (eq application.applicant.role "primary") (eq request.body.values.isParentDriven "true"))}}
   {
     "event": "create",
     "payload": {
