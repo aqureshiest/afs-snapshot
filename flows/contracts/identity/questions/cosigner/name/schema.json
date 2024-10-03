@@ -5,17 +5,21 @@
       "type": "string",
       "pattern": "^[a-zA-Z\\s'-]*$",
       "minLength": 1,
+      "maxLength": 39,
       "errorMessage": {
         "minLength": "First name is required.",
+        "maxLength": "First name must be less than 40 characters.",
         "pattern": "First name contains invalid characters."
       }
     },
     "last": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 39,
       "pattern": "^[a-zA-Z\\s'-]*$",
       "errorMessage": {
         "minLength": "Last name is required.",
+        "maxLength": "Last name must be less than 40 characters.",
         "pattern": "Last name contains invalid characters."
       }
     },
