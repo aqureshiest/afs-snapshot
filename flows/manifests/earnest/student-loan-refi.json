@@ -21,6 +21,7 @@
     "*": "landing-students",
     "landing_stage": { 
       "*": "landing.primer-full-refi", 
+      "layout": "layout.full-refi-primer",
       "headerLabel": {
         "@": "Let's get started refinancing your loans."
       },
@@ -54,7 +55,6 @@
         }
       ]
     },
-    "layout": "layout.full-refi-primer",
     "redirect_homebase": "actions/homebase.default"
   }
 }]

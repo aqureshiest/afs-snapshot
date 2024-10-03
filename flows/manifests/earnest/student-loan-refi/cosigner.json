@@ -26,9 +26,9 @@
   "outputs": {
     "*": "landing-students",
     "landing_stage": { 
-      "*": "landing.primer-full-refi-cosigner"
+      "*": "landing.primer-full-refi-cosigner",
+      "layout": "layout.full-refi-primer"
     },
-    "layout": "layout.full-refi-primer",
     "redirect_homebase": "actions/homebase.default"
   }
 }]
