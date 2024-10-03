@@ -6,7 +6,15 @@
     "pageTitle": "Earnest"
   },
   "pageLayout": {{{json (contract 'layout')}}},
-  "analytics": {},
+  
+  "analytics": {
+    "name": "Primer Screen Viewed",
+    "product": "slr",
+    "role": "primary",
+    "source": "rate check",
+    "rootapplicationid": "{{{application.id}}}",
+    "primarysubapplicationid": "{{{application.primary.id}}}"
+  },
   "definition": {
     "type": "landing",
     "definition": {
