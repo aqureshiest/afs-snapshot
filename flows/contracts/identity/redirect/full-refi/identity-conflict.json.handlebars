@@ -64,7 +64,7 @@
                               (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
                             )}}
                               {{!PII verification screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{../request.body.values.email}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{escapeUrlParam ../request.body.values.email}}",
                               "external": true
                             {{/if}}
                           }

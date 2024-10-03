@@ -530,3 +530,8 @@ export function mapProductForRedirect(product: string): string {
 
   return productMapping[product];
 }
+
+export function escapeUrlParam(input: string) {
+  if (!input) return null;
+  return encodeURIComponent(input);
+}
