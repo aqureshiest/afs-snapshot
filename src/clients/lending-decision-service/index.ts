@@ -1231,6 +1231,22 @@ export default class LendingDecisionServiceClient extends Client {
         edcuationDetails
           .filter((education) => education && Object.keys(education).length > 0)
           .map(async (education) => {
+            if (education?.degree && education.degree === "high_school") {
+              return {
+                degreeType: education?.degree ? education?.degree : "",
+                endDate: education?.graduationDate
+                  ? new Date(education.graduationDate).toISOString()
+                  : "",
+                schoolName: "",
+                ...(appType === "parent_plus"
+                  ? {
+                      whoseEducation:
+                        applicant === "benefactor" ? "parent" : "child",
+                    }
+                  : {}),
+              };
+            }
+
             const searchedSchool = (
               await accreditedSchoolService["getSchools"](input, context, {
                 opeid: education?.opeid,

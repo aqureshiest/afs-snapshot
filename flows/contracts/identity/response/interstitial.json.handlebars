@@ -15,7 +15,7 @@
           "properties": {
             "showSpinner": true,
             "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
-            {{#if (eq (every (contract 'get-statuses') 'submitted') true)}}
+            {{#if (or (eq application.tag.applicants 'parent_plus') (eq (every (contract 'get-statuses') 'submitted') true))}}
               "action": {{{json (contract 'statusAction')}}}
             {{else}}
               "action":  {{{json (contract 'syllabus')}}}

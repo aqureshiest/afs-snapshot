@@ -966,6 +966,110 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     assert.deepEqual(results.data.status, "completed");
   });
 
+  it("[048dac00] should post a parent plus v2 app decision", async () => {
+    const beneficiaryID = uuidv4();
+    const benefactor = {
+      ...primaryAppData.applicants[0],
+      monolithApplicationID: null,
+      reference: {
+        ...primaryAppData.applicants[0].reference,
+        monolithApplicationID: null,
+        monolithUserID: null,
+      },
+      relationships: [
+        {
+          id: root,
+          relationship: "root",
+        },
+        {
+          id: beneficiaryID,
+          relationship: "beneficiary",
+        },
+      ],
+      details: {
+        ...primaryAppData.applicants[0].details,
+        education: [
+          {
+            degree: "high_school",
+            graduationDate: "2027-01-01",
+          },
+        ],
+      },
+    };
+    const beneficiary = {
+      id: beneficiaryID,
+      details: {
+        education: [
+          {
+            degree: "bachelors",
+            enrollment: null,
+            graduationDate: "2015-01-01",
+            termStart: null,
+            termEnd: null,
+            credits: null,
+            opeid: "00115500",
+          },
+        ],
+      },
+    };
+    const parentApp = {
+      ...primaryAppData,
+      tags: ["incomplete", "parent_plus"],
+      tag: {
+        applicants: "parent_plus",
+        serialization: null,
+        status: "incomplete",
+      },
+      monolithLoanID: null,
+      benefactor: benefactor,
+      beneficiary: beneficiary,
+      applicants: [benefactor, beneficiary],
+    };
+
+    mock.method(
+      context.loadedPlugins.applicationServiceClient.instance,
+      "post",
+      () => {
+        return {
+          results: {
+            data: {
+              application: parentApp,
+            },
+          },
+          response: {
+            statusCode: 200,
+          },
+        };
+      },
+    );
+
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Application Review",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    const results = await client.postDecisionRequest(input, context, root);
+
+    assert.deepEqual(results.message, "Decisioning Request is processed.");
+    assert.deepEqual(results.data.decisionOutcome, "Application Review");
+    assert.deepEqual(results.data.status, "completed");
+  });
+
   it("[36a5efe2] set the root application's status to 'submitted'", async () => {
     const mockFn = mock.fn(() => {
       return {

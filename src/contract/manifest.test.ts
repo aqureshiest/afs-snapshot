@@ -1576,6 +1576,7 @@ describe("[462fd166] manifest.execute", () => {
         body: {
           values: {
             application: {
+              id: 10,
               primary: {
                 id: 1,
               },
@@ -1604,7 +1605,8 @@ describe("[462fd166] manifest.execute", () => {
               "primaryRole": {{{getApplicantWithRole 1 request.body.values.application}}},
               "cosignerRole": {{{getApplicantWithRole 2 request.body.values.application}}},
               "benefactorRole": {{{getApplicantWithRole 3 request.body.values.application}}},
-              "defaultPrimaryRole": {{{getApplicantWithRole 4 request.body.values.application}}}
+              "defaultPrimaryRole": {{{getApplicantWithRole 4 request.body.values.application}}},
+              "root": {{{getApplicantWithRole 10 request.body.values.application}}}
 
             }
         `,
@@ -1627,6 +1629,15 @@ describe("[462fd166] manifest.execute", () => {
       defaultPrimaryRole: {
         primary: { id: 1 },
         applicant: { id: 1, role: "primary" },
+      },
+      root: {
+        primary: {
+          id: 3,
+        },
+        applicant: {
+          id: 3,
+          role: "primary",
+        },
       },
     });
   });

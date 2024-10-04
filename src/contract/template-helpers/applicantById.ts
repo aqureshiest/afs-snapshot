@@ -39,6 +39,22 @@ export const getApplicantWithRole = function (id, application) {
       primary: application.benefactor,
       applicant: { ...application.benefactor, role: "primary" },
     });
+  } else if (id === application.id) {
+    if (application?.benefactor?.id) {
+      return JSON.stringify({
+        primary: application.benefactor,
+        applicant: { ...application.benefactor, role: "primary" },
+      });
+    } else if (application?.primary?.id) {
+      return JSON.stringify({
+        applicant: { ...application.primary, role: "primary" },
+      });
+    } else {
+      return JSON.stringify({
+        primary: applicantIndex0,
+        applicant: { ...applicantIndex0, role: "primary" },
+      });
+    }
   } else {
     return JSON.stringify({
       primary: applicantIndex0,

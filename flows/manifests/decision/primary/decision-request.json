@@ -39,7 +39,7 @@
             "*": "application/single.flattened",
             "application": "application-by-id-param"
         },
-        "actions": ["set-applicant-submitted", "set-beneficiary-submitted", "decision-request", "decision-backfill"],
+        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill"],
         "get-statuses": "applicants/status.get-applicant-status",
         "set-timestamp": "redis.set-decision-request-timestamp",
         "syllabus": "actions/decision-request.syllabus",

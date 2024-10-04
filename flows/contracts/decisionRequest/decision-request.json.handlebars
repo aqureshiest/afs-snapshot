@@ -1,6 +1,6 @@
 {{#if (contract 'actions' 0)  }}
   {{#if request.params.id}}
-    {{#if (eq (every (contract 'get-statuses') 'submitted') true)}}
+    {{#if (or (eq application.tag.applicants 'parent_plus') (eq (every (contract 'get-statuses') 'submitted') true))}}
       {
         "decisionRequestMethod": "postDecisionRequest",
         "id": "{{request.params.id}}"

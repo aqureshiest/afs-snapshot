@@ -127,7 +127,7 @@ export function year(v1) {
 
 export function last8Years() {
   const currentYear = new Date().getFullYear();
-  return  Array.from({ length: 8 }, (_, i) => `"${currentYear - i}"`);
+  return Array.from({ length: 8 }, (_, i) => `"${currentYear - i}"`);
 }
 
 export function getCurrentTime() {
@@ -501,15 +501,16 @@ export function mapCitizenship(citizenship: string): string | null {
 }
 
 export function keyString(key: string): string | null {
-    const TOKEN_LENGTH = 8;
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < TOKEN_LENGTH; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    const r = `"${key}-${result}"`;
-    console.log('TOKEN KEY', r)
-    return r;
+  const TOKEN_LENGTH = 8;
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < TOKEN_LENGTH; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  const r = `"${key}-${result}"`;
+  console.log("TOKEN KEY", r);
+  return r;
 }
 
 export function getApplicantByEmail(

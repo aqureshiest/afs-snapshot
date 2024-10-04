@@ -209,7 +209,7 @@ class ApplicationEvent extends ContractExecutable<
           const { application } = (await applicationServiceClient.sendRequest(
             {
               query: TEMP_DEFAULT_APPLICATION_QUERY,
-              variables: { id: rehydrationId },
+              variables: { id: rehydrationId, root: true },
             },
             context,
           )) as unknown as { application: types.Application };
