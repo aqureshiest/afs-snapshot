@@ -7,7 +7,7 @@
     "inputs":{
         "*": "inputs",
         "application": {
-            "*": "application/cosigned.flattened",
+            "*": "application/single.flattened",
             "application": "application-by-id-param"
         },
         "applications": [],
@@ -36,7 +36,7 @@
     "outputs": {
         "*": "response.interstitial",
         "updatedApplication": {
-            "*": "application/cosigned.flattened",
+            "*": "application/single.flattened",
             "application": "application-by-id-param"
         },
         "actions": ["set-applicant-submitted", "decision-request", "decision-backfill"],
