@@ -4,8 +4,8 @@
 		(lt identify.response.statusCode 400) 
   )}}
     {{#if (or
-      (hasActiveIncompleteApplication ../application.id ../applications)
-      (hasActivePostSubmissionApplication ../application.id ../applications)
+      (hasActiveIncompleteApplication ../application.applicant.id ../applications)
+      (hasActivePostSubmissionApplication ../application.applicant.id ../applications)
     )}}
       null
     {{else}}
@@ -15,7 +15,7 @@
         "method": "post",
         "uri": "/auth/identity/access-code/send",
         "body": {
-          "applicationId": {{{json ../application.id}}},
+          "applicationId": {{{json ../application.applicant.id}}},
           "emailId": {{{json ../request.body.values.email}}}
         }
       }

@@ -3,6 +3,7 @@ import ContractExecutable from "../contract-executable.js";
 import { Types as AStypes } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
+import { getApplicantWithRole } from "../template-helpers/applicantById.js";
 
 const mutationSchemaQuery = `query schema {
   __type(name: "Mutation") {
@@ -214,7 +215,9 @@ class ApplicationEvent extends ContractExecutable<
             context,
           )) as unknown as { application: types.Application };
 
-          Object.defineProperty(input, "application", { value: application });
+          const applicationRoles = JSON.parse(getApplicantWithRole(application.id, application));
+
+          Object.defineProperty(input, "application", { value: {...application, ...applicationRoles} });
         } catch (error) {
           this.log(context, {
             message: "failed to rehydrate application",

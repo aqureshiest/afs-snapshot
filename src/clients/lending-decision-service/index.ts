@@ -193,7 +193,7 @@ export default class LendingDecisionServiceClient extends Client {
         },
       })) as unknown as { applications: Array<typings.Application> };
 
-      application = flattenApplication(result["applications"][0]);
+      application = flattenApplication (result["applications"][0]);
       this.log(
         {
           id,
@@ -236,6 +236,7 @@ export default class LendingDecisionServiceClient extends Client {
         queryVars = {
           ...(entity
             ? {
+                // This is the applicant ID in this case
                 id: application.id, // update the applicant's status if an entity is passed
               }
             : {
@@ -254,6 +255,7 @@ export default class LendingDecisionServiceClient extends Client {
                 id: application[entity.applicantRole].id, // update the applicant's status if an entity is passed
               }
             : {
+                // This is the applicant ID in this case
                 id: application.id, // otherwise, update the root application status
               }),
         };

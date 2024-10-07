@@ -1,6 +1,6 @@
 {{#if (and
-  (not (hasActiveIncompleteApplication application.id applications))
-  (not (hasActivePostSubmissionApplication application.id applications))
+  (not (hasActiveIncompleteApplication application.applicant.id applications))
+  (not (hasActivePostSubmissionApplication application.applicant.id applications))
 )}}
   {{{json (contract 'redirect-education')}}}
 {{else}}
@@ -16,7 +16,7 @@
               "type": "header",
               "componentProps": {
                 "copy": "Welcome back {{ toUpper request.body.values.name.first }}",
-                "subCopy": "We noticed you started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication application.id applications) "root") "createdAt")}}. Would you like to save time by picking up where you left off?",
+                "subCopy": "We noticed you started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication application.applicant.id applications) "root") "createdAt")}}. Would you like to save time by picking up where you left off?",
                 "asset": {
                   "center": true,
                   "type": "LocalAsset",
@@ -45,23 +45,23 @@
                           {{! Returning users with an account and an inflight incomplete application}}
                             {{#if (and
                               (eq actions.[1].statusCode 409)
-                              (boolean (hasActiveIncompleteApplication ../application.id ../applications))
+                              (boolean (hasActiveIncompleteApplication ../application.applicant.id ../applications))
                             )}}
                               {{!Login screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../application.id ../applications) "root") "id"}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../application.applicant.id ../applications) "root") "id"}}",
                               "external": true
                           {{! Returning users with an inflight post-submission application}}
                             {{else if (and
                               (eq actions.[1].statusCode 409)
-                              (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
+                              (boolean (hasActivePostSubmissionApplication ../application.applicant.id ../applications))
                             )}}
                               {{!Login screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../application.id ../applications) "root") "id"}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../application.applicant.id ../applications) "root") "id"}}",
                               "external": true
                           {{! Returning accountless users with an inflight incomplete or post-submission application}}
                             {{else if (or
-                              (boolean (hasActiveIncompleteApplication ../application.id ../applications))
-                              (boolean (hasActivePostSubmissionApplication ../application.id ../applications))
+                              (boolean (hasActiveIncompleteApplication ../application.applicant.id ../applications))
+                              (boolean (hasActivePostSubmissionApplication ../application.applicant.id ../applications))
                             )}}
                               {{!PII verification screen}}
                               "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{escapeUrlParam ../request.body.values.email}}",
@@ -72,8 +72,8 @@
                     }
                     {{!Secondary Button}}
                     {{#if (and
-                      (boolean (hasActiveIncompleteApplication ../application.id ../applications))
-                      (not (boolean (hasActivePostSubmissionApplication ../application.id ../applications)))
+                      (boolean (hasActiveIncompleteApplication ../application.applicant.id ../applications))
+                      (not (boolean (hasActivePostSubmissionApplication ../application.applicant.id ../applications)))
                     )}}
                       ,{
                         "copy": "Resume current application",
@@ -82,14 +82,14 @@
                             {{!Login screen}}
                             "type": "navigate",
                             "properties": {
-                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.root.id}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.id}}",
                               "external": true
                             }
                           {{else}}
                             {{!Send verification code + redirect to Verification screen}}
                             "type": "request",
                             "properties": {
-                              "manifest": "send-verification-email/{{../application.id}}",
+                              "manifest": "send-verification-email/{{../application.applicant.id}}",
                               "method": "POST"
                             }
                           {{/if}}
