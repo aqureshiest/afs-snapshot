@@ -30,6 +30,7 @@
         }
       }
     },
+    "analytics": "analytics/full-refi.syllabus",
     "bottomNavigation": {
       "*": "stage.bottom-navigation",
       "buttons": [{

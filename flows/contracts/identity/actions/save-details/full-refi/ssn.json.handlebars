@@ -1,10 +1,18 @@
 {
-    "key": "save-ssn-full-refi",
-    "type": "request",
-    "properties": {
-        "analytics": {},
-        "manifest": "save-details/full-refi/ssn/{{application.primary.id}}",
-        "method": "POST",
-        "onError": {{{json (contract 'onError')}}}
-    }
+  "key": "save-ssn-full-refi",
+  "type": "request",
+  "properties": {
+    "analytics": {
+      "name": "Rate Check Section Submitted",
+      "product": "slr",
+      "role": "{{{application.applicant.role}}}",
+      "source": "rate check",
+      "section": "identity",
+      "rootapplicationid": "{{{application.id}}}",
+      "primarysubapplicationid": "{{{application.primary.id}}}"
+    },
+    "manifest": "save-details/full-refi/ssn/{{application.primary.id}}",
+    "method": "POST",
+    "onError": {{{json (contract 'onError')}}}
+  }
 }

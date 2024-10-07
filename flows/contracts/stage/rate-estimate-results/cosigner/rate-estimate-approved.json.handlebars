@@ -2,6 +2,19 @@
   "type": "flexible",
   "label": "Rate Estimate Result",
   "pageLayout": {{{json (contract 'pageLayout')}}},
+  "onLoadEvent": 
+  {
+    "name": "Rate Check Results Viewed",
+    "product": "slr",
+    "role": "{{{application.applicant.role}}}",
+    "source": "rate check",
+    "rootapplicationid": "{{{application.id}}}",
+    "primaryapplicationid": "{{{application.primary.id}}}",
+    "cosignerapplicationid": "{{{application.cosigner.id}}}",
+    "serverProperties": {
+      "name": "Rate Check Results Received"
+    }
+  },
   "definition": {
     "type": "flexible",
     "definition": {

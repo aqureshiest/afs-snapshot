@@ -2,6 +2,13 @@
   "type": "flexible",
   "label": "Rate Estimate Result",
   "pageLayout": {{{json (contract 'pageLayout')}}},
+  "onLoadEvent": 
+  {
+    "name": "Rate Check Results Viewed",
+    "product": "slr",
+    "role": "{{{application.applicant.role}}}",
+    "source": "rate check",
+  },
   "definition": {
     "type": "flexible",
     "definition": {
@@ -101,7 +108,16 @@
                         "key": "addCosigner",
                         "type": "navigate",
                         "properties": {
-                          "goTo": "/{{application.brand}}/student-loan-refi/cosigner-invite/{{application.id}}"
+                          "goTo": "/{{application.brand}}/student-loan-refi/cosigner-invite/{{application.id}}",
+                          "analytics": 
+                          {
+                            "name": "Rate Check Results Viewed",
+                            "product": "slr",
+                            "role": "{{{application.applicant.role}}}",
+                            "source": "rate check",
+                            "rootapplicationid": "{{{application.id}}}",
+                            "primaryapplicationid": "{{{application.primary.id}}}"
+                          }
                         }
                       }
                     },

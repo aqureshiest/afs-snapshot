@@ -5,6 +5,9 @@
     {{#if (contract "stageLayout")}}
       "pageLayout":{{{json (contract 'stageLayout')}}},
     {{/if}}
+    {{#if (contract "analytics")}}
+      "analytics":{{{json (contract 'analytics')}}},
+    {{/if}}
     {{#if (contract "stageSeo")}}
       "seo":{{{json (contract 'stageSeo')}}},
     {{/if}}
