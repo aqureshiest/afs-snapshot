@@ -6,7 +6,6 @@
     "pageTitle": "Earnest"
   },
   "pageLayout": {{{json (contract 'layout')}}},
-  
   "analytics": {
     "name": "Primer Screen Viewed",
     "product": "slr",
@@ -166,7 +165,15 @@
                     "type": "request",
                     "properties": {
                         "manifest": "create-accountless-application",
-                        "method": "POST"
+                        "method": "POST",
+                        "analytics": {
+                        "name": "Rate Check Started",
+                        "product": "slr",
+                        "role": "primary",
+                        "source": "rate check",
+                        "rootapplicationid": "{{{application.id}}}",
+                        "primarysubapplicationid": "{{{application.primary.id}}}"
+                        }
                     }
                 }
               }
