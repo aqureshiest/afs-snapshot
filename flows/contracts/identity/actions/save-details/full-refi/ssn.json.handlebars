@@ -9,7 +9,15 @@
       "source": "rate check",
       "section": "identity",
       "rootapplicationid": "{{{application.id}}}",
-      "primarysubapplicationid": "{{{application.primary.id}}}"
+      "primaryapplicationid": "{{{application.primary.id}}}",
+      "serverProperties": {
+        "name": "Rate Check Submitted",
+        "product": "slr",
+        "role": "{{{application.applicant.role}}}",
+        "source": "rate check",
+        "rootapplicationid": "{{{application.id}}}",
+        "primaryapplicationid": "{{{application.primary.id}}}"
+      }
     },
     "manifest": "save-details/full-refi/ssn/{{application.primary.id}}",
     "method": "POST",
