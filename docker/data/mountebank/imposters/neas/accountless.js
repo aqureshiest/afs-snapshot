@@ -8,10 +8,11 @@ async function accountless(request, state, logger) {
   const { createHash } = require("crypto");
 
   const payload = JSON.parse(request.body);
-  const { applicationId, email, idToken } = payload;
+  const { applicationId, emailId: email, idToken } = payload;
+
   state = state || {};
 
-  const token = idToken || applicationId && createHash("sha1").update(applicationId).digest().toString("hex");
+  const token = idToken || (applicationId || email) && createHash("sha1").update(applicationId || email).digest().toString("hex");
 
   if (!token) {
     logger.error('[SESSION:identify]', payload );
@@ -39,6 +40,7 @@ async function accountless(request, state, logger) {
     body: {
       notification_type: "application_unauthenticated_continue",
       session: token,
+      userId: session.userId,
       user: { ...session, id: session.userId },
     }
   }

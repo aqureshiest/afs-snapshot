@@ -36,7 +36,8 @@
         "full-refi.add-details-full-refi",
         "neas.identify",
         "session",
-        "neas.send-access-email"
+        "neas.send-access-email",
+        "full-refi.add-userId-before-verifying-through-emailId"
       ]
     }
   }

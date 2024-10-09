@@ -1,0 +1,17 @@
+{{#with (contract 'cosigner') as |cosigner|}}
+  {{#with (contract 'user') as |user|}}
+    {
+      "event": "addReferences",
+      "payload": {
+        "id": "{{ cosigner.id}}",
+        "references": [
+          {
+            "referenceId": {{{json (coalesce user.results.userId user.results.userIdMap.user_id)}}},
+            "referenceType": "userIdBeforeVerifyingThroughEmailId"
+          }
+        ]
+      },
+      "fields": "application { id }"
+   }
+  {{else}} null {{/with}}
+{{else}} null {{/with}}

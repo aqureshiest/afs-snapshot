@@ -598,7 +598,6 @@ export default class LendingDecisionServiceClient extends Client {
         appInfo: applicationDecisionDetails,
       } as unknown as DecisionRequestDetails;
     } else {
-      await this.setUserID(input, context, applicationId);
       const requestMetaDataIDs = await this.buildRequestMetaDataIDs(
         input,
         context,
@@ -1796,86 +1795,6 @@ export default class LendingDecisionServiceClient extends Client {
       );
       context.logger.warn({
         message: revertStatusError,
-      });
-      throw error;
-    }
-  }
-
-  /**
-   * Method to save the userID to application service upon submission.
-   * by checkout service
-   * @param context
-   * @param applicationId
-   * @param userID
-   * @param isVerified
-   */
-  private async setUserID(
-    input: Input<unknown>,
-    context: PluginContext,
-    applicationId: string,
-  ): Promise<void> {
-    const applicationServiceClient =
-      context.loadedPlugins.applicationServiceClient?.instance;
-    if (!applicationServiceClient)
-      throw new Error(
-        "[0f4e75fe] Application Service client instance not found",
-      );
-
-    /**
-     * For v2 accountless applications, the 'candidateUserId' is needed by Checkout Service.
-     * In the auth artifacts we store either the 'userId' or the 'candidateUserId' under
-     * the field auth.artifacts.userId.
-     *
-     * We can determine what value is stored in the field ' auth.artifacts.userId' by the 'verified' field in the artifacts
-     * If this field is 'true' this indicates that a user has verified who they are either through PII-verification or signing in
-     * and the value in 'auth.artifacts.userId' is the authenticated 'userID'
-     * else if 'false' this is the 'candidateUserId'
-     *
-     * Use the 'verified' key in setUserID() to determine under what reference key
-     * we save the auth.artifacts.userId
-     */
-    const userId = input?.auth?.artifacts?.userId;
-    const isVerified = Boolean(input?.auth?.artifacts?.verified);
-    assert(userId, "[3a97066b] Missing 'userId' from artifacts");
-
-    let referenceType = "userID";
-
-    if (!isVerified) {
-      referenceType = "userIdBeforeVerifyingThroughEmailId";
-    }
-
-    const setUserIDResult = (await applicationServiceClient["sendRequest"](
-      {
-        query: String.raw`mutation (
-          $id: UUID!
-          $meta: EventMeta
-          $references: [ReferenceInput]
-        ) {
-          addReferences(id: $id, meta: $meta, references: $references) {
-            id,
-            error,
-          }
-        }`,
-        variables: {
-          id: applicationId,
-          references: [
-            {
-              referenceId: userId,
-              referenceType: referenceType,
-            },
-          ],
-          meta: { service: "apply-flow-service" },
-        },
-      },
-      context,
-    )) as { addReferences: { error: string | null } };
-
-    const setUserIDError = setUserIDResult?.addReferences?.error;
-
-    if (setUserIDError) {
-      const error = new Error(`[4604f09e] Failed to set ${referenceType}`);
-      context.logger.warn({
-        message: setUserIDError,
       });
       throw error;
     }

@@ -1,20 +1,22 @@
 {{#with (contract 'cosigner') as |cosigner|}}
   {{#with (contract 'user') as |user|}}
-    {
-      "action": "send-invite",
-      "client": "NeasClient",
-      "method": "post",
-      "uri": "/auth/identity/send-invite",
-      "body": {
-      "applicantId": {{{json cosigner.id}}},
-        "userId": {{{json (coalesce user.results.userId user.results.userIdMap.user_id)}}},
-        "email": {{{json @root.request.body.values.email}}},
-        "template": "application_cosigner_invite",
-        "meta": {
-          "primary_first_name": {{{json (toUpper @root.application.primary.details.name.first)}}},
-          "cosigner_first_name": {{{json (toUpper @root.request.body.values.name.first)}}}
+    {{#with (contract 'reference') as |reference|}}
+      {
+        "action": "send-invite",
+        "client": "NeasClient",
+        "method": "post",
+        "uri": "/auth/identity/send-invite",
+        "body": {
+        "applicantId": {{{json cosigner.id}}},
+          "userId": {{{json (coalesce user.results.userId user.results.userIdMap.user_id)}}},
+          "email": {{{json @root.request.body.values.email}}},
+          "template": "application_cosigner_invite",
+          "meta": {
+            "primary_first_name": {{{json (toUpper @root.application.primary.details.name.first)}}},
+            "cosigner_first_name": {{{json (toUpper @root.request.body.values.name.first)}}}
+          }
         }
       }
-    }
+    {{else}} null {{/with}}
   {{else}} null {{/with}}
 {{else}} null {{/with}}

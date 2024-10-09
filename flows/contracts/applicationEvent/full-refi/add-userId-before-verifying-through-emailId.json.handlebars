@@ -1,0 +1,23 @@
+{{#with (contract 'actions' (sum @index -3)) as |identification|}}
+  {{#if (
+    and
+    (gte identification.response.statusCode 200)
+    (lt identification.response.statusCode 400)
+  )}}
+  {
+    "event": "addReferences",
+    "payload": {
+      "id": "{{ ../request.params.id}}",
+      "references": [
+        {
+        "referenceId": "{{identification.userId}}",
+          "referenceType": "userIdBeforeVerifyingThroughEmailId"
+        }
+      ]
+    },
+    "fields": "application { id }"
+  }
+  {{else}}
+    {}
+  {{/if}}
+{{/with}}
