@@ -2,6 +2,16 @@
   "key": "create-cosigner-and-invite",
   "type": "request",
   "properties": {
+    "analytics": {
+      "name": "Cosigner Invite Started",
+      "loan_type": "cosigned",
+      "product": "slr",
+      "source": "rate check",
+      "role": "{{{application.applicant.role}}}",
+      "rootapplicationid": "{{{application.id}}}",
+      "primaryapplicationid": "{{{application.primary.id}}}",
+      "cosignerapplicationid": "{{{application.cosigner.id}}}"
+    },
     "manifest": "{{{application.reference.brand}}}/student-loan-refi/create-cosigner-and-invite/{{{application.applicant.id}}}",
     "method": "POST"
   }
