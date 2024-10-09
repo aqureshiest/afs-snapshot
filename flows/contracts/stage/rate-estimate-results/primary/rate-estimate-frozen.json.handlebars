@@ -57,14 +57,15 @@
                         "type": "navigate",
                         "properties": {
                           "goTo": "/{{application.brand}}/student-loan-refi/cosigner-invite/{{application.applicant.id}}",
-                          "analytics": {
-                            "name": "Action Clicked",
-                            "action": "invite cosigner",
+                          "analytics": 
+                          {
+                            "name": "Rate Check Results Viewed",
                             "product": "slr",
                             "role": "{{{application.applicant.role}}}",
                             "source": "rate check",
                             "rootapplicationid": "{{{application.id}}}",
-                            "primaryapplicationid": "{{{application.primary.id}}}"
+                            "primaryapplicationid": "{{{application.primary.id}}}",
+                            "cosignerapplicationid": "{{{application.cosigner.id}}}"
                           }
                         }
                       }
