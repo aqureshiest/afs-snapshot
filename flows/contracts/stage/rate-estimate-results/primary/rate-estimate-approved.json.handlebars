@@ -2,12 +2,18 @@
   "type": "flexible",
   "label": "Rate Estimate Result",
   "pageLayout": {{{json (contract 'pageLayout')}}},
-  "onLoadEvent": 
-  {
+  "onLoadEvent": {
     "name": "Rate Check Results Viewed",
     "product": "slr",
     "role": "{{{application.applicant.role}}}",
-    "source": "rate check"
+    "source": "rate check",
+    "rootapplicationid": "{{{application.id}}}",
+    "primaryapplicationid": "{{{application.primary.id}}}",
+    "cosignerapplicationid": "{{{application.cosigner.id}}}",
+    "value": "{{{multiply application.details.amount.requested 0.13}}}",
+    "serverProperties": {
+      "name": "Rate Check Results Received"
+    }
   },
   "definition": {
     "type": "flexible",
@@ -109,9 +115,9 @@
                         "type": "navigate",
                         "properties": {
                           "goTo": "/{{application.brand}}/student-loan-refi/cosigner-invite/{{application.applicant.id}}",
-                          "analytics": 
-                          {
-                            "name": "Rate Check Results Viewed",
+                          "analytics": {
+                            "name": "Action Clicked",
+                            "action": "invite cosigner",
                             "product": "slr",
                             "role": "{{{application.applicant.role}}}",
                             "source": "rate check",
@@ -128,7 +134,16 @@
                         "type": "navigate",
                         "properties": {
                           "external": true,
-                          "goTo": "https://www.earnest.com/blog/do-you-need-a-cosigner-for-student-loans/"
+                          "goTo": "https://www.earnest.com/blog/do-you-need-a-cosigner-for-student-loans/",
+                          "analytics": {
+                            "name": "Action Clicked",
+                            "action": "learn more",
+                            "product": "slr",
+                            "role": "{{{application.applicant.role}}}",
+                            "source": "rate check",
+                            "rootapplicationid": "{{{application.id}}}",
+                            "primaryapplicationid": "{{{application.primary.id}}}"
+                          }
                         }
                       }
                     }
