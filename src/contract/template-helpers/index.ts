@@ -245,8 +245,6 @@ export function mathAdd(v1, v2) {
   return num1 + num2;
 }
 
-
-
 export function sum(...args) {
   return Array.prototype.slice
     .call(args, 0, -1)
@@ -256,8 +254,7 @@ export function sum(...args) {
 export function multiply(...args) {
   return Array.prototype.slice
     .call(args, 0, -1)
-    .reduce((a, b) => 
-      Number(a) * (Number(b) || 1), 1);
+    .reduce((a, b) => Number(a) * (Number(b) || 1), 1);
 }
 
 export function product(...args) {

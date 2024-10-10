@@ -119,9 +119,10 @@ type IScoreCurve = {
 
 type IArtifacts = {
   priceCurve: Array<IPriceCurve>;
-  cosignerPriceCurve?: Array<IPriceCurve>;
+  combinedPriceCurve?: Array<IPriceCurve>;
   scoreCurve: Array<IScoreCurve>;
-  cosignerScoreCurve?: Array<IScoreCurve>;
+  combinedScoreCurve?: Array<IScoreCurve>;
+  combinedScoring?: boolean;
   creditReport: { [key: string]: unknown };
   cosignerCreditReport?: { [key: string]: unknown };
   ficoScore: number;

@@ -215,9 +215,13 @@ class ApplicationEvent extends ContractExecutable<
             context,
           )) as unknown as { application: types.Application };
 
-          const applicationRoles = JSON.parse(getApplicantWithRole(application.id, application));
+          const applicationRoles = JSON.parse(
+            getApplicantWithRole(application.id, application),
+          );
 
-          Object.defineProperty(input, "application", { value: {...application, ...applicationRoles} });
+          Object.defineProperty(input, "application", {
+            value: { ...application, ...applicationRoles },
+          });
         } catch (error) {
           this.log(context, {
             message: "failed to rehydrate application",

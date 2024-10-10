@@ -193,7 +193,7 @@ export default class LendingDecisionServiceClient extends Client {
         },
       })) as unknown as { applications: Array<typings.Application> };
 
-      application = flattenApplication (result["applications"][0]);
+      application = flattenApplication(result["applications"][0]);
       this.log(
         {
           id,
@@ -429,9 +429,9 @@ export default class LendingDecisionServiceClient extends Client {
     }
 
     const priceCurve =
-      results.data.artifacts?.cosignerPriceCurve &&
-      results.data.artifacts.cosignerPriceCurve.length > 0
-        ? results.data.artifacts.cosignerPriceCurve
+      results.data.artifacts?.combinedPriceCurve &&
+      results.data.artifacts.combinedPriceCurve.length > 0
+        ? results.data.artifacts.combinedPriceCurve
         : results.data.artifacts.priceCurve;
 
     const softApprovedAmount = results.data.artifacts
@@ -444,6 +444,13 @@ export default class LendingDecisionServiceClient extends Client {
       : results.data.artifacts.softInquiryDate;
 
     const filteredPrices = this.filterPriceCurve(context, priceCurve);
+
+    // If we somehow got no prices, throw an error
+    if (!filteredPrices || (filteredPrices && filteredPrices.length === 0)) {
+      const error = new Error("[627754c9] Missing priceCurve");
+      context.logger.error(error);
+      throw error;
+    }
 
     const prices = filteredPrices.map((filteredPrice, index) => {
       return {
