@@ -34,7 +34,7 @@
         "stage": "review.refi",
         "pageLayout": "sidebar",
         "steps": [
-            "student-info-form/review.refi"
+            "student-info-form/review.full-refi"
         ],
         "student-info-review-rows": [
             "info/student-review.full-refi",
@@ -64,6 +64,11 @@
         "actionsDashboard": "actions/homebase.default",
         "onError": ["onError.unauthorized"],
         "getDegrees": "questions/primary/degree.get-degrees",
+        "updatedApplication": {
+          "*": "application/single.flattened",
+          "application": "application-by-id-param"
+        },
+        "get-statuses": "applicants/status.get-applicant-status",
         "disclosureLinks": [
             "questions/primary/disclosure/links.terms-of-services",
             "questions/primary/disclosure/links.privacy-policy",

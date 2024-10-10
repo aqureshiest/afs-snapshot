@@ -14,8 +14,8 @@
           "type": "interstitial",
           "properties": {
             "showSpinner": true,
-            "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
             {{#if (or (eq application.tag.applicants 'parent_plus') (eq (every (contract 'get-statuses') 'submitted') true))}}
+              "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
               "action": {{{json (contract 'statusAction')}}}
             {{else}}
               "action":  {{{json (contract 'syllabus')}}}

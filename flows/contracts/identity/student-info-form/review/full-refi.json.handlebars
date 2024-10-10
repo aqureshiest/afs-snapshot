@@ -13,7 +13,15 @@
                 "type": "interstitial",
                 "properties": {
                     "showSpinner": true,
-                    "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+                    {{#if (and (eq tag.applicants 'cosigned') (eq (some (contract 'get-statuses') 'submitted') false))}}
+                    {{!-- Don't show the header if this a cosigned application and no one has submitted their --}}
+                    {{!-- portion of the application. Send the applicant to syllabus right away --}}
+                    {{!-- Another check is defined in the 'actions' contract to check if we send to syllabus or --}}
+                    {{!-- do full app submit --}}
+                        "header": "",
+                    {{else}}
+                        "header": { "copy": "We’re reviewing your application. This can take up to a minute." },
+                    {{/if}}
                     "action": {{{ json (contract 'actions') }}}
                 }
             }

@@ -1301,7 +1301,8 @@ describe("[462fd166] manifest.execute", () => {
               "applyProduct": "{{{mapProduct request.body.values.applyProduct}}}",
               "searchDeniedArtifactTags": {{{searchDeniedArtifactTags request.body.values.tags}}},
               "every": {{{ every request.body.values.statuses 'submitted' }}},
-              "reviewDateFormatter": "{{{ reviewDateFormatter '2024-09-26' }}}"
+              "reviewDateFormatter": "{{{ reviewDateFormatter '2024-09-26' }}}",
+              "some": {{{ some request.body.values.statuses 'submitted'}}}
             }
         `,
           }),
@@ -1349,6 +1350,7 @@ describe("[462fd166] manifest.execute", () => {
       searchDeniedArtifactTags: true,
       every: true,
       reviewDateFormatter: "09/26/2024",
+      some: true,
     });
   });
 

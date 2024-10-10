@@ -30,6 +30,12 @@ export function every(array: string[], condition: string, ...args: unknown[]) {
   }
 }
 
+export function some(array: string[], condition: string, ...args: unknown[]) {
+  if (array && Array.isArray(array)) {
+    return array.some((item) => item === condition);
+  }
+}
+
 /**
  * Convert raw multi-line text into JSON-compatible string
  */
