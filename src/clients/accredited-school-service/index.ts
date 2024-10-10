@@ -29,6 +29,9 @@ export default class AccreditedSchoolServiceClient extends Client {
     context: PluginContext,
     payload,
   ): Promise<SchoolDetails | null> {
+    if (!payload.id) {
+      return null
+    }
     const { results, response } = await this.get<SchoolDetails>(
       {
         uri: `/schools/${String(payload.id)}`,

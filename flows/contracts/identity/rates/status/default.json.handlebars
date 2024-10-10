@@ -1,5 +1,4 @@
 {{#with (contract 'artifacts') as |artifacts|}}
-{{log "DEBUG_artifacts_2" artifacts}}
   {{#if (eq artifacts.results.data.decisionOutcome "Approved")}}
     "approved"
   {{else}}

@@ -1,0 +1,13 @@
+{{#if application.beneficiary.details.education.0.graduationDate}}
+{
+  "month": "{{month application.beneficiary.details.education.0.graduationDate}}",
+  "day": "{{day application.beneficiary.details.education.0.graduationDate}}",
+  "year": "{{year application.beneficiary.details.education.0.graduationDate}}"
+}
+{{else}}
+{
+  "month": "",
+  "day": "",
+  "year": ""
+}
+{{/if}}

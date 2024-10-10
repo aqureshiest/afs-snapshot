@@ -122,7 +122,8 @@
                 },
                 "conditional": {
                   "@": [["primaryGraduate"]]
-                }
+                }, 
+                "value": {"*": "get-school-obj", "opeid": "questions/primary/school.value"}
               },
               {
                 "*": "questions/primary/school",
@@ -134,7 +135,8 @@
                 },
                 "conditional": {
                   "@": [["primaryUndergraduate"]]
-                }
+                },
+                "value": {"*": "get-school-obj", "opeid": "questions/primary/school.value"}
               },
               {
                 "*": "questions/primary/select",
@@ -240,7 +242,7 @@
                   "@": [["isParentDriven"]]
                 },
                 "deps": [{"@": "education.isParentDriven"}],
-                "value": "earnest-student-loan-refi/values.degree-type",
+                "value": "earnest-student-loan-refi/values.student-degree-type",
                 "items": "questions/primary/radio/items/degree-types.omit-highschool"
               },
               {
@@ -253,7 +255,8 @@
                 },
                 "conditional": {
                   "@": [["studentGraduate", "isParentDriven"]]
-                }
+                },
+                "value": {"*": "get-school-obj", "opeid": {"*": "questions/primary/school.value", "as": {"@": "beneficiary"}}}
               },
               {
                 "*": "questions/primary/school",
@@ -265,7 +268,8 @@
                 },
                 "conditional": {
                   "@": [["studentUndergraduate", "isParentDriven"]]
-                }
+                },
+                "value": {"*": "get-school-obj", "opeid": {"*": "questions/primary/school.value", "as": {"@": "beneficiary"}}}
               },
               {
                 "*": "questions/primary/select",
@@ -276,7 +280,7 @@
                   "@": "Graduate degree type"
                 },
                 "deps": [{"@": "education.residencyEndDate"}],
-                "value": "earnest-student-loan-refi/values.graduate-degree-type",
+                "value": "earnest-student-loan-refi/values.student-graduate-degree-type",
                 "items": "questions/primary/radio/items/degree-types.graduate",
                 "conditional": {
                   "@": [["studentGraduate", "isParentDriven"]]
@@ -290,7 +294,7 @@
                 "label": {
                   "@": "Undergraduate degree type"
                 },
-                "value": "earnest-student-loan-refi/values.undergraduate-degree-type",
+                "value": "earnest-student-loan-refi/values.student-undergraduate-degree-type",
                 "items": "questions/primary/radio/items/degree-types.undergraduate",
                 "conditional": {
                   "@": [["studentUndergraduate", "isParentDriven"]]
@@ -308,7 +312,7 @@
                   "@": [["isParentDriven"]]
                 },
                 "deps": [{"@": "education.residencyEndDate"}],
-                "value": "earnest-student-loan-refi/values.graduation-date"
+                "value": "earnest-student-loan-refi/values.student-graduation-date"
               }
             ]
           }

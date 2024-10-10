@@ -1,16 +1,10 @@
-{{#applicantById}}
 {
   "type": "input",
   "definition": {
       "key": {{{maybe (json (contract 'key')) "school"}}},
       "type": "inputSchool",
       {{! TODO: request school name based on opeid from accredited-school-service}}
-      {{#if applicant.details.education.0.opeid}}
-      "value": {{{json applicant.details.education.0.opeid}}},
-      {{else}}
-      "value": "",
-      {{/if}}
-      "conditional": {{{maybe (json (contract 'conditional')) []}}},
+      "value": {{{json (getSchoolInputValue (contract "value"))}}},
       {{#if (contract "label")}}
         "label": {
           {{#if (contract "subLabel")}}
@@ -22,10 +16,9 @@
       {{! TODO: the placeholder should depend on the degree type: Graduate school or Undergraduate school}}
       "placeholder": "School to be attended",
       "label": {
-          "copy": "School to be attended {{userState.degree-type}}"
+          "copy": "School to be attended"
       },
       {{/if}}
-      "error": "{{{ ajv 'errors' 'questions/primary/school' applicant.details.education.0.opeid }}}"
+      "conditional": {{#if (contract "conditional")}}{{{json (contract "conditional")}}}{{else}}[]{{/if}}
   }
 }
-{{/applicantById}}

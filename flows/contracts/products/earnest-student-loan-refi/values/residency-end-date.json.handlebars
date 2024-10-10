@@ -1,15 +1,13 @@
-{{#applicantById}}
-  {{#if applicant.details.education.0.residencyEnd}}
-  {
-    "month": "{{month applicant.details.education.0.residencyEnd}}",
-    "day": "{{day applicant.details.education.0.residencyEnd}}",
-    "year": "{{year applicant.details.education.0.residencyEnd}}"
-  }
-  {{else}}
-  {
-    "month": "",
-    "day": "",
-    "year": ""
-  }
-  {{/if}}
-{{/applicantById}}
+{{#if application.applicant.details.education.0.residencyEnd}}
+{
+  "month": "{{month application.applicant.details.education.0.residencyEnd}}",
+  "day": "{{day application.applicant.details.education.0.residencyEnd}}",
+  "year": "{{year application.applicant.details.education.0.residencyEnd}}"
+}
+{{else}}
+{
+  "month": "",
+  "day": "",
+  "year": ""
+}
+{{/if}}

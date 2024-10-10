@@ -1,0 +1,9 @@
+{{#if (eq (contract "as") "primary")}}
+  {{{json application.primary.details.education.0.opeid}}}
+{{else if (eq (contract "as") "cosigner")}}
+  {{{json application.cosigner.details.education.0.opeid}}}
+{{else if (eq (contract "as") "beneficiary")}}
+  {{{json application.beneficiary.details.education.0.opeid}}}
+{{else}}
+  {{{json application.applicant.details.education.0.opeid}}}
+{{/if}}

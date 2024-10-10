@@ -1,5 +1,5 @@
 
-{{#if (and auth.artifacts.userId (or request.body.values.degree-type request.body.values.graduate-degree-type request.body.values.undergraduate-degree-type request.body.values.isParentDriven))}}
+{{#if (and auth.artifacts.userId (or request.body.values.degree-type request.body.values.graduate-degree-type request.body.values.undergraduate-degree-type request.body.values.student-degree-type request.body.values.student-graduate-degree-type request.body.values.student-undergraduate-degree-type request.body.values.isParentDriven))}}
   {
     "redisMethod": "setUserState",
     "key": "{{auth.artifacts.userId}}",
@@ -14,6 +14,15 @@
           {{/if}}
           {{#if undergraduate-degree-type}}
             {"undergraduate-degree-type": "{{undergraduate-degree-type}}"}
+          {{/if}}
+          {{#if student-degree-type}}
+            {"student-degree-type": "{{student-degree-type}}"}
+          {{/if}}
+          {{#if student-graduate-degree-type}}
+            {"student-graduate-degree-type": "{{student-graduate-degree-type}}"}
+          {{/if}}
+          {{#if student-undergraduate-degree-type}}
+            {"student-undergraduate-degree-type": "{{student-undergraduate-degree-type}}"}
           {{/if}}
           {{#if isParentDriven}}
             {"isParentDriven": "{{isParentDriven}}"}

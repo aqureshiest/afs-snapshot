@@ -285,6 +285,17 @@ export function getSchoolName(school) {
   return school?.name;
 }
 
+export function getSchoolInputValue(school) {
+  return school ? {
+    opeid8: school?.opeid8,
+    name: school?.name,
+    address: school?.address,
+    state: school?.state,
+    city: school?.city,
+    country: school?.country,
+  } : "";
+}
+
 export function hasValues(value) {
   if (value) {
     return Object.values(value).some(
@@ -514,9 +525,7 @@ export function keyString(key: string): string | null {
   for (let i = 0; i < TOKEN_LENGTH; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
-  const r = `"${key}-${result}"`;
-  console.log("TOKEN KEY", r);
-  return r;
+  return `"${key}-${result}"`;
 }
 
 export function getApplicantByEmail(

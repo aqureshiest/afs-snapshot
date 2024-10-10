@@ -116,7 +116,8 @@
                 },
                 "conditional": {
                   "@": [["primaryGraduate"]]
-                }
+                },
+                "value": {"*": "get-school-obj", "opeid": "questions/primary/school.value"}
               },
               {
                 "*": "questions/primary/school",
@@ -128,7 +129,8 @@
                 },
                 "conditional": {
                   "@": [["primaryUndergraduate"]]
-                }
+                },
+                "value": {"*": "get-school-obj", "opeid": "questions/primary/school.value"}
               },
               {
                 "*": "questions/primary/select",
