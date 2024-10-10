@@ -13,6 +13,7 @@
         "applications": [],
         "applicationState": "application-state",
         "userState": "user-state",
+        "env": "inputs/env.ens",
         "auth": {
             "*": "auth-artifacts",
             "strategies": [
@@ -39,7 +40,7 @@
             "*": "application/single.flattened",
             "application": "application-by-id-param"
         },
-        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill"],
+        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill", "ens.cosigner-submmited"],
         "get-statuses": "applicants/status.get-applicant-status",
         "set-timestamp": "redis.set-decision-request-timestamp",
         "statusAction": "actions/decision-request.applicationStatus",

@@ -6,6 +6,7 @@ import { IncomingMessage } from "http";
 const VALID_CLIENTS = Object.freeze([
   "accreditedSchoolService",
   "internalRestServiceClient",
+  "notificationServiceClient",
   "lendingDecisionServiceClient",
   "NeasClient",
   "plaid",

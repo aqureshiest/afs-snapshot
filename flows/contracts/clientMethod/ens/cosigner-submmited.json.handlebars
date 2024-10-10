@@ -1,0 +1,20 @@
+{
+  "action": "send-email-to-primary-cosigner-submitted",
+  "client": "notificationServiceClient",
+  "method": "post",
+  "uri": "/notification/send",
+  "headers": {
+    "Authorization": "Bearer {{env.S2S_KEY_AFS_NOTIFICATION_SERVICE}}"
+  }
+  "body": {
+    "notification_type": "application_cosigner_app_submitted",
+    "user": {
+      "id": "{{auth.artifacts.userId}}",
+      "email": "{{application.primary.details.email}}"
+    },
+    "meta_attributes": {
+      "cosigner_first_name": "{{application.cosigner.details.name.first}}",
+      "primary_first_name": "{{application.primary.details.name.first}}"
+    }
+  }
+}
