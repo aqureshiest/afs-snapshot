@@ -4,37 +4,19 @@
     "first": {
       "type": "string",
       "pattern": "^[a-zA-Z\\s'-]*$",
-      "minLength": 1,
       "maxLength": 39,
       "errorMessage": {
-        "minLength": "First name is required.",
         "maxLength": "First name must be less than 40 characters.",
         "pattern": "First name contains invalid characters."
       }
     },
     "last": {
       "type": "string",
-      "minLength": 1,
       "maxLength": 39,
       "pattern": "^[a-zA-Z\\s'-]*$",
       "errorMessage": {
-        "minLength": "Last name is required.",
         "maxLength": "Last name must be less than 40 characters.",
         "pattern": "Last name contains invalid characters."
-      }
-    },
-    "middle": {
-      "type": "string",
-      "pattern": "^[a-zA-Z\\s'-]*$",
-      "errorMessage": {
-        "pattern": "Middle name contains invalid characters."
-      }
-    },
-    "title": {
-      "type": "string",
-      "pattern": "^[a-zA-Z\\s.']*$",
-      "errorMessage": {
-        "pattern": "Title contains invalid characters."
       }
     }
   },
@@ -42,15 +24,83 @@
     "first",
     "last"
   ],
-  "errorMessage":{
-    "type": "First name is required",
-    "required":{
-      "first" : "First name is required.",
-      "last" : "Last name is required."
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "first": {
+            "not": {
+              "minLength": 1
+            }
+          },
+          "last": {
+            "not": {
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "first": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "errorMessage": {
+          "_": "Full legal name is required."
+        }
+      }
     },
-    "properties":{
-      "first" : "First name is required.",
-      "last" : "Last name is required."
+    {
+      "if": {
+        "properties": {
+          "first": {
+            "not": {
+              "minLength": 1
+            }
+          },
+          "last": {
+            "minLength": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "first": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "errorMessage": {
+          "_": "First name is required."
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "last": {
+            "not": {
+              "minLength": 1
+            }
+          },
+          "first": {
+            "minLength": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "last": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "errorMessage": {
+          "_": "Last name required."
+        }
+      }
     }
-  }
+  ]
 }

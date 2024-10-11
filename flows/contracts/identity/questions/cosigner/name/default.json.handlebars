@@ -8,7 +8,10 @@
             "last": "Last name"
         },
         "status": {{{json (contract 'cosigner_name_input_status')}}},
-        "value": {{#if application.cosigner}} {{{json application.cosigner.details.name}}} {{else}} "" {{/if}},
+        "value": {
+            "first": {{#if applicant.details.name.first}}{{{json applicant.details.name.first}}}{{else}}""{{/if}},
+            "last": {{#if applicant.details.name.last}}{{{json applicant.details.name.last}}}{{else}}""{{/if}}
+        },
         "label": {
             "copy": "Cosigner's full legal name"
         },

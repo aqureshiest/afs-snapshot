@@ -9,11 +9,10 @@
             "last": "Last name"
         },
         "status": {{{json (contract 'primary_name_input_status')}}},
-        {{#if details.name}}
-            "value": {{{json details.name}}},
-        {{else}}
-            "value": "",
-        {{/if}}
+        "value": {
+            "first": {{#if details.name.first}}{{{json details.name.first}}}{{else}}""{{/if}},
+            "last": {{#if details.name.last}}{{{json details.name.last}}}{{else}}""{{/if}}
+        },
         "label": {
             "copy": "Full legal name"
         },
