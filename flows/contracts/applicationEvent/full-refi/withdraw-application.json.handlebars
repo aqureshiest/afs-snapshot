@@ -1,5 +1,8 @@
-{{#if (hasActiveIncompleteApplication
-  (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications)}}
+{{#if (and
+  auth.artifacts.userId
+  auth.artifacts.verified
+  (hasActiveIncompleteApplication (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications)
+)}}
   {
     "event": "setStatus",
     "payload": {

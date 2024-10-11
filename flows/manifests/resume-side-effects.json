@@ -1,5 +1,5 @@
 [{
-  "methods": ["get"],
+  "methods": ["post"],
   "parameters": [{
     "key": "id",
     "format": "uuid"
@@ -7,9 +7,13 @@
   "inputs": {
     "*": "inputs",
     "application": {
-      "*": "application/single.flattened",
+      "*": "application/cosigned.flattened",
       "application": "application-by-id-param"
     },
+    "applications": {
+      "*": "applications-by-email"
+    },
+    "applicationState": "application-state",
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
@@ -26,6 +30,11 @@
     }
   },
   "outputs": {
-    "*": "actions/side-effects.resume"
+    "*": "redirect",
+    "redirect": "redirect.resume-application",
+    "actions": [
+      "full-refi.add-userId-reference",
+      "full-refi.withdraw-application"
+    ]
   }
 }]
