@@ -23,29 +23,21 @@ class ClientMethod extends ContractExecutable<
     return "ClientMethod";
   }
 
-  /**
-   * instead of returning invalid contract bodies verbatim that will never be evaluated, return null
-   */
-  transform(_, __, definition: Definition) {
-    if (
-      definition &&
-      VALID_CLIENTS.includes(
-        definition.client as (typeof VALID_CLIENTS)[number],
-      )
-    ) {
-      return definition;
-    }
-
-    return null;
-  }
-
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   condition = (_, __, ___, transformation: Transformation | null) => {
     const incompleteDependencies = Object.values(this.dependencies).some(
       (dependency) => dependency.isIncomplete(_, __, ___),
     );
 
-    return !incompleteDependencies && Boolean(transformation);
+    const canSendRequest =
+      transformation &&
+      transformation.uri &&
+      transformation.method &&
+      VALID_CLIENTS.includes(
+        transformation.client as (typeof VALID_CLIENTS)[number],
+      );
+
+    return !incompleteDependencies && Boolean(canSendRequest);
   };
 
   /**

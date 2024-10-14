@@ -5,19 +5,14 @@
     (lt identification.response.statusCode 400)
   )}}
   {
-    "event": "addReferences",
+    "event": "reference",
     "payload": {
       "id": "{{ ../request.params.id}}",
-      "references": [
-        {
-        "referenceId": "{{identification.results.userId}}",
-          "referenceType": "userIdBeforeVerifyingThroughEmailId"
-        }
-      ]
+      "reference": {
+        "userIdBeforeVerifyingThroughEmailId": {{{ json (string identification.results.userId) }}}
+      }
     },
     "fields": "application { id }"
   }
-  {{else}}
-    {}
-  {{/if}}
-{{/with}}
+  {{else}} null {{/if}}
+{{else}} null {{/with}}

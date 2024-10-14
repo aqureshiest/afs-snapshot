@@ -21,7 +21,7 @@ export default class AccreditedSchoolServiceClient extends Client {
     payload,
   ): Promise<School | null> {
     if (!payload.opeid) {
-      return null
+      return null;
     }
     const school = (await this.getSchools(input, context, payload))?.[0];
 

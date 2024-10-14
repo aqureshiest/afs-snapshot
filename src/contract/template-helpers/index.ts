@@ -292,14 +292,16 @@ export function getSchoolName(school) {
 }
 
 export function getSchoolInputValue(school) {
-  return school ? {
-    opeid8: school?.opeid8,
-    name: school?.name,
-    address: school?.address,
-    state: school?.state,
-    city: school?.city,
-    country: school?.country,
-  } : "";
+  return school
+    ? {
+        opeid8: school?.opeid8,
+        name: school?.name,
+        address: school?.address,
+        state: school?.state,
+        city: school?.city,
+        country: school?.country,
+      }
+    : "";
 }
 
 export function hasValues(value) {

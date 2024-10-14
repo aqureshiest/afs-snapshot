@@ -1,28 +1,32 @@
-{{#with (contract 'actions' (sum @index -2)) as |identify|}}
-  {{#if (and
-    (gte identify.response.statusCode 200)
-		(lt identify.response.statusCode 400) 
-  )}}
-    {{#if (or
-      (hasActiveIncompleteApplication ../application.applicant.id ../applications)
-      (hasActivePostSubmissionApplication ../application.applicant.id ../applications)
+{{#if (ne request.body.values.email application.applicant.details.email) }}
+  {{#with (contract 'actions' (sum @index -2)) as |identify|}}
+    {{#if (and
+      (gte identify.response.statusCode 200)
+                  (lt identify.response.statusCode 400) 
     )}}
-      null
-    {{else}}
-      {
-        "action": "send-access-email",
-        "client": "NeasClient",
-        "method": "post",
-        "uri": "/auth/identity/access-code/send",
-        "body": {
-          "applicationId": {{{json ../application.applicant.id}}},
-          "emailId": {{{json ../request.body.values.email}}}
+      {{#if (or
+        (hasActiveIncompleteApplication ../application.applicant.id ../applications)
+        (hasActivePostSubmissionApplication ../application.applicant.id ../applications)
+      )}}
+      { "action": "send-access-email"}
+      {{else}}
+        {
+          "action": "send-access-email",
+          "client": "NeasClient",
+          "method": "post",
+          "uri": "/auth/identity/access-code/send",
+          "body": {
+            "applicationId": {{{json ../application.applicant.id}}},
+            "emailId": {{{json ../request.body.values.email}}}
+          }
         }
-      }
+      {{/if}}
+    {{else}}
+      { "action": "send-access-email" }
     {{/if}}
   {{else}}
-    null
-  {{/if}}
+    { "action": "send-access-email" }
+  {{/with}}
 {{else}}
-  null
-{{/with}}
+  { "action": "send-access-email" }
+{{/if}}
