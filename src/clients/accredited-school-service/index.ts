@@ -11,54 +11,21 @@ export default class AccreditedSchoolServiceClient extends Client {
     context: PluginContext,
     payload,
   ): Promise<string | null> {
-    let school;
-    if (payload?.opeid || payload?.name) {
-      school = (await this.getSchools(input, context, payload))?.[0];
-    } else {
-      school = await this.getSchool(input, context, payload);
-    }
-    if (school) {
-      return school.name;
-    } else {
-      return null;
-    }
+    const school = (await this.getSchools(input, context, payload))?.[0];
+    return school ? school.name : null;
   }
 
   async getSchool(
     input: Input<unknown>,
     context: PluginContext,
     payload,
-  ): Promise<SchoolDetails | null> {
-    if (!payload.id) {
+  ): Promise<School | null> {
+    if (!payload.opeid) {
       return null
     }
-    const { results, response } = await this.get<SchoolDetails>(
-      {
-        uri: `/schools/${String(payload.id)}`,
-        headers: this.headers,
-      },
-      context,
-    );
+    const school = (await this.getSchools(input, context, payload))?.[0];
 
-    if (response.statusCode === 404) {
-      return null;
-    }
-
-    if (response.statusCode && response.statusCode >= 400) {
-      const error = new Error(`[29b9ae42] Failed to get school information`);
-
-      this.log(
-        {
-          error,
-          results,
-        },
-        context,
-      );
-
-      throw error;
-    }
-
-    return results;
+    return school ? school : null;
   }
 
   async getSchools(

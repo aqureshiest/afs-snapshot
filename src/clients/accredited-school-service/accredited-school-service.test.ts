@@ -36,10 +36,11 @@ describe("[f8395630] Application Service Client", () => {
   });
 
   it("[b6fa8369] should be able to get school data from id", async () => {
-    const response = await client.getSchool(input, context, { id: "00732978" });
+    const response = await client.getSchool(input, context, { opeid: "00131200" });
     assert(response);
-    assert.deepStrictEqual(response.name, "ITT Technical Institute - Corona");
+    assert.deepStrictEqual(response.name, "University of California, Berkeley");
   });
+
   it("[0743446b] should get error when >=400", async () => {
     mock.method(client, "get", async () => {
       return {
@@ -54,18 +55,7 @@ describe("[f8395630] Application Service Client", () => {
     });
     assert.rejects(request);
   });
-  it("[8208a473] should get 404 when id not found", async () => {
-    mock.method(client, "get", async () => {
-      return {
-        response: {
-          statusCode: 404,
-          statusMessage: "not found",
-        },
-      };
-    });
-    const request = await client.getSchool(input, context, { id: "404" });
-    assert.equal(request, null);
-  });
+
   it("[8a10561b] should get error when >=400", async () => {
     mock.method(client, "get", async () => {
       return {
@@ -75,7 +65,7 @@ describe("[f8395630] Application Service Client", () => {
         },
       };
     });
-    const request = client.getSchool(input, context, { id: "404" });
+    const request = client.getSchool(input, context, { opeid: "404" });
     assert.rejects(request);
   });
 });
