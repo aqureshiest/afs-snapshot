@@ -2,9 +2,26 @@
     "type": "info",
     "definition": {
         "key": "ssnInfo",
-        "type": "infoBlock",
-        "copy": {
-            "body": ":IconWithText[:props[{ icon: 'SecureIcon', text: 'Your data is safe'}]] \n\n We keep all personal information secure with end-to-end encryption. "
-        }
+        "type": "infoContent",
+        "content": [
+            {
+                "key": "ssnInfoContent",
+                "type": "callout",
+                "componentProps": {
+                    "margin": "0px",
+                    "content": [
+                        {
+                            "key": "ssnInfoMd",
+                            "type": "md",
+                            "componentProps": {
+                                "className": "dark",
+                                "size": "small",
+                                "content": ":IconWithText[:props[{ icon: 'SecureIcon', text: 'Your data is safe'}]] \n\n We keep all personal information secure with end-to-end encryption. "
+                            }
+                        }
+                    ]
+                }
+            }
+        ] 
     }
 }
