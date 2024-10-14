@@ -1093,6 +1093,37 @@ describe("[462fd166] manifest.execute", () => {
     });
   });
 
+  it("[ba5215d8] getSchoolInputValue helper - NO SCHOOLS", async () => {
+    const input = {} as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+        {
+          "school": {{{json (getSchoolInputValue "")}}}
+        }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    console.log("RESULT", result);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      school: ""
+    });
+  });
+
   it("[ba9215d8] spread helper", async () => {
     const input = {} as Input<unknown>;
     const manifest = new Manifest(

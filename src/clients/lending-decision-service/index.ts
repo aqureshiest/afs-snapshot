@@ -1275,7 +1275,7 @@ export default class LendingDecisionServiceClient extends Client {
               input,
               context,
               {
-                opeid: searchedSchool.id,
+                id: searchedSchool.id,
               },
             );
 

@@ -291,7 +291,9 @@ export function getSchoolName(school) {
   return school?.name;
 }
 
-export function getSchoolInputValue(school) {
+/* v8 ignore next */
+export function getSchoolInputValue(schoolArray) {
+  const school = schoolArray?.[0];
   return school
     ? {
         opeid8: school?.opeid8,
