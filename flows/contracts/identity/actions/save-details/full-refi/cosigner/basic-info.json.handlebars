@@ -5,11 +5,12 @@
         "analytics": {
             "name": "Rate Check Section Submitted",
             "product": "slr",
-            "role": "cosigner",
+            "role": "{{{application.applicant.role}}}",
             "source": "rate check",
             "section": "basic info",
             "rootapplicationid": "{{{application.id}}}",
-            "primaryapplicationid": "{{{application.primary.id}}}"
+            "primaryapplicationid": "{{{application.primary.id}}}",
+            "cosignerapplicationid": "{{{application.cosigner.id}}}"
         },
         "manifest": "save-details/full-refi/cosigner/basic-info/{{application.cosigner.id}}",
         "method": "POST",

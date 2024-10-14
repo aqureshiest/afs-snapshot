@@ -10,7 +10,8 @@
       "product": "{{{mapProduct application.reference.product}}}",
       "loan_type": "{{{mapLoanType application.tag.applicants}}}",
       "name": "Income Verification",
-      "title": "Verification Method Selection"
+      "title": "Verification Method Selection",
+      "role": "{{{application.applicant.role}}}"
   },
   "definition": {
     "type": "bankAccounts",
@@ -22,7 +23,8 @@
           "name": "Modal Loaded",
           "modal": "income verification",
           "income_verification_method": "plaid",
-          "loan_type": "{{{mapLoanType application.tag.applicants}}}"
+          "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+          "role": "{{{application.applicant.role}}}"
         },
         "plaidClosed": {
           "name": "Modal Dismissed",
