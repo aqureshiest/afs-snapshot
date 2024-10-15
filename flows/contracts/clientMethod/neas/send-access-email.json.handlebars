@@ -1,15 +1,19 @@
-{{#if (ne request.body.values.email application.applicant.details.email) }}
-  {{#with (contract 'actions' (sum @index -2)) as |identify|}}
-    {{#if (and
-      (gte identify.response.statusCode 200)
-                  (lt identify.response.statusCode 400) 
-    )}}
+{{#with (contract 'actions' (sum @index -2)) as |identify|}}
+  {{#if (and
+    (gte identify.response.statusCode 200)
+    (lt identify.response.statusCode 400)
+  )}}
+  {{!Applications will be undefined the first time a user submits the basic info form.
+    If user navigates back, applications will be populated using the email claims for a given session,
+    ensuring that a verification email will only be sent if they change their email in the form.
+  }}
+  {{#if (ne ../request.body.values.email ../applications.[0].details.email) }}
       {{#if (or
         (hasActiveIncompleteApplication ../application.applicant.id ../applications)
         (hasActivePostSubmissionApplication ../application.applicant.id ../applications)
       )}}
-      { "action": "send-access-email"}
-      {{else}}
+          { "action": "send-access-email"}
+        {{else}}
         {
           "action": "send-access-email",
           "client": "NeasClient",
@@ -26,7 +30,7 @@
     {{/if}}
   {{else}}
     { "action": "send-access-email" }
-  {{/with}}
+  {{/if}}
 {{else}}
-  { "action": "send-access-email" }
-{{/if}}
+    { "action": "send-access-email" }
+{{/with}}

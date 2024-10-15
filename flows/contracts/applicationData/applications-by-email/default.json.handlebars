@@ -3,13 +3,9 @@
     "query": {{{ json query }}},
   {{/with}}
   "criteria": {{#list}}
-    {{#if request.body.values.email}}
-      { "email": {{{ json request.body.values.email }}} }
-    {{else}}
-      {{#with (contract 'auth') as |auth|}}
-        { "email": {{{ json auth.artifacts.email }}} }
-      {{/with}}
-    {{/if}}
+    {{#with (contract 'auth') as |auth|}}
+      { "email": {{{ json (coalesce auth.artifacts.email request.body.values.email) }}} }
+    {{/with}}
   {{/list}}
   {{#with request.query}}
      {{#if limit}}
