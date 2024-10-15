@@ -1989,7 +1989,10 @@ export default class LendingDecisionServiceClient extends Client {
       requestMetaDataIDs["applicationId"] = application["primary"].id;
       requestMetaDataIDs["userId"] = application["primary"].reference?.userID
         ? application["primary"].reference.userID
-        : await this.getNEASUserID(context, application["primary"]);
+        : application["primary"].reference?.userIdBeforeVerifyingThroughEmailId
+          ? application["primary"].reference
+              ?.userIdBeforeVerifyingThroughEmailId
+          : await this.getNEASUserID(context, application["primary"]);
 
       assert(
         application["cosigner"],
@@ -1999,7 +2002,11 @@ export default class LendingDecisionServiceClient extends Client {
       requestMetaDataIDs["cosignerUserId"] = application["cosigner"].reference
         ?.userID
         ? application["cosigner"].reference.userID
-        : await this.getNEASUserID(context, application["cosigner"]);
+        : application["cosigner"].reference?.userIdBeforeVerifyingThroughEmailId
+          ? application["cosigner"].reference
+              .userIdBeforeVerifyingThroughEmailId
+          : await this.getNEASUserID(context, application["cosigner"]);
+          
       requestMetaDataIDs["cosignerApplicationId"] = application["cosigner"].id;
     } else {
       requestMetaDataIDs["applicationId"] = applicationId;
