@@ -1,3 +1,4 @@
+{{#if (contract "identify-user-by-primary-email") }}
 {
   "action": "send-email-to-primary-cosigner-submitted",
   "client": "notificationServiceClient",
@@ -9,7 +10,7 @@
   "body": {
     "notification_type": "application_cosigner_app_submitted",
     "user": {
-      "id": "{{auth.artifacts.userId}}",
+      "id": {{{ json (coalesce application.primary.reference.userId application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
       "email": "{{application.primary.details.email}}"
     },
     "meta_attributes": {
@@ -18,3 +19,6 @@
     }
   }
 }
+{{else}}
+ null
+{{/if}}
