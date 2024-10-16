@@ -4,15 +4,41 @@
   "key": "{{{auth.artifacts.userId}}}",
   "value": {
     {{#with (contract 'actions' 0) as |rateResult|}}
-        {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
-            "latestRateResult":  "approved"
-        {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (searchDeniedArtifactTags rateResult.data.artifacts.tags))}}
+      {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
+          "latestRateResult":  "approved"
+      {{else if (eq rateResult.data.decisionOutcome 'Denied') }}
+        {{!-- Check for cosigner tags first --}}
+        {{#if rateResult.data.artifacts.cosignerTags}}
+          {{#if (searchDeniedArtifactTags rateResult.data.artifacts.cosignerTags)}}
+            {{!-- check if the cosigner tags contain the tag keywords --}}
             "latestRateResult":  "declined"
-        {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable"))}}
+          {{else if (includes rateResult.data.artifacts.cosignerTags "RC_FrozenCredit_Unable")}}
+            {{!-- check if the tags contain the frozen keyword --}}
             "latestRateResult":  "frozen"
-        {{else}}
+          {{else}}
+            {{!-- Denied but no keywords found--}}
             "latestRateResult":  "unable"
+          {{/if}}
+        {{else if rateResult.data.artifacts.tags}}
+          {{!-- no cosigner tags --}}
+          {{#if (searchDeniedArtifactTags rateResult.data.artifacts.tags)}}
+            {{!-- check if the tags contain the tag keywords --}}
+            "latestRateResult":  "declined"
+          {{else if (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable")}}
+            {{!-- check if the tags contain the frozen keyword --}}
+            "latestRateResult":  "frozen"
+          {{else}}
+            {{!-- Denied but no keywords found--}}
+            "latestRateResult":  "unable"
+          {{/if}}
+        {{else}}
+          {{!-- somehow got denied but no artifact tags found--}}
+          "latestRateResult":  "unable"
         {{/if}}
+      {{else}}
+        {{!-- if anything else wrong, just redirect to unable page --}}
+        "latestRateResult":  "unable"
+      {{/if}}
     {{/with}}
   }
 }

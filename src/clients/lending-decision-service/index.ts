@@ -2021,7 +2021,7 @@ export default class LendingDecisionServiceClient extends Client {
           ? application["cosigner"].reference
               .userIdBeforeVerifyingThroughEmailId
           : await this.getNEASUserID(context, application["cosigner"]);
-          
+
       requestMetaDataIDs["cosignerApplicationId"] = application["cosigner"].id;
     } else {
       requestMetaDataIDs["applicationId"] = applicationId;
