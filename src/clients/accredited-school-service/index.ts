@@ -31,7 +31,7 @@ export default class AccreditedSchoolServiceClient extends Client {
     payload,
   ): Promise<SchoolDetails | null> {
     if (!payload.id) {
-      return null
+      return null;
     }
     const { results, response } = await this.get<SchoolDetails>(
       {

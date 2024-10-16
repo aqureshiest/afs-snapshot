@@ -249,10 +249,17 @@ export default class LendingDecisionServiceClient extends Client {
          * entity role of `primary` is the parent, which
          * is 'benefactor' in application service
          */
+        let role;
+        if (entity) {
+          role =
+            application?.tag?.applicants === "parent_plus"
+              ? "benefactor"
+              : entity.applicantRole;
+        }
         queryVars = {
           ...(entity
             ? {
-                id: application[entity.applicantRole].id, // update the applicant's status if an entity is passed
+                id: application[role].id, // update the applicant's status if an entity is passed
               }
             : {
                 // This is the applicant ID in this case
@@ -262,6 +269,14 @@ export default class LendingDecisionServiceClient extends Client {
       }
 
       if (status) {
+        this.log(
+          {
+            id: queryVars.id,
+            message: `[a339b218] query variables: ${JSON.stringify(queryVars)}`,
+          },
+          context,
+        );
+
         const ASresponse = (await applicationServiceClient["sendRequest"]({
           query: String.raw`mutation (
             $id: UUID!
