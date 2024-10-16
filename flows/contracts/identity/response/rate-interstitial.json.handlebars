@@ -4,11 +4,37 @@
   "action":
       {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
         {{{json (contract 'rateApproved')}}},
-      {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (searchDeniedArtifactTags rateResult.data.artifacts.tags))}}
-        {{{json (contract 'rateDeclined')}}},
-      {{else if ( and (eq rateResult.data.decisionOutcome 'Denied') (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable"))}}
-        {{{json (contract 'rateFrozen')}}},
+      {{else if (eq rateResult.data.decisionOutcome 'Denied') }}
+        {{!-- Check for cosigner tags first --}}
+        {{#if rateResult.data.artifacts.cosignerTags}}
+          {{#if (searchDeniedArtifactTags rateResult.data.artifacts.cosignerTags)}}
+            {{!-- check if the cosigner tags contain the tag keywords --}}
+            {{{json (contract 'rateDeclined')}}},
+          {{else if (includes rateResult.data.artifacts.cosignerTags "RC_FrozenCredit_Unable")}}
+            {{!-- check if the tags contain the frozen keyword --}}
+            {{{json (contract 'rateFrozen')}}},
+          {{else}}
+            {{!-- Denied but no keywords found--}}
+            {{{json (contract 'rateUnable')}}},
+          {{/if}}
+        {{else if rateResult.data.artifacts.tags}}
+          {{!-- no cosigner tags --}}
+          {{#if (searchDeniedArtifactTags rateResult.data.artifacts.tags)}}
+            {{!-- check if the tags contain the tag keywords --}}
+            {{{json (contract 'rateDeclined')}}},
+          {{else if (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable")}}
+            {{!-- check if the tags contain the frozen keyword --}}
+            {{{json (contract 'rateFrozen')}}},
+          {{else}}
+            {{!-- Denied but no keywords found--}}
+            {{{json (contract 'rateUnable')}}},
+          {{/if}}
+        {{else}}
+          {{!-- somehow got denied but no found artifact tags --}}
+          {{{json (contract 'rateUnable')}}},
+        {{/if}}
       {{else}}
+        {{!-- if anything else wrong, just redirect to unable page --}}
         {{{json (contract 'rateUnable')}}},
       {{/if}}
   "result": ["{{rateResult.data.decisionOutcome}}"],
