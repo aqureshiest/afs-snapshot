@@ -26,6 +26,7 @@ const applicantById = function (options) {
 
 export const getApplicantWithRole = function (id, application) {
   const applicantIndex0 = application?.applicants?.[0];
+
   if (id === application?.primary?.id) {
     return JSON.stringify({
       applicant: { ...application.primary, role: "primary" },

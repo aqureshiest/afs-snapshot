@@ -5,7 +5,7 @@
     "*": "inputs",
     "env": "inputs/env",
     "application": {
-      "*": "application/cosigned.flattened",
+      "*": "application/single.flattened",
       "application": "application-by-id-param"
     },
     "applications": {

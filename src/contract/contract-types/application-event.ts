@@ -199,10 +199,25 @@ class ApplicationEvent extends ContractExecutable<
         this.error(executionContext, error);
         return { event: definition.event };
       }
+
+      /* Do not, my friends, become addicted to
+       *  █     █░ ▄▄▄     ▄▄▄█████▓ ▓█████  ██▀███
+       * ▓█░ █ ░█░▒████▄   ▓  ██▒ ▓▒ ▓█   ▀ ▓██ ▒ ██▒
+       * ▒█░ █ ░█ ▒██  ▀█▄ ▒ ▓██░ ▒░ ▒███   ▓██ ░▄█ ▒
+       * ░█░ █ ░█ ░██▄▄▄▄██░ ▓██▓ ░  ▒▓█  ▄ ▒██▀▀█▄
+       * ░░██▒██▓  ▓█   ▓██▒ ▒██▒ ░  ░▒████▒░██▓ ▒██▒
+       * ░ ▓░▒ ▒   ▒▒   ▓▒█░ ▒ ░░    ░░ ▒░ ░░ ▒▓ ░▒▓░
+       *   ▒ ░ ░    ▒   ▒▒ ░   ░      ░ ░  ░  ░▒ ░ ▒░
+       *   ░   ░    ░   ▒    ░          ░     ░░   ░
+       *     ░          ░  ░            ░  ░   ░
+       * It will take hold of you,
+       * and you will resent its absence! */
+
       /* ============================== *
-       * Rehydration: when application-event evaluates, it should re-hydrate the
-       * input parameters for re-evaluation
+       * TODO: good software should be DRY, remove this troublesome rehydration
+       * side-effect to prevent it from mangling the input in unpredictable ways
        * ============================== */
+
       const rehydrationId = eventResult[definition.event]?.application?.id;
 
       if (rehydrationId) {
@@ -216,7 +231,7 @@ class ApplicationEvent extends ContractExecutable<
           )) as unknown as { application: types.Application };
 
           const applicationRoles = JSON.parse(
-            getApplicantWithRole(application.id, application),
+            getApplicantWithRole(rehydrationId, application),
           );
 
           Object.defineProperty(input, "application", {
