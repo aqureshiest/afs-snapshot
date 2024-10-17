@@ -6,7 +6,14 @@
     },
     "submit": {
         "copy": "Get Your Rates",
-        "action": {{{json (contract 'save_details_action')}}}
+        "action": {
+                "key": "ssnSaveInterstitial",
+                "type": "interstitial",
+                "properties": {
+                    "showSpinner": true,
+                    "action": {{{ json (contract 'save_details_action') }}}
+                }
+            }
     },
     "progress": {{{json (contract 'progress')}}},
     "rows": {{{json (contract 'rows')}}}

@@ -7,6 +7,9 @@
     "journeyApplicationStatus": "waiting_review",
     "decisionOutcome": "Application Review",
     "journeyToken": "J-DHy7fAj0lVLlZ1mDqOuh",
-    "journeyApplicationToken": "JA-XeJrpLbxxRz6JyLkfQmh"
+    "journeyApplicationToken": "JA-XeJrpLbxxRz6JyLkfQmh",
+    "artifacts": {
+      "tags": []
+    }
   }
 }
