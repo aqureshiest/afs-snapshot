@@ -29,7 +29,13 @@
             "amount": {
                 "type": "object",
                 "properties": {
-                    "amount": {{{json (schema 'questions/primary/amount')}}}
+                    {{#if (eq (stateFromAddress application.primary.details.location) "NM")}}
+                        "amount": {{{json (schema 'questions/primary/amount/schemas/nm')}}}
+                    {{else if (eq (stateFromAddress application.primary.details.location) "CA")}}
+                        "amount": {{{json (schema 'questions/primary/amount/schemas/ca')}}}
+                    {{else}}
+                        "amount": {{{json (schema 'questions/primary/amount/schemas')}}}
+                    {{/if}}
                 }
             },
             "income": {

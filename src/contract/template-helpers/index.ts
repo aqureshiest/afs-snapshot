@@ -331,6 +331,14 @@ export function stateMinLoan(addresses) {
   return minLoan;
 }
 
+export function stateFromAddress(addresses) {
+  if (addresses) {
+    const primaryAddress = findCurrentAddress(addresses);
+    return primaryAddress.state;
+  }
+  return null;
+}
+
 /**
  * 'values' can be an income detail from db with structure:
  *    {

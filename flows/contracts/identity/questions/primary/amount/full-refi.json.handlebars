@@ -11,7 +11,13 @@
             "value": "",
         {{/if}}
         "status": {{{json (contract 'primary_amount_input_status')}}},
-        "error": "{{{ ajv 'errors' 'questions/primary/amount' details.amount.requested }}}",
+        {{#if (eq (stateFromAddress application.primary.details.location) "NM")}}
+            "error": "{{{ ajv 'errors' 'questions/primary/amount/schemas/nm' details.amount.requested }}}"
+        {{else if (eq (stateFromAddress application.primary.details.location) "CA")}}
+            "error": "{{{ ajv 'errors' 'questions/primary/amount/schemas/ca' details.amount.requested }}}"
+        {{else}}
+            "error": "{{{ ajv 'errors' 'questions/primary/amount/schemas' details.amount.requested }}}"
+        {{/if}},
         "label": {
             "copy": "Estimated refinance amount"
         },

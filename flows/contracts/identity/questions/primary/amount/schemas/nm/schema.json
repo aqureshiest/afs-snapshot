@@ -1,0 +1,10 @@
+{
+    "type": "number",
+    "minimum": 10001,
+    "maximum": 9999999,
+    "errorMessage": {
+      "type": "Refinance amount is required.",
+      "minimum": "The minimum amount to refinance in your state is $10,001",
+      "maximum": "The maximum amount is $9,999,999."
+    }
+  }
