@@ -334,7 +334,7 @@ export function stateMinLoan(addresses) {
 export function stateFromAddress(addresses) {
   if (addresses) {
     const primaryAddress = findCurrentAddress(addresses);
-    return primaryAddress.state;
+    return primaryAddress?.state;
   }
   return null;
 }
