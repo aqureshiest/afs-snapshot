@@ -32,6 +32,7 @@ fragment ApplicantFragment on Application {
   reference {
     userID
     brand
+    userIdBeforeVerifyingThroughEmailId
     cognitoID
     lender {
       canCapInterest

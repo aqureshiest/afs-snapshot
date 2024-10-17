@@ -1,5 +1,6 @@
+{{#if (eq request.body.values.citizenship "non-resident")}}
 {
-  "action": "send-email-to-primary-cosigner-submitted",
+  "action": "send-email-to-primary-cosigner-inelegible",
   "client": "notificationServiceClient",
   "method": "post",
   "uri": "/notification/send",
@@ -7,10 +8,10 @@
     "Authorization": "Bearer {{env.S2S_KEY_AFS_NOTIFICATION_SERVICE}}"
   },
   "body": {
-    "notification_type": "application_cosigner_app_submitted",
+    "notification_type": "application_cosigner_ineligible",
     "user": {
       "id": {{{ json (coalesce application.primary.reference.userID application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
-      "email": "{{application.primary.details.email}}"
+      "email": {{{json application.primary.details.email}}}
     },
     "meta_attributes": {
       "cosigner_first_name": "{{application.cosigner.details.name.first}}",
@@ -18,3 +19,6 @@
     }
   }
 }
+{{else}}
+  {}
+{{/if}}
