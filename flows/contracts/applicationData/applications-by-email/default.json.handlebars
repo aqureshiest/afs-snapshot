@@ -3,13 +3,13 @@
     "query": {{{ json query }}},
   {{/with}}
   "criteria": {{#list}}
-      {{#with (contract 'auth') as |auth|}}
-        {{#if auth.artifacts.email}
-          { "email": {{{ json auth.artifacts.email }}} }
-        {{else}}
-          { "email": {{{ json ../request.body.values.email }}} }
-        {{/if}}
-      {{/with}}
+    {{#with (contract 'auth') as |auth|}}
+      {{#if auth.artifacts.email}}
+        { "email": {{{ json auth.artifacts.email }}} }
+      {{else}}
+        { "email": {{{ json ../request.body.values.email }}} }
+      {{/if}}
+    {{/with}}
   {{/list}}
   {{#with request.query}}
      {{#if limit}}

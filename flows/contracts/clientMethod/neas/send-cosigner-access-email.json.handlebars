@@ -1,4 +1,4 @@
-  {{#with (contract 'actions' (sum @index -1)) as |addDetails|}}
+{{#with (contract 'actions' (sum @index -1)) as |addDetails|}}
     {{#if (ne ../request.body.values.email ../applications.[0].details.email) }}
       {{#if (or
         (hasActiveIncompleteApplication ../application.applicant.id ../applications)
