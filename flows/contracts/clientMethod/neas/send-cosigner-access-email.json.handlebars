@@ -1,14 +1,11 @@
-{{{custom_log application.applicant.id "block-0"}}}
 {{#with (contract 'actions' (sum @index -1)) as |addDetails|}}
     {{#if (ne ../request.body.values.email ../applications.[0].details.email) }}
       {{#if (or
         (hasActiveIncompleteApplication ../application.applicant.id ../applications)
         (hasActivePostSubmissionApplication ../application.applicant.id ../applications)
       )}}
-        {{{custom_log application.applicant.id "block-1"}}}
         { "action": "send-cosigner-access-email"}
       {{else}}
-        {{{custom_log application.applicant.id "block-2"}}}
         {
           "action": "send-cosigner-access-email",
           "client": "NeasClient",
@@ -21,10 +18,8 @@
         }
       {{/if}}
   {{else}}
-        {{{custom_log application.applicant.id "block-3"}}}
     { "action": "send-cosigner-access-email" }
   {{/if}}
 {{else}}
-        {{{custom_log application.applicant.id "block-4"}}}
   { "action": "send-cosigner-access-email" }
 {{/with}}

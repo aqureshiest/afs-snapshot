@@ -37,14 +37,6 @@ class ClientMethod extends ContractExecutable<
         transformation.client as (typeof VALID_CLIENTS)[number],
       );
 
-      console.log("======================= CLIENT-METHOD");
-      console.log("canSendRequest => ", canSendRequest);
-      console.log("transformation.action => ", transformation?.action);
-      console.log("incompleteDependencies => ", incompleteDependencies);
-      console.log("!incompleteDependencies && Boolean(canSendRequest) => ", !incompleteDependencies && Boolean(canSendRequest));
-      console.log("======================= CLIENT-METHOD");
-      
-
     return !incompleteDependencies && Boolean(canSendRequest);
   };
 
