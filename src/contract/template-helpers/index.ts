@@ -556,6 +556,16 @@ export function getApplicantByEmail(
   );
 }
 
+export function getApplicantByUserID(
+  userId: string,
+  application: typings.Application,
+) {
+  return (application.applicants || []).find(
+    (applicant) =>
+      applicant && applicant?.reference && (applicant.reference.userID === userId || applicant.reference.userIdBeforeVerifyingThroughEmailId === userId)
+  );
+}
+
 export function mapProductForRedirect(product: string): string {
   const productMapping = Object.freeze({
     "student-refi": "student-refi",

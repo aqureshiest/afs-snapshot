@@ -12,7 +12,7 @@
     {{#if (eq application.product "student-refi")}}
       "{{application.brand}}/student-refi/{{request.params.id}}"
     {{else}}
-      "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if (eq application.cosigner.id (lookup (getApplicantByEmail auth.artifacts.email application) "id"))}}/cosigner/{{lookup (getApplicantByEmail auth.artifacts.email application) "id"}}{{/if}}"
+      "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if (eq application.cosigner.id (lookup (getApplicantByUserID auth.artifacts.userId application) "id"))}}/cosigner/{{lookup (getApplicantByUserID auth.artifacts.userId application) "id"}}{{/if}}"
     {{/if}}
   {{/if}}
 {{else}}
