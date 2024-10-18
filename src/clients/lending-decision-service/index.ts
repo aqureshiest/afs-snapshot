@@ -170,6 +170,9 @@ export default class LendingDecisionServiceClient extends Client {
               cosigner {
                 ...ApplicantFragment
               }
+              benefactor {
+                ...ApplicantFragment
+              }
             }
           }
           `,
