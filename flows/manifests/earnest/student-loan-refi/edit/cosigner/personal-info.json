@@ -87,6 +87,7 @@
             "@": "Your previous address cannot match your current address."
           }
       },
+      "email-validation": "questions/cosigner/email/validation",
       "redirect_homebase": "actions/homebase.default"
     }
   }

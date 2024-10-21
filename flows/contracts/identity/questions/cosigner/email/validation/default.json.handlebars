@@ -1,0 +1,16 @@
+{
+  "type": "string",
+  "minLength": 1,
+  "format": "email",
+  "matches": {
+    "shouldMatch": false,
+    "useParentData": false,
+    "matchAgainst": {{{json auth.artifacts.email}}}
+  },
+  "errorMessage": {
+    "matches": "Please enter the email associated with your invitation to continue",
+    "minLength": "Email is required.",
+    "type": "Invalid email.",
+    "format": "Email address contains invalid characters."
+  }
+}

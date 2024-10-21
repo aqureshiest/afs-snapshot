@@ -17,8 +17,10 @@
                 "properties": {
                     "name": {{{json (schema 'questions/cosigner/name')}}},
                     "dateOfBirth": {{{json (schema 'questions/cosigner/dateOfBirth')}}},
-                    "phone": {{{json (schema 'questions/cosigner/phone')}}},
-                    "email": {{{json (schema 'questions/cosigner/email')}}}
+                    "phone": {{{json (schema 'questions/cosigner/phone')}}}
+                    {{#with (contract 'email-validation') as |emailValidation|}}
+                      ,"email": {{{json emailValidation}}}
+                    {{/with}}
                 }
             },
             "citizenship": {
