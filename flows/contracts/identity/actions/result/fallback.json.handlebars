@@ -6,10 +6,18 @@
       "results": {{{json attempt.results}}}
     {{else}}
       {{#with (contract 'fallback') as |fallback|}}
-        {{#if (and (gte attempt.response.statusCode 200) (lt attempt.response.statusCode 400))}}
+        {{#if (and (gte fallback.response.statusCode 200) (lt fallback.response.statusCode 400))}}
           "success": true,
           "results": {{{json fallback.results}}}
         {{else}}
+          {{! the fallback error will transmit its own statusCode error and message;
+              use with caution }}
+          {{#noop}}{{#contract type="error" key="fallback-error"}}
+              {
+                "statusCode": {{{ json fallback.response.statusCode }}},
+                "error": {{{ json fallback.results.message }}}
+              }
+            {{/contract}}{{/noop}}
           "success": false
         {{/if}}
       {{else}}

@@ -170,9 +170,11 @@ export default class Executable<Input> implements ExecutableInterface<Input> {
 
     const selfErrors = (errors[this.id] = errors[this.id] || []);
     if (Array.isArray(message)) {
-      selfErrors.concat(message);
-    } else {
+      selfErrors.push(...message);
+    } else if (message) {
       selfErrors.push(message);
+    } else {
+      delete selfErrors[this.id];
     }
   }
 

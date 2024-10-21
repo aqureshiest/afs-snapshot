@@ -562,7 +562,10 @@ export function getApplicantByUserID(
 ) {
   return (application.applicants || []).find(
     (applicant) =>
-      applicant && applicant?.reference && (applicant.reference.userID === userId || applicant.reference.userIdBeforeVerifyingThroughEmailId === userId)
+      applicant &&
+      applicant?.reference &&
+      (applicant.reference.userID === userId ||
+        applicant.reference.userIdBeforeVerifyingThroughEmailId === userId),
   );
 }
 
