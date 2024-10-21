@@ -98,6 +98,7 @@
         }
       ],
       "primaryAction": {
+        "key": "continue",
         "copy": "Continue to Apply",
         "action": {
           "key": "applyIndependent",
@@ -105,6 +106,13 @@
           "properties": {
             "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.primary.id}}"
           }
+        }
+      },
+      "backAction": {
+        "key": "backbutton",
+        "type": "navigate",
+        "properties": {
+          "goTo": "/{{application.brand}}/student-loan-refi/ssn/{{application.primary.id}}"
         }
       }
     }

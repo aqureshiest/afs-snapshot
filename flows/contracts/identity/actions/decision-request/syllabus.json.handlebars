@@ -1,7 +1,32 @@
-{
-  "key": "syllabus",
-  "type": "navigate",
-  "properties": {
-    "goTo": "earnest/student-loan-refi/{{#if (eq request.params.id application.cosigner.id)}}cosigner/{{/if}}syllabus/{{{application.applicant.id}}}"
+{{#if (eq request.params.id application.cosigner.id)}}
+{{!-- Cosigner Redirect --}}
+  {{#if (ne application.primary.tag.status "incomplete")}}
+    {{!-- Cosigner goes to homebase if primary has already submitted --}}
+    {
+      "key": "syllabus",
+      "type": "navigate",
+      "properties": {
+        "goTo": "{{env.BASE_URL}}/_/dashboard/",
+        "external": true
+      }
+    }
+  {{else}}
+    {{!-- Cosigner goes to syllabus if primary has not already submitted --}}
+    {
+      "key": "syllabus",
+      "type": "navigate",
+      "properties": {
+        "goTo": "earnest/student-loan-refi/cosigner/syllabus/{{{application.applicant.id}}}"
+      }
+    }
+  {{/if}}
+{{else}}
+{{!-- Primary Redirect --}}
+  {
+    "key": "syllabus",
+    "type": "navigate",
+    "properties": {
+      "goTo": "earnest/student-loan-refi/syllabus/{{{application.applicant.id}}}"
+    }
   }
-}
+{{/if}}

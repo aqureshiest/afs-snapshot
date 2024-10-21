@@ -105,6 +105,7 @@
         }
       ],
       "primaryAction": {
+        "key": "continue",
         "copy": "Continue to Apply",
         "action": {
           "key": "applyIndependent",
@@ -112,6 +113,13 @@
           "properties": {
             "goTo": "/{{application.brand}}/student-loan-refi/cosigner/previous-address/{{application.cosigner.id}}"
           }
+        }
+      },
+      "backAction": {
+        "key": "backbutton",
+        "type": "navigate",
+        "properties": {
+          "goTo": "/{{application.brand}}/student-loan-refi/cosigner/ssn/{{application.cosigner.id}}"
         }
       }
     }
