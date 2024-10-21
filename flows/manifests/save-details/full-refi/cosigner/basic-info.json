@@ -32,8 +32,8 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "full-refi.add-details-full-refi",
-        "neas.send-cosigner-access-email"
+        "neas.send-cosigner-access-email",
+        "full-refi.add-details-full-refi"
       ]
     }
   }
