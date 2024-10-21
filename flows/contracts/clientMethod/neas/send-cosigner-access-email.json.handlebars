@@ -1,22 +1,18 @@
-{{#if (ne request.body.values.email auth.artifacts.email)}}
-  {{#if (or
-    (lookup application.applicant.details "dateOfBirth")
-    (hasActiveIncompleteApplication application.applicant.id applications)
-    (hasActivePostSubmissionApplication application.applicant.id applications)
-  )}}
-      { "action": "send-cosigner-access-email"}
-    {{else}}
-      {
-        "action": "send-cosigner-access-email",
-        "client": "NeasClient",
-        "method": "post",
-        "uri": "/auth/identity/access-code/send",
-        "body": {
-          "applicationId": {{{json request.params.id}}},
-          "emailId": {{{json request.body.values.email}}}
-        }
-      }
-    {{/if}}
+{{#if (or
+  (lookup application.applicant.details "dateOfBirth")
+  (hasActiveIncompleteApplication application.applicant.id applications)
+  (hasActivePostSubmissionApplication application.applicant.id applications)
+)}}
+  { "action": "send-cosigner-access-email"}
 {{else}}
-  { "action": "send-cosigner-access-email" }
+  {
+    "action": "send-cosigner-access-email",
+    "client": "NeasClient",
+    "method": "post",
+    "uri": "/auth/identity/access-code/send",
+    "body": {
+      "applicationId": {{{json request.params.id}}},
+      "emailId": {{{json request.body.values.email}}}
+    }
+  }
 {{/if}}
