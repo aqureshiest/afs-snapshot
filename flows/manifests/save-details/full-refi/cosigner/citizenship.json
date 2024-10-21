@@ -4,6 +4,10 @@
   "inputs": {
     "*": "inputs",
     "env": "inputs/env.ens",
+    "application": {
+      "*": "application/single.flattened",
+      "application": "application-by-id-param"
+    },
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
