@@ -220,7 +220,7 @@ class ApplicationEvent extends ContractExecutable<
 
       const rehydrationId = eventResult[definition.event]?.application?.id;
 
-      if (rehydrationId) {
+      if (rehydrationId && definition.rehydrate !== false) {
         try {
           const { application } = (await applicationServiceClient.sendRequest(
             {
@@ -245,6 +245,7 @@ class ApplicationEvent extends ContractExecutable<
           });
         }
       }
+
       return {
         ...eventResult[definition.event],
         event: definition.event,

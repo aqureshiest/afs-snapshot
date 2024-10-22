@@ -1,11 +1,16 @@
 {
+  {{#with (contract 'actions') as |actions|}}
     "action": {
       "type": "navigate",
       "properties": {
-        "goTo": "earnest/student-loan-refi/basic-info/{{application.applicants.0.id}}"
+        {{! LA-1584: rather than rely on rehydration, we pull the application result
+        directly from the result of the first action. This could be tidied up to
+        make this more generalizable }}
+        "goTo": "earnest/student-loan-refi/basic-info/{{actions.[0].id}}"
       }
     },
     {{! returning actions is not needed, but left for debugin }}
-    "result": {{{ json (contract 'actions') }}},
-    "error": {{{json error}}}
-  }
+    "result": {{{ json actions }}},
+  {{/with}}
+  "error": {{{json error}}}
+}

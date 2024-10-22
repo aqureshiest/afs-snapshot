@@ -1,15 +1,19 @@
+{{! LA-1584: accountless applications are created with the applicant as the focal point;
+    applications created in this way will have an NEAS session created with the applicationId
+    corresponding to the first applicant created.
+}}
 {
   "event": "create",
+  "rehydrate": false,
   "payload": {
     "application" : {
-      "reference":{
-        "brand":"earnest",
-        "product":"slr"
-      },
-      "applicants": [{
-        "id": null
-      }]
+      "root": {
+        "reference":{
+          "brand":"earnest",
+          "product":"slr"
+        }
+      }
     }
   },
-  "fields": "application { id applicants { id }}"
+  "fields": "application { id root { id }}"
 }

@@ -75,6 +75,7 @@ declare module "contract/contract-types/application-event.js" {
     fields: string;
     payload: { [key: string]: unknown };
     application: never;
+    rehydrate?: boolean;
     [key: string]: unknown;
   };
 
