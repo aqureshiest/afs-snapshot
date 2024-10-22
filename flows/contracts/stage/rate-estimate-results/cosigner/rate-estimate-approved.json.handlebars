@@ -111,7 +111,20 @@
           "key": "applyIndependent",
           "type": "navigate",
           "properties": {
-            "goTo": "/{{application.brand}}/student-loan-refi/cosigner/previous-address/{{application.cosigner.id}}"
+            "goTo": "/{{application.brand}}/student-loan-refi/cosigner/previous-address/{{application.cosigner.id}}",
+            "analytics": {
+              "name": "Application Started",
+              "properties": {
+                "product": "slr",
+                "source": "application",
+                "decision_code": "S",
+                "application_id": "{{{application.id}}}",
+                "primary_application_id": "{{{application.primary.id}}}",
+                "cosigner_application_id": "{{{application.cosigner.id}}}",
+                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+                "role": "{{{application.applicant.role}}}"
+              }
+            }
           }
         }
       },
