@@ -15,8 +15,8 @@
               "key": "header",
               "type": "header",
               "componentProps": {
-                "copy": "Welcome back {{ toUpper request.body.values.name.first }}",
-                "subCopy": "We noticed you started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication request.params.id applications) "root") "createdAt")}}. Would you like to save time by picking up where you left off?",
+                "copy": "Pick up where you left off?",
+                "subCopy": "You started an application with us on {{ISODateToYYYYMMDD (lookup (lookup (hasActiveIncompleteApplication request.params.id applications) "root") "createdAt")}}. Would you like to continue from where you left off?",
                 "asset": {
                   "center": true,
                   "type": "LocalAsset",
@@ -38,7 +38,7 @@
                   {{#with (contract 'actions') as |actions|}}
                     {{!Primary Button}}
                     {
-                      "copy": "Pick up where I left off",
+                      "copy": "Resume prior application",
                       "action": {
                           "type": "navigate",
                           "properties": {
@@ -76,7 +76,7 @@
                       (not (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications)))
                     )}}
                       ,{
-                        "copy": "Resume current application",
+                        "copy": "Continue new application",
                         "action": {
                           {{#if (eq actions.[1].statusCode 409)}}
                             {{!Login screen}}

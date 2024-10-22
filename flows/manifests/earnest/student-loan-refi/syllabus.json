@@ -33,17 +33,19 @@
     "onLoadEvent": "analytics/full-refi.syllabus",
     "bottomNavigation": {
       "*": "stage.bottom-navigation",
-      "buttons": [{
-        "*": "actions.with-copy",
-        "copy": {
-          "@": "Send reminder to cosigner"
-        },
-        "action": {
-          "*": "actions/navigate",
-          "goTo": "earnest-student-loan-refi/urls.reminder-sent",
-          "analytics": "analytics/full-refi.syllabus-reminder-action"
+      "buttons": [
+        {
+          "*": "actions.with-copy",
+          "copy": {
+            "@": "Send reminder to cosigner"
+          },
+          "action": {
+            "*": "actions/navigate",
+            "goTo": "earnest-student-loan-refi/urls.reminder-sent",
+            "analytics": "analytics/full-refi.syllabus-reminder-action"
+          }
         }
-      }]
+      ]
     },
     "stageContent": [
       {
@@ -60,12 +62,12 @@
         "label": {
           "@": "Primary's info"
         },
-        "status": {
-          "*": "asset/local",
-          "icon": "asset/local/icons.green-check"
-        },
-        "progress": {
-          "@": "100"
+        "componentProps": {
+          "*": "earnest-student-loan-refi/pages/syllabus.progress-card-status",
+          "completedStatus": {
+            "*": "asset/local",
+            "icon": "asset/local/icons.green-check"
+          }
         }
       },
       {
@@ -73,12 +75,18 @@
         "label": {
           "@": "Cosigner's info"
         },
-        "status": { "@": "in progress"},
-        "progress": {
-          "@": "50"
+        "componentProps": {
+          "*": "earnest-student-loan-refi/pages/syllabus.progress-card-status",
+          "as": {"@": "cosigner"},
+          "completedStatus": {
+            "*": "asset/local",
+            "icon": "asset/local/icons.green-check"
+          }
         },
         "containerProps": {
-          "@": {"marginTop": "24px"}
+          "@": {
+            "marginTop": "24px"
+          }
         }
       }
     ]
