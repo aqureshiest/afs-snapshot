@@ -37,6 +37,7 @@
         "*": "response.rate-interstitial",
         "actions": ["rate-estimate-request", "redis.set-rate-results"],
         "set-timestamp": "redis.set-rate-estimate-request-timestamp",
+        "partner-attribution": "partner.rate-check",
         "rateDeclined": "actions/rate-estimate-request/primary.declined",
         "rateUnable": "actions/rate-estimate-request/primary.unable",
         "rateFrozen": "actions/rate-estimate-request/primary.frozen",

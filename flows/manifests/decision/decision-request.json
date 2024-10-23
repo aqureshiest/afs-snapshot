@@ -36,6 +36,7 @@
     "outputs": {
         "*": "response.interstitial",
         "actions": ["decision-request", "decision-backfill"],
+        "partner-attribution": "partner.application-submitted",
         "set-timestamp": "redis.set-decision-request-timestamp",
         "statusAction": "actions/decision-request.applicationStatus",
         "redirect_homebase": "actions/homebase.default"

@@ -3,6 +3,7 @@
     "decisionRequestMethod": "rateCheckRequest",
     "id": "{{request.params.id}}"
   }
+  {{#noop}} {{contract "partner-attribution"}} {{/noop}}
 {{else}}
   null
 {{/if}} 

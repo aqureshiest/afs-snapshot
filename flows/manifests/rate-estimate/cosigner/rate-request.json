@@ -37,6 +37,7 @@
         "*": "response.rate-interstitial",
         "actions": ["rate-estimate-request", "redis.set-rate-results"],
         "rateDeclined": "actions/rate-estimate-request/cosigner.declined",
+        "partner-attribution": "partner.rate-check",
         "rateUnable": "actions/rate-estimate-request/cosigner.unable",
         "rateFrozen": "actions/rate-estimate-request/cosigner.frozen",
         "rateApproved": "actions/rate-estimate-request/cosigner.approved"

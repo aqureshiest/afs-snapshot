@@ -8,8 +8,7 @@ export const plugin: Plugin<PartnerClient> = {
   version: "1.0.0",
   registerOrder: 0,
   register: async (context: PluginContext) => {
-    const baseUrl =
-      SensitiveString.ExtractValue(context.env.PARTNER_URL) || "";
+    const baseUrl = SensitiveString.ExtractValue(context.env.PARTNER_URL) || "";
 
     const client = new PartnerClient(baseUrl);
 

@@ -42,6 +42,7 @@
         },
         "actions": ["set-applicant-submitted", "decision-request", "decision-backfill", "ens.cosigner-submmited"],
         "get-statuses": "applicants/status.get-applicant-status",
+        "partner-attribution": "partner.application-submitted",
         "set-timestamp": "redis.set-decision-request-timestamp",
         "statusAction": "actions/decision-request.applicationStatus",
         "syllabus": "actions/decision-request.syllabus",
