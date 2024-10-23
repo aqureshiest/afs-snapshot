@@ -1,0 +1,25 @@
+{{#with (contract 'prices') as |prices|}}
+  {{#if prices}}
+    {
+      "action": "notify-primary-of-cosigners-rate-estimates",
+      "client": "notificationServiceClient",
+      "method": "post",
+      "uri": "/notification/send",
+      "headers": {
+        "Authorization": "Bearer {{env.S2S_KEY_AFS_NOTIFICATION_SERVICE}}"
+      },
+      "body": {
+        "notification_type": "application_notify_primary_of_cosigners_rate_estimates",
+        "user": {
+          "id": {{{ json (coalesce ../application.primary.reference.userId ../application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
+          "email": "{{../application.primary.details.email}}"
+        },
+        "meta_attributes": {
+          "primary_first_name": "{{../application.primary.details.name.first}}",
+          "mapped_rate_payments": {{{json (mapRatePayments prices)}}},
+          "requested_loan_amount": "{{formatToUSCurrency ../application.details.amount.requested}}"
+        }
+      }
+    }
+  {{else}} null {{/if}}
+{{else}} null {{/with}}

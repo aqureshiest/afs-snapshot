@@ -13,6 +13,7 @@
         "applications": [],
         "applicationState": "application-state",
         "userState": "user-state",
+        "env": "inputs/env.ens",
         "auth": {
             "*": "auth-artifacts",
             "strategies": [
@@ -35,7 +36,14 @@
     },
     "outputs": {
         "*": "response.rate-interstitial",
-        "actions": ["rate-estimate-request", "redis.set-rate-results"],
+        ">": {
+          "*": "ens.notify-primary-of-cosigners-rate-estimates",
+          "prices": "rate-estimate-prices-v2"
+        },
+        "actions": [
+          "rate-estimate-request",
+          "redis.set-rate-results"
+        ],
         "rateDeclined": "actions/rate-estimate-request/cosigner.declined",
         "partner-attribution": "partner.rate-check",
         "rateUnable": "actions/rate-estimate-request/cosigner.unable",

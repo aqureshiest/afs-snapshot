@@ -31,6 +31,7 @@ fragment ApplicantFragment on Application {
   ssnTokenURI
   reference {
     userID
+    userIdBeforeVerifyingThroughEmailId
     brand
     userIdBeforeVerifyingThroughEmailId
     cognitoID

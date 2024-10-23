@@ -1,0 +1,11 @@
+{{#with  (contract 'actions' 0) as |rateEstimateResponse|}}
+  {{#if (eq rateEstimateResponse.data.decisionOutcome 'Approved')}}
+  {
+    "decisionRequestMethod": "getPaymentsAndRates",
+    "id": "{{rateEstimateResponse.data.decisioningToken}}",
+    "payload": {
+      "type": "decisioning-request"
+    }
+  }
+  {{else}} null {{/if}}
+{{else}} null {{/with}}
