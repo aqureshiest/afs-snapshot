@@ -108,7 +108,8 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
       properties;
 
     const props: TrackParams = {
-      ...(userId ? { userId } : { anonymousId }),
+      ...(userId ? { userId } : {}),
+      anonymousId,
       event: event,
       properties: {
         ...payloadProps,
