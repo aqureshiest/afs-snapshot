@@ -1,4 +1,4 @@
 {
   "*": "response",
-  "actions": ["track-event", "redis.setApplicationState"]
+  "actions": ["track-event", "redis.setApplicationState", "redis.setUserState-device-id"]
 }

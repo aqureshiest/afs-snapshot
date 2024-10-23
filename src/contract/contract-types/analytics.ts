@@ -83,7 +83,6 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
           //   break;
           default:
         }
-
       } catch (error) {
         context.logger.error({
           error,

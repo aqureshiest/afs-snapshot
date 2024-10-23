@@ -1,0 +1,11 @@
+{{#if (and auth.artifacts.userId application.id (notNull request.body.values.anonymousId))}}
+  {
+    "redisMethod": "setUserState",
+    "key": "{{auth.artifacts.userId}}",
+    "value": {
+      "device_id": "{{request.body.values.anonymousId}}"
+    }
+  }
+  {{else}}
+    {}
+{{/if}}

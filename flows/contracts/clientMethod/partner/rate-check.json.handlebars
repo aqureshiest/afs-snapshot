@@ -2,11 +2,12 @@
   "action": "attribution_rate-check",
   "client": "partnerClient",
   "method": "post",
-  "uri": "/api/attribution/student-refi-quick-score",
+  "uri": "/api/attribution/pre-application-qs",
   "body": {
     "application_id": "{{application.id}}",
     "user_id": {{{ json (coalesce application.primary.reference.userID application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
     "source": "apply-flow-service",
+    "device_id": "{{userState.device_id}}",
     "misc": {
       "email": "{{application.primary.details.email}}"
     }
