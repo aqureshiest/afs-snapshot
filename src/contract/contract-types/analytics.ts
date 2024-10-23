@@ -83,6 +83,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
           //   break;
           default:
         }
+
       } catch (error) {
         context.logger.error({
           error,
@@ -91,20 +92,15 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
         this.error(input, error.message);
       }
     });
-
     return { success: true };
   };
 
   private buildTrackProps(input: Input, definition: Definition) {
     const { application, auth } = input;
 
-    assert(application?.primary, "[18e77f7d] application.primary is null");
-
     const userId = auth?.artifacts?.userId;
 
-    assert(userId, "[ab4bkv0s] userId is null");
-
-    const { event, payload } = definition;
+    const { event, payload, anonymousId } = definition;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { serverProperties, ...properties } = payload;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -112,7 +108,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
       properties;
 
     const props: TrackParams = {
-      userId,
+      ...(userId ? { userId } : { anonymousId }),
       event: event,
       properties: {
         ...payloadProps,

@@ -171,6 +171,7 @@ declare module "contract/contract-types/analytics.js" {
   type Definition = {
     event: string;
     type: string;
+    anonymousId: string;
     payload: { serverProperties: map } & map;
   };
 
