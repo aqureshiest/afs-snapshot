@@ -71,21 +71,84 @@
                     "height": "initial"
                   },
                   "buttons": [
+                    {{! TODO: these would be prime candidates for a breakout contract,
+                      but then again, so would everything else in this contract }}
                     {
                       "copy": "Invite Cosigner",
                       "action": {
                         "key": "addCosigner",
-                        "type": "navigate",
+                        "type": "modal",
                         "properties": {
-                          "goTo": "/{{application.brand}}/student-loan-refi/cosigner-invite/{{application.applicant.id}}",
-                          "analytics": {
-                            "name": "Action Clicked",
-                            "action": "invite cosigner",
-                            "product": "slr",
-                            "role": "{{{application.applicant.role}}}",
-                            "source": "rate check",
-                            "application_id": "{{{application.id}}}",
-                            "primary_application_id": "{{{application.primary.id}}}"
+                          "type": "flexible",
+                          "definition": {
+                            "content": [
+                              {
+                                "key": "header",
+                                "type": "header",
+                                "componentProps": {
+                                  "copy": "Want to check rates with a cosigner?",
+                                  "subCopy": "You can invite a cosigner to fill out a few questions to determine if a cosigner loan will give you better rates. To qualify, we recommend adding a cosigner who: \n\n * Has a strong credit history  \n\n * Shares a close and trusting relationship with you \n\n * Has a stable income"
+                                },
+                                "modalProps": {
+                                  "maxWidth": "400px",
+                                  "showCloseButton": false,
+                                  "outsideClickEnable": false
+                                }
+                              },
+                              {
+                                "key": "buttons",
+                                "type": "buttons",
+                                "componentProps": {
+                                  "stylePreset": "primaryTertiary",
+                                  "buttons": [
+                                    {
+                                      "copy": "Check Rates with Cosigner",
+                                      "action": {
+                                        "type": "navigate",
+                                        "properties": {
+                                          "goTo": "/{{application.brand}}/student-loan-refi/cosigner-invite/{{application.applicant.id}}",
+                                          "analytics": {
+                                            "name": "Action Clicked",
+                                            "action": "invite cosigner",
+                                            "product": "slr",
+                                            "role": "{{{application.applicant.role}}}",
+                                            "source": "rate check",
+                                            "application_id": "{{{application.id}}}",
+                                            "primary_application_id": "{{{application.primary.id}}}"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "copy": "Continue as Independent",
+                                      "action": {
+                                        "type": "navigate",
+                                        "properties": {
+                                          "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.primary.id}}",
+                                          "analytics": {
+                                            "name": "Application Started",
+                                            "properties": {
+                                              "product": "slr",
+                                              "source": "application",
+                                              "decision_code": "U",
+                                              "application_id": "{{{application.id}}}",
+                                              "primary_application_id": "{{{application.primary.id}}}",
+                                              "cosigner_application_id": "{{{application.cosigner.id}}}",
+                                              "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+                                              "role": "{{{application.applicant.role}}}"
+                                            }
+                                          }
+                                       }
+                                      }
+                                    }
+                                  ],
+                                  "groupProps": {
+                                    "flexDirection": "column",
+                                    "alignItems": "center"
+                                  }
+                                }
+                              }
+                            ]
                           }
                         }
                       }
