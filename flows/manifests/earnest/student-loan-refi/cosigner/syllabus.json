@@ -1,5 +1,6 @@
 {
   "*": "stage",
+  "redirectOnFullSubmission": "actions/navigate.homebase",
   "stage": {
     "*": "stage.view",
     "stageKey": {
@@ -45,12 +46,18 @@
         "label": {
           "@": "Cosigner's info"
         },
-        "status": {
-          "*": "asset/local",
-          "icon": "asset/local/icons.green-check"
+        "componentProps": {
+          "*": "earnest-student-loan-refi/pages/syllabus.progress-card-status",
+          "as": {"@": "cosigner"},
+          "completedStatus": {
+            "*": "asset/local",
+            "icon": "asset/local/icons.green-check"
+          }
         },
-        "progress": {
-          "@": "100"
+        "containerProps": {
+          "@": {
+            "marginTop": "24px"
+          }
         }
       },
       {
@@ -58,12 +65,12 @@
         "label": {
           "@": "Primary's info"
         },
-        "status": { "@": "in progress"},
-        "progress": {
-          "@": "50"
-        },
-        "containerProps": {
-          "@": {"marginTop": "24px"}
+        "componentProps": {
+          "*": "earnest-student-loan-refi/pages/syllabus.progress-card-status",
+          "completedStatus": {
+            "*": "asset/local",
+            "icon": "asset/local/icons.green-check"
+          }
         }
       }
     ]

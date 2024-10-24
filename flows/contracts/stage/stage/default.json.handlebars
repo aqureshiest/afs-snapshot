@@ -1,5 +1,11 @@
+{{#if (and (contract "redirectOnFullSubmission") (ne application.tag.status "incomplete"))}}
+  {
+    "action": {{{json (contract "redirectOnFullSubmission")}}}
+  }
+{{else}}
 {
     "manifest": "{{manifest.id}}",
     "id": "{{application.applicant.id}}",
     "stage": {{{ json (contract 'stage')}}}
 }
+{{/if}}

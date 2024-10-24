@@ -1,25 +1,25 @@
 {{#if (eq (contract "as") "cosigner")}}
-  {{#if (eq application.cosigner.tag.status "incomplete")}}
-    {
-      "status": {{#if (contract "incompleteStatus")}}{{{json (contract "incompleteStatus")}}}{{else}}"incomplete"{{/if}},
-      "progress": {{#if (contract "incompleteProgress")}}{{{json (contract "incompleteProgress")}}}{{else}}50{{/if}}
-    }
-  {{else}}
+  {{#if (eq application.cosigner.status.name "submitted")}}
     {
       "status": {{#if (contract "completedStatus")}}{{{json (contract "completedStatus")}}}{{else}}"completed"{{/if}},
       "progress": {{#if (contract "completedProgress")}}{{{json (contract "completedProgress")}}}{{else}}100{{/if}}
+    }
+  {{else}}
+    {
+      "status": {{#if (contract "incompleteStatus")}}{{{json (contract "incompleteStatus")}}}{{else}}"incomplete"{{/if}},
+      "progress": {{#if (contract "incompleteProgress")}}{{{json (contract "incompleteProgress")}}}{{else}}50{{/if}}
     }
   {{/if}}
 {{else}}
-  {{#if (eq application.primary.tag.status "incomplete")}}
-    {
-      "status": {{#if (contract "incompleteStatus")}}{{{json (contract "incompleteStatus")}}}{{else}}"incomplete"{{/if}},
-      "progress": {{#if (contract "incompleteProgress")}}{{{json (contract "incompleteProgress")}}}{{else}}50{{/if}}
-    }
-  {{else}}
+  {{#if (eq application.primary.status.name "submitted")}}
     {
       "status": {{#if (contract "completedStatus")}}{{{json (contract "completedStatus")}}}{{else}}"completed"{{/if}},
       "progress": {{#if (contract "completedProgress")}}{{{json (contract "completedProgress")}}}{{else}}100{{/if}}
+    }
+  {{else}}
+    {
+      "status": {{#if (contract "incompleteStatus")}}{{{json (contract "incompleteStatus")}}}{{else}}"incomplete"{{/if}},
+      "progress": {{#if (contract "incompleteProgress")}}{{{json (contract "incompleteProgress")}}}{{else}}50{{/if}}
     }
   {{/if}}
 {{/if}}

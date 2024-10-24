@@ -1,5 +1,6 @@
 {
   "*": "stage",
+  "redirectOnFullSubmission": "actions/navigate.homebase",
   "stage": {
     "*": "stage.view",
     "stageKey": {
