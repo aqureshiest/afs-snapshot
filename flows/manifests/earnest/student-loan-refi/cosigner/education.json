@@ -79,7 +79,8 @@
               "key": {
                 "@": "save-address"
               },
-              "manifest": "earnest-student-loan-refi/urls/save.education"
+              "manifest": "earnest-student-loan-refi/urls/save.education",
+              "analytics": "analytics/full-refi/cosigner.education"
             },
             "onError": [],
             "stepSaveCopy": {

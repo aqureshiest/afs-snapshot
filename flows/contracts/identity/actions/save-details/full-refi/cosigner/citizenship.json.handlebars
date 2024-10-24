@@ -2,7 +2,16 @@
     "key": "save-citizenship-details-full-refi",
     "type": "request",
     "properties": {
-        "analytics": {},
+        "analytics": {
+            "name": "Rate Check Section Submitted",
+            "product": "slr",
+            "role": "{{{application.applicant.role}}}",
+            "source": "rate check",
+            "section": "citizenship",
+            "application_id": "{{{application.id}}}",
+            "primary_application_id": "{{{application.primary.id}}}",
+            "cosigner_application_id": "{{{application.cosigner.id}}}"
+        },
         "manifest": "save-details/full-refi/cosigner/citizenship/{{application.cosigner.id}}",
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}
