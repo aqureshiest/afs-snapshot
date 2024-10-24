@@ -2,6 +2,28 @@
   "type": "flexible",
   "label": "Rate Estimate Result",
   "pageLayout": {{{json (contract 'pageLayout')}}},
+  "onLoadEvent": {
+    "name": "Rate Check Results Viewed",
+    "product": "slr",
+    "role": "{{{application.applicant.role}}}",
+    "source": "rate check",
+    "application_id": "{{{application.id}}}",
+    "primary_application_id": "{{{application.primary.id}}}",
+    "cosigner_application_id": "{{{application.cosigner.id}}}",
+    "value": "{{{multiply application.details.amount.requested 0.13}}}",
+    "decision_code": "D",
+    "can_invite_cosigner": "y",
+    {{!-- "login": "n", --}}
+    {{!-- "estimate_id": "{{{application.lendingDecisionID.[0]}}}", --}}
+    {{!-- "device_id": "{{{userState.device_id}}}", --}}
+    {{!-- "email": "{{{application.primary.details.email}}}", --}}
+    {{!-- "education_highest_degree": "{{{application.applicant.details.education.highest_degree}}}", --}}
+    {{!-- "citzenship": "{{{application.primary.details.location.0.citizenship}}}", --}}
+    {{!-- "personal_info_state": "{{{currentAddress.state}}}", --}}
+    "serverProperties": {
+      "name": "Rate Check Results Received"
+    }
+  },
   "definition": {
     "type": "flexible",
     "definition": {
