@@ -120,4 +120,4 @@ class Client extends BaseClient<[Context | void]> {
   }
 }
 
-export default mixins.agent()(mixins.logged(Client));
+export default mixins.agent({ keepAlive: false })(mixins.logged(Client));

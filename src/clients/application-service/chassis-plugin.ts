@@ -20,8 +20,9 @@ export const plugin: Plugin<typings.ApplicationServiceClient> = {
 
     const client = new ApplicationServiceClientClass({ baseUrl, accessKey });
 
-    if (context.env.NODE_ENV !== "test") {
+    if (!context.env.NODE_TEST_CONTEXT) {
       await client.start(context);
+      process.on("SIGTERM", () => client.stop());
     }
 
     plugin.instance = client;
