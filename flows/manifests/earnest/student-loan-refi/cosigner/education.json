@@ -80,7 +80,7 @@
                 "@": "save-address"
               },
               "manifest": "earnest-student-loan-refi/urls/save.education",
-              "analytics": "analytics/full-refi/cosigner.education"
+              "analytics": "actions/analytics/full-refi/cosigner.education"
             },
             "onError": [],
             "stepSaveCopy": {
