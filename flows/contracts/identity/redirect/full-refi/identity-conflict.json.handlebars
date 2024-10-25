@@ -48,7 +48,7 @@
                               (boolean (hasActiveIncompleteApplication ../request.params.id ../applications))
                             )}}
                               {{!Login screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/resume}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/resume",
                               "external": true
                           {{! Returning users with an inflight post-submission application}}
                             {{else if (and
@@ -56,7 +56,7 @@
                               (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications))
                             )}}
                               {{!Login screen}}
-                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/resume}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/resume",
                               "external": true
                           {{! Returning accountless users with an inflight incomplete or post-submission application}}
                             {{else if (or
@@ -82,7 +82,7 @@
                             {{!Login screen}}
                             "type": "navigate",
                             "properties": {
-                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/resume}}",
+                              "goTo": "{{env.BASE_URL}}/_/auth/neasauth/resume",
                               "external": true
                             }
                           {{else}}
