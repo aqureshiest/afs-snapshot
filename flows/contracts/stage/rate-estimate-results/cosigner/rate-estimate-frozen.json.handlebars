@@ -13,13 +13,10 @@
     "value": "{{{formatCentsToDollars (multiply application.details.amount.requested 0.13)}}}",
     "decision_code": "D",
     "can_invite_cosigner": "n",
-    {{!-- "login": "n", --}}
-    {{!-- "estimate_id": "{{{application.lendingDecisionID.[0]}}}", --}}
-    {{!-- "device_id": "{{{userState.device_id}}}", --}}
-    {{!-- "email": "{{{application.cosigner.details.email}}}", --}}
-    {{!-- "education_highest_degree": "{{{application.applicant.details.education.highest_degree}}}", --}}
-    {{!-- "citizenship": "{{{application.cosigner.details.location.0.citizenship}}}", --}}
-    {{!-- "personal_info_state": "{{{currentAddress.state}}}", --}}
+    "login": "n",
+    "estimate_id": "{{{application.lendingDecisionID.0.decisionID}}}",
+    "device_id": "{{{userState.device_id}}}",
+    "email": "{{{application.cosigner.details.email}}}",
     "serverProperties": {
       "name": "Rate Check Results Received"
     }
