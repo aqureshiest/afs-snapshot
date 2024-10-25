@@ -169,7 +169,17 @@
                     "key": "cosigner-basic-info-request",
                     "type": "navigate",
                     "properties": {
-                        "goTo" : "earnest/student-loan-refi/cosigner/basic-info/{{application.cosigner.id}}"
+                        "goTo" : "earnest/student-loan-refi/cosigner/basic-info/{{application.cosigner.id}}",
+                        "analytics": {
+                          "name": "Rate Check Started",
+                          "product": "slr",
+                          "role": "cosigner",
+                          "source": "rate check",
+                          "loan_type": "cosigned",
+                          "application_id": "{{{application.id}}}",
+                          "primary_application_id": "{{{application.primary.id}}}",
+                          "cosigner_application_id": "{{{application.cosigner.id}}}"
+                        }
                     }
                 }
               }
