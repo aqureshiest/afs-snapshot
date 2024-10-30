@@ -44,6 +44,7 @@
             "info/student-loan-amount/review.full-refi-cosigner",
             "info/student-finances/review.full-refi-cosigner",
             "questions/primary/consent.default",
+            "questions/cosigner/intent.default",
             "questions/primary/disclosure.default",
             "questions/primary/disclosure.disclaimer"
         ],
@@ -54,6 +55,7 @@
             "info/student-employment/review.full-refi-cosigner",
             "info/student-loan-amount/review.full-refi-cosigner",
             "questions/primary/consent.default",
+            "questions/cosigner/intent.default",
             "questions/primary/disclosure.default",
             "questions/primary/disclosure.disclaimer"
         ],
