@@ -39,7 +39,7 @@
         "stageLabel": {
           "@": "Education"
         },
-        "stageValidation": "earnest-student-loan-refi/pages/degree.validation",
+        "stageValidation": "earnest-student-loan-refi/pages/degree.cosigner-validation",
         "stageLayout": {
           "*": "stage/layout",
           "header": [

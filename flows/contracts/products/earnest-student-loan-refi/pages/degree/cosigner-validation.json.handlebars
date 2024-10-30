@@ -1,0 +1,89 @@
+{{#applicantById}}
+{
+  "type": "object",
+  "properties": {
+    "education": {
+      "type": "object",
+      "properties": {
+        "degree-type": {
+          "type": "string",
+          "enum": ["undergraduate", "graduate", "high_school"],
+          "errorMessage": {
+            "enum": "Select an option"
+          }
+        },
+        "graduationDate": {{{json (schema 'questions/primary/date/schemas/graduation-date')}}}
+      },
+      "allOf": [{
+        {{!-- =============================================================================
+        IF Undergraduate - require: 
+        - undergrdauate school
+        - undergraduate degree type 
+        ============================================================================= --}}
+        "if": {
+            "properties": {
+            "degree-type": {
+                "const": "undergraduate"
+            }
+            }
+        },
+        "then": {
+          "properties": {
+            "school-undergraduate": {{{json (schema 'questions/primary/school')}}},
+            "undergraduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}}
+          }
+        }
+      }, {
+        {{!-- =============================================================================
+        IF Graduate - require: 
+        - grdauate school
+        - graduate degree type 
+        ============================================================================= --}}
+        "if": {
+          "properties": {
+            "degree-type": {
+              "const": "graduate"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "school-graduate": {{{json (schema 'questions/primary/school')}}},
+            "graduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/graduate-degree-types')}}}
+          },
+          {{!-- =============================================================================
+            IF Graduate && graduationDate within last 8 years && graduate-degree-type is medical - require:
+            - residency end date
+            ============================================================================= --}}
+          "if": {
+            "allOf": [{
+              "properties": {
+                "graduate-degree-type": {
+                  "enum": ["dvm", "do", "md", "dds", "pharmd"]
+                }
+              }
+            }, 
+            {
+              "properties": {
+                "graduationDate": {
+                  "type": "object",
+                  "properties": {
+                    "year": {
+                      "enum": [{{{last8Years}}}] 
+                    }
+                  }
+                }
+              }
+            }]
+          },
+          "then": {
+            "properties": {
+              "residencyEndDate": {{{json (schema 'questions/primary/date/schemas/residency-end')}}}
+            }
+          }
+        }
+      }]
+    }
+  }
+}
+{{/applicantById}}
