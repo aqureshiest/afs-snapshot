@@ -1,0 +1,10 @@
+{
+  "action": {
+    "type": "navigate",
+    "properties": {
+      {{#if (contract 'analytics')}}"analytics": {{{json (contract 'analytics')}}},{{/if}}
+      "goTo": {{#if (contract 'goTo')}}{{{json (contract 'goTo')}}}{{else}}""{{/if}},
+      "external": {{#if (contract 'external')}}{{{json (contract 'external')}}}{{else}}false{{/if}}
+    }
+  }
+}

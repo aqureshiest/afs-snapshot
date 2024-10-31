@@ -41,8 +41,8 @@
             "@": "Send reminder to cosigner"
           },
           "action": {
-            "*": "actions/navigate",
-            "goTo": "earnest-student-loan-refi/urls.reminder-sent",
+            "*": "actions/request",
+            "manifest": "actions/reminders/student-loan-refi.cosigner-reminder",
             "analytics": "analytics/full-refi.syllabus-reminder-action"
           }
         }

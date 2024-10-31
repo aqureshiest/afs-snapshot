@@ -1,0 +1,16 @@
+{
+  "action": "send-reminder",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/identity/send-invite",
+  "body": {
+    "applicantId": {{{json @root.application.cosigner.id}}},
+    "userId": {{{json (coalesce @root.application.cosigner.reference.userID @root.application.cosigner.reference.userIdBeforeVerifyingThroughEmailId)}}},
+    "email": {{{json @root.application.cosigner.details.email}}},
+    "template": "application_cosigner_invite",
+    "meta": {
+      "primary_first_name": {{{json (toUpper @root.application.primary.details.name.first)}}},
+      "cosigner_first_name": {{{json (toUpper @root.application.cosigner.details.name.first)}}}
+    }
+  }
+}

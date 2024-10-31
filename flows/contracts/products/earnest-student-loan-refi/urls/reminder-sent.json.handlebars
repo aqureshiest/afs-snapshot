@@ -1,3 +1,7 @@
-{{#applicantById}}
-  "{{../application.reference.brand}}/student-loan-refi/{{#if isCosigner}}cosigner/{{/if}}reminder-sent/{{{applicant.id}}}"
-{{/applicantById}}
+{{#with (contract 'actions' 0)}}
+  {{#applicantById}}
+    "{{../application.reference.brand}}/student-loan-refi/{{#if isCosigner}}cosigner/{{/if}}reminder-sent/{{{../application.applicant.id}}}"
+  {{/applicantById}}
+{{else}}
+  null
+{{/with}}

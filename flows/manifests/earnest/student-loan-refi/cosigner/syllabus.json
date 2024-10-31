@@ -26,8 +26,9 @@
           "@": "Send reminder to primary"
         },
         "action": {
-          "*": "actions/navigate",
-          "goTo": "earnest-student-loan-refi/urls.reminder-sent"
+          "*": "actions/request",
+          "manifest": "actions/reminders/student-loan-refi",
+          "analytics": "analytics/full-refi.syllabus-reminder-action"
         }
       }]
     },
