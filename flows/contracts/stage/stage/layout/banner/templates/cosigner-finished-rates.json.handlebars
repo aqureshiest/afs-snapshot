@@ -1,4 +1,9 @@
-{{#if (and (eq application.applicant "primary") (application.cosigner.decision))}}
+{{! TODO: the condition for showing this banner is imprecise; this should be substituted by a
+    check of the artifact from LDS to ensure that the decision:
+      1. has rates
+      2. has not expired
+}}
+{{#if (and (eq application.applicant.role "primary") application.cosigner.details.decision.length)}}
 {
   {{#if (contract "secondaryAction")}}
     "additionalButtonProps": {{{json (contract "secondaryAction")}}},
