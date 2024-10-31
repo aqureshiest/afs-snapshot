@@ -7,7 +7,6 @@
       "id": "{{request.params.id}}",
       "details": {{#obj}} {{! make sure to flatten each element into a single line}}
         {{#with request.body.values}}
-            {"deviceId": {{{json request.cookies.device_uuid}}}}
           {{#if dateOfBirth}}
             {"dateOfBirth": "{{{dateObjToString dateOfBirth}}}"}
           {{/if}}
