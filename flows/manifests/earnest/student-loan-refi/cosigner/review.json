@@ -32,6 +32,7 @@
       "outputs": {
         "*": "refi-review",
         "stage": "review.refi",
+        "intent": { "*": { "@": true } },
         "pageLayout": "sidebar",
         "steps": [
             "student-info-form/review.full-refi"
