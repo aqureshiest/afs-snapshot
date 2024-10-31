@@ -6,7 +6,7 @@
         "id": "{{cosigner.id}}",
         "details": {{#obj}} {{! make sure to flatten each element into a single line}}
           {{#with request.body.values}}
-              {"deviceId": "{{{request.cookies.device_uuid}}}"}
+              {"deviceId": {{{json request.cookies.device_uuid}}}}
             {{#if name}}
               {"name": {{{json name}}} }
             {{/if}}
