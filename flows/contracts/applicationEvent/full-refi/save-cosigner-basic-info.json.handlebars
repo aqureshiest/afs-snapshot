@@ -5,7 +5,6 @@
       "payload": {
         "id": "{{cosigner.id}}",
         "details": {{#obj}} {{! make sure to flatten each element into a single line}}
-              {"deviceId": "{{userState.device_id}}"}
           {{#with request.body.values}}
             {{#if name}}
               {"name": {{{json name}}} }
