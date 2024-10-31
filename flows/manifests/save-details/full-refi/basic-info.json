@@ -12,6 +12,7 @@
       "*": "applications-by-email",
       "query": "application/search-query"
      },
+    "userState": "user-state",
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
