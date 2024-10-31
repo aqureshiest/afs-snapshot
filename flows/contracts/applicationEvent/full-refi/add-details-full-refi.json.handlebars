@@ -8,6 +8,7 @@
       "details": {{#obj}} {{! make sure to flatten each element into a single line}}
         {"deviceId": "{{userState.device_id}}"}
         {{#with request.body.values}}
+            {"deviceId": "{{{request.cookies.device_uuid}}}"}
           {{#if dateOfBirth}}
             {"dateOfBirth": "{{{dateObjToString dateOfBirth}}}"}
           {{/if}}

@@ -6,8 +6,7 @@
       "id": "{{request.params.id}}",
       "details": 
         {{#with request.body.values}}
-            { "deviceId": "{{userState.device_id}}",
-              "education": [{
+            { "education": [{
               "index": 0,
               "degree": {{#if (eq degree-type "graduate")}} "{{graduate-degree-type}}" 
                           {{else if (eq degree-type "undergraduate")}} "{{undergraduate-degree-type}}"
