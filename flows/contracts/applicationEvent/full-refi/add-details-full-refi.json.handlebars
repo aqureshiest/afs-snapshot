@@ -6,7 +6,7 @@
     "payload": {
       "id": "{{request.params.id}}",
       "details": {{#obj}} {{! make sure to flatten each element into a single line}}
-        {"deviceId": "{{userState.deviceId}}"}
+        {"deviceId": "{{userState.device_id}}"}
         {{#with request.body.values}}
           {{#if dateOfBirth}}
             {"dateOfBirth": "{{{dateObjToString dateOfBirth}}}"}
