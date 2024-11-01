@@ -306,6 +306,12 @@ export function getSchoolInputValue(schoolArray) {
     : "";
 }
 
+/* v8 ignore next */
+export function schoolSupported(school, product) {
+  const supported = school && school?.loanTypes?.includes(product)
+  return supported
+}
+
 export function hasValues(value) {
   if (value) {
     return Object.values(value).some(

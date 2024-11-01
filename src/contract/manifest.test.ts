@@ -9,6 +9,7 @@ import readJsonFile from "@earnest-labs/microservice-chassis/readJsonFile.js";
 import Contract from "./contract.js";
 import Manifest from "./manifest.js";
 import RedisClient from "../clients/redis/index.js";
+import * as helpers from "./template-helpers/index.js";
 
 describe("[462fd166] manifest.execute", () => {
   let context;
@@ -1115,13 +1116,38 @@ describe("[462fd166] manifest.execute", () => {
 
     const result = await manifest.execute(context, {}, input);
 
-    console.log("RESULT", result);
-
     const parsed = JSON.parse(JSON.stringify(result));
 
     assert.deepEqual(parsed, {
       school: "",
     });
+  });
+
+  it("[dp9215d8] schoolSupported helper", async () => {
+    const school = { loanTypes: ['slr']}
+    const supported = helpers.schoolSupported(school, "slr")
+    const unsupported = helpers.schoolSupported(school, "nope")
+
+    assert.equal(supported, true)
+    assert.equal(unsupported, false)
+  });
+
+  it("[gi732673] getSchoolInputValue helper", async () => {
+    const uiSafeSchool = {
+      opeid8: 1234,
+      name: "test",
+      address: "test",
+      state: "test",
+      city: "test",
+      country: "test",
+    }
+    const unsafeProperties = {
+      loanTypes: ['slr']
+    }
+
+    const schoolInputValue = helpers.getSchoolInputValue([{...uiSafeSchool, ...unsafeProperties}]) 
+
+    assert.deepEqual(schoolInputValue, uiSafeSchool);
   });
 
   it("[ba9215d8] spread helper", async () => {

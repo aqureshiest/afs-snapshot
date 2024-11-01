@@ -1,0 +1,18 @@
+{{!-- What is this? --}}
+{{!-- When the primary is submitting the education screen, we need to get the opeid from the request in order to validate if it's in supported loanTypes --}}
+{{!-- The caveat is that when the primary is for a parent-plus loan, the correct opeid to validate is the "students" --}}
+{{#with request.body.values}}
+  {{#if (eq isParentDriven "true")}}
+    {{#if (eq student-degree-type "graduate")}}
+      {{student-school-graduate.opeid8}}
+    {{else if (eq student-degree-type "undergraduate")}}
+      {{student-school-undergraduate.opeid8}}
+    {{/if}}
+  {{else}}
+    {{#if (eq degree-type "graduate")}}
+      {{school-graduate.opeid8}}
+    {{else if (eq degree-type "undergraduate")}}
+      {{school-undergraduate.opeid8}}
+    {{/if}}
+  {{/if}}
+{{/with}}

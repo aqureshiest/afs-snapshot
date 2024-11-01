@@ -40,6 +40,19 @@ describe("[f8395630] Application Service Client", () => {
     assert(response);
     assert.deepStrictEqual(response.name, "ITT Technical Institute - Corona");
   });
+
+  it("[b6fa8269] should be able to get school data from opeidid", async () => {
+    const response = await client.getSchoolByOpeid(input, context, { opeid: "00732978" });
+    assert(response);
+    assert.deepStrictEqual(response.name, "University of California, Berkeley");
+  });
+
+  it("[b6fg9269] should be able to get school name from opeidid", async () => {
+    const response = await client.getSchoolName(input, context, { opeid: "00732978" });
+    assert(response);
+    assert.deepStrictEqual(response, "University of California, Berkeley");
+  });
+
   it("[0743446b] should get error when >=400", async () => {
     mock.method(client, "get", async () => {
       return {

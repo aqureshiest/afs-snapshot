@@ -1,0 +1,65 @@
+{
+  "*": "flexible-content",
+  "content": [
+    {
+      "*": "flexible-content/items/header",
+      "item-key": {
+        "@": "header"
+      },
+      "copy": {
+        "@": "The school you entered does not meet our refinancing criteria"
+      },
+      "subCopy": {
+        "@": "We are unable to offer you refinance option at this time given the school you entered for your student."
+      },
+      "asset": {
+        "*": "asset/local",
+        "icon": "asset/local/illustrations.warning",
+        "centered": {
+          "@": "true"
+        }
+      }
+    },
+    {
+      "*": "flexible-content/items/md",
+      "item-key": {
+        "@": "content"
+      },
+      "size": {
+        "@": "small"
+      },
+      "content": {
+        "@": "## What makes a school eligible for refinancing with Earnest? \n\n We can refinance student loans used to pay for any college or university degree that is accredited with the U.S. Department of Education under Title IV. If you're unsure if your school is Title IV accredited, you can consult this list."
+      }
+    },
+    {
+      "*": "flexible-content/items/buttons",
+      "item-key": {
+        "@": "button"
+      },
+      "buttons": [
+        {
+          "*": "actions.with-copy",
+          "copy": {
+            "@": "Return to Application"
+          },
+          "action": {
+            "*": "actions/modal.dismiss"
+          }
+        }
+      ],
+      "stylePreset": { "@": "secondaryPrimary"},
+      "groupProps": {
+        "@": {
+          "flexDirection": "column",
+          "alignItems": "center"
+        }
+      },
+      "containerProps": {
+        "@": {
+          "marginTop": "24px"
+        }
+      }
+    }
+  ]
+}

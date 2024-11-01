@@ -1,0 +1,8 @@
+{{#if (contract "opeid")}}
+{
+  "accreditedSchoolServiceRequestMethod": "getSchoolByOpeid",
+  "opeid": {{{json (contract "opeid")}}}
+}
+{{else}}
+ ""
+{{/if}}

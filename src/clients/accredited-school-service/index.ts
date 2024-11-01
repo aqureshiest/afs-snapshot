@@ -6,7 +6,6 @@ export default class AccreditedSchoolServiceClient extends Client {
   get clientName() {
     return "AccreditedSchoolService";
   }
-  /* v8 ignore next */
   async getSchoolName(
     input: Input<unknown>,
     context: PluginContext,
@@ -23,6 +22,18 @@ export default class AccreditedSchoolServiceClient extends Client {
     } else {
       return null;
     }
+  }
+
+  async getSchoolByOpeid(
+    input: Input<unknown>,
+    context: PluginContext,
+    payload,
+  ): Promise<SchoolDetails | null> {
+    const { opeid } = payload;
+    const schoolFromSearch = opeid && (await this.getSchools(input, context, payload))?.[0]
+    const { id } = schoolFromSearch || {};
+    const school = id && this.getSchool(input, context, {id});
+    return school || null
   }
 
   async getSchool(

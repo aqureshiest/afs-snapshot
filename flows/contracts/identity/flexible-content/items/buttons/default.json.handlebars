@@ -1,0 +1,12 @@
+{
+  "key": {{{json (contract "item-key")}}},
+  "type": "buttons",
+  {{#if (contract "containerProps")}}
+    "containerProps": {{{json (contract "containerProps")}}},
+  {{/if}}
+  "componentProps": {
+    {{#if (contract "stylePreset")}}"stylePreset": {{{json (contract "stylePreset")}}},{{/if}}
+    {{#if (contract "groupProps")}}"groupProps": {{{json (contract "groupProps")}}},{{/if}}
+    "buttons": {{{json (contract "buttons")}}}
+  }
+}

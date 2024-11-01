@@ -1,40 +1,75 @@
-[{
-  "methods": ["post"],
-  "parameters": [ { "key": "id", "format": "uuid" } ],
-  "inputs": {
-    "*": "inputs",
-    "application": {
-      "*": "application/single.flattened",
-      "application": "application-by-id-param"
+[
+  {
+    "methods": [
+      "post"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid"
+      }
+    ],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
     },
-    "applications": [],
-    "applicationState": "application-state",
-    "userState": "user-state",
-    "auth": {
-      "*": "auth-artifacts",
-      "strategies": [
-        {
-          "*": "inputs/auth.neas-session",
-          "response": "neas.verify-token",
-          "authorization": [
-            "inputs/auth.neas-application-auth",
-            "inputs/auth.neas-user-auth",
-            "inputs/auth.neas-monolith-auth"
-          ]
+    "outputs": {
+      "*": "earnest-student-loan-refi/save.response",
+      "returnedAction": {
+        "*": "actions.conditional",
+        "if": {
+          "*": "conditionals.supported-school",
+          "school": {
+            "*": "get-school-by-opeid",
+            "opeid": {
+              "*": "earnest-student-loan-refi/pages/education.opeid-to-check-support",
+              "as": {
+                "@": "request"
+              }
+            }
+          },
+          "product": {"@": "slr"}
+        },
+        "else": {
+          "*": "actions/modal.manifest",
+          "manifest": "earnest-student-loan-refi/urls/content.unsupported-school"
+        },
+        "then": {
+          "*": "actions/navigate",
+          "goTo": "earnest-student-loan-refi/urls.address"
         }
-      ]
-    }
-  },
-  "outputs": {
-    "*": "earnest-student-loan-refi/save.response",
-    "returnedAction": { "*": "actions/navigate", "goTo": "earnest-student-loan-refi/urls.address"},
-    "actions": {
-      "*": "actions/result.results",
-      "actions": [
-        "full-refi.add-details-education",
-        {"*": "create.beneficiary", "details": "earnest-student-loan-refi/save.beneficiary-details"},
-        "redis.full-refi"
-      ]
+      },
+      "actions": {
+        "*": "actions/result.results",
+        "actions": [
+          "full-refi.add-details-education",
+          {
+            "*": "create.beneficiary",
+            "details": "earnest-student-loan-refi/save.beneficiary-details"
+          },
+          "redis.full-refi"
+        ]
+      }
     }
   }
-}]
+]
