@@ -1309,6 +1309,38 @@ describe("[462fd166] manifest.execute", () => {
             applyProduct: "student-refi",
             tags: ["RC_Primary_Decline"],
             statuses: ["submitted", "submitted"],
+            decisions: [
+              {
+                decisionID: "51388714-2a9b-4e88-8da2-6b45b3c9d04f",
+                type: "rate-check",
+                expiresAt: "2024-11-04T23:12:28.000Z",
+                inquiryDate: "2024-10-01T01:20:52.263Z",
+              },
+              {
+                decisionID: "85551f34-a75f-42db-94f5-3f08f16e442c",
+                type: "rate-check",
+                expiresAt: "2024-11-04T23:12:28.000Z",
+                inquiryDate: "2024-10-29T01:20:52.263Z",
+              },
+              {
+                decisionID: "ed623f60-c19e-44f7-a706-867aec15c770",
+                type: "rate-check",
+                expiresAt: "2024-11-04T23:12:28.000Z",
+                inquiryDate: "2024-10-20T01:20:52.263Z",
+              },
+              {
+                decisionID: "c98d803a-2a6f-4f51-a9aa-9726ec81ac54",
+                type: "application",
+                expiresAt: "2024-11-27T23:13:55.000Z",
+                inquiryDate: "2024-10-29T01:22:30.830Z",
+              },
+              {
+                decisionID: "c98d803a-2a6f-4f51-a9aa-9726ec81ac54",
+                type: "application",
+                expiresAt: "2024-11-27T23:13:55.000Z",
+                inquiryDate: "2024-10-29T01:23:06.178Z",
+              },
+            ],
           },
         },
       },
@@ -1360,7 +1392,8 @@ describe("[462fd166] manifest.execute", () => {
               "searchDeniedArtifactTags": {{{searchDeniedArtifactTags request.body.values.tags}}},
               "every": {{{ every request.body.values.statuses 'submitted' }}},
               "reviewDateFormatter": "{{{ reviewDateFormatter '2024-09-26' }}}",
-              "some": {{{ some request.body.values.statuses 'submitted'}}}
+              "some": {{{ some request.body.values.statuses 'submitted'}}},
+              "decisions": {{{json (getMostRecentRateInquiry request.body.values.decisions)}}}
             }
         `,
           }),
@@ -1410,6 +1443,12 @@ describe("[462fd166] manifest.execute", () => {
       every: true,
       reviewDateFormatter: "09/26/2024",
       some: true,
+      decisions: {
+        decisionID: "85551f34-a75f-42db-94f5-3f08f16e442c",
+        type: "rate-check",
+        expiresAt: "2024-11-04T23:12:28.000Z",
+        inquiryDate: "2024-10-29T01:20:52.263Z",
+      },
     });
   });
 

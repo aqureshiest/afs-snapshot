@@ -588,3 +588,16 @@ export function escapeUrlParam(input: string) {
   if (!input) return null;
   return encodeURIComponent(input);
 }
+
+export function getMostRecentRateInquiry(decisions) {
+  if (!Array.isArray(decisions) || decisions.length === 0) {
+    return null;
+  }
+
+  return decisions.reduce((mostRecent, current) => {
+    return current.type === "rate-check" &&
+      new Date(current.inquiryDate) > new Date(mostRecent.inquiryDate)
+      ? current
+      : mostRecent;
+  });
+}

@@ -215,6 +215,7 @@ interface IDecisionPostResponse {
     journeyToken: string;
     journeyApplicationToken: string;
     expirationDate: string;
+    artifacts?: IArtifacts;
   };
 }
 
@@ -326,9 +327,7 @@ declare module "../../../clients/lending-decision-service/index.js" {
   type DecisionGetResponse = IDecisionGetResponse;
   type WebhookEventPayload = IWebhookEventPayload;
   type RateRequestDetails = IRateRequestDetails;
-  type RateRequestResponse = DecisionPostResponse & {
-    artifacts: IArtifacts;
-  };
+  type RateRequestResponse = DecisionPostResponse;
   type ArtifactGetResponse = IArtifactGetResponse;
   type FilteredPrices = IFilteredPrices;
 

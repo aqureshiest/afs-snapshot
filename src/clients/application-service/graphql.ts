@@ -74,6 +74,7 @@ fragment ApplicantFragment on Application {
       decisionID
       type
       expiresAt
+      inquiryDate
     }
     dateOfBirth
     email

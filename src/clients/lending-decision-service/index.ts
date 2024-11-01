@@ -668,6 +668,7 @@ export default class LendingDecisionServiceClient extends Client {
       context,
     );
 
+    const inquiryDate = new Date();
     const { results, response } = await this.post<DecisionPostResponse>(
       {
         uri: lendingDecisionURI,
@@ -717,6 +718,7 @@ export default class LendingDecisionServiceClient extends Client {
       results.data.decisioningToken,
       decisionType,
       results.data.expirationDate,
+      inquiryDate.toISOString(),
     );
 
     return results;
@@ -807,6 +809,7 @@ export default class LendingDecisionServiceClient extends Client {
       "[c3b14b3d] Missing application product in rate check request",
     );
 
+    const inquiryDate = new Date();
     const { results, response } = await this.post<RateRequestResponse>(
       {
         uri: `/v2/decisioning-request/${application?.product}/${decisionType}`,
@@ -854,6 +857,7 @@ export default class LendingDecisionServiceClient extends Client {
       results.data.decisioningToken,
       decisionType,
       results.data.expirationDate,
+      inquiryDate.toISOString(),
     );
 
     return results;
@@ -1847,6 +1851,7 @@ export default class LendingDecisionServiceClient extends Client {
     decisionToken: string,
     decisionType: string,
     expiresAt: string,
+    inquiryDate: string,
   ): Promise<void> {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient?.instance;
@@ -1876,6 +1881,7 @@ export default class LendingDecisionServiceClient extends Client {
                 decisionID: decisionToken,
                 type: decisionType,
                 expiresAt: expiresAt,
+                inquiryDate: inquiryDate,
               },
             },
             id: applicantApplicationId,
