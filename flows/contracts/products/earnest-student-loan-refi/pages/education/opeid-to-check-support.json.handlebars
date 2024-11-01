@@ -4,15 +4,15 @@
 {{#with request.body.values}}
   {{#if (eq isParentDriven "true")}}
     {{#if (eq student-degree-type "graduate")}}
-      {{student-school-graduate.opeid8}}
+      "{{student-school-graduate.opeid8}}"
     {{else if (eq student-degree-type "undergraduate")}}
-      {{student-school-undergraduate.opeid8}}
+      "{{student-school-undergraduate.opeid8}}"
     {{/if}}
   {{else}}
     {{#if (eq degree-type "graduate")}}
-      {{school-graduate.opeid8}}
+      "{{school-graduate.opeid8}}"
     {{else if (eq degree-type "undergraduate")}}
-      {{school-undergraduate.opeid8}}
+      "{{school-undergraduate.opeid8}}"
     {{/if}}
   {{/if}}
 {{/with}}
