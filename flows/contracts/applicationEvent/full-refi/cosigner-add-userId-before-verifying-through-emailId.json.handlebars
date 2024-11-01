@@ -1,19 +1,20 @@
+{{noop (contract 'cosigner') (contract 'user')}}
 {{#with (contract 'cosigner') as |cosigner|}}
   {{#with (contract 'user') as |user|}}
-    {{#if user.success }}
+    {{#with (coalesce user.results.userId user.results.userIdMap.user_id) as |userId| }}
       {
         "event": "addReferences",
         "payload": {
           "id": "{{ cosigner.id}}",
           "references": [
             {
-              "referenceId": {{{json (coalesce user.results.userId user.results.userIdMap.user_id)}}},
+              "referenceId": {{{json (string userId)}}},
               "referenceType": "userIdBeforeVerifyingThroughEmailId"
             }
           ]
         },
         "fields": "application { id }"
      }
-     {{else}} null {{/if}}
+     {{else}} null {{/with}}
   {{else}} null {{/with}}
 {{else}} null {{/with}}
