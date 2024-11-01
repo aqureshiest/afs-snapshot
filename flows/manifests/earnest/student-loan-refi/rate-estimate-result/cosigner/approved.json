@@ -36,6 +36,7 @@
     "outputs": {
         "*": "rate-estimate-results-view",
         "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
+        "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
         "pageLayout": "sidebar",
         "getPaymentsAndRates": "rate-estimate-prices",
         "redirect_homebase": "actions/homebase.default"

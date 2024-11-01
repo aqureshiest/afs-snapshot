@@ -1,6 +1,7 @@
 {
     "*": "rate-estimate-results-view",
     "landing_stage": "rate-estimate-results/cosigner.rate-estimate-declined",
+    "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
     "pageLayout": "sidebar",
     "redirect_homebase": "actions/homebase.default",
     "headLineRates": "rest.headLineRates"

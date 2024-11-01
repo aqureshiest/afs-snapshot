@@ -2,6 +2,9 @@
   "type": "flexible",
   "label": "Rate Estimate Result",
   "pageLayout": {{{json (contract 'pageLayout')}}},
+  {{#if (contract "analytics")}}
+      "analytics":{{{json (contract 'analytics')}}},
+  {{/if}}
   "onLoadEvent": {
     "name": "Rate Check Results Viewed",
     "product": "slr",
