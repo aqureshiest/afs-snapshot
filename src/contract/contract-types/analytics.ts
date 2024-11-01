@@ -67,12 +67,12 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
         switch (eventType) {
           case EVENT_TYPE.track:
             await analyticsServiceClient.track(
-              this.buildTrackProps(input, definition),
+              this.buildTrackProps(input, definition, input?.request?.cookies),
             );
             break;
           case EVENT_TYPE.identify:
             await analyticsServiceClient.identify(
-              this.buildIdentifyProps(input),
+              this.buildIdentifyProps(input, input?.request?.cookies),
             );
             break;
           // not sending this type of events from the server side.
@@ -94,7 +94,11 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
     return { success: true };
   };
 
-  private buildTrackProps(input: Input, definition: Definition) {
+  private buildTrackProps(
+    input: Input,
+    definition: Definition,
+    cookies: Cookies,
+  ) {
     const { application, auth } = input;
 
     const userId = auth?.artifacts?.userId;
@@ -108,7 +112,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
 
     const props: TrackParams = {
       ...(userId ? { userId } : {}),
-      anonymousId,
+      anonymousId: cookies.ajs_anonymous_id,
       event: event,
       properties: {
         ...payloadProps,
@@ -132,7 +136,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
     return props;
   }
 
-  private buildIdentifyProps(input: Input) {
+  private buildIdentifyProps(input: Input, cookies: Cookies) {
     const { application, auth } = input;
 
     assert(application?.primary, "[18e77f7d] application.primary is null");
@@ -143,6 +147,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
 
     const props: IdentifyParams = {
       userId,
+      anonymousId: cookies.ajs_anonymous_id,
       traits: {
         applicationId: application.id,
         product: application.product,

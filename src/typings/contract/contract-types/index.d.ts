@@ -174,6 +174,10 @@ declare module "contract/contract-types/analytics.js" {
     anonymousId: string;
     payload: { serverProperties: map } & map;
   };
+  type Cookies = {
+    ajs_anonymous_id: string;
+    device_id: string;
+  };
 
   type Output = { [key: string]: string | boolean } | null;
 }
