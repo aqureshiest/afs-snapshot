@@ -8,6 +8,7 @@
     "stageLabel": {
       "@": "Invite Sent"
     },
+    "analytics": "actions/analytics/full-refi.cosigner-invited-page-event",
     "stageLayout": {
       "*": "stage/layout",
       "header": [
