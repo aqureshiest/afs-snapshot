@@ -3,7 +3,7 @@
   "enum": [
     "undergraduate",
     "graduate",
-    "high-school"
+    "high_school"
   ],
   "errorMessage": {
     "enum": "Please select your degree type."

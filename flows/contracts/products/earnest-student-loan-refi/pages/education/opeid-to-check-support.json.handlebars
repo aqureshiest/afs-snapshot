@@ -7,12 +7,16 @@
       "{{student-school-graduate.opeid8}}"
     {{else if (eq student-degree-type "undergraduate")}}
       "{{student-school-undergraduate.opeid8}}"
+    {{else}}
+      "high_school"
     {{/if}}
   {{else}}
     {{#if (eq degree-type "graduate")}}
       "{{school-graduate.opeid8}}"
     {{else if (eq degree-type "undergraduate")}}
       "{{school-undergraduate.opeid8}}"
+    {{else}}
+      "high_school"
     {{/if}}
   {{/if}}
 {{/with}}

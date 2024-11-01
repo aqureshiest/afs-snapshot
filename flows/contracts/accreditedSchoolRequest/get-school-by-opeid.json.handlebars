@@ -1,8 +1,12 @@
-{{#if (contract "opeid")}}
-{
-  "accreditedSchoolServiceRequestMethod": "getSchoolByOpeid",
-  "opeid": {{{json (contract "opeid")}}}
-}
+{{#with (contract "opeid") as |opeid|}}
+  {{#if (and opeid (ne opeid "high_school"))}}
+  {
+    "accreditedSchoolServiceRequestMethod": "getSchoolByOpeid",
+    "opeid": {{{json opeid}}}
+  }
+  {{else}}
+    "high_school"
+  {{/if}}
 {{else}}
- ""
-{{/if}}
+  null
+{{/with}}
