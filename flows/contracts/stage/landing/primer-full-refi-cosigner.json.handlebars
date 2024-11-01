@@ -6,7 +6,16 @@
     "pageTitle": "Earnest"
   },
   "pageLayout": {{{json (contract 'layout')}}},
-  "analytics": {},
+  "analytics": {
+    "name": "Primer Screen",
+    "product": "slr",
+    "role": "cosigner",
+    "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+    "source": "rate check",
+    "application_id": "{{{application.id}}}",
+    "primary_application_id": "{{{application.primary.id}}}",
+    "cosigner_application_id": "{{{application.cosigner.id}}}"
+  },
   "definition": {
     "type": "landing",
     "definition": {

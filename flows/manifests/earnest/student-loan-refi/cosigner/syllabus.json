@@ -9,6 +9,7 @@
     "stageLabel": {
       "@": "Current Address"
     },
+    "analytics":"actions/analytics/full-refi/cosigner.syllabus-page-event",
     "stageLayout": {
       "*": "stage/layout",
       "header": [

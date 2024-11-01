@@ -43,6 +43,7 @@
         "stageLabel": {
           "@": "Reminder Sent"
         },
+        "analytics": "actions/analytics/full-refi.reminder-sent-page-event",
         "stageLayout": {
           "*": "stage/layout",
           "header": [

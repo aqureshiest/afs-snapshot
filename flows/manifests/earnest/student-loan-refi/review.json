@@ -32,6 +32,7 @@
       "outputs": {
         "*": "refi-review",
         "stage": "review.refi",
+        "analytics": "actions/analytics/full-refi.review-page-event",
         "intent": { "*": { "@": true } },
         "pageLayout": "sidebar",
         "steps": [

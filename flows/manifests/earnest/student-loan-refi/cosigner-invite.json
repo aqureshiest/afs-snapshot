@@ -32,6 +32,7 @@
     "outputs": {
       "*": "full-refi",
       "stage": "student-info-stage.refi-cosigner-invite",
+      "analytics": "actions/analytics/full-refi.cosigner-invite-page-event",
       "pageLayout": "layout.sidebar",
       "steps": [
         "student-info-form/cosigner-invite"

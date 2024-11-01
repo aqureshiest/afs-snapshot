@@ -4,6 +4,9 @@
     "label": "Cosigner Invite",
     "status": "notStarted",
     "showProgress": true,
+    {{#if (contract "analytics")}}
+        "analytics": {{{json (contract 'analytics')}}},
+    {{/if}}
     "pageLayout":{{{json (contract 'pageLayout')}}},
     "seo": {
         "pageTitle": "Earnest"

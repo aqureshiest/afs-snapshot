@@ -43,6 +43,7 @@
         "stageLabel": {
           "@": "Education"
         },
+        "analytics": "actions/analytics/full-refi.education-page-event",
         "stageValidation": "earnest-student-loan-refi/pages/degree.validation",
         "stageLayout": {
           "*": "stage/layout",
@@ -84,7 +85,7 @@
                 "@": "save-address"
               },
               "manifest": "earnest-student-loan-refi/urls/save.education",
-              "analytics": "analytics/full-refi.education"
+              "analytics": "actions/analytics/full-refi.education"
             },
             "onError": [],
             "stepSaveCopy": {

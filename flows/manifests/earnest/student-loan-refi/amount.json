@@ -29,6 +29,7 @@
     "outputs": {
       "*": "full-refi",
       "stage": "student-info-stage.full-refi",
+      "analytics": "actions/analytics/full-refi.amount-page-event",
       "pageLayout": "layout.sidebar",
       "steps": [
         "student-info-form/amount.full-refi"

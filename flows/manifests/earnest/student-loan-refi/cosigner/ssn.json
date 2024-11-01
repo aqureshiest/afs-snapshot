@@ -29,6 +29,7 @@
     "outputs": {
       "*": "full-refi",
       "stage": "student-info-stage.full-refi-cosigner",
+      "analytics": "actions/analytics/full-refi/cosigner.ssn-page-event",
       "pageLayout": "layout.sidebar",
       "steps": [
         "student-info-form/ssn.full-refi"

@@ -38,6 +38,7 @@
         "*": "actions/navigate",
         "goTo": "earnest-student-loan-refi/urls.income-source"
       },
+      "analytics": "actions/analytics/full-refi.income-verification-page-event",
       "pageLayout": "sidebar",
       "onError": ["onError.unauthorized"],
       "redirect_homebase": "actions/homebase.default"

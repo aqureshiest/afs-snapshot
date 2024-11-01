@@ -9,6 +9,7 @@
     "stageLabel": {
       "@": "Current Address"
     },
+    "analytics":"actions/analytics/full-refi.syllabus-page-event",
     "stageLayout": {
       "*": "stage/layout",
       "header": [

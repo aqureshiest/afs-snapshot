@@ -32,6 +32,7 @@
     "outputs": {
       "*": "income-verification",
       "stage": "plaid-income-verification.full-refi",
+      "analytics": "actions/analytics/full-refi/cosigner.income-verification-page-event",
       "plaid-link-token-method": "plaid.generate-link-token",
       "section": "refi-primary-only-section",
       "back-button": "actions/back-buttons/full-refi/cosigner.income",

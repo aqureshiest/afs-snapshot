@@ -4,12 +4,16 @@
     "type": "form",
     "status": "notStarted",
     "pageLayout":{{{json (contract 'pageLayout')}}},
+    {{#if (contract "analytics")}}
+    "analytics":{{{json (contract 'analytics')}}},
+    {{else}}
     "analytics": {
         "product": "{{{mapProduct application.reference.product}}}",
         "loan_type": "{{{mapLoanType application.tag.applicants}}}",
         "name": "Application Review",
         "title": "Review"
     },
+    {{/if}}
     "steps": {{{json (contract 'steps')}}},
     "backAction": {{{ json (contract 'back-button') }}},
     "validation": {

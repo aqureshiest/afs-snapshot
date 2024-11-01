@@ -8,6 +8,7 @@
     "stageLabel": {
       "@": "Reminder Sent"
     },
+    "analytics": "actions/analytics/full-refi/cosigner.reminder-sent-page-event",
     "stageLayout": {
       "*": "stage/layout",
       "header": [

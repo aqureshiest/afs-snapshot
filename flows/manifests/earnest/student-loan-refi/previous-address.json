@@ -23,6 +23,7 @@
         }
       }
     },
+    "analytics": "actions/analytics/full-refi.previous-address-page-event",
     "stageLayout": {
       "*": "stage/layout",
       "header": [

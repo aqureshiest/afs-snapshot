@@ -4,6 +4,18 @@
     "label": "Basic Info",
     "status": "notStarted",
     "pageLayout":{{{json (contract 'pageLayout')}}},
+    {{#if (contract "analytics")}}
+        "analytics":{{{json (contract 'analytics')}}},
+    {{else}}
+        "analytics": {
+            "name": "Basic Info",
+            "product": "slr",
+            "role": "{{{application.applicant.role}}}",
+            "source": "rate check",
+            "application_id": "{{{application.id}}}",
+            "primary_application_id": "{{{application.primary.id}}}"
+        },
+    {{/if}}
     "seo": {
         "pageTitle": "Earnest"
     },

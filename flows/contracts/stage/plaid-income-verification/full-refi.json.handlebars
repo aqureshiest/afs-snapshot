@@ -6,6 +6,9 @@
   "seo": {
       "pageTitle": "Student Loan Refinance Application - Earnest"
   },
+  {{#if (contract "analytics")}}
+    "analytics":{{{json (contract 'analytics')}}},
+  {{else}}
   "analytics": {
       "product": "{{{mapProduct application.reference.product}}}",
       "loan_type": "{{{mapLoanType application.tag.applicants}}}",
@@ -13,6 +16,7 @@
       "title": "Verification Method Selection",
       "role": "{{{application.applicant.role}}}"
   },
+  {{/if}}
   "definition": {
     "type": "bankAccounts",
     "definition": {

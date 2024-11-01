@@ -8,6 +8,9 @@
     {{#if (contract "stageSeo")}}
       "seo":{{{json (contract 'stageSeo')}}},
     {{/if}}
+    {{#if (contract "analytics")}}
+      "analytics":{{{json (contract 'analytics')}}},
+    {{/if}}
     {{#if (contract "conditionPresets")}}
       "conditionPresets":{{{json (contract 'conditionPresets')}}},
     {{/if}}
