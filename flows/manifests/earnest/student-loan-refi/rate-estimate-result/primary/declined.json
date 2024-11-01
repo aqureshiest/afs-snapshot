@@ -2,6 +2,7 @@
     "*": "rate-estimate-results-view",
     "landing_stage": "rate-estimate-results/primary.rate-estimate-declined",
     "pageLayout": "sidebar",
+    "analytics": "actions/analytics/full-refi.rate-estimate-page-event",
     "redirect_homebase": "actions/homebase.default",
     "headLineRates": "rest.headLineRates"
 }
