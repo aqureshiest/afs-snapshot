@@ -37,14 +37,30 @@
       "*": "stage.bottom-navigation",
       "buttons": [
         {
-          "*": "actions.with-copy",
-          "copy": {
-            "@": "Send reminder to cosigner"
+          "*": "actions.conditional",
+          "if": {
+            "*": "conditionals.applicant-incomplete"
           },
-          "action": {
-            "*": "actions/request",
-            "manifest": "actions/reminders/student-loan-refi.cosigner-reminder",
-            "analytics": "analytics/full-refi.syllabus-reminder-action"
+          "else": {
+            "*": "actions.with-copy",
+            "copy": {
+              "@": "Send reminder to cosigner"
+            },
+            "action": {
+              "*": "actions/request",
+              "manifest": "actions/reminders/student-loan-refi.cosigner-reminder",
+              "analytics": "analytics/full-refi.syllabus-reminder-action"
+            }
+          },
+          "then": {
+            "*": "actions.with-copy",
+            "copy": {
+              "@": "Finish my application"
+            },
+            "action": {
+              "*": "actions/navigate",
+              "goTo": "earnest-student-loan-refi/urls.basic-info"
+            }
           }
         }
       ]

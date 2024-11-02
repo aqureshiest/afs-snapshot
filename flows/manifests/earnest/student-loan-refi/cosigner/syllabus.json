@@ -21,17 +21,35 @@
     },
     "bottomNavigation": {
       "*": "stage.bottom-navigation",
-      "buttons": [{
-        "*": "actions.with-copy",
-        "copy": {
-          "@": "Send reminder to primary"
-        },
-        "action": {
-          "*": "actions/request",
-          "manifest": "actions/reminders/student-loan-refi",
-          "analytics": "analytics/full-refi.syllabus-reminder-action"
+      "buttons": [
+        {
+          "*": "actions.conditional",
+          "if": {
+            "*": "conditionals.applicant-incomplete"
+          },
+          "else": {
+            "*": "actions.with-copy",
+            "copy": {
+              "@": "Send reminder to primary"
+            },
+            "action": {
+              "*": "actions/request",
+              "manifest": "actions/reminders/student-loan-refi",
+              "analytics": "analytics/full-refi.syllabus-reminder-action"
+            }
+          },
+          "then": {
+            "*": "actions.with-copy",
+            "copy": {
+              "@": "Finish my application"
+            },
+            "action": {
+              "*": "actions/navigate",
+              "goTo": "earnest-student-loan-refi/urls.basic-info"
+            }
+          }
         }
-      }]
+      ]
     },
     "stageContent": [
       {
