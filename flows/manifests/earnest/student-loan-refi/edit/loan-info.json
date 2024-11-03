@@ -27,7 +27,7 @@
     },
     "outputs": {
       "*": "refi-student-info",
-      "stage": "student-info-stage.refi-edit",
+      "stage": "student-info-stage.full-refi-edit",
       "pageLayout": "header/refi-edit.default",
       "steps": [
         "student-info-form/loan.refi-edit"

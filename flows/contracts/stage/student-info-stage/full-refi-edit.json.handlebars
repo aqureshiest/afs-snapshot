@@ -1,0 +1,28 @@
+{{#with application.primary}}
+{
+    "key": "student-full-refi-edit",
+    "type": "form",
+    "label": "Edit Primary Info",
+    "status": "notStarted",
+    "showProgress": true,
+    "pageLayout": {{{json (contract 'pageLayout')}}},
+    "steps": {{{json (contract 'steps')}}},
+    "validation": {
+        "type": "object",
+        "properties": {
+            "editLoanlDetails": {
+                "type": "object",
+                "properties": {
+                    {{#if (eq (stateFromAddress details.location) "NM")}}
+                        "amount": {{{json (schema 'questions/primary/amount/schemas/nm')}}}
+                    {{else if (eq (stateFromAddress details.location) "CA")}}
+                        "amount": {{{json (schema 'questions/primary/amount/schemas/ca')}}}
+                    {{else}}
+                        "amount": {{{json (schema 'questions/primary/amount/schemas')}}}
+                    {{/if}}
+                }
+            }
+        }
+    }
+}
+{{/with}}
