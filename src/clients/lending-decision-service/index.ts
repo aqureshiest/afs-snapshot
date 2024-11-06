@@ -645,6 +645,7 @@ export default class LendingDecisionServiceClient extends Client {
         application,
         currentApplicant,
         applicationId,
+        decisionType,
       );
 
       lendingDecisionURI = `/v2/decisioning-request/${application?.product}/${decisionType}`;
@@ -771,6 +772,7 @@ export default class LendingDecisionServiceClient extends Client {
       application,
       currentApplicant,
       applicationId,
+      decisionType,
     );
 
     /* ============ SO HACKY vvvvv. TODO: REDO THIS!!! ============ */
@@ -2017,6 +2019,7 @@ export default class LendingDecisionServiceClient extends Client {
     application: typings.Application & { applicant?: typings.Application },
     currentApplicant: string,
     applicationId: string,
+    decisionType: string,
   ): Promise<DecisionRequestDetails["requestMetadata"]> {
     const requestMetaDataIDs = {
       rootApplicationId: application.id,
@@ -2033,8 +2036,11 @@ export default class LendingDecisionServiceClient extends Client {
               ?.userIdBeforeVerifyingThroughEmailId
           : await this.getNEASUserID(context, application["primary"]);
 
-      // add primary device_uuid, if exists
-      if (application["primary"].details?.deviceId) {
+      // add primary device_uuid, if this is full app submission and if exists
+      if (
+        decisionType === "application" &&
+        application["primary"].details?.deviceId
+      ) {
         requestMetaDataIDs["deviceId"] =
           application["primary"].details?.deviceId;
       }
@@ -2053,8 +2059,11 @@ export default class LendingDecisionServiceClient extends Client {
               .userIdBeforeVerifyingThroughEmailId
           : await this.getNEASUserID(context, application["cosigner"]);
 
-      // add cosigner device_uuid, if exists
-      if (application["cosigner"].details?.deviceId) {
+      // add cosigner device_uuid, if this is full app submission and if exists
+      if (
+        decisionType === "application" &&
+        application["cosigner"].details?.deviceId
+      ) {
         requestMetaDataIDs["cosignerDeviceId"] =
           application["cosigner"].details?.deviceId;
       }
@@ -2064,8 +2073,11 @@ export default class LendingDecisionServiceClient extends Client {
         ? input.auth.artifacts.userId
         : await this.getNEASUserID(context, application[currentApplicant]);
 
-      // add applicant's device_uuid, if exists
-      if (application[currentApplicant].details?.deviceId) {
+      // add applicant's device_uuid, if this is full app submission and if exists
+      if (
+        decisionType === "application" &&
+        application[currentApplicant].details?.deviceId
+      ) {
         requestMetaDataIDs["deviceId"] =
           application[currentApplicant].details.deviceId;
       }

@@ -1984,6 +1984,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       application,
       "cosigner",
       uuidv4(),
+      "application",
     );
     assert.deepEqual(result, expected);
   });
