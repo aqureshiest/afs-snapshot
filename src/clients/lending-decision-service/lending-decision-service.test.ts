@@ -118,6 +118,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
           },
         ],
         details: {
+          deviceId: uuidv4(),
           name: {
             first: "Nancy",
             last: "Birkhead",
@@ -246,6 +247,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
           },
         ],
         details: {
+          deviceId: uuidv4(),
           name: {
             first: "David",
             last: "Hans",
@@ -406,7 +408,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       await assert.rejects(request);
     });
 
-    it("[cf74382e] Throw an error when no application ID is given to POST request", async () => {
+    it("[cf74382e] Throw an error when application service not present to POST request", async () => {
       const missingASClientContext = {
         ...context,
         loadedPlugins: {
@@ -416,6 +418,40 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
 
       const request = client.postDecisionRequest(input, missingASClientContext);
+
+      await assert.rejects(request);
+    });
+
+    it("[4e68ad9a] Throw an error when pii token service not present to POST request", async () => {
+      const missingPIIClientContext = {
+        ...context,
+        loadedPlugins: {
+          ...context.loadedPlugins,
+          piiTokenServiceClient: {},
+        },
+      };
+
+      const request = client.postDecisionRequest(
+        input,
+        missingPIIClientContext,
+      );
+
+      await assert.rejects(request);
+    });
+
+    it("[2d7098c1] Throw an error when accredited school service not present to POST request", async () => {
+      const missingSchoolClientContext = {
+        ...context,
+        loadedPlugins: {
+          ...context.loadedPlugins,
+          accreditedSchoolService: {},
+        },
+      };
+
+      const request = client.postDecisionRequest(
+        input,
+        missingSchoolClientContext,
+      );
 
       await assert.rejects(request);
     });
@@ -1895,18 +1931,23 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     }
   });
 
-  it("[f4035eef] buil request meta dataIDs", async () => {
+  it("[f4035eef] build request meta dataIDs", async () => {
     const primaryUserID = uuidv4();
     const primaryAppID = uuidv4();
     const cosignerAppID = uuidv4();
     const cosignerUserID = uuidv4();
     const applicationRefID = 1;
     const applicationID = uuidv4();
+    const primaryDeviceId = uuidv4();
+    const cosignerDeviceId = uuidv4();
 
     const primaryApplicants = {
       id: primaryAppID,
       reference: {
         userID: primaryUserID,
+      },
+      details: {
+        deviceId: primaryDeviceId,
       },
     };
 
@@ -1914,6 +1955,9 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       id: cosignerAppID,
       reference: {
         userID: cosignerUserID,
+      },
+      details: {
+        deviceId: cosignerDeviceId,
       },
     };
 
@@ -1930,6 +1974,8 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       userId: primaryUserID,
       cosignerUserId: cosignerUserID,
       cosignerApplicationId: cosignerAppID,
+      deviceId: primaryDeviceId,
+      cosignerDeviceId: cosignerDeviceId,
     };
     const result = await client.buildRequestMetaDataIDs(
       input,

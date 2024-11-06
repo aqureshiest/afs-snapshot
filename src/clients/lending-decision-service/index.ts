@@ -461,6 +461,12 @@ export default class LendingDecisionServiceClient extends Client {
         ? results.data.artifacts.combinedPriceCurve
         : results.data.artifacts.priceCurve;
 
+    if (!priceCurve) {
+      const error = new Error("[bdadc2a2] Missing priceCurve");
+      context.logger.error(error);
+      throw error;
+    }
+
     const softApprovedAmount = results.data.artifacts
       ?.cosignerSoftApprovedAmount
       ? results.data.artifacts.cosignerSoftApprovedAmount
@@ -474,7 +480,7 @@ export default class LendingDecisionServiceClient extends Client {
 
     // If we somehow got no prices, throw an error
     if (!filteredPrices || (filteredPrices && filteredPrices.length === 0)) {
-      const error = new Error("[627754c9] Missing priceCurve");
+      const error = new Error("[627754c9] No prices");
       context.logger.error(error);
       throw error;
     }
@@ -2027,11 +2033,18 @@ export default class LendingDecisionServiceClient extends Client {
               ?.userIdBeforeVerifyingThroughEmailId
           : await this.getNEASUserID(context, application["primary"]);
 
+      // add primary device_uuid, if exists
+      if (application["primary"].details?.deviceId) {
+        requestMetaDataIDs["deviceId"] =
+          application["primary"].details?.deviceId;
+      }
+
       assert(
         application["cosigner"],
         "[da148eac] Missing Cosigner Application",
       );
 
+      requestMetaDataIDs["cosignerApplicationId"] = application["cosigner"].id;
       requestMetaDataIDs["cosignerUserId"] = application["cosigner"].reference
         ?.userID
         ? application["cosigner"].reference.userID
@@ -2040,12 +2053,22 @@ export default class LendingDecisionServiceClient extends Client {
               .userIdBeforeVerifyingThroughEmailId
           : await this.getNEASUserID(context, application["cosigner"]);
 
-      requestMetaDataIDs["cosignerApplicationId"] = application["cosigner"].id;
+      // add cosigner device_uuid, if exists
+      if (application["cosigner"].details?.deviceId) {
+        requestMetaDataIDs["cosignerDeviceId"] =
+          application["cosigner"].details?.deviceId;
+      }
     } else {
       requestMetaDataIDs["applicationId"] = applicationId;
       requestMetaDataIDs["userId"] = input?.auth?.artifacts?.userId
         ? input.auth.artifacts.userId
         : await this.getNEASUserID(context, application[currentApplicant]);
+
+      // add applicant's device_uuid, if exists
+      if (application[currentApplicant].details?.deviceId) {
+        requestMetaDataIDs["deviceId"] =
+          application[currentApplicant].details.deviceId;
+      }
     }
 
     return requestMetaDataIDs;

@@ -1124,12 +1124,12 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[dp9215d8] schoolSupported helper", async () => {
-    const school = { loanTypes: ['slr']}
-    const supported = helpers.schoolSupported(school, "slr")
-    const unsupported = helpers.schoolSupported(school, "nope")
+    const school = { loanTypes: ["slr"] };
+    const supported = helpers.schoolSupported(school, "slr");
+    const unsupported = helpers.schoolSupported(school, "nope");
 
-    assert.equal(supported, true)
-    assert.equal(unsupported, false)
+    assert.equal(supported, true);
+    assert.equal(unsupported, false);
   });
 
   it("[gi732673] getSchoolInputValue helper", async () => {
@@ -1140,12 +1140,14 @@ describe("[462fd166] manifest.execute", () => {
       state: "test",
       city: "test",
       country: "test",
-    }
+    };
     const unsafeProperties = {
-      loanTypes: ['slr']
-    }
+      loanTypes: ["slr"],
+    };
 
-    const schoolInputValue = helpers.getSchoolInputValue([{...uiSafeSchool, ...unsafeProperties}]) 
+    const schoolInputValue = helpers.getSchoolInputValue([
+      { ...uiSafeSchool, ...unsafeProperties },
+    ]);
 
     assert.deepEqual(schoolInputValue, uiSafeSchool);
   });

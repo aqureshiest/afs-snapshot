@@ -308,7 +308,9 @@ export function getSchoolInputValue(schoolArray) {
 
 /* v8 ignore next */
 export function schoolSupported(school, product) {
-  const supported = school && (school?.loanTypes?.includes(product) || school === "high_school");
+  const supported =
+    school &&
+    (school?.loanTypes?.includes(product) || school === "high_school");
   return supported;
 }
 

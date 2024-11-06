@@ -30,10 +30,11 @@ export default class AccreditedSchoolServiceClient extends Client {
     payload,
   ): Promise<SchoolDetails | null> {
     const { opeid } = payload;
-    const schoolFromSearch = opeid && (await this.getSchools(input, context, payload))?.[0]
+    const schoolFromSearch =
+      opeid && (await this.getSchools(input, context, payload))?.[0];
     const { id } = schoolFromSearch || {};
-    const school = id && this.getSchool(input, context, {id});
-    return school || null
+    const school = id && this.getSchool(input, context, { id });
+    return school || null;
   }
 
   async getSchool(

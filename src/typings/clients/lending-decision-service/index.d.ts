@@ -182,6 +182,8 @@ interface IRequestMetadata {
   applicationId: string;
   cosignerApplicationId?: string;
   cosignerUserId?: string;
+  deviceId?: string;
+  cosignerDeviceId?: string;
 }
 interface IDecisionRequestDetails {
   product?: string;

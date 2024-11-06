@@ -66,6 +66,7 @@ fragment ApplicantFragment on Application {
     relationship
   }
   details {
+    deviceId
     name {
       first
       last
