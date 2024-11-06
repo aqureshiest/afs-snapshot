@@ -44,7 +44,8 @@
             "@": "Return to Application"
           },
           "action": {
-            "*": "actions/modal.dismiss"
+            "*": "actions/modal.dismiss",
+            "analytics": "actions/analytics/full-refi.unsupported-school"
           }
         }
       ],
