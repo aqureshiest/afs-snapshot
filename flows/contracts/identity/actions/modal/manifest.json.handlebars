@@ -4,6 +4,9 @@
     "type": "manifest",
     "definition": {
       "manifest": {{{json (contract "manifest")}}}
-    }
+    },
+    {{#if (contract "analytics")}}
+      "analytics":{{{json (contract 'analytics')}}}
+    {{/if}}
   }
 }

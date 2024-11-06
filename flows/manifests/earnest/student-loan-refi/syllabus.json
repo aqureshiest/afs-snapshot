@@ -23,11 +23,12 @@
         "primaryAction": {
           "*": "actions.with-copy",
           "text": {
-            "@": "View rates"
+            "@": "See my cosigned rates"
           },
           "action": {
             "*": "actions/modal.manifest",
-            "manifest": "earnest-student-loan-refi/urls/content.rates-modal"
+            "manifest": "earnest-student-loan-refi/urls/content.rates-modal",
+            "analytics": "actions/analytics/full-refi.see-cosigned-rates"
           }
         }
       }
