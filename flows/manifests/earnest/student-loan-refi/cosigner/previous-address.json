@@ -107,6 +107,9 @@
             "expanded": {
               "@": "true"
             },
+            "previousValue": {
+              "@": "true"
+            },
             "streetLabel": {
               "@": "Previous address street"
             },
