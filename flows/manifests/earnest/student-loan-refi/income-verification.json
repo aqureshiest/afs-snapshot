@@ -40,6 +40,17 @@
       },
       "analytics": "actions/analytics/full-refi.income-verification-page-event",
       "pageLayout": "sidebar",
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "label": {
+              "@": "Apply"
+          },
+          "value": {
+            "@": "90"
+          }
+        }
+      ],
       "onError": ["onError.unauthorized"],
       "redirect_homebase": "actions/homebase.default"
     }

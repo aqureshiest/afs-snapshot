@@ -37,6 +37,17 @@
       "section": "refi-primary-only-section",
       "back-button": "actions/back-buttons/full-refi/cosigner.income",
       "pageLayout": "sidebar",
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "label": {
+              "@": "Apply"
+          },
+          "value": {
+            "@": "90"
+          }
+        }
+      ],
       "onError": ["onError.unauthorized"],
       "redirect_homebase": "actions/homebase.default"
     }
