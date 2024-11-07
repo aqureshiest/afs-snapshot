@@ -19,8 +19,10 @@
       "value": {
         "type": "number",
         "maximum": 9999999,
+        "minimum": 1,
         "errorMessage": {
-          "maximum": "The maximum amount is $9,999,999."
+          "maximum": "The maximum amount is $9,999,999.",
+          "minimum": "Please enter an amount greater than 0."
         }
       }
     },

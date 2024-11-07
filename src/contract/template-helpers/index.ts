@@ -608,3 +608,28 @@ export function getMostRecentRateInquiry(decisions) {
       : mostRecent;
   });
 }
+export function isToday(strDate) {
+  const today = new Date();
+  const date = new Date(strDate);
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+export function hasUnexpiredRateChecks(decisions) {
+  return (
+    decisions &&
+    decisions.filter((decision) => {
+      return (
+        decision.type === "rate-check" &&
+        new Date(decision.expiresAt) > new Date()
+      );
+    }).length > 0
+  );
+}
+export function getRateChecks(decisions) {
+  return decisions.filter((decision) => {
+    return decision.type === "rate-check";
+  });
+}

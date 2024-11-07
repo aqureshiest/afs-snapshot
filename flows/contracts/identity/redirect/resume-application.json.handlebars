@@ -1,20 +1,39 @@
 {{#noop}}{{contract 'actions'}}{{/noop}}
 {{#if request.params.id }}
-  {{#if (and (hasValues applicationState) applicationState.manifest )}}
-    {{#with applicationState }}
-      {{#if step}}
-        "{{manifest}}?step={{step}}"
+  {{!-- v1 resume --}}
+  {{#if (eq application.product "student-refi")}}
+    {{#if (and (hasValues applicationState) applicationState.manifest )}}
+      {{#with applicationState }}
+        {{#if step}}
+          "{{manifest}}?step={{step}}"
+        {{else}}
+          "{{manifest}}"
+        {{/if}}
+      {{/with}}
+    {{else}}
+        "{{../application.brand}}/student-refi/{{../request.params.id}}"
+    {{/if}}
+  {{else}}
+    {{!-- v2 - conditional to refresh rate-estimates --}}
+    {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
+      {{#if (and (gt applicant.details.decision.length 0) (not (hasUnexpiredRateChecks applicant.details.decision)))}}
+        "{{../application.brand}}/student-loan-refi/refresh-rate-estimates/{{applicant.id}}"
       {{else}}
-        "{{manifest}}"
+          {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}
+            {{#with ../applicationState }}
+              {{#if step}}
+                "{{manifest}}?step={{step}}"
+              {{else}}
+                "{{manifest}}"
+              {{/if}}
+            {{/with}}
+          {{else}}
+            "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if (eq ../application.cosigner.id (lookup (getApplicantByUserID ../auth.artifacts.userId ../application) "id"))}}/cosigner/{{lookup (getApplicantByUserID ../auth.artifacts.userId ../application) "id"}}{{/if}}"
+          {{/if}}
       {{/if}}
     {{/with}}
-  {{else}}
-    {{#if (eq application.product "student-refi")}}
-      "{{application.brand}}/student-refi/{{request.params.id}}"
-    {{else}}
-      "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if (eq application.cosigner.id (lookup (getApplicantByUserID auth.artifacts.userId application) "id"))}}/cosigner/{{lookup (getApplicantByUserID auth.artifacts.userId application) "id"}}{{/if}}"
-    {{/if}}
   {{/if}}
 {{else}}
   null
 {{/if}}
+

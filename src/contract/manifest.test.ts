@@ -1395,7 +1395,8 @@ describe("[462fd166] manifest.execute", () => {
               "every": {{{ every request.body.values.statuses 'submitted' }}},
               "reviewDateFormatter": "{{{ reviewDateFormatter '2024-09-26' }}}",
               "some": {{{ some request.body.values.statuses 'submitted'}}},
-              "decisions": {{{json (getMostRecentRateInquiry request.body.values.decisions)}}}
+              "decisions": {{{json (getMostRecentRateInquiry request.body.values.decisions)}}},
+              "isToday": {{{isToday "${new Date().toISOString()}"}}}
             }
         `,
           }),
@@ -1406,7 +1407,6 @@ describe("[462fd166] manifest.execute", () => {
     const result = await manifest.execute(context, {}, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
-
     assert.deepEqual(parsed, {
       equals: true,
       ne: false,
@@ -1451,9 +1451,135 @@ describe("[462fd166] manifest.execute", () => {
         expiresAt: "2024-11-04T23:12:28.000Z",
         inquiryDate: "2024-10-29T01:20:52.263Z",
       },
+      isToday: true,
     });
   });
 
+  it("[136d26ef] hasUnexpiredRateChecks, getRateChecks template helpers", async () => {
+    const input = {
+      request: {
+        body: {
+          values: {
+            numbers: [1, 2],
+            date: "2013-09-01T07:00:00.000Z",
+            dateOfBirth: {
+              month: "12",
+              day: "20",
+              year: "1950",
+            },
+            location: [
+              {
+                street1: "545 N 34TH ST",
+                street2: null,
+                city: "PADUCAH",
+                state: "CA",
+                zip: "42001",
+                citizenship: "citizen",
+                type: "primary",
+              },
+              {
+                street1: "789 6th Avenue",
+                street2: null,
+                city: "San Francisco",
+                state: "CA",
+                zip: "94118",
+                citizenship: null,
+                type: "previous",
+              },
+            ],
+            EmployedIncomes: [
+              {
+                employer: "BigCompany",
+                type: "employment",
+              },
+            ],
+            loanType: "primary_only",
+            applyProduct: "student-refi",
+            tags: ["RC_Primary_Decline"],
+            statuses: ["submitted", "submitted"],
+            decisions: [
+              {
+                decisionID: "51388714-2a9b-4e88-8da2-6b45b3c9d04f",
+                type: "rate-check",
+                expiresAt: "3024-11-04T23:12:28.000Z",
+                inquiryDate: "2024-10-01T01:20:52.263Z",
+              },
+              {
+                decisionID: "85551f34-a75f-42db-94f5-3f08f16e442c",
+                type: "rate-check",
+                expiresAt: "2024-11-04T23:12:28.000Z",
+                inquiryDate: "2024-10-29T01:20:52.263Z",
+              },
+              {
+                decisionID: "ed623f60-c19e-44f7-a706-867aec15c770",
+                type: "rate-check",
+                expiresAt: "2024-11-04T23:12:28.000Z",
+                inquiryDate: "2024-10-20T01:20:52.263Z",
+              },
+              {
+                decisionID: "c98d803a-2a6f-4f51-a9aa-9726ec81ac54",
+                type: "application",
+                expiresAt: "2024-11-27T23:13:55.000Z",
+                inquiryDate: "2024-10-29T01:22:30.830Z",
+              },
+              {
+                decisionID: "c98d803a-2a6f-4f51-a9aa-9726ec81ac54",
+                type: "application",
+                expiresAt: "2024-11-27T23:13:55.000Z",
+                inquiryDate: "2024-10-29T01:23:06.178Z",
+              },
+            ],
+          },
+        },
+      },
+    } as unknown as Input<unknown>;
+    const manifest = new Manifest(
+      "manifestTest",
+      {
+        "*": "raw",
+      },
+      {
+        raw: {
+          default: new Contract({
+            raw: `
+            {
+              "hasUnexpiredRateChecks": {{{json (hasUnexpiredRateChecks request.body.values.decisions)}}},
+              "getRateChecks": {{{json (getRateChecks request.body.values.decisions)}}}
+            }
+        `,
+          }),
+        },
+      },
+    );
+
+    const result = await manifest.execute(context, {}, input);
+
+    const parsed = JSON.parse(JSON.stringify(result));
+
+    assert.deepEqual(parsed, {
+      hasUnexpiredRateChecks: true,
+      getRateChecks: [
+        {
+          decisionID: "51388714-2a9b-4e88-8da2-6b45b3c9d04f",
+          type: "rate-check",
+          expiresAt: "3024-11-04T23:12:28.000Z",
+          inquiryDate: "2024-10-01T01:20:52.263Z",
+        },
+        {
+          decisionID: "85551f34-a75f-42db-94f5-3f08f16e442c",
+          type: "rate-check",
+          expiresAt: "2024-11-04T23:12:28.000Z",
+          inquiryDate: "2024-10-29T01:20:52.263Z",
+        },
+        {
+          decisionID: "ed623f60-c19e-44f7-a706-867aec15c770",
+          type: "rate-check",
+          expiresAt: "2024-11-04T23:12:28.000Z",
+          inquiryDate: "2024-10-20T01:20:52.263Z",
+        },
+      ],
+    });
+  });
   it("[93dc0646] test mapRatePayments", async () => {
     const input = {
       request: {

@@ -1,0 +1,20 @@
+{{#with (getRateChecks application.applicant.details.decision) as |rateChecks|}}
+  {{#if (gt rateChecks.length 1)}}
+    {{#with (getMostRecentRateInquiry rateChecks) as |mostRecentRateCheck|}}
+      {{#if (isToday mostRecentRateCheck.inquiryDate)}}    
+        {
+          "variant": {{{json (maybe (contract "variant") "brand")}}},
+          "text": {{{json (maybe (contract "copy") "Your original rates have expired, but we've updated them for you.")}}}
+        }
+      {{else}}
+        null
+      {{/if}}
+    {{else}}
+      null
+    {{/with}}
+  {{else}}
+    null
+  {{/if}}
+{{else}}
+  null
+{{/with}}

@@ -1,0 +1,28 @@
+{{#if application}}
+  {
+    "action": {
+      "key": "rateCheckInterstitial",
+      "type": "interstitial",
+      "properties": {
+        "showSpinner": true,
+        "header": {
+          "copy": "We're refreshing your rate estimate. This can take up to a minute."
+        },
+        "action": {
+            "key": "rate-check-refresh-request",
+            "type": "request",
+            "properties": {
+                "manifest": "rate-estimate/{{#if (eq (lookup (getApplicantWithRole request.params.id application) "role") "cosigner")}}cosigner{{else}}primary{{/if}}/rate-request/{{request.params.id}}",
+                "analytics": {},
+                "method": "POST",
+                "onError": {{{json (contract 'onError')}}}
+            }
+        }
+      }
+    },
+    "result": {{{ json (contract 'actions') }}},
+    "error": {{{json error}}}
+  }
+{{else}}
+  null
+{{/if}}
