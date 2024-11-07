@@ -3,5 +3,34 @@
     "landing_stage": "rate-estimate-results/primary.rate-estimate-unable",
     "analytics": "actions/analytics/full-refi.rate-estimate-page-event",
     "pageLayout": "sidebar",
+    "progress": [
+        {
+            "*": "stage.progress-item",
+            "label": {
+                "@": "Get Rates"
+            },
+            "value": {
+            "@": "100"
+            }
+        },
+        {
+            "*": "stage.progress-item",
+            "label": {
+                "@": "Apply"
+            },
+            "value": {
+            "@": "0"
+            }
+        },
+        {
+            "*": "stage.progress-item",
+            "label": {
+                "@": "Choose Plan"
+            },
+            "value": {
+                "@": "0"
+            }
+        }
+    ],
     "redirect_homebase": "actions/homebase.default"
 }

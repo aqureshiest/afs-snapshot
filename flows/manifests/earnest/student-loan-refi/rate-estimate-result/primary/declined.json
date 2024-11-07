@@ -2,6 +2,35 @@
     "*": "rate-estimate-results-view",
     "landing_stage": "rate-estimate-results/primary.rate-estimate-declined",
     "pageLayout": "sidebar",
+    "progress": [
+        {
+            "*": "stage.progress-item",
+            "label": {
+                "@": "Get Rates"
+            },
+            "value": {
+            "@": "100"
+            }
+        },
+        {
+            "*": "stage.progress-item",
+            "label": {
+                "@": "Apply"
+            },
+            "value": {
+            "@": "0"
+            }
+        },
+        {
+            "*": "stage.progress-item",
+            "label": {
+                "@": "Choose Plan"
+            },
+            "value": {
+                "@": "0"
+            }
+        }
+    ],
     "analytics": "actions/analytics/full-refi.rate-estimate-page-event",
     "redirect_homebase": "actions/homebase.default",
     "headLineRates": "rest.headLineRates"

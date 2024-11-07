@@ -38,6 +38,35 @@
         "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
         "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
         "pageLayout": "sidebar",
+        "progress": [
+            {
+                "*": "stage.progress-item",
+                "label": {
+                    "@": "Get Rates"
+                },
+                "value": {
+                "@": "100"
+                }
+            },
+            {
+                "*": "stage.progress-item",
+                "label": {
+                    "@": "Apply"
+                },
+                "value": {
+                "@": "0"
+                }
+            },
+            {
+                "*": "stage.progress-item",
+                "label": {
+                    "@": "Review & Sign"
+                },
+                "value": {
+                    "@": "0"
+                }
+            }
+        ],
         "getPaymentsAndRates": "rate-estimate-prices",
         "redirect_homebase": "actions/homebase.default"
     }
