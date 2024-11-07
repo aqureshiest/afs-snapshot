@@ -8,11 +8,9 @@
     },
     "name": {
       "type": "string",
-      "pattern": "^[a-zA-Z\\s.',-]*$",
       "minLength": 1,
       "errorMessage": {
         "minLength": "Please enter your school name.",
-        "pattern": "School name contains invalid characters.",
         "type": "Invalid school name."
       }
     }
