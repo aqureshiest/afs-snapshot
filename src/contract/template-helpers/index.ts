@@ -529,6 +529,14 @@ export function ISODateToYYYYMMDD(dateStr: string) {
   }
 }
 
+export function ISODateToMMDDYYYY(dateStr: string) {
+  if (dateStr) {
+    const YYYYMMDD = new Date(dateStr).toISOString().split("T")[0].split("-");
+
+    return YYYYMMDD.slice(1).join("-").concat(`-${YYYYMMDD[0]}`);
+  }
+}
+
 export function getApplicant(id: string, application: typings.Application) {
   return (application.applicants || []).find(
     (applicant) => applicant && applicant?.id === id,
