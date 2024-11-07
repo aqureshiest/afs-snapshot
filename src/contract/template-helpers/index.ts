@@ -347,6 +347,11 @@ export function stateFromAddress(addresses) {
   return null;
 }
 
+export function showVariableRates(state) {
+  const skipVariableRateState = ["AK","IL","MN","NH","OH","TN","TX"];
+  return state ? !skipVariableRateState.includes(state) : true
+}
+
 /**
  * 'values' can be an income detail from db with structure:
  *    {

@@ -72,24 +72,55 @@
                   {
                     "key": "variableRate",
                     "label": "Variable Rates",
-                    "content": [
-                      {
-                        "key": "variableRatesMarkdown",
-                        "type": "md",
-                        "componentProps": {
-                          "content": "## Variable Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Variable rate means that your interest rate will change over the course of your loan term."
+                    {{#if (and filteredResults filteredResults.variableData (showVariableRates (stateFromAddress ../../application.primary.details.location)))}}
+                      "content": [
+                        {
+                          "key": "variableRatesMarkdown",
+                          "type": "md",
+                          "componentProps": {
+                            "content": "## Variable Rates & Terms for requested {{formatToUSCurrency ../../application.details.amount.requested 'true'}}: \n\n Variable rate means that your interest rate will change over the course of your loan term."
+                          }
                         }
+                      ],
+                      "table": {
+                        "headers": ["loan term", "interest rate *", "payment/mo"],
+                        "rows": {{{json filteredResults.variableData}}},
+                        "metadata": {
+                          "centered": true,
+                          "stylePreset": "lastColumnBGGray"
+                        },
+                        "footer": "&ast; Rates include 0.25% Auto Pay discount."
                       }
-                    ],
-                    "table": {
-                      "headers": ["loan term", "interest rate *", "payment/mo"],
-                      "rows": {{{json filteredResults.variableData}}},
-                      "metadata": {
-                        "centered": true,
-                        "stylePreset": "lastColumnBGGray"
-                      },
-                      "footer": "&ast; Rates include 0.25% Auto Pay discount."
-                    }
+                    {{else}}
+                      "content": [
+                          {
+                            "key": "emptyVariableRatesIlustration",
+                            "type": "asset",
+                            "containerProps": {
+                              "marginTop": "40px"
+                            },
+                            "componentProps": {
+                              "asset": {
+                                "center": true,
+                                "type": "Assets.LocalAsset",
+                                "name": "illustrations.variableRatesSmall"
+                              }
+                            }
+                          },
+                          {
+                            "key": "markdown",
+                            "type": "md",
+                            "containerProps": {
+                              "marginBottom": "40px"
+                            },
+                            "componentProps": {
+                              "marginTop": "16px",
+                              "content":
+                                ":Heading[Variable rates unavailable :props[{fontSize: '24px', marginBottom: '16px', fontWeight: 400, display: 'block', textAlign: 'center'}]] Earnest doesn't currently offer Variable Rate loans in your state. However, you can explore our affordable Fixed Rate loan options designed to meet your needs."
+                            }
+                          }
+                        ]
+                    {{/if}}
                   }
                 ]
               {{/with}}
