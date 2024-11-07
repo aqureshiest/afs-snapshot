@@ -2,11 +2,11 @@
   "type": "modal",
   "properties": {
     "type": "manifest",
+    {{#if (contract "analytics")}}
+      "analytics":{{{json (contract 'analytics')}}},
+    {{/if}}
     "definition": {
       "manifest": {{{json (contract "manifest")}}}
-    },
-    {{#if (contract "analytics")}}
-      "analytics":{{{json (contract 'analytics')}}}
-    {{/if}}
+    }
   }
 }
