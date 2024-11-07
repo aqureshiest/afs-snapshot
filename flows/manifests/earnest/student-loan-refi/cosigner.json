@@ -27,7 +27,36 @@
     "*": "landing-students",
     "landing_stage": { 
       "*": "landing.primer-full-refi-cosigner",
-      "layout": "layout.full-refi-primer"
+      "layout": "layout.full-refi-primer",
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Get Rates"
+          },
+          "value": {
+            "@": "0"
+          }
+        },
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Apply"
+          },
+          "value": {
+            "@": "0"
+          }
+        },
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Choose Plan"
+          },
+          "value": {
+            "@": "0"
+          }
+        }
+      ]
     },
     "redirect_homebase": "actions/homebase.default"
   }

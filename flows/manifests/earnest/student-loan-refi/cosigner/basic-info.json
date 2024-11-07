@@ -41,6 +41,17 @@
         "questions/cosigner/email.default",
         "info/student-disclaimer.full-refi"
       ],
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Get Rates"
+          },
+          "value": {
+            "@": "15"
+          }
+        }
+      ],
       "back-button": "actions/back-buttons/full-refi/cosigner.basic-info",
       "save_basic_info_details_action": "actions/save-details/full-refi/cosigner.basic-info",
       "cosigner_dob_input_status": "questions/cosigner/dateOfBirth.status",

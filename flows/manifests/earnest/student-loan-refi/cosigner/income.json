@@ -40,6 +40,17 @@
         "questions/cosigner/income/additional-income.full-refi",
         "info/student-income/additional-income-hint.full-refi"
       ],
+      "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Get Rates"
+        },
+        "value": {
+          "@": "75"
+        }
+      }
+    ],
       "back-button": "actions/back-buttons/full-refi/cosigner.citizenship",
       "save_income_details_action": "actions/save-details/full-refi/cosigner.income",
       "cosigner_income_annual_income_input_status": "questions/cosigner/income/annual-income.status",

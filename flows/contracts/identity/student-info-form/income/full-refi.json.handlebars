@@ -5,7 +5,11 @@
         "action": {{{ json (contract 'back-button') }}}
     },
     "submit": {
-        "copy": "Refinance Amount",
+        {{#if (eq application.applicant.role "primary")}}
+            "copy": "Refinance Amount",
+        {{else}}
+            "copy": "Confirm Identity",
+        {{/if}}
         "action": {{{json (contract 'save_income_details_action')}}}
     },
     "progress": {{{json (contract 'progress')}}},
