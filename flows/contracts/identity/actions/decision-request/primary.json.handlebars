@@ -11,7 +11,7 @@
             "application_id": "{{{application.id}}}",
             "income_verification_method": {{{mapIncomeVerificationMethod application.primary.details.financialAccounts}}},
             "employment_type": "{{{mapIncomeTypeToEmplStatus application.primary.details.income}}}",
-            "value": "{{{formatCentsToDollars (multiply application.details.amount.requested 0.0055)}}}"{{!-- factor defined by DnA --}}
+            "value": "{{{formatCentsToDollars (multiply application.details.amount.requested 0.55)}}}"{{!-- factor defined by DnA --}}
         },
         "method": "POST",
         "onError": {{{json (contract 'onError')}}}
