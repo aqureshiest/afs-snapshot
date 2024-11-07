@@ -1,10 +1,22 @@
-{
+[{
   "name": "Cosigner Invite Submitted",
   "product": "slr",
   "role": "{{{application.applicant.role}}}",
-  "source": "rate check",
+  "source": "application",
   "loan_type": "cosigned",
   "application_id": "{{{application.id}}}",
   "primary_application_id": "{{{application.primary.id}}}",
   "cosigner_application_id": "{{{application.cosigner.id}}}"
-}
+},
+{
+  "name": "Application Started",
+  "properties": {
+    "product": "slr",
+    "source": "application",
+    "application_id": "{{{application.id}}}",
+    "primary_application_id": "{{{application.primary.id}}}",
+    "cosigner_application_id": "{{{application.cosigner.id}}}",
+    "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+    "role": "{{{application.applicant.role}}}"
+  }
+}]
