@@ -423,6 +423,10 @@ export default class LendingDecisionServiceClient extends Client {
       throw new Error("[2542e05a] missing lending decision id");
     }
 
+    if (!payload.amountRequested) {
+      throw new Error("[776d039c] missing requested loan amount");
+    }
+
     const calculatorServiceClient =
       context.loadedPlugins.calculatorServiceClient?.instance;
 
@@ -490,7 +494,7 @@ export default class LendingDecisionServiceClient extends Client {
         rateInBps: filteredPrice.rate,
         uwLoanTermInMonths: filteredPrice.term,
         rateType: filteredPrice.rateType,
-        startingPrincipalBalanceInCents: softApprovedAmount,
+        startingPrincipalBalanceInCents: payload.amountRequested,
         date: softInquiryDate.split("T")[0],
         dateType: "fti",
         priceId: index,

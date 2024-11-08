@@ -4,7 +4,8 @@
     "decisionRequestMethod": "getPaymentsAndRates",
     "id": "{{rateEstimateResponse.data.decisioningToken}}",
     "payload": {
-      "type": "decisioning-request"
+      "type": "decisioning-request",
+      "amountRequested": {{../application.details.amount.requested}}
     }
   }
   {{else}} null {{/if}}

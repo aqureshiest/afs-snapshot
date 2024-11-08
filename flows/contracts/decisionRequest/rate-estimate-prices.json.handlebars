@@ -4,7 +4,8 @@
       "decisionRequestMethod": "getPaymentsAndRates",
       "id": "{{decision.decisionID}}",
       "payload": {
-        "type": "decisioning-request"
+        "type": "decisioning-request",
+        "amountRequested": {{../application.details.amount.requested}}
       }
     }
   {{/with}}

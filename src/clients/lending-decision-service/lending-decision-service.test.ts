@@ -781,8 +781,11 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         await client.getPaymentsAndRates(
           input,
           context,
-          "decisioning-request",
           "721e917c-572c-4e81-b791-09c3bf1ea5c1",
+          {
+            type: "decisioning-request",
+            amountRequested: 500000,
+          },
         );
       } catch (error) {
         assert.strictEqual(
@@ -791,6 +794,20 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         );
       }
     });
+  });
+
+  it("[37272a78] Throw an error for missing amountRequested", async () => {
+    await assert.rejects(
+      client.getPaymentsAndRates(
+        input,
+        context,
+        "721e917c-572c-4e81-b791-09c3bf1ea5c1",
+        {
+          type: "decisioning-request",
+          amountRequested: null,
+        },
+      ),
+    );
   });
 
   it("[8e943ff1] should get a decision", async () => {
@@ -1866,6 +1883,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       "16719670-a754-4719-a185-4f7e875bc04c",
       {
         type: "decisioning-request",
+        amountRequested: 6000000,
       },
     );
 
