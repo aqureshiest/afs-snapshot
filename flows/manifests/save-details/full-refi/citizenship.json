@@ -8,12 +8,11 @@
       "strategies": [
         {
           "*": "inputs/auth.neas-session",
-          "response": {
-            "*": "neas.verify-token",
-            "token": "header.idtoken"
-          },
-          "mode": "optional",
-          "authorization": []
+          "response": "neas.verify-token",
+          "authorization": [
+            "inputs/auth.neas-application-auth",
+            "inputs/auth.neas-user-auth"
+          ]
         }
       ]
     }

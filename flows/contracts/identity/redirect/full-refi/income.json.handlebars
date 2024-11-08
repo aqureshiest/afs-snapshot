@@ -2,10 +2,13 @@
     "action": {
         "type": "navigate",
         "properties": {
-        "goTo": "earnest/student-loan-refi/income/{{application.applicant.id}}"
+            {{#if (eq request.body.values.citizenship 'non-resident')}}
+                "goTo": "earnest/student-loan-refi/unsupported-citizenship/{{application.applicant.id}}"
+            {{else}}
+                "goTo": "earnest/student-loan-refi/income/{{application.applicant.id}}"
+            {{/if}}
         }
     },
-    {{! returning actions is not needed, but left for debugin }}
     "result": {{{ json (contract 'actions') }}},
     "error": {{{json error}}}
 }

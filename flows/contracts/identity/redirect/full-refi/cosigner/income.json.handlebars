@@ -2,8 +2,8 @@
     "action": {
         "type": "navigate",
         "properties": {
-            {{#if (eq request.body.values.citizenship "non-resident")}}
-                "goTo": "earnest/student-loan-refi/cosigner/ineligible/{{application.cosigner.id}}"
+            {{#if (eq request.body.values.citizenship 'non-resident')}}
+                "goTo": "earnest/student-loan-refi/unsupported-citizenship/{{application.cosigner.id}}"
             {{else}}
                 "goTo": "earnest/student-loan-refi/cosigner/income/{{application.cosigner.id}}"
             {{/if}}
