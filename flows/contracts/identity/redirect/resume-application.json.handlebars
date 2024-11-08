@@ -16,7 +16,7 @@
   {{else}}
     {{!-- v2 - conditional to refresh rate-estimates --}}
     {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
-      {{#if (and (gt applicant.details.decision.length 0) (not (hasUnexpiredRateChecks applicant.details.decision)))}}
+      {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted"))}}
         "{{../application.brand}}/student-loan-refi/refresh-rate-estimates/{{applicant.id}}"
       {{else}}
           {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}

@@ -12,10 +12,12 @@
             "key": "rate-check-refresh-request",
             "type": "request",
             "properties": {
-                "manifest": "rate-estimate/{{#if (eq (lookup (getApplicantWithRole request.params.id application) "role") "cosigner")}}cosigner{{else}}primary{{/if}}/rate-request/{{request.params.id}}",
+              {{#with (getApplicantWithRole request.params.id application) as |result|}}
+                "manifest": "rate-estimate/{{result.applicant.role}}/rate-request/{{result.applicant.id}}",
                 "analytics": {},
                 "method": "POST",
                 "onError": {{{json (contract 'onError')}}}
+              {{/with}}
             }
         }
       }

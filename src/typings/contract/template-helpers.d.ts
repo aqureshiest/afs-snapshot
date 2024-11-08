@@ -107,3 +107,9 @@ import "contract/template-helpers/json.js";
 declare module "contract/template-helpers/json.js" {
   type TemplateHelper = ITemplateHelper;
 }
+import "contract/template-helpers/applicantById.js";
+declare module "contract/template-helpers/applicantById.js" {
+  type TemplateHelper = ITemplateHelper<
+    [string, Array<{ [key: string]: unknown }>]
+  >;
+}

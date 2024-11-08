@@ -3,7 +3,7 @@ import ContractExecutable from "../contract-executable.js";
 import { Types as AStypes } from "@earnest/application-service-client";
 import * as types from "@earnest/application-service-client/typings/codegen.js";
 import { TEMP_DEFAULT_APPLICATION_QUERY } from "../../clients/application-service/graphql.js";
-import { getApplicantWithRole } from "../template-helpers/applicantById.js";
+import { getApplicantWithRole } from "../template-helpers/index.js";
 
 const mutationSchemaQuery = `query schema {
   __type(name: "Mutation") {
@@ -230,10 +230,10 @@ class ApplicationEvent extends ContractExecutable<
             context,
           )) as unknown as { application: types.Application };
 
-          const applicationRoles = JSON.parse(
-            getApplicantWithRole(rehydrationId, application),
+          const applicationRoles = getApplicantWithRole(
+            rehydrationId,
+            application,
           );
-
           Object.defineProperty(input, "application", {
             value: { ...application, ...applicationRoles },
           });

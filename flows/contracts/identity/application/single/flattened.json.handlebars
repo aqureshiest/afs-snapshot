@@ -6,7 +6,7 @@
   {{#obj}}
     {{{ json application }}}
     {{#unless application.applicant}}
-      {{{ getApplicantWithRole ../request.params.id application }}}
+      {{{json (getApplicantWithRole ../request.params.id application) }}}
     {{/unless}}
   {{/obj}}
 {{else}}

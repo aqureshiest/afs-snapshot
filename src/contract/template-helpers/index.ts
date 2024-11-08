@@ -18,10 +18,7 @@ export { default as mapRatePayments } from "./mapRatePayments.js";
 export { default as map } from "./map.js";
 export { default as log } from "./log.js";
 export { default as json } from "./json.js";
-export {
-  default as applicantById,
-  getApplicantWithRole,
-} from "./applicantById.js";
+export { default as applicantById } from "./applicantById.js";
 export { default as maybe } from "./maybe.js";
 
 export function every(array: string[], condition: string, ...args: unknown[]) {
@@ -608,13 +605,20 @@ export function getMostRecentRateInquiry(decisions) {
   if (!Array.isArray(decisions) || decisions.length === 0) {
     return null;
   }
-
-  return decisions.reduce((mostRecent, current) => {
-    return current.type === "rate-check" &&
-      new Date(current.inquiryDate) > new Date(mostRecent.inquiryDate)
-      ? current
-      : mostRecent;
-  });
+  return decisions
+    .filter((decision) => decision.type === "rate-check")
+    .sort((a, b) => {
+      if (new Date(a.expiresAt) < new Date(b.expiresAt)) {
+        return -1;
+      } else if (new Date(a.expiresAt) > new Date(b.expiresAt)) {
+        return 1;
+      }
+      return 0;
+    })
+    .reverse()[0];
+}
+export function isExpired(decision) {
+  return new Date(decision.expiresAt) < new Date();
 }
 export function isToday(strDate) {
   const today = new Date();
@@ -640,4 +644,40 @@ export function getRateChecks(decisions) {
   return decisions.filter((decision) => {
     return decision.type === "rate-check";
   });
+}
+export function getApplicantWithRole(id, application) {
+  const applicantIndex0 = application?.applicants?.[0];
+  let applicant = {};
+  if (id === application?.primary?.id) {
+    applicant = { applicant: { ...application.primary, role: "primary" } };
+  } else if (id === application?.cosigner?.id) {
+    applicant = { applicant: { ...application.cosigner, role: "cosigner" } };
+  } else if (id === application?.benefactor?.id) {
+    applicant = {
+      primary: application.benefactor,
+      applicant: { ...application.benefactor, role: "primary" },
+    };
+  } else if (id === application.id) {
+    if (application?.benefactor?.id) {
+      applicant = {
+        primary: application.benefactor,
+        applicant: { ...application.benefactor, role: "primary" },
+      };
+    } else if (application?.primary?.id) {
+      applicant = {
+        applicant: { ...application.primary, role: "primary" },
+      };
+    } else {
+      applicant = {
+        primary: applicantIndex0,
+        applicant: { ...applicantIndex0, role: "primary" },
+      };
+    }
+  } else {
+    applicant = {
+      primary: applicantIndex0,
+      applicant: { ...applicantIndex0, role: "primary" },
+    };
+  }
+  return applicant;
 }

@@ -1321,7 +1321,7 @@ describe("[462fd166] manifest.execute", () => {
               {
                 decisionID: "85551f34-a75f-42db-94f5-3f08f16e442c",
                 type: "rate-check",
-                expiresAt: "2024-11-04T23:12:28.000Z",
+                expiresAt: "2024-11-05T23:12:28.000Z",
                 inquiryDate: "2024-10-29T01:20:52.263Z",
               },
               {
@@ -1448,7 +1448,7 @@ describe("[462fd166] manifest.execute", () => {
       decisions: {
         decisionID: "85551f34-a75f-42db-94f5-3f08f16e442c",
         type: "rate-check",
-        expiresAt: "2024-11-04T23:12:28.000Z",
+        expiresAt: "2024-11-05T23:12:28.000Z",
         inquiryDate: "2024-10-29T01:20:52.263Z",
       },
       isToday: true,
@@ -1830,11 +1830,11 @@ describe("[462fd166] manifest.execute", () => {
           default: new Contract({
             raw: `
             {
-              "primaryRole": {{{getApplicantWithRole 1 request.body.values.application}}},
-              "cosignerRole": {{{getApplicantWithRole 2 request.body.values.application}}},
-              "benefactorRole": {{{getApplicantWithRole 3 request.body.values.application}}},
-              "defaultPrimaryRole": {{{getApplicantWithRole 4 request.body.values.application}}},
-              "root": {{{getApplicantWithRole 10 request.body.values.application}}}
+              "primaryRole": {{{json (getApplicantWithRole 1 request.body.values.application)}}},
+              "cosignerRole": {{{json (getApplicantWithRole 2 request.body.values.application)}}},
+              "benefactorRole": {{{json (getApplicantWithRole 3 request.body.values.application)}}},
+              "defaultPrimaryRole": {{{json (getApplicantWithRole 4 request.body.values.application)}}},
+              "root": {{{json (getApplicantWithRole 10 request.body.values.application)}}}
 
             }
         `,
