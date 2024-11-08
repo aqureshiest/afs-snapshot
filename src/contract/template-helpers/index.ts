@@ -618,6 +618,9 @@ export function getMostRecentRateInquiry(decisions) {
     .reverse()[0];
 }
 export function isExpired(decision) {
+  if (!decision) {
+    return false;
+  }
   return new Date(decision.expiresAt) < new Date();
 }
 export function isToday(strDate) {
