@@ -5,24 +5,33 @@
     "progress": [
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "declined-get-rates"
+            },
             "label": {
                 "@": "Get Rates"
             },
             "value": {
-            "@": "100"
+                "@": "100"
             }
         },
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "declined-apply"
+            },
             "label": {
                 "@": "Apply"
             },
             "value": {
-            "@": "0"
+                "@": "0"
             }
         },
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "declined-choose-plan"
+            },
             "label": {
                 "@": "Choose Plan"
             },

@@ -6,6 +6,9 @@
     "progress": [
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "unable-get-rates"
+            },
             "label": {
                 "@": "Get Rates"
             },
@@ -15,6 +18,9 @@
         },
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "unable-apply"
+            },
             "label": {
                 "@": "Apply"
             },
@@ -24,6 +30,9 @@
         },
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "unable-choose-plan"
+            },
             "label": {
                 "@": "Choose Plan"
             },

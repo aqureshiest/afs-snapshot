@@ -5,6 +5,9 @@
     "progress": [
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "frozen-get-rates"
+            },
             "label": {
                 "@": "Get Rates"
             },
@@ -14,6 +17,9 @@
         },
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "frozen-apply"
+            },
             "label": {
                 "@": "Apply"
             },
@@ -23,6 +29,9 @@
         },
         {
             "*": "stage.progress-item",
+            "key": {
+                "@": "frozen-choose-plan"
+            },
             "label": {
                 "@": "Choose Plan"
             },

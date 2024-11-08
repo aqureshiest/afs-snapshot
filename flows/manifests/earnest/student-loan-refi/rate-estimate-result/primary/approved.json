@@ -51,24 +51,33 @@
         "progress": [
             {
                 "*": "stage.progress-item",
+                "key": {
+                    "@": "approved-get-rates"
+                },
                 "label": {
                     "@": "Get Rates"
                 },
                 "value": {
-                "@": "100"
+                    "@": "100"
                 }
             },
             {
                 "*": "stage.progress-item",
+                "key": {
+                    "@": "approved-apply"
+                },
                 "label": {
                     "@": "Apply"
                 },
                 "value": {
-                "@": "0"
+                    "@": "0"
                 }
             },
             {
                 "*": "stage.progress-item",
+                "key": {
+                    "@": "approved-choose-plan"
+                },
                 "label": {
                     "@": "Choose Plan"
                 },
