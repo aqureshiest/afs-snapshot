@@ -3,7 +3,7 @@
   "properties": {
     "first": {
       "type": "string",
-      "pattern": "^[a-zA-Z\\s'’-]*$",
+      "pattern": "^[a-zA-Z\\s'-]*$",
       "maxLength": 39,
       "errorMessage": {
         "maxLength": "First name must be less than 40 characters.",
@@ -13,7 +13,7 @@
     "last": {
       "type": "string",
       "maxLength": 39,
-      "pattern": "^[a-zA-Z\\s'’-]*$",
+      "pattern": "^[a-zA-Z\\s'-]*$",
       "errorMessage": {
         "maxLength": "Last name must be less than 40 characters.",
         "pattern": "Last name contains invalid characters."
