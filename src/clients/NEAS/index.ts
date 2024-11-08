@@ -187,6 +187,6 @@ export default class NeasClient extends Client {
     if (response.statusCode && response.statusCode >= 400) {
       throw new Error(response.statusMessage);
     }
-    return results?.userIdMap?.user_id ? results.userIdMap.user_id : "";
+    return results?.userIdMap?.user_id;
   }
 }

@@ -1997,7 +1997,12 @@ export default class LendingDecisionServiceClient extends Client {
       if (!emailId) {
         throw new Error("[84338d44] Missing applicant Email");
       }
+
       userID = await neasClientService["getUserID"](context, emailId);
+
+      if (!userID) {
+        throw new Error("[f3dd698c] userID is null or empty");
+      }
     } catch (error) {
       this.log(
         {
@@ -2009,7 +2014,17 @@ export default class LendingDecisionServiceClient extends Client {
       );
       throw error;
     }
-    return userID ? userID : "";
+    /**
+     * NEAS can return a user_ID that is of type number.
+     * This happens when the queried user is a monolith user.
+     * In this case, we need to type cast the user_id to a string
+     * as LDS expects this value to be a string.
+     */
+    if (typeof userID === "number") {
+      userID = userID.toString();
+    }
+
+    return userID;
   }
 
   private async buildRequestMetaDataIDs(

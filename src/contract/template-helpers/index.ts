@@ -348,8 +348,8 @@ export function stateFromAddress(addresses) {
 }
 
 export function showVariableRates(state) {
-  const skipVariableRateState = ["AK","IL","MN","NH","OH","TN","TX"];
-  return state ? !skipVariableRateState.includes(state) : true
+  const skipVariableRateState = ["AK", "IL", "MN", "NH", "OH", "TN", "TX"];
+  return state ? !skipVariableRateState.includes(state) : true;
 }
 
 /**
