@@ -54,16 +54,38 @@
                           (not (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications)))
                         )}}
                           "copy": "Login",
+                          "action": {
+                              "type": "navigate",
+                              "properties": {
+                                "goTo": "{{../env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.id}}",
+                                "external": true
+                              }
+                          }
                         {{else}}
                           "copy": "Resume prior application",
+                          "action": {
+                              "type": "navigate",
+                              "properties": {
+                               {{! Monolith / Cognito users with and active incomplete application) }}
+                                {{#if (and
+                                  (eq actions.[1].statusCode 409)
+                                  (boolean (hasActiveIncompleteApplication ../request.params.id ../applications))
+                                )}}
+                                  "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActiveIncompleteApplication ../request.params.id ../applications) "root") "id"}}",
+                               {{! Monolith / Cognito users with and active post-submission application) }}
+                                {{else if (and
+                                  (eq actions.[1].statusCode 409)
+                                  (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications))
+                                )}}
+                                  "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../request.params.id ../applications) "root") "id"}}",
+                                {{else}}
+                               {{! Default redirect users to the resume page }}
+                                  "goTo": "{{../env.BASE_URL}}/_/auth/neasauth/resume?email={{../request.body.values.email}}",
+                                {{/if}}
+                                "external": true
+                              }
+                          }
                         {{/if}}
-                        "action": {
-                            "type": "navigate",
-                            "properties": {
-                              "goTo": "{{../env.BASE_URL}}/_/auth/neasauth/resume",
-                              "external": true
-                            }
-                        }
                       }
                       {{!Secondary Button -- only shown when users have an incomplete application in-flight}}
                       {{#if (and
@@ -77,7 +99,7 @@
                             {{#if (eq actions.[1].statusCode 409)}}
                               "type": "navigate",
                               "properties": {
-                                "goTo": "{{../env.BASE_URL}}/_/auth/neasauth/resume",
+                                "goTo": "{{../env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{../application.id}}",
                                 "external": true
                               }
                             {{else}}
