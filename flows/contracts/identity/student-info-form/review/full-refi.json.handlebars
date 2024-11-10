@@ -1,9 +1,19 @@
-{{#with application}}
+{{#with (contract 'updatedApplication') as |updatedApplication| }}
 {
     "key": "refi-review",
     "label": "Student Refi Review",
     "submit": {
-        {{#if (and primary.details.decision ( ne tag.status 'incomplete' ))}}
+         {{#if 
+         (or 
+            (and (eq updatedApplication.applicant.role 'primary') 
+            (or (and updatedApplication.primary.details.decision ( ne updatedApplication.tag.status 'incomplete' )) 
+            (eq updatedApplication.primary.status.name 'submitted'))) 
+
+            (and (eq updatedApplication.applicant.role 'cosigner') 
+            (or (and updatedApplication.cosigner.details.decision ( ne updatedApplication.tag.status 'incomplete' )) 
+            (eq updatedApplication.cosigner.status.name 'submitted')))
+         )
+         }}
             "copy": "Dashboard",
             "action": {{{ json (contract 'actionsDashboard') }}}
         {{else}}
@@ -13,7 +23,8 @@
                 "type": "interstitial",
                 "properties": {
                     "showSpinner": true,
-                    {{#if (and (eq tag.applicants 'cosigned') (eq (some (contract 'get-statuses') 'submitted') false))}}
+                    {{#if (and (eq updatedApplication.tag.applicants 'cosigned') (eq (some (contract 'get-statuses') 
+                    'submitted') false))}}
                     {{!-- Don't show the header if this a cosigned application and no one has submitted their --}}
                     {{!-- portion of the application. Send the applicant to syllabus right away --}}
                     {{!-- Another check is defined in the 'actions' contract to check if we send to syllabus or --}}
@@ -31,7 +42,7 @@
         "action": {{{ json (contract 'back-button') }}}
     },
     "progress": 100,
-    {{#if (and primary.details.financialAccounts (someSelected primary.details.financialAccounts))}}
+    {{#if (and updatedApplication.primary.details.financialAccounts (someSelected updatedApplication.primary.details.financialAccounts))}}
         "rows":  {{{ json (contract 'student-info-review-rows')}}}
     {{else}}
         "rows":  {{{ json (contract 'student-info-review-noFinancialAccounts-rows')}}}

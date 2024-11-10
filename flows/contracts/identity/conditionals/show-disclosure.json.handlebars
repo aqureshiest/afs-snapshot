@@ -1,0 +1,17 @@
+{{#with (contract 'updatedApplication') as |updatedApplication| }}
+  {{#if 
+      (or 
+        (and (eq updatedApplication.applicant.role 'primary') 
+        (or (and updatedApplication.primary.details.decision ( ne updatedApplication.tag.status 'incomplete' )) 
+        (eq updatedApplication.primary.status.name 'submitted'))) 
+
+        (and (eq updatedApplication.applicant.role 'cosigner') 
+        (or (and updatedApplication.cosigner.details.decision ( ne updatedApplication.tag.status 'incomplete' )) 
+        (eq updatedApplication.cosigner.status.name 'submitted')))
+      )
+  }}
+    false
+  {{else}}
+    true
+  {{/if}}
+{{/with}}

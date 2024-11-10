@@ -31,14 +31,17 @@
       },
       "outputs": {
         "*": "refi-review",
-        "stage": "review.refi",
+        "stage": "review.full-refi",
         "analytics": "actions/analytics/full-refi.review-page-event",
         "intent": { "*": { "@": true } },
         "pageLayout": "sidebar",
         "steps": [
             "student-info-form/review.full-refi"
         ],
-        "student-info-review-rows": [
+        "student-info-review-rows": {
+          "*": "actions.conditional",
+          "if": "conditionals.show-disclosure",
+          "then": [
             "info/student-review.full-refi",
             {"<":"info/student-info/review.full-refi", "decryptPiiSsn": "pii.get-token"},
             "info/student-education/review.full-refi",
@@ -48,9 +51,29 @@
             "questions/primary/consent.default",
             "questions/primary/intent.default",
             "questions/primary/disclosure.default",
-            "questions/primary/disclosure.disclaimer"
-        ],
-        "student-info-review-noFinancialAccounts-rows": [
+            "questions/primary/disclosure.disclaimer"], 
+          "else": [
+            "info/student-review.full-refi",
+            {"<":"info/student-info/review.full-refi", "decryptPiiSsn": "pii.get-token"},
+            "info/student-education/review.full-refi",
+            "info/student-employment/review.full-refi",
+            "info/student-loan-amount/review.full-refi",
+            "info/student-finances/review.full-refi"
+          ],
+          "disclosureLinks": [
+              "questions/primary/disclosure/links.terms-of-services",
+              "questions/primary/disclosure/links.privacy-policy",
+              "questions/primary/disclosure/links.privacy-notice",
+              "questions/primary/disclosure/links.credit-report-policy",
+              "questions/primary/disclosure/links.loss-of-benefits",
+              "questions/primary/disclosure/links.consent-electronic-communications",
+              "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+          ]
+        },
+        "student-info-review-noFinancialAccounts-rows": {
+          "*": "actions.conditional",
+          "if": "conditionals.show-disclosure",
+          "then": [
             "info/student-review.full-refi",
             {"<":"info/student-info/review.full-refi", "decryptPiiSsn": "pii.get-token"},
             "info/student-education/review.full-refi",
@@ -59,8 +82,24 @@
             "questions/primary/consent.default",
             "questions/primary/intent.default",
             "questions/primary/disclosure.default",
-            "questions/primary/disclosure.disclaimer"
-        ],
+            "questions/primary/disclosure.disclaimer"], 
+          "else": [
+            "info/student-review.full-refi",
+            {"<":"info/student-info/review.full-refi", "decryptPiiSsn": "pii.get-token"},
+            "info/student-education/review.full-refi",
+            "info/student-employment/review.full-refi",
+            "info/student-loan-amount/review.full-refi"
+          ],
+          "disclosureLinks": [
+              "questions/primary/disclosure/links.terms-of-services",
+              "questions/primary/disclosure/links.privacy-policy",
+              "questions/primary/disclosure/links.privacy-notice",
+              "questions/primary/disclosure/links.credit-report-policy",
+              "questions/primary/disclosure/links.loss-of-benefits",
+              "questions/primary/disclosure/links.consent-electronic-communications",
+              "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+          ]
+        },
 
         "back-button": "actions/back-buttons/full-refi.income-verification",
         "getSchools": "primary-get-school-name",
@@ -74,15 +113,6 @@
           "application": "application-by-id-param"
         },
         "get-statuses": "applicants/status.get-applicant-status",
-        "disclosureLinks": [
-            "questions/primary/disclosure/links.terms-of-services",
-            "questions/primary/disclosure/links.privacy-policy",
-            "questions/primary/disclosure/links.privacy-notice",
-            "questions/primary/disclosure/links.credit-report-policy",
-            "questions/primary/disclosure/links.loss-of-benefits",
-            "questions/primary/disclosure/links.consent-electronic-communications",
-            "questions/primary/disclosure/links.earnest-loan-application-solicitation"
-        ],
         "redirect_homebase": "actions/homebase.default"
       }
     }

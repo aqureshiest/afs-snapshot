@@ -1,42 +1,70 @@
+{{#with (contract 'updatedApplication') as |updatedApplication| }}
 {
-
     "key": "review-stage",
     "type": "form",
     "status": "notStarted",
     "pageLayout":{{{json (contract 'pageLayout')}}},
-    "analytics": {},
+    {{#if (contract "analytics")}}
+    "analytics":{{{json (contract 'analytics')}}},
+    {{else}}
+    "analytics": {
+        "product": "{{{mapProduct application.reference.product}}}",
+        "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+        "name": "Application Review",
+        "title": "Review"
+    },
+    {{/if}}
     "steps": {{{json (contract 'steps')}}},
-    "backAction": {{{ json (contract 'back-button') }}},
-    "validation": {
-        "type": "object",
-        "properties": {
-            "refi-review": {
-                "type": "object",
-                "properties": {
-                    "consent": {
-                        "type": "boolean",
-                        "minLength": 1,
-                        "const": true,
-                        "errorMessage": {
-                            "minLength": "To continue you must agree",
-                            "const": "To continue you must agree",
-                            "type": "To continue you must agree"
-                        }
-                    },
-                    "disclosure": {
-                        "type": "boolean",
-                        "minLength": 1,
-                        "const": true,
-                        "errorMessage": {
-                            "minLength": "To continue you must agree",
-                            "const": "To continue you must agree",
-                            "type": "To continue you must agree"
+    {{#if (or 
+        (and (eq updatedApplication.applicant.role 'primary') (ne updatedApplication.primary.status.name 'submitted')) 
+        (and (eq updatedApplication.applicant.role 'cosigner') (ne updatedApplication.cosigner.status.name 'submitted')) 
+        (and (eq updatedApplication.applicant.role 'benefactor') (ne updatedApplication.benefactor.status.name 'submitted'))
+    )}}
+        "validation": {
+            "type": "object",
+            "properties": {
+                "refi-review": {
+                    "type": "object",
+                    "properties": {
+                        "consent": {
+                            "type": "boolean",
+                            "minLength": 1,
+                            "const": true,
+                            "errorMessage": {
+                                "minLength": "To continue you must agree",
+                                "const": "To continue you must agree",
+                                "type": "To continue you must agree"
+                            }
+                        },
+                        {{#if (contract 'intent')}}
+                      "intent": {
+                          "type": "boolean",
+                          "minLength": 1,
+                          "const": true,
+                          "errorMessage": {
+                              "minLength": "To continue you must agree",
+                              "const": "To continue you must agree",
+                              "type": "To continue you must agree"
+                          }
+                      },
+                    {{/if}}
+                        "disclosure": {
+                            "type": "boolean",
+                            "minLength": 1,
+                            "const": true,
+                            "errorMessage": {
+                                "minLength": "To continue you must agree",
+                                "const": "To continue you must agree",
+                                "type": "To continue you must agree"
+                            }
                         }
                     }
                 }
-            }
+            },
+            "required": [],
+            "additionalProperties": true
         },
-        "required": [],
-        "additionalProperties": true
-    }
+    {{/if}}
+    "backAction": {{{ json (contract 'back-button') }}}
 }
+{{/with}}
