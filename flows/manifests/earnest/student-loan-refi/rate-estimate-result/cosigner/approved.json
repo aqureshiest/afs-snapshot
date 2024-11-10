@@ -37,7 +37,18 @@
         "*": "rate-estimate-results-view",
         "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
         "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
-        "pageLayout": "sidebar",
+        "pageLayout": {
+            "*": "stage/layout",
+            "header": [
+              {
+                "*": "stage/layout/header.logo",
+                "action": "actions/navigate.homebase"
+              }
+            ],
+            "banner": {
+              "*": "stage/layout/banner/templates.rate-estimates-refreshed"
+            }
+          },
         "progress": [
             {
                 "*": "stage.progress-item",

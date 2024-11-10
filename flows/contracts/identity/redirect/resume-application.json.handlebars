@@ -11,12 +11,18 @@
         {{/if}}
       {{/with}}
     {{else}}
-        "{{../application.brand}}/student-refi/{{../request.params.id}}"
+        "{{application.brand}}/student-refi/{{request.params.id}}"
     {{/if}}
   {{else}}
     {{!-- v2 - conditional to refresh rate-estimates --}}
     {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
-      {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted"))}}
+     {{!-- will refresh rate-estimates if the following conditions are meet
+          - the app has decisions, 
+          - the most recent rate inquiry is expired, 
+          - the app is not submitted, 
+          - and the applicant is not the primary in a cosigned app
+       --}}
+      {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted") (not (and ../application.cosigner.id (eq ../application.primary.id applicant.id) ) ))}}
         "{{../application.brand}}/student-loan-refi/refresh-rate-estimates/{{applicant.id}}"
       {{else}}
           {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}
@@ -28,7 +34,7 @@
               {{/if}}
             {{/with}}
           {{else}}
-            "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if (eq ../application.cosigner.id (lookup (getApplicantByUserID ../auth.artifacts.userId ../application) "id"))}}/cosigner/{{lookup (getApplicantByUserID ../auth.artifacts.userId ../application) "id"}}{{/if}}"
+            "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if applicant.id}}{{#if (eq ../application.cosigner.id applicant.id)}}/cosigner{{else}}/basic-info{{/if}}/{{applicant.id}}"{{/if}}
           {{/if}}
       {{/if}}
     {{/with}}
