@@ -1,12 +1,35 @@
-{
-  "copy": "View rates",
-  "action": {
-    "type": "modal",
-    "properties": {
-      "type": "manifest",
-      "definition": {
-        "manifest": "{{application.reference.brand}}/student-loan-refi/content/unsupported-school/{{{application.applicant.id}}}"
+{{#if (eq application.tag.applicants "cosigned")}}
+  {{#if application.cosigner.details.decision.length}}
+    {
+      "copy": "View rates",
+      "action": {
+        "type": "modal",
+        "properties": {
+          "type": "manifest",
+          "definition": {
+            "manifest": "{{application.reference.brand}}/student-loan-refi/content/rates-modal/{{{application.cosigner.id}}}"
+          }
+        }
       }
     }
-  }
-}
+  {{else}}
+    {}
+  {{/if}}
+{{else}}
+  {{#if application.primary.details.decision.length}}
+    {
+      "copy": "View rates",
+      "action": {
+        "type": "modal",
+        "properties": {
+          "type": "manifest",
+          "definition": {
+            "manifest": "{{application.reference.brand}}/student-loan-refi/content/rates-modal/{{{application.applicant.id}}}"
+          }
+        }
+      }
+    }
+  {{else}}
+    {}
+  {{/if}}
+{{/if}}

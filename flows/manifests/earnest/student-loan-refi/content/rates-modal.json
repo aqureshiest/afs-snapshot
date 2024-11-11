@@ -7,7 +7,7 @@
         "@": "header"
       },
       "copy": {
-        "@": "Your cosigned rate estimates are here:"
+        "@": "Your rate estimates are here:"
       }
     },
     {
