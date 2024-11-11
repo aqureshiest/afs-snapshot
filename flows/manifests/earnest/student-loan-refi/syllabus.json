@@ -31,7 +31,7 @@
           },
           "action": {
             "*": "actions/modal.manifest",
-            "manifest": "earnest-student-loan-refi/urls/content.rates-modal",
+            "manifest": "earnest-student-loan-refi/urls/content.cosigner-rates-modal",
             "analytics": "actions/analytics/full-refi.see-cosigned-rates"
           }
         }

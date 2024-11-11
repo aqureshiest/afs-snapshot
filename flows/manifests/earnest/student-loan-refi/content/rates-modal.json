@@ -1,4 +1,47 @@
 {
   "*": "flexible-content",
-  "content": [{"*": "flexible-content/items/rates-table", "getPaymentsAndRates": "rate-estimate-prices"}]
+  "content": [
+    {
+      "*": "flexible-content/items/header",
+      "item-key": {
+        "@": "header"
+      },
+      "copy": {
+        "@": "Your cosigned rate estimates are here:"
+      }
+    },
+    {
+      "*": "flexible-content/items/rates-table",
+      "getPaymentsAndRates": "rate-estimate-prices"
+    },
+    {
+      "*": "flexible-content/items/buttons",
+      "item-key": {
+        "@": "button"
+      },
+      "buttons": [
+        {
+          "*": "actions.with-copy",
+          "copy": {
+            "@": "Return to Application"
+          },
+          "action": {
+            "*": "actions/modal.dismiss"
+          }
+        }
+      ],
+      "stylePreset": { "@": "primaryTertiary"},
+      "groupProps": {
+        "@": {
+          "flexDirection": "column",
+          "alignItems": "center"
+        }
+      },
+      "containerProps": {
+        "@": {
+          "marginTop": "24px"
+        }
+      }
+    }
+  ]
 }
