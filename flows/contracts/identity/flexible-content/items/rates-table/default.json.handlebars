@@ -17,6 +17,7 @@
                 }
               }
             ],
+            "analytics": {{{json (contract 'fixedRatesAnalytics')}}},
             "table": {
               "headers": ["loan term", "interest rate *", "payment/mo"],
               "rows": {{{json filteredResults.fixedData}}},
@@ -39,6 +40,7 @@
                 }
               }
             ],
+            "analytics": {{{json (contract 'variableRatesAnalytics')}}},
             "table": {
               "headers": ["loan term", "interest rate *", "payment/mo"],
               "rows": {{{json filteredResults.variableData}}},

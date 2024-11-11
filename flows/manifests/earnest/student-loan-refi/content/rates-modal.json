@@ -12,7 +12,9 @@
     },
     {
       "*": "flexible-content/items/rates-table",
-      "getPaymentsAndRates": "rate-estimate-prices"
+      "getPaymentsAndRates": "rate-estimate-prices",
+      "fixedRatesAnalytics": "analytics/full-refi.cosigner-rates-modal-fixed-rates",
+      "variableRatesAnalytics": "analytics/full-refi.cosigner-rates-modal-variable-rates"
     },
     {
       "*": "flexible-content/items/buttons",
@@ -26,7 +28,8 @@
             "@": "Return to Application"
           },
           "action": {
-            "*": "actions/modal.dismiss"
+            "*": "actions/modal.dismiss",
+            "analytics": "actions/analytics/full-refi.cosigner-rates-modal-return-to-application"
           }
         }
       ],
@@ -43,5 +46,6 @@
         }
       }
     }
-  ]
+  ],
+  "analytics": "analytics/full-refi.cosigner-rates-modal"
 }

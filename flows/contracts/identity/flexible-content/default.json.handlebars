@@ -1,3 +1,6 @@
 {
+  {{#if (contract "analytics")}}
+    "analytics":{{{json (contract 'analytics')}}},
+  {{/if}}
   "content": {{{maybe (json (contract 'content')) []}}}
 }
