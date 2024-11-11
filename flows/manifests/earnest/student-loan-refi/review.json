@@ -72,6 +72,8 @@
             "info/student-loan-amount/review.full-refi",
             "info/student-finances/review.full-refi"
           ],
+          "getSchools": "primary-get-school-name",
+          "getDegrees": "questions/primary/degree.get-degrees",
           "disclosureLinks": [
               "questions/primary/disclosure/links.terms-of-services",
               "questions/primary/disclosure/links.privacy-policy",
@@ -102,6 +104,8 @@
             "info/student-employment/review.full-refi",
             "info/student-loan-amount/review.full-refi"
           ],
+          "getSchools": "primary-get-school-name",
+          "getDegrees": "questions/primary/degree.get-degrees",
           "disclosureLinks": [
               "questions/primary/disclosure/links.terms-of-services",
               "questions/primary/disclosure/links.privacy-policy",
@@ -119,12 +123,10 @@
           "then": "actions/back-buttons/full-refi.income-source",
           "else": "actions/back-buttons/full-refi.income-verification"
         },
-        "getSchools": "primary-get-school-name",
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.primary",
         "actionsDashboard": "actions/homebase.default",
         "onError": ["onError.unauthorized"],
-        "getDegrees": "questions/primary/degree.get-degrees",
         "updatedApplication": {
           "*": "application/single.flattened",
           "application": "application-by-id-param"

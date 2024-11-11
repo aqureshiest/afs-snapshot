@@ -75,6 +75,8 @@
             "info/student-loan-amount/review.full-refi-cosigner",
             "info/student-finances/review.full-refi-cosigner"
           ],
+          "getSchools": "cosigner-get-school-name",
+          "getDegrees": "questions/primary/degree.get-degrees",
           "disclosureLinks": [
               "questions/primary/disclosure/links.terms-of-services",
               "questions/primary/disclosure/links.privacy-policy",
@@ -105,6 +107,8 @@
             "info/student-employment/review.full-refi-cosigner",
             "info/student-loan-amount/review.full-refi-cosigner"
           ],
+          "getSchools": "cosigner-get-school-name",
+          "getDegrees": "questions/primary/degree.get-degrees",
           "disclosureLinks": [
               "questions/primary/disclosure/links.terms-of-services",
               "questions/primary/disclosure/links.privacy-policy",
@@ -121,12 +125,10 @@
           "then": "actions/back-buttons/full-refi/cosigner.income-source",
           "else": "actions/back-buttons/full-refi/cosigner.income-verification"
         },
-        "getSchools": "cosigner-get-school-name",
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.cosigner",
         "actionsDashboard": "actions/homebase.default",
         "onError": ["onError.unauthorized"],
-        "getDegrees": "questions/primary/degree.get-degrees",
         "updatedApplication": {
           "*": "application/single.flattened",
           "application": "application-by-id-param"
