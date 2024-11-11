@@ -71,7 +71,7 @@
                                   (eq actions.[1].statusCode 409)
                                   (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications))
                                 )}}
-                                  "goTo": "{{env.BASE_URL}}/_/auth/login?targetUrl=/_/apply/resume/{{lookup (lookup (hasActivePostSubmissionApplication ../request.params.id ../applications) "root") "id"}}",
+                                  "goTo": "{{env.BASE_URL}}/_/auth/login",
                                {{! Monolith / Cognito users with and active incomplete application) }}
                                 {{else if (and
                                   (eq actions.[1].statusCode 409)
