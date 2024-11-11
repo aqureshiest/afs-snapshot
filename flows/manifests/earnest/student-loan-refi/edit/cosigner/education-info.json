@@ -1,16 +1,22 @@
 [
   {
-    "methods": ["get"],
-    "parameters": [{
-      "key": "id",
-      "format": "uuid"
-    }],
+    "methods": [
+      "get"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid"
+      }
+    ],
     "inputs": {
       "*": "inputs",
       "application": {
         "*": "application/single.flattened",
         "application": "application-by-id-param"
       },
+      "applications": [],
+      "applicationState": "application-state",
       "userState": "user-state",
       "auth": {
         "*": "auth-artifacts",
@@ -20,40 +26,212 @@
             "response": "neas.verify-token",
             "authorization": [
               "inputs/auth.neas-application-auth",
-              "inputs/auth.neas-user-auth"
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
             ]
           }
         ]
       }
     },
     "outputs": {
-      "*": "refi-student-info",
-      "stage": "student-info-stage.refi-edit-cosigner",
-      "pageLayout": "header/refi-edit.default",
-      "steps": [
-        "student-info-form/education.refi-edit"
-      ],
-      "student-education-info-rows": [
-        "info/student-education/edit.default",
-        "questions/cosigner/degree-type.default",
-        "questions/cosigner/school.full-refi-graduate",
-        "questions/cosigner/school.full-refi-undergraduate",
-        "questions/cosigner/degree-type-undergraduate",
-        "questions/cosigner/degree-type-graduate",
-        "questions/cosigner/graduationDate.full-refi"
-      ],
-  
-      "back-button": "actions/back-buttons/full-refi/cosigner.review",
-      "save_edited_details_action": "actions/save-details/full-refi/cosigner.edit-education",
-      "onError": ["onError.unauthorized"],
-      "cosigner_school_input_status": "questions/cosigner/school.status",
-      "cosigner_degree_input_status": "questions/cosigner/degree-type.status",
-      "cosigner_gradDate_input_status": "questions/cosigner/graduationDate.status",
-      "decryptPiiSsn": "pii-get-cosigner-ssn",
-      "getSchools": "get-schools-cosigner",
-      "getDegrees": "questions/primary/degree.get-degrees",
-      "getPrimarySchoolName": "cosigner-get-school-name",
-      "redirect_homebase": "actions/homebase.default"
+      "*": "stage",
+      "stage": {
+        "*": "stage.form",
+        "stageKey": {
+          "@": "get-rates"
+        },
+        "stageLabel": {
+          "@": "Academic Info"
+        },
+        "stageValidation": "earnest-student-loan-refi/pages/degree.cosigner-validation",
+        "stageLayout": {
+          "*": "stage/layout",
+          "header": [
+            {
+              "*": "stage/layout/header.logo",
+              "action": "actions/navigate.homebase"
+            },
+            {
+              "*": "stage/layout/header.closeIcon",
+              "action": {
+                "*": "actions/navigate",
+                "goTo": "earnest-student-loan-refi/urls.review"
+              }
+            }
+          ]
+        },
+        "conditionPresets": "earnest-student-loan-refi/pages/degree/conditionals.presets",
+        "stageSteps": [
+          {
+            "*": "stage.form-step",
+            "stepKey": {
+              "@": "education"
+            },
+            "stepLabel": {
+              "@": "Academic Info"
+            },
+            "stepBackAction": {
+              "*": "actions/navigate",
+              "goTo": "earnest-student-loan-refi/urls.review"
+            },
+            "stepSaveAction": {
+              "*": "actions/request",
+              "key": {
+                "@": "save-address"
+              },
+              "manifest": "earnest-student-loan-refi/urls/save/edit.education",
+              "analytics": "actions/analytics/full-refi/cosigner.education"
+            },
+            "onError": [],
+            "stepSaveCopy": {
+              "@": "Save"
+            },
+            "stepRows": [
+              {
+                "*": "info/header",
+                "key": {
+                  "@": "header"
+                },
+                "copy": {
+                  "@": "Highest degree pursued?"
+                }
+              },
+              {
+                "*": "questions/primary/radio",
+                "key": {
+                  "@": "degree-type"
+                },
+                "label": {
+                  "@": "Degree type"
+                },
+                "value": "earnest-student-loan-refi/values.degree-type",
+                "items": "questions/primary/radio/items/degree-types"
+              },
+              {
+                "*": "questions/primary/school",
+                "label": {
+                  "@": "Graduate School"
+                },
+                "key": {
+                  "@": "school-graduate"
+                },
+                "conditional": {
+                  "@": [
+                    [
+                      "primaryGraduate"
+                    ]
+                  ]
+                },
+                "value": {
+                  "*": "get-school-obj",
+                  "opeid": "questions/primary/school.value"
+                }
+              },
+              {
+                "*": "questions/primary/school",
+                "label": {
+                  "@": "Undergraduate School"
+                },
+                "key": {
+                  "@": "school-undergraduate"
+                },
+                "conditional": {
+                  "@": [
+                    [
+                      "primaryUndergraduate"
+                    ]
+                  ]
+                },
+                "value": {
+                  "*": "get-school-obj",
+                  "opeid": "questions/primary/school.value"
+                }
+              },
+              {
+                "*": "questions/primary/select",
+                "key": {
+                  "@": "graduate-degree-type"
+                },
+                "label": {
+                  "@": "Graduate degree type"
+                },
+                "deps": [
+                  {
+                    "@": "education.residencyEndDate"
+                  }
+                ],
+                "value": "earnest-student-loan-refi/values.graduate-degree-type",
+                "items": "questions/primary/radio/items/degree-types.graduate",
+                "conditional": {
+                  "@": [
+                    [
+                      "primaryGraduate"
+                    ]
+                  ]
+                }
+              },
+              {
+                "*": "questions/primary/radio",
+                "key": {
+                  "@": "undergraduate-degree-type"
+                },
+                "label": {
+                  "@": "Undergraduate degree type"
+                },
+                "value": "earnest-student-loan-refi/values.undergraduate-degree-type",
+                "items": "questions/primary/radio/items/degree-types.undergraduate",
+                "conditional": {
+                  "@": [
+                    [
+                      "primaryUndergraduate"
+                    ]
+                  ]
+                }
+              },
+              {
+                "*": "questions/primary/date",
+                "key": {
+                  "@": "graduationDate"
+                },
+                "label": {
+                  "@": "Graduation date or last attendance date"
+                },
+                "deps": [
+                  {
+                    "@": "education.residencyEndDate"
+                  }
+                ],
+                "value": "earnest-student-loan-refi/values.graduation-date"
+              },
+              {
+                "*": "questions/primary/date",
+                "key": {
+                  "@": "residencyEndDate"
+                },
+                "deps": [
+                  {
+                    "@": "education.graduate-degree-type"
+                  },
+                  {
+                    "@": "education.graduationDate"
+                  }
+                ],
+                "label": {
+                  "@": "Residency end date"
+                },
+                "value": "earnest-student-loan-refi/values.residency-end-date",
+                "conditional": {
+                  "@": [
+                    [
+                      "showResidencyDate"
+                    ]
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
     }
   }
 ]
