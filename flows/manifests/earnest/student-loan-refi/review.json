@@ -34,7 +34,19 @@
         "stage": "review.full-refi",
         "analytics": "actions/analytics/full-refi.review-page-event",
         "intent": { "*": { "@": true } },
-        "pageLayout": "sidebar",
+        "pageLayout": {
+          "*": "stage/layout",
+          "header": [
+            {
+              "*": "stage/layout/header.logo",
+              "action": "actions/navigate.homebase"
+            },
+            {
+              "*": "stage/layout/header.sidebar",
+              "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"]
+            }
+          ]
+        },
         "steps": [
             "student-info-form/review.full-refi"
         ],

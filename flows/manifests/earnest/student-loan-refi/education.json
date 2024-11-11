@@ -51,6 +51,10 @@
             {
               "*": "stage/layout/header.logo",
               "action": "actions/navigate.homebase"
+            },
+            {
+              "*": "stage/layout/header.sidebar",
+              "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"]
             }
           ]
         },
@@ -176,6 +180,7 @@
                 "label": {
                   "@": "Graduation date or last attendance date"
                 },
+                "omitDay": {"@": true},
                 "deps": [{"@": "education.residencyEndDate"}],
                 "value": "earnest-student-loan-refi/values.graduation-date"
               },
@@ -312,6 +317,7 @@
                 "conditional": {
                   "@": [["isParentDriven"]]
                 },
+                "omitDay": {"@": true},
                 "deps": [{"@": "education.residencyEndDate"}],
                 "value": "earnest-student-loan-refi/values.student-graduation-date"
               }

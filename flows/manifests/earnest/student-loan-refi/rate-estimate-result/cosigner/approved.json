@@ -1,84 +1,99 @@
-[{
-    "methods": ["get"],
-    "parameters": [{
+[
+  {
+    "methods": [
+      "get"
+    ],
+    "parameters": [
+      {
         "key": "id",
         "format": "uuid"
-    }],
-    "inputs":{
-        "*": "inputs",
-        "application": {
-            "*": "application/single.flattened",
-            "application": "application-by-id-param"
-        },
-        "applications": [],
-        "applicationState": "application-state",
-        "userState": "user-state",
-        "auth": {
-            "*": "auth-artifacts",
-            "strategies": [
-                {
-                    "*": "inputs/auth.neas-session",
-                    "response": "neas.verify-token",
-                    "authorization": [
-                        "inputs/auth.neas-application-auth",
-                        "inputs/auth.neas-user-auth",
-                        "inputs/auth.neas-monolith-auth"
-                    ]
-                },
-                {
-                    "*": "inputs/auth.internal-bearer",
-                    "token": "inputs/auth.bearer-token",
-                    "authorization": ["inputs/auth.lending-decisioning-webhook"]
-                }
+      }
+    ],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
             ]
-        }
+          },
+          {
+            "*": "inputs/auth.internal-bearer",
+            "token": "inputs/auth.bearer-token",
+            "authorization": [
+              "inputs/auth.lending-decisioning-webhook"
+            ]
+          }
+        ]
+      }
     },
     "outputs": {
-        "*": "rate-estimate-results-view",
-        "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
-        "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
-        "pageLayout": {
-            "*": "stage/layout",
-            "header": [
-              {
-                "*": "stage/layout/header.logo",
-                "action": "actions/navigate.homebase"
-              }
-            ],
-            "banner": {
-              "*": "stage/layout/banner/templates.rate-estimates-refreshed"
-            }
+      "*": "rate-estimate-results-view",
+      "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
+      "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
+      "pageLayout": {
+        "*": "stage/layout",
+        "header": [
+          {
+            "*": "stage/layout/header.logo",
+            "action": "actions/navigate.homebase"
           },
-        "progress": [
-            {
-                "*": "stage.progress-item",
-                "label": {
-                    "@": "Get Rates"
-                },
-                "value": {
-                "@": "100"
-                }
-            },
-            {
-                "*": "stage.progress-item",
-                "label": {
-                    "@": "Apply"
-                },
-                "value": {
-                "@": "0"
-                }
-            },
-            {
-                "*": "stage.progress-item",
-                "label": {
-                    "@": "Review & Sign"
-                },
-                "value": {
-                    "@": "0"
-                }
-            }
+          {
+            "*": "stage/layout/header.sidebar",
+            "items": [
+              "stage/layout/header/sidebar-items.rates",
+              "stage/layout/header/sidebar-items.support"
+            ]
+          }
         ],
-        "getPaymentsAndRates": "rate-estimate-prices",
-        "redirect_homebase": "actions/homebase.default"
+        "banner": {
+          "*": "stage/layout/banner/templates.rate-estimates-refreshed"
+        }
+      },
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Get Rates"
+          },
+          "value": {
+            "@": "100"
+          }
+        },
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Apply"
+          },
+          "value": {
+            "@": "0"
+          }
+        },
+        {
+          "*": "stage.progress-item",
+          "label": {
+            "@": "Review & Sign"
+          },
+          "value": {
+            "@": "0"
+          }
+        }
+      ],
+      "getPaymentsAndRates": "rate-estimate-prices",
+      "redirect_homebase": "actions/homebase.default"
     }
-}]
+  }
+]

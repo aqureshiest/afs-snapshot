@@ -31,7 +31,19 @@
       "*": "full-refi",
       "stage": "student-info-stage.full-refi",
       "analytics": "actions/analytics/full-refi.ssn-page-event",
-      "pageLayout": "layout.sidebar",
+      "pageLayout": {
+        "*": "stage/layout",
+        "header": [
+          {
+            "*": "stage/layout/header.logo",
+            "action": "actions/navigate.homebase"
+          },
+          {
+            "*": "stage/layout/header.sidebar",
+            "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"]
+          }
+        ]
+      },
       "steps": [
         "student-info-form/ssn.full-refi"
       ],

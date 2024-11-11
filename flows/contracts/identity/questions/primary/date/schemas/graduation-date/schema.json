@@ -6,6 +6,12 @@
       "minLength": 2,
       "maxLength": 2,
       "pattern": "^(1[012]|0?[1-9])$",
+      "dateThreshold": {
+        "before": {
+          "type": "months",
+          "value": 6
+        }
+      },
       "requiredParentFields": {
         "requiredFields": true
       },
@@ -14,7 +20,8 @@
         "minLength": "Enter a valid month.",
         "maxLength": "Enter a valid month.",
         "pattern": "Enter a valid month.",
-        "type": "Graduation date is required."
+        "type": "Graduation date is required.",
+        "dateThreshold": "Graduation date must not be more than 6 months in the future."
       }
     },
     "day": {

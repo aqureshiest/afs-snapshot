@@ -39,7 +39,19 @@
         "goTo": "earnest-student-loan-refi/urls.income-source"
       },
       "analytics": "actions/analytics/full-refi.income-verification-page-event",
-      "pageLayout": "sidebar",
+      "pageLayout": {
+        "*": "stage/layout",
+        "header": [
+          {
+            "*": "stage/layout/header.logo",
+            "action": "actions/navigate.homebase"
+          },
+          {
+            "*": "stage/layout/header.sidebar",
+            "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"]
+          }
+        ]
+      },
       "progress": [
         {
           "*": "stage.progress-item",

@@ -1,10 +1,14 @@
 [
   {
-    "methods": ["get"],
-    "parameters": [{
-      "key": "id",
-      "format": "uuid"
-    }],
+    "methods": [
+      "get"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid"
+      }
+    ],
     "inputs": {
       "*": "inputs",
       "application": {
@@ -29,7 +33,22 @@
       "*": "full-refi",
       "stage": "student-info-stage.full-refi-cosigner",
       "analytics": "actions/analytics/full-refi/cosigner.basic-info-page-event",
-      "pageLayout": "layout.sidebar",
+      "pageLayout": {
+        "*": "stage/layout",
+        "header": [
+          {
+            "*": "stage/layout/header.logo",
+            "action": "actions/navigate.homebase"
+          },
+          {
+            "*": "stage/layout/header.sidebar",
+            "items": [
+              "stage/layout/header/sidebar-items.rates",
+              "stage/layout/header/sidebar-items.support"
+            ]
+          }
+        ]
+      },
       "steps": [
         "student-info-form/basic.full-refi"
       ],

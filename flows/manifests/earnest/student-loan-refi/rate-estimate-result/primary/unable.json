@@ -2,7 +2,22 @@
     "*": "rate-estimate-results-view",
     "landing_stage": "rate-estimate-results/primary.rate-estimate-unable",
     "analytics": "actions/analytics/full-refi.rate-estimate-page-event",
-    "pageLayout": "sidebar",
+    "pageLayout": {
+        "*": "stage/layout",
+        "header": [
+            {
+                "*": "stage/layout/header.logo",
+                "action": "actions/navigate.homebase"
+            },
+            {
+                "*": "stage/layout/header.sidebar",
+                "items": [
+                    "stage/layout/header/sidebar-items.rates",
+                    "stage/layout/header/sidebar-items.support"
+                ]
+            }
+        ]
+    },
     "progress": [
         {
             "*": "stage.progress-item",
@@ -13,7 +28,7 @@
                 "@": "Get Rates"
             },
             "value": {
-            "@": "100"
+                "@": "100"
             }
         },
         {
@@ -25,7 +40,7 @@
                 "@": "Apply"
             },
             "value": {
-            "@": "0"
+                "@": "0"
             }
         },
         {

@@ -35,6 +35,9 @@ export const plugin: Plugin<unknown> = {
       keyword: "allowFuture",
     });
     ajv.addKeyword({
+      keyword: "dateThreshold",
+    });
+    ajv.addKeyword({
       keyword: "requiredParentFields",
     });
     ajv.addKeyword({

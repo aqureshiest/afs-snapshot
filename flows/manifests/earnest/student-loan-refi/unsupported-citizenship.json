@@ -49,6 +49,10 @@
             {
               "*": "stage/layout/header.logo",
               "action": "actions/navigate.homebase"
+            },
+            {
+              "*": "stage/layout/header.sidebar",
+              "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"]
             }
           ]
         },

@@ -27,7 +27,19 @@
     "*": "landing-students",
     "landing_stage": { 
       "*": "landing.primer-full-refi-cosigner",
-      "layout": "layout.full-refi-primer",
+      "layout": {
+        "*": "stage/layout",
+        "header": [
+          {
+            "*": "stage/layout/header.logo",
+            "action": "actions/navigate.homebase"
+          },
+          {
+            "*": "stage/layout/header.sidebar",
+            "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"]
+          }
+        ]
+      },
       "progress": [
         {
           "*": "stage.progress-item",
