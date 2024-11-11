@@ -113,7 +113,12 @@
           ]
         },
 
-        "back-button": "actions/back-buttons/full-refi.income-verification",
+        "back-button": {
+          "*": "actions.conditional",
+          "if": "conditionals.skip-income-verification",
+          "then": "actions/back-buttons/full-refi.income-source",
+          "else": "actions/back-buttons/full-refi.income-verification"
+        },
         "getSchools": "primary-get-school-name",
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.primary",

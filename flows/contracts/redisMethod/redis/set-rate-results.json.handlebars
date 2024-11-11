@@ -5,7 +5,14 @@
   "value": {
     {{#with (contract 'actions' 0) as |rateResult|}}
       {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
-          "latestRateResult":  "approved"
+          "latestRateResult":  "approved",
+          {{#if rateResult.data.artifacts.cosignerTags}}
+            "skip-plaid": "{{doSkipPlaid rateResult.data.artifacts.cosignerTags}}"
+          {{else if rateResult.data.artifacts.tags}}
+            "skip-plaid": "{{doSkipPlaid rateResult.data.artifacts.tags}}"
+          {{else}}
+            "skip-plaid": "false"
+          {{/if}}
       {{else if (eq rateResult.data.decisionOutcome 'Denied') }}
         {{!-- Check for cosigner tags first --}}
         {{#if rateResult.data.artifacts.cosignerTags}}

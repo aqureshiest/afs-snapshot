@@ -26,7 +26,12 @@
   },
   "outputs": {
     "*": "redirect",
-    "redirect": "redirect/full-refi/cosigner.income-verification",
+    "redirect": {
+      "*": "actions.conditional",
+      "if": "conditionals.skip-income-verification",
+      "then": "redirect/full-refi/cosigner.review",
+      "else": "redirect/full-refi/cosigner.income-verification"
+    },
     "actions": {
       "*": "actions/result.results",
       "actions": [

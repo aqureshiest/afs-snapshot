@@ -63,6 +63,16 @@
         "questions/primary/employment/job-title.full-refi",
         "questions/primary/employment/start-date.full-refi"
       ],
+      "submit_copy":{
+        "*": "actions.conditional",
+        "if": "conditionals.skip-income-verification",
+        "then": {
+          "@": "Review Application"
+        },
+        "else": {
+          "@": "Income Verification"
+        }
+      },
       "back-button": "actions/back-buttons/full-refi.prev-address",
       "save_details_action": "actions/save-details/full-refi.income-source",
       "primary_income_employer_name_input_status": "questions/primary/employment/employer-name.status",

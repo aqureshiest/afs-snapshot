@@ -5,8 +5,8 @@
         "action": {{{ json (contract 'back-button') }}}
     },
     "submit": {
-        "copy": "Income Verification",
-        "action": {{{json (contract 'save_details_action')}}}
+            "copy": {{{ json (contract 'submit_copy') }}},
+            "action": {{{json (contract 'save_details_action')}}}
     },
     "progress": 81,
     {{#if userState.additionalAmount}}

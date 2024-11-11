@@ -27,6 +27,13 @@ export function every(array: string[], condition: string, ...args: unknown[]) {
   }
 }
 
+export function doSkipPlaid(tags) {
+  if (tags) {
+    return ["Skip Plaid"].some((v) => tags.includes(v));
+  }
+  return false;
+}
+
 export function some(array: string[], condition: string, ...args: unknown[]) {
   if (array && Array.isArray(array)) {
     return array.some((item) => item === condition);

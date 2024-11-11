@@ -26,7 +26,12 @@
   },
   "outputs": {
     "*": "redirect",
-    "redirect": "redirect/full-refi.income-verification",
+    "redirect": {
+      "*": "actions.conditional",
+      "if": "conditionals.skip-income-verification",
+      "then": "redirect/full-refi.review",
+      "else": "redirect/full-refi.income-verification"
+    },
     "actions": {
       "*": "actions/result.results",
       "actions": [

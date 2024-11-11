@@ -1,0 +1,14 @@
+{{!-- skip income verification for 
+    1. skip-plaid tag
+    2. Degree type is 'undergraduate' and Undergraduate degree type is NOT 'bachelors'
+    3. Parent plus benefactor degree type is 'high_school'
+    4. employmentType is 'self_employed'
+ --}}
+ 
+{{#if (or userState.skip-plaid 
+  (eq userState.degree-type 'high_school')
+)}}
+  true
+{{else}}
+  false
+{{/if}}
