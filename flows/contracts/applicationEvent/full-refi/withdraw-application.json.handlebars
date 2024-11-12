@@ -5,6 +5,7 @@
 )}}
   {
     "event": "setStatus",
+    "rehydrate": false,
     "payload": {
       "status": "withdrawn",
       "id": "{{ lookup (lookup (hasActiveIncompleteApplication (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications) "root") "id" }}"
