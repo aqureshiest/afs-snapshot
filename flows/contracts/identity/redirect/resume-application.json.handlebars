@@ -15,6 +15,7 @@
     {{/if}}
   {{else}}
     {{!-- v2 - conditional to refresh rate-estimates --}}
+    {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
      {{!-- will refresh rate-estimates if the following conditions are meet
           - the app has decisions, 
           - the most recent rate inquiry is expired, 
@@ -33,11 +34,13 @@
               {{/if}}
             {{/with}}
           {{else}}
-            "{{application.brand}}/{{mapProductForRedirect application.product}}{{#if application.applicant.id}}{{#if (eq application.cosigner.id application.applicant.id)}}/cosigner{{else}}/basic-info{{/if}}/{{application.applicant.id}}"{{/if}}
+            "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if applicant.id}}{{#if (eq ../application.cosigner.id applicant.id)}}/cosigner{{else}}/basic-info{{/if}}/{{applicant.id}}"{{/if}}
           {{/if}}
-      {{!-- {{/if}} --}}
+          {{!-- {{/if}} --}}
+    {{else}}
+      null
+    {{/with}}
   {{/if}}
 {{else}}
   null
 {{/if}}
-
