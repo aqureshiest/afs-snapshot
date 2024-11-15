@@ -293,15 +293,6 @@ export default class LendingDecisionServiceClient extends Client {
                 }
                 error
             }
-            ${
-              ["approved", "declined"].includes(status)
-                ? application?.applicants?.map((applicant, i) =>
-                    applicant
-                      ? `setApplicantStatus_${i}: setStatus(id: "${applicant.id}", meta: $meta, status: $status) { id, error }`
-                      : "",
-                  )
-                : ""
-            }
           }`,
           variables: {
             ...queryVars,
@@ -316,6 +307,56 @@ export default class LendingDecisionServiceClient extends Client {
           ASresponse.setStatus["error"]
         ) {
           input?.response?.status(400).send(ASresponse.setStatus["error"]);
+        }
+
+        if (
+          [
+            DecisionStatusMapping.APPROVED,
+            DecisionStatusMapping.DECLINED,
+          ].includes(status)
+        ) {
+          this.log(
+            {
+              id: application.id,
+              message: `[1b8aebd9] Updating applicants of ${application.id} to status ${status}`,
+            },
+            context,
+          );
+
+          const applicantASresponse = (await applicationServiceClient[
+            "sendRequest"
+          ]({
+            query: String.raw`mutation (
+              $meta: EventMeta
+              $status: ApplicationStatusName!
+              ) {
+                ${application?.applicants?.map((applicant, i) =>
+                  applicant
+                    ? `setApplicantStatus_${i}: setStatus(id: "${applicant.id}", meta: $meta, status: $status) { 
+                      id
+                      application {
+                        id
+                      }
+                      error
+                      }`
+                    : "",
+                )}
+            }`,
+            variables: {
+              status,
+              meta: { service: "apply-flow-service" },
+            },
+          })) as unknown as { setStatus: Event };
+
+          if (
+            applicantASresponse &&
+            applicantASresponse.setStatus &&
+            applicantASresponse.setStatus["error"]
+          ) {
+            input?.response
+              ?.status(400)
+              .send(applicantASresponse.setStatus["error"]);
+          }
         }
       }
     } catch (error) {
@@ -470,11 +511,6 @@ export default class LendingDecisionServiceClient extends Client {
       context.logger.error(error);
       throw error;
     }
-
-    const softApprovedAmount = results.data.artifacts
-      ?.cosignerSoftApprovedAmount
-      ? results.data.artifacts.cosignerSoftApprovedAmount
-      : results.data.artifacts.softApprovedAmount;
 
     const softInquiryDate = results.data.artifacts?.cosignerSoftInquiryDate
       ? results.data.artifacts.cosignerSoftInquiryDate
