@@ -19,7 +19,9 @@
                 "type": "object",
                 "properties": {
                     "name": {{{json (schema 'questions/cosigner/name')}}},
-                    "email": {{{json (schema 'questions/cosigner/email')}}}
+                    {{#with (contract 'email-validation') as |emailValidation|}}
+                      "email": {{{json emailValidation}}}
+                    {{/with}}
                 }
             }
         }

@@ -58,6 +58,7 @@
       "save_action": "actions/cosigner-invite",
       "cosigner_name_input_status": "questions/cosigner/name.status",
       "cosigner_email_input_status": "questions/cosigner/email.status",
+      "email-validation": "questions/cosigner/email/validation.cosigner-invite",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

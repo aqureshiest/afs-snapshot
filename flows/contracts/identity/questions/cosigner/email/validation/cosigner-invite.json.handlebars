@@ -1,0 +1,16 @@
+{
+  "type": "string",
+  "minLength": 1,
+  "format": "email",
+  "matches": {
+    "shouldMatch": false,
+    "useParentData": false,
+    "matchAgainst": {{{json application.primary.details.email}}}
+  },
+  "errorMessage": {
+    "matches": "Cosigner’s email address is invalid",
+    "minLength": "Email is required.",
+    "type": "Invalid email.",
+    "format": "Email address contains invalid characters."
+  }
+}
