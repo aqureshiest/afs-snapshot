@@ -22,9 +22,9 @@
           - the app is not submitted, 
           - and the applicant is not the primary in a cosigned app
        --}}
-      {{!-- {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted") (not (and ../application.cosigner.id (eq ../application.primary.id applicant.id) ) ))}}
+      {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted") (not (and ../application.cosigner.id (eq ../application.primary.id applicant.id) ) ))}}
         "{{../application.brand}}/student-loan-refi/refresh-rate-estimates/{{applicant.id}}"
-      {{else}} --}}
+      {{else}}
           {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}
             {{#with ../applicationState }}
               {{#if step}}
@@ -36,7 +36,7 @@
           {{else}}
             "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if applicant.id}}{{#if (eq ../application.cosigner.id applicant.id)}}/cosigner{{else}}/basic-info{{/if}}/{{applicant.id}}"{{/if}}
           {{/if}}
-          {{!-- {{/if}} --}}
+      {{/if}}
     {{else}}
       null
     {{/with}}

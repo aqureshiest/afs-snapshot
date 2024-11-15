@@ -58,7 +58,10 @@
               "stage/layout/header/sidebar-items.support"
             ]
           }
-        ]
+        ],
+        "banner": {
+          "*": "stage/layout/banner/templates.rate-estimates-refreshed"
+        }
       },
       "progress": [
         {
