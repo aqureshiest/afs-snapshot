@@ -85,7 +85,13 @@
               "questions/primary/disclosure/links.loss-of-benefits",
               "questions/primary/disclosure/links.consent-electronic-communications",
               "questions/primary/disclosure/links.earnest-loan-application-solicitation"
-          ]
+          ],
+          "back-button": {
+            "*": "actions.conditional",
+            "if": "conditionals.skip-income-verification",
+            "then": "actions/back-buttons/full-refi/cosigner.income-source",
+            "else": "actions/back-buttons/full-refi/cosigner.income-verification"
+          }
         },
         "student-info-review-noFinancialAccounts-rows": {
           "*": "actions.conditional",
@@ -117,13 +123,13 @@
               "questions/primary/disclosure/links.loss-of-benefits",
               "questions/primary/disclosure/links.consent-electronic-communications",
               "questions/primary/disclosure/links.earnest-loan-application-solicitation"
-          ]
-        },
-        "back-button": {
-          "*": "actions.conditional",
-          "if": "conditionals.skip-income-verification",
-          "then": "actions/back-buttons/full-refi/cosigner.income-source",
-          "else": "actions/back-buttons/full-refi/cosigner.income-verification"
+          ],
+          "back-button": {
+            "*": "actions.conditional",
+            "if": "conditionals.skip-income-verification",
+            "then": "actions/back-buttons/full-refi/cosigner.income-source",
+            "else": "actions/back-buttons/full-refi/cosigner.income-verification"
+          }
         },
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.cosigner",

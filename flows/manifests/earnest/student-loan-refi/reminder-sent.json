@@ -65,8 +65,7 @@
               "@": "Back to dashboard"
             },
             "action": {
-              "*": "actions/navigate",
-              "goTo": "earnest-student-loan-refi/urls.syllabus"
+              "*": "actions/navigate.homebase"
             }
           }]
         },
