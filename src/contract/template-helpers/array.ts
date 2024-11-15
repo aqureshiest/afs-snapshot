@@ -1,3 +1,5 @@
+export const isArray = (arr) => Array.isArray(arr);
+
 const findInArray = function (...args) {
   const [arr, property, value, return_property] = args;
   const context = args[args.length - 1].data.context;

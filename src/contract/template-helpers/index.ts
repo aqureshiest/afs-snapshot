@@ -12,7 +12,7 @@ export { default as getSchool } from "./getSchool.js";
 export { default as mapLoanType } from "./mapLoanType.js";
 export { mapProduct, getProductName } from "./mapProduct.js";
 export { default as mapIncomeTypeToEmplStatus } from "./mapIncomeType.js";
-export { default as findInArray } from "./array.js";
+export { default as findInArray, isArray } from "./array.js";
 export { default as mapIncomeVerificationMethod } from "./mapIncomeVerificationMethod.js";
 export { default as mapRatePayments } from "./mapRatePayments.js";
 export { default as map } from "./map.js";
@@ -25,6 +25,10 @@ export function every(array: string[], condition: string, ...args: unknown[]) {
   if (array && Array.isArray(array)) {
     return array.every((item) => item === condition);
   }
+}
+
+export function isNotEmptyObj(obj) {
+  return !(obj && Object.keys(obj).length === 0 && obj.constructor === Object);
 }
 
 export function doSkipPlaid(tags) {

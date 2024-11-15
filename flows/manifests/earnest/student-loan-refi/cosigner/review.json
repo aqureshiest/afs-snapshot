@@ -53,83 +53,48 @@
         "steps": [
             "student-info-form/review.full-refi"
         ],
-        "student-info-review-rows": {
-          "*": "actions.conditional",
-          "if": "conditionals.show-disclosure",
-          "then": [
+        "rows": {
+          "*": "actions.array-helper", 
+          "items": [
             "info/student-review.full-refi",
             {"<":"info/student-info/review.full-refi-cosigner", "decryptPiiSsn": "pii.get-token-cosigner"},
             "info/student-education/review.full-refi-cosigner",
             "info/student-employment/review.full-refi-cosigner",
             "info/student-loan-amount/review.full-refi-cosigner",
-            "info/student-finances/review.full-refi-cosigner",
-            "questions/primary/consent.default",
-            "questions/cosigner/intent.default",
-            "questions/primary/disclosure.default",
-            "questions/primary/disclosure.disclaimer"], 
-          "else": [
-            "info/student-review.full-refi",
-            {"<":"info/student-info/review.full-refi-cosigner", "decryptPiiSsn": "pii.get-token-cosigner"},
-            "info/student-education/review.full-refi-cosigner",
-            "info/student-employment/review.full-refi-cosigner",
-            "info/student-loan-amount/review.full-refi-cosigner",
-            "info/student-finances/review.full-refi-cosigner"
-          ],
-          "getSchools": "cosigner-get-school-name",
-          "getDegrees": "questions/primary/degree.get-degrees",
-          "disclosureLinks": [
-              "questions/primary/disclosure/links.terms-of-services",
-              "questions/primary/disclosure/links.privacy-policy",
-              "questions/primary/disclosure/links.privacy-notice",
-              "questions/primary/disclosure/links.credit-report-policy",
-              "questions/primary/disclosure/links.loss-of-benefits",
-              "questions/primary/disclosure/links.consent-electronic-communications",
-              "questions/primary/disclosure/links.earnest-loan-application-solicitation"
-          ],
-          "back-button": {
-            "*": "actions.conditional",
-            "if": "conditionals.skip-income-verification",
-            "then": "actions/back-buttons/full-refi/cosigner.income-source",
-            "else": "actions/back-buttons/full-refi/cosigner.income-verification"
-          }
+            {
+              "*": "actions.conditional",
+              "if": "conditionals.with-financials",
+              "then":"info/student-finances/review.full-refi-cosigner"
+            },
+            {
+              "*": "actions.conditional", 
+              "if": "conditionals.show-disclosure", 
+              "then":[
+                  "questions/primary/consent.default",
+                  "questions/cosigner/intent.default",
+                  "questions/primary/disclosure.default",
+                  "questions/primary/disclosure.disclaimer"
+                ],
+              "disclosureLinks": [
+                  "questions/primary/disclosure/links.terms-of-services",
+                  "questions/primary/disclosure/links.privacy-policy",
+                  "questions/primary/disclosure/links.privacy-notice",
+                  "questions/primary/disclosure/links.credit-report-policy",
+                  "questions/primary/disclosure/links.loss-of-benefits",
+                  "questions/primary/disclosure/links.consent-electronic-communications",
+                  "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+              ]
+            }
+          ], 
+          "removeEmptyObjects": {"@": true},
+          "getSchools": "primary-get-school-name",
+          "getDegrees": "questions/primary/degree.get-degrees"
         },
-        "student-info-review-noFinancialAccounts-rows": {
+        "back-button": {
           "*": "actions.conditional",
-          "if": "conditionals.show-disclosure",
-          "then": [
-            "info/student-review.full-refi",
-            {"<":"info/student-info/review.full-refi-cosigner", "decryptPiiSsn": "pii.get-token-cosigner"},
-            "info/student-education/review.full-refi-cosigner",
-            "info/student-employment/review.full-refi-cosigner",
-            "info/student-loan-amount/review.full-refi-cosigner",
-            "questions/primary/consent.default",
-            "questions/cosigner/intent.default",
-            "questions/primary/disclosure.default",
-            "questions/primary/disclosure.disclaimer"], 
-          "else": [
-            "info/student-review.full-refi",
-            {"<":"info/student-info/review.full-refi-cosigner", "decryptPiiSsn": "pii.get-token-cosigner"},
-            "info/student-education/review.full-refi-cosigner",
-            "info/student-employment/review.full-refi-cosigner",
-            "info/student-loan-amount/review.full-refi-cosigner"
-          ],
-          "getSchools": "cosigner-get-school-name",
-          "getDegrees": "questions/primary/degree.get-degrees",
-          "disclosureLinks": [
-              "questions/primary/disclosure/links.terms-of-services",
-              "questions/primary/disclosure/links.privacy-policy",
-              "questions/primary/disclosure/links.privacy-notice",
-              "questions/primary/disclosure/links.credit-report-policy",
-              "questions/primary/disclosure/links.loss-of-benefits",
-              "questions/primary/disclosure/links.consent-electronic-communications",
-              "questions/primary/disclosure/links.earnest-loan-application-solicitation"
-          ],
-          "back-button": {
-            "*": "actions.conditional",
-            "if": "conditionals.skip-income-verification",
-            "then": "actions/back-buttons/full-refi/cosigner.income-source",
-            "else": "actions/back-buttons/full-refi/cosigner.income-verification"
-          }
+          "if": "conditionals.skip-income-verification",
+          "then": "actions/back-buttons/full-refi/cosigner.income-source",
+          "else": "actions/back-buttons/full-refi/cosigner.income-verification"
         },
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.cosigner",

@@ -1,0 +1,17 @@
+{{#list}}
+    {{#with (contract 'items') as |items|}}
+        {{#each items as |item|}}
+            {{#if (and item (isNotEmptyObj item))}}
+                {{#if (isArray item)}}
+                    {{#each item as |i|}}
+                        {{#if (and i (isNotEmptyObj i))}}
+                            {{{json i}}}
+                        {{/if}}
+                    {{/each}}
+                {{else}}
+                    {{{json item}}}
+                {{/if}}
+            {{/if}}
+        {{/each}}
+    {{/with}}
+{{/list}}

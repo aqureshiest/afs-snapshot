@@ -4,16 +4,6 @@
     "type": "form",
     "status": "notStarted",
     "pageLayout":{{{json (contract 'pageLayout')}}},
-    {{#if (contract "analytics")}}
-    "analytics":{{{json (contract 'analytics')}}},
-    {{else}}
-    "analytics": {
-        "product": "{{{mapProduct application.reference.product}}}",
-        "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-        "name": "Application Review",
-        "title": "Review"
-    },
-    {{/if}}
     "steps": {{{json (contract 'steps')}}},
     {{#if (or 
         (and (eq updatedApplication.applicant.role 'primary') (ne updatedApplication.primary.status.name 'submitted')) 
@@ -65,6 +55,15 @@
             "additionalProperties": true
         },
     {{/if}}
-    "backAction": {{{ json (contract 'back-button') }}}
+    {{#if (contract "analytics")}}
+        "analytics":{{{json (contract 'analytics')}}}
+    {{else}}
+        "analytics": {
+            "product": "{{{mapProduct application.reference.product}}}",
+            "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+            "name": "Application Review",
+            "title": "Review"
+        }
+    {{/if}}
 }
-{{/with}}
+{{else}} null {{/with}}

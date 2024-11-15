@@ -42,11 +42,7 @@
         "action": {{{ json (contract 'back-button') }}}
     },
     "progress": 100,
-    {{#if (and updatedApplication.applicant.details.financialAccounts (someSelected updatedApplication.applicant.details.financialAccounts))}}
-        "rows":  {{{ json (contract 'student-info-review-rows')}}}
-    {{else}}
-        "rows":  {{{ json (contract 'student-info-review-noFinancialAccounts-rows')}}}
-    {{/if}}
+    "rows":  {{{ json (contract 'rows')}}}
 }
 {{else}} null {{/with}}
 
