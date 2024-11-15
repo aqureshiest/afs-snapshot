@@ -42,8 +42,9 @@
             },
             "action": {
               "*": "actions/request",
-              "manifest": "actions/reminders/student-loan-refi",
+              "manifest": "actions/reminders/student-loan-refi.cosigner-reminder",
               "analytics": "analytics/full-refi.syllabus-reminder-action"
+
             }
           },
           "then": {
