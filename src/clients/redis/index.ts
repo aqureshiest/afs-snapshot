@@ -121,10 +121,17 @@ export default class RedisClient {
       ...value,
     };
     const rKey = `${this.prefix}_usr_${key}`;
-
-    return await this.client.set(rKey, JSON.stringify(newState), {
-      EX: this.expiration,
-      GT: true,
-    });
+    context.logger.info(
+      `Setting user state: ${rKey} - ${Object.keys(newState).join(", ")}`,
+    );
+    try {
+      return await this.client.set(rKey, JSON.stringify(newState), {
+        EX: this.expiration,
+        GT: true,
+      });
+    } catch (ex) {
+      context.logger.error("[14973763] error saving user state", ex);
+      return null;
+    }
   }
 }
