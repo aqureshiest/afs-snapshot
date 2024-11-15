@@ -1420,23 +1420,37 @@ export default class LendingDecisionServiceClient extends Client {
      * with this income detail yet. Only on the employment question will type by assigned
      * ============================== *
      */
+    let annualAdditionalIncome = 0;
+    const additionalIncomes = incomeDetails.slice(1);
+    const nonAdditionalAnnualIncome = [
+      "employment",
+      "unspecified",
+      "employed",
+      "self_employed",
+      "future",
+      "retired",
+      "unemployed",
+    ];
+    additionalIncomes.forEach((element) => {
+      if (element?.type && nonAdditionalAnnualIncome.includes(element.type)) {
+        return;
+      }
+      annualAdditionalIncome += element?.amount ? element.amount : 0;
+    });
+
     const rateCheckIncomes: DecisionEntity["incomes"] = [
       {
         incomeType: "claimed_annual_income",
         value:
-          incomeDetails[0] && !incomeDetails[0].type && incomeDetails[0].amount
+          incomeDetails[0] && incomeDetails[0].amount
             ? incomeDetails[0].amount
             : 0,
       },
       {
         incomeType: "annual_additional_income",
-        value:
-          incomeDetails[1] && !incomeDetails[1].type && incomeDetails[1].amount
-            ? incomeDetails[1].amount
-            : 0,
+        value: annualAdditionalIncome,
       },
     ];
-
     return rateCheckIncomes;
   }
 
