@@ -5,8 +5,11 @@
     4. employmentType is 'self_employed'
  --}}
  
-{{#if (or userState.skip-plaid 
-  (eq userState.degree-type 'high_school')
+{{#if (or 
+  userState.skip-plaid 
+  (eq application.benefactor.details.education.0.degree 'high_school')
+  (eq request.body.values.employmentType 'self_employed')
+  (eq (mapIncomeTypeToEmplStatus application.applicant.details.income) 'self_employed')
 )}}
   true
 {{else}}
