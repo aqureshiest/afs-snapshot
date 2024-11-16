@@ -3,7 +3,7 @@
   "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
-    "env": "inputs/env",
+    "env": "inputs/env.neas-irs-joint",
     "application": {
       "*": "application/single.flattened",
       "application": "application-by-id-param"
@@ -33,7 +33,15 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
+        "neas.identify-user-without-role-dependency",
         "neas.send-cosigner-access-email",
+        {
+          "<": "actions/result.legacy-result",
+           "action": {
+            "<": "internal-rest-service.existing-user-cosigner",
+            "get-existing-user": "internal-rest-service.get-existing-user"
+          }
+        },
         "full-refi.add-details-full-refi"
       ]
     }

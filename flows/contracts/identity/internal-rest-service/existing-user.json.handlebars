@@ -1,0 +1,20 @@
+{{#with (contract 'actions' (sum @index -4)) as |identify|}}
+  {{#if (eq identify.response.statusCode 409)}}
+    {{#with (contract 'get-existing-user') as |existingUser|}}
+     {
+
+       "action": "get-existing-user",
+       "hasActiveLegacyLoan": {{{json (hasActiveLegacyLoan existingUser.results.user)}}}
+     }
+    {{else}}
+      null
+    {{/with}}
+  {{else}}
+    {
+      "action": "get-existing-user",
+      "success": false
+    }
+  {{/if}}
+{{else}}
+  null
+{{/with}}

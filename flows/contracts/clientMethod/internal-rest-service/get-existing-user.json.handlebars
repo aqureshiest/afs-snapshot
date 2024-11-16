@@ -1,0 +1,12 @@
+{
+  "action": "get-existing-user",
+  "client": "internalRestServiceClient",
+  "method": "post",
+  "uri": "/users/slr-lookup",
+  "headers": {
+    "Authorization": "Basic {{env.INTERNAL_REST_SERVICE_AUTH_KEY}}"
+  },
+  "body": {
+    "email": "{{request.body.values.email}}"
+  }
+}

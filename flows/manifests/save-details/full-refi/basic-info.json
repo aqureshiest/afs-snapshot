@@ -3,7 +3,7 @@
   "parameters": [ { "key": "id", "format": "uuid" } ],
   "inputs": {
     "*": "inputs",
-    "env": "inputs/env",
+    "env": "inputs/env.neas-irs-joint",
     "application": {
       "*": "application/single.flattened",
       "application": "application-by-id-param"
@@ -38,7 +38,14 @@
         "neas.identify",
         "session",
         "neas.send-access-email",
-        "full-refi.add-userId-before-verifying-through-emailId"
+        "full-refi.add-userId-before-verifying-through-emailId",
+        {
+          "*": "actions/result.legacy-result",
+          "action": {
+            "<": "internal-rest-service.existing-user",
+            "get-existing-user": "internal-rest-service.get-existing-user"
+          }
+        }
       ]
     }
   }

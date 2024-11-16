@@ -20,6 +20,8 @@ export { default as log } from "./log.js";
 export { default as json } from "./json.js";
 export { default as applicantById } from "./applicantById.js";
 export { default as maybe } from "./maybe.js";
+export { default as hasActiveLegacyLoan } from "./has-active-legacy-loan.js";
+export { default as generateModalTemplate } from "./generate-modal-template.js";
 
 export function every(array: string[], condition: string, ...args: unknown[]) {
   if (array && Array.isArray(array)) {
@@ -694,4 +696,17 @@ export function getApplicantWithRole(id, application) {
     };
   }
   return applicant;
+}
+
+interface Action {
+  action: string;
+  statusCode?: number;
+  hasActiveLegacyLoan?: boolean;
+  [key: string]: unknown;
+}
+
+export function getAction(actions: Record<string, Action>, actionName: string): Action | undefined {
+  return Object.values(actions)
+    .filter((ac: Action) => ac.action === actionName )
+    .pop();
 }

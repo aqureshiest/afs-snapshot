@@ -1,0 +1,6 @@
+{
+  "S2S_APPLICATION_SERVICES_KEY": {{{ json (extractSensitiveString env.S2S_APPLICATION_SERVICES_KEY) }}},
+  "INTERNAL_REST_SERVICE_AUTH_KEY": {{{ json (extractSensitiveString env.INTERNAL_REST_SERVICE_AUTH_KEY) }}},
+   "BASE_URL": {{{json env.BASE_URL}}},
+  "CORS_DOMAIN": {{{ json (extractSensitiveString env.CORS_DOMAIN) }}}
+}

@@ -1,0 +1,12 @@
+
+{{#with (contract 'action') as |result|}}
+  {
+    "action": {{{ json result.action }}},
+    "hasActiveLegacyLoan": {{{json result.hasActiveLegacyLoan}}}
+  }
+{{else}}
+  {
+    "action": null,
+    "success": false
+  }
+{{/with}}

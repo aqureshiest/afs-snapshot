@@ -1,0 +1,12 @@
+{
+  "action": "identify",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/identity/user",
+  "headers": {
+    "Authorization": "Bearer {{btoa env.S2S_APPLICATION_SERVICES_KEY}}"
+  },
+  "body": {
+    "email": {{{json request.body.values.email}}}
+  }
+}

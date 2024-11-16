@@ -10,5 +10,43 @@
     },
     "body": "null"
   },
-  "stubs": []
+  "stubs": [
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "http://localhost:3000",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "user": {
+                "id": "1",
+                "email": "test@earnest.com",
+                "first_name": "first",
+                "last_name": "last",
+                "applications": [
+                  {
+                    "loan": {
+                      "status": "agreed"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "method": "POST",
+            "path": "/users/slr-lookup"
+          }
+        }
+      ]
+    }
+  ]
 }

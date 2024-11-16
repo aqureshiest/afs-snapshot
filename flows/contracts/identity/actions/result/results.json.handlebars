@@ -21,6 +21,9 @@
       {{#if result.response.statusCode}}
         { "statusCode": {{{ json result.response.statusCode }}} }
       {{/if}}
+      {{#if result.hasActiveLegacyLoan}}
+        { "hasActiveLegacyLoan": {{{ json result.hasActiveLegacyLoan }}} }
+      {{/if}}
     {{/obj}}
   {{/each}}
 {{/list}}
