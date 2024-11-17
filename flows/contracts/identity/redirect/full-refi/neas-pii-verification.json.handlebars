@@ -1,0 +1,10 @@
+{
+  "action": {
+    "type": "navigate",
+    "properties": {
+      "goTo": "{{env.BASE_URL}}/_/auth/neasauth/verify?email={{escapeUrlParam (lookup (lookup (getApplicant request.params.id application) "details") "email")}}",
+      "external": true
+    }
+  },
+  "results": {{{json (contract 'actions')}}}
+}

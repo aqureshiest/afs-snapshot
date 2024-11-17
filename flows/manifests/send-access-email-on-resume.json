@@ -1,0 +1,34 @@
+[{
+  "methods": ["post"],
+  "parameters": [{
+    "key": "id",
+    "format": "uuid"
+  }],
+  "inputs": {
+    "*": "inputs",
+    "env": "inputs/env",
+    "application": {
+      "*": "application/single.flattened",
+      "application": "application-by-id-param"
+    },
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": "neas.verify-token",
+          "authorization": []
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "redirect/full-refi.neas-pii-verification",
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "neas.send-access-email-on-resume"
+      ]
+    }
+  }
+}]

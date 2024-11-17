@@ -1,0 +1,10 @@
+{
+  "action": "send-access-email-on-resume",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/identity/access-code/send",
+  "body": {
+    "applicationId": "{{application.applicant.id}}",
+    "emailId": "{{application.applicant.details.email}}"
+  }
+}

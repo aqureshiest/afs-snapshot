@@ -108,21 +108,30 @@ export default function generateModalTemplate(request, actions, application, app
         {
           copy: ((hasMonolithOrCognitoAccount && hasActiveLegacyLoan)
             || (hasMonolithOrCognitoAccount && !hasActiveIncompleteApp && !hasActivePostSubmissionApp
-          )) ? "Login" 
+            )) ? "Login"
             : "Resume prior application",
-          action: {
-            type: "navigate",
-            properties: {
-              goTo: hasMonolithOrCognitoAccount
-                ? (hasActivePostSubmissionApp || hasActiveLegacyLoan)
+          action: hasMonolithOrCognitoAccount
+            ? {
+              type: "navigate",
+              properties: {
+                goTo: (hasActivePostSubmissionApp || hasActiveLegacyLoan)
                   ? `${env.BASE_URL}/_/auth/login`
                   : (!hasActiveIncompleteApp && !hasActivePostSubmissionApp)
                     ? `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
-                    : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`
-                : `${env.BASE_URL}/_/auth/neasauth/verify?email=${encodeURIComponent(request.body.values.email)}`,
-              external: true
+                    : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
+                external: true
+              }
             }
-          }
+            : {
+              type: "request",
+              properties: {
+                manifest: `send-access-email-on-resume/${hasActivePostSubmissionApp
+                  ? hasActivePostSubmissionApp?.root?.id
+                  : hasActiveIncompleteApp?.root?.id
+                  }`,
+                method: "POST"
+              }
+            }
         }
       ],
       groupProps: {
