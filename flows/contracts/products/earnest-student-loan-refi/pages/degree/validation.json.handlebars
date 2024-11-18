@@ -32,6 +32,18 @@
           "properties": {
             "school-undergraduate": {{{json (schema 'questions/primary/school')}}},
             "undergraduate-degree-type": {{{json (schema 'questions/primary/radio/schemas/undergraduate-degree-types')}}}
+          },
+          "if": {
+            "properties": {
+              "undergraduate-degree-type": {
+                "const": "incomplete_grads"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "graduationDate": {{{json (schema 'questions/primary/date/schemas/incomplete-graduation-date')}}}
+            }
           }
         }
       }, {

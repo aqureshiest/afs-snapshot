@@ -113,7 +113,7 @@
                 "label": {
                   "@": "Degree type"
                 },
-                "deps": [{"@": "education.isParentDriven"}],
+                "deps": [{"@": "education.isParentDriven"}, {"@": "education.graduationDate"}],
                 "value": "earnest-student-loan-refi/values.degree-type",
                 "items": "questions/primary/radio/items/degree-types"
               },
@@ -168,6 +168,7 @@
                 },
                 "value": "earnest-student-loan-refi/values.undergraduate-degree-type",
                 "items": "questions/primary/radio/items/degree-types.undergraduate",
+                "deps": [{"@": "education.graduationDate"}],
                 "conditional": {
                   "@": [["primaryUndergraduate"]]
                 }
@@ -181,7 +182,7 @@
                   "@": "Graduation date or last attendance date"
                 },
                 "omitDay": {"@": true},
-                "deps": [{"@": "education.residencyEndDate"}],
+                "deps": [{"@": "education.residencyEndDate"}, {"@": "education.degree-type"}, {"@": "education.undergraduate-degree-type"}],
                 "value": "earnest-student-loan-refi/values.graduation-date"
               },
               {
