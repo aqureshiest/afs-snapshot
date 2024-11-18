@@ -1,22 +1,17 @@
-{{#with (getRateChecks application.applicant.details.decision) as |rateChecks|}}
-  {{#if (gt rateChecks.length 1)}}
-    {{#with (getMostRecentRateInquiry rateChecks) as |mostRecentRateCheck|}}
-      {{#if (isToday mostRecentRateCheck.inquiryDate)}}    
-        {
-          "variant": "neutral",
-          "iconStart": "InfoIcon",
-          "iconEnd": "CloseIcon",
-          "text": {{{json (maybe (contract "copy") "Your original rates have expired, but we've updated them for you.")}}}
-        }
-      {{else}}
-        null
-      {{/if}}
-    {{else}}
-      null
-    {{/with}}
-  {{else}}
-    null
-  {{/if}}
+{{#if (isToday userState.rate-refreshed-at)}}    
+  {
+    "variant": "neutral",
+    "iconStart": "InfoIcon",
+    "iconEnd": "CloseIcon",
+    "iconEndOnClick": {
+      "action": {
+        "key": "dismissIcon",
+        "type": "dismissBanner",
+        "properties": {}
+      }
+    },
+    "text": {{{json (maybe (contract "copy") "Your original rates have expired, but we've updated them for you.")}}}
+  }
 {{else}}
   null
-{{/with}}
+{{/if}}

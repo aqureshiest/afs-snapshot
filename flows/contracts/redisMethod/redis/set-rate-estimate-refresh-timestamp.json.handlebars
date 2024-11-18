@@ -1,0 +1,11 @@
+{{#if auth.artifacts.userId}}
+{
+  "redisMethod": "setUserState",
+  "key": "{{{auth.artifacts.userId}}}",
+  "value": {
+    "rate-refreshed-at": "{{getCurrentTime}}"
+  }
+}
+{{else}}
+  null
+{{/if}}

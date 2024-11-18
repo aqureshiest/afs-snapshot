@@ -23,6 +23,6 @@
   },
   "outputs": {
     "*": "response.refresh-rate-check-interstitial",
-    "actions": []
+    "actions": ["redis.set-rate-estimate-refresh-timestamp"]
   }
 }]
