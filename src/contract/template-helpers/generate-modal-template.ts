@@ -2,7 +2,7 @@ import {
   hasActiveIncompleteApplication,
   hasActivePostSubmissionApplication,
   ISODateToMMDDYYYY,
-  getAction
+  getAction,
 } from "./index.js";
 
 interface Template {
@@ -22,12 +22,12 @@ interface ButtonTemplate {
   type: string;
   componentProps: {
     stylePreset: string;
-    buttons: Button[],
+    buttons: Button[];
     groupProps: {
       flexDirection: string;
       alignItems: string;
     };
-  }
+  };
 }
 
 interface Button {
@@ -39,11 +39,27 @@ interface Button {
       external?: boolean;
       manifest?: string;
       method?: string;
+      analytics?: {
+        name: string;
+        product: string;
+        role: string;
+        source: string;
+        application_id: string;
+        primary_application_id: string;
+        cosigner_application_id: string;
+        selection: string;
+      };
     };
   };
 }
 
-export default function generateModalTemplate(request, actions, application, applications, env) {
+export default function generateModalTemplate(
+  request,
+  actions,
+  application,
+  applications,
+  env
+) {
   const hasActiveIncompleteApp = hasActiveIncompleteApplication(
     request.params.id,
     applications
@@ -54,7 +70,8 @@ export default function generateModalTemplate(request, actions, application, app
   );
   const identityResponse = getAction(actions, "identify");
   const getExistLegacyUserResponse = getAction(actions, "get-existing-user");
-  const hasMonolithOrCognitoAccount = identityResponse?.statusCode && identityResponse.statusCode === 409;
+  const hasMonolithOrCognitoAccount =
+    identityResponse?.statusCode && identityResponse.statusCode === 409;
   const hasActiveLegacyLoan = getExistLegacyUserResponse?.hasActiveLegacyLoan;
 
   const template: Template = {
@@ -68,36 +85,53 @@ export default function generateModalTemplate(request, actions, application, app
               key: "header",
               type: "header",
               componentProps: {
-                copy: hasMonolithOrCognitoAccount && !hasActiveIncompleteApp && !hasActivePostSubmissionApp
-                  ? "We found an account with this email."
-                  : "Pick up where you left off?",
+                copy:
+                  hasMonolithOrCognitoAccount &&
+                  !hasActiveIncompleteApp &&
+                  !hasActivePostSubmissionApp
+                    ? "We found an account with this email."
+                    : "Pick up where you left off?",
                 subCopy:
-                  hasMonolithOrCognitoAccount && !hasActiveIncompleteApp && !hasActivePostSubmissionApp
+                  hasMonolithOrCognitoAccount &&
+                  !hasActiveIncompleteApp &&
+                  !hasActivePostSubmissionApp
                     ? "Please log in to continue your application."
-                    : `You started an application with us on ${hasActivePostSubmissionApp
-                      ? ISODateToMMDDYYYY(
-                        hasActivePostSubmissionApp?.root?.createdAt
-                      )
-                      : ISODateToMMDDYYYY(hasActiveIncompleteApp?.root?.createdAt)
-                    }. Would you like to continue from where you left off?`,
+                    : `You started an application with us on ${
+                        hasActivePostSubmissionApp
+                          ? ISODateToMMDDYYYY(
+                              hasActivePostSubmissionApp?.root?.createdAt
+                            )
+                          : ISODateToMMDDYYYY(
+                              hasActiveIncompleteApp?.root?.createdAt
+                            )
+                      }. Would you like to continue from where you left off?`,
                 asset: {
                   center: true,
                   type: "LocalAsset",
-                  name: "illustrations.info"
-                }
+                  name: "illustrations.info",
+                },
               },
               modalProps: {
                 maxWidth: "400px",
                 showCloseButton: false,
-                outsideClickEnable: false
-              }
-            }
-          ]
-        }
-      }
-    }
+                outsideClickEnable: false,
+              },
+            },
+          ],
+        },
+      },
+    },
   };
-
+  const analytics = {
+    name: "Existing Application Selection Type",
+    product: "slr",
+    role: application?.applicant?.role,
+    source: "application",
+    application_id: application?.id,
+    primary_application_id: application?.primary?.id,
+    cosigner_application_id: application?.cosigner?.id,
+    selection: "resume app",
+  };
   const buttons: ButtonTemplate = {
     key: "buttons",
     type: "buttons",
@@ -106,54 +140,64 @@ export default function generateModalTemplate(request, actions, application, app
       buttons: [
         // Primary Button
         {
-          copy: ((hasMonolithOrCognitoAccount && hasActiveLegacyLoan)
-            || (hasMonolithOrCognitoAccount && !hasActiveIncompleteApp && !hasActivePostSubmissionApp
-            )) ? "Login"
-            : "Resume prior application",
+          copy:
+            (hasMonolithOrCognitoAccount && hasActiveLegacyLoan) ||
+            (hasMonolithOrCognitoAccount &&
+              !hasActiveIncompleteApp &&
+              !hasActivePostSubmissionApp)
+              ? "Login"
+              : "Resume prior application",
           action: hasMonolithOrCognitoAccount
             ? {
-              type: "navigate",
-              properties: {
-                goTo: (hasActivePostSubmissionApp || hasActiveLegacyLoan)
-                  ? `${env.BASE_URL}/_/auth/login`
-                  : (!hasActiveIncompleteApp && !hasActivePostSubmissionApp)
-                    ? `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
-                    : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
-                external: true
+                type: "navigate",
+                properties: {
+                  goTo:
+                    hasActivePostSubmissionApp || hasActiveLegacyLoan
+                      ? `${env.BASE_URL}/_/auth/login`
+                      : !hasActiveIncompleteApp && !hasActivePostSubmissionApp
+                      ? `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
+                      : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
+                  external: true,
+                  analytics,
+                },
               }
-            }
             : {
-              type: "request",
-              properties: {
-                manifest: `send-access-email-on-resume/${hasActivePostSubmissionApp
-                  ? hasActivePostSubmissionApp?.root?.id
-                  : hasActiveIncompleteApp?.root?.id
+                type: "request",
+                properties: {
+                  manifest: `send-access-email-on-resume/${
+                    hasActivePostSubmissionApp
+                      ? hasActivePostSubmissionApp?.root?.id
+                      : hasActiveIncompleteApp?.root?.id
                   }`,
-                method: "POST"
-              }
-            }
-        }
+                  method: "POST",
+                  analytics,
+                },
+              },
+        },
       ],
       groupProps: {
         flexDirection: "column",
-        alignItems: "center"
-      }
-    }
+        alignItems: "center",
+      },
+    },
   };
 
   // Secondary Buttons
   if (hasActiveIncompleteApp && !hasActivePostSubmissionApp) {
+    analytics.selection = "resume app";
+
     if (hasMonolithOrCognitoAccount) {
-        buttons.componentProps.buttons.push({
-          copy: "Continue new application",
-          action: {
-            type: "navigate",
-            properties: {
-              goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${application.id}`,
-              external: true
-            }
-          }
-        });
+      buttons.componentProps.buttons.push({
+        copy: "Continue new application",
+        action: {
+          type: "navigate",
+          properties: {
+            goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${application.id}`,
+            external: true,
+            analytics,
+          },
+        },
+      });
     } else {
       buttons.componentProps.buttons.push({
         copy: "Continue new application",
@@ -161,16 +205,17 @@ export default function generateModalTemplate(request, actions, application, app
           type: "request",
           properties: {
             manifest: `send-verification-email/${request.params.id}`,
-            method: "POST"
-          }
-        }
+            method: "POST",
+            analytics,
+          },
+        },
       });
     }
   }
 
   template.action.properties.definition.content = [
     ...template.action.properties.definition.content,
-    buttons
+    buttons,
   ];
 
   return template;
