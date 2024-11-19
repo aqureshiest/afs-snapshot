@@ -92,7 +92,7 @@ export const lte = (v1, v2) => v1 <= v2;
 export const gte = (v1, v2) => v1 >= v2;
 export const not = (v1) => !v1;
 export const notNull = (v1) => v1 !== null;
-export const concat = (v1: string, v2: string) => (v1 ?? '').concat(v2 ?? '');
+export const concat = (v1: string, v2: string) => (v1 ?? "").concat(v2 ?? "");
 
 /**
  * As `Array.prototype.includes` except a weak comparison is made to each
@@ -753,8 +753,11 @@ interface Action {
   [key: string]: unknown;
 }
 
-export function getAction(actions: Record<string, Action>, actionName: string): Action | undefined {
+export function getAction(
+  actions: Record<string, Action>,
+  actionName: string,
+): Action | undefined {
   return Object.values(actions)
-    .filter((ac: Action) => ac.action === actionName )
+    .filter((ac: Action) => ac.action === actionName)
     .pop();
 }

@@ -61,10 +61,6 @@ enum ApplicationTypes {
   "parent_plus" = "PARENTPLUS",
 }
 
-enum ProductTypes {
-  "student-refi" = "slr",
-}
-
 enum TermLengths {
   "5 year" = 60,
   "7 year" = 84,
@@ -804,7 +800,26 @@ export default class LendingDecisionServiceClient extends Client {
      * Application Tags is an array of strings, where the first element is overall application status
      * and last element is the application type
      */
-    const appType = await this.getApplicationType(context, applicationId);
+    let appType = await this.getApplicationType(context, applicationId);
+
+    /**
+     * ================================================ *
+     * LA-1747 : For primaries in a cosigned application
+     * we should allow them to re-submit their rate-check.
+     * LDS requires the appType in the payload and prior to
+     * LA-1747, we were passing the appTag that application
+     * service was apply.
+     *
+     * To allow for primaries to resubmit in cosigned application,
+     * special case the 'appType' parameter to 'PRIMARY_ONLY' if
+     * current applicant is primary.
+     * ================================================ *
+     */
+
+    if (currentApplicant === "primary" && appType === "cosigned") {
+      appType = "primary_only";
+    }
+
     const requestMetaDataIDs = await this.buildRequestMetaDataIDs(
       input,
       context,
@@ -858,6 +873,7 @@ export default class LendingDecisionServiceClient extends Client {
     );
 
     const inquiryDate = new Date();
+
     const { results, response } = await this.post<RateRequestResponse>(
       {
         uri: `/v2/decisioning-request/${application?.product}/${decisionType}`,

@@ -1,5 +1,4 @@
-
-import { before, describe, it} from "node:test";
+import { before, describe, it } from "node:test";
 import { Response } from "express";
 import assert from "node:assert";
 
@@ -26,10 +25,10 @@ describe("[02c8a0e5] Generate Modal Contract", () => {
 
   it("[da1cfa73] should generate a modal template", async () => {
     /**
-     * Dont ask my why, but the test will fail unless the we include 
+     * Dont ask my why, but the test will fail unless the we include
      * the unrelated code below.
      */
-    const input = { response: res } ;
+    const input = { response: res };
     const manifest = new Manifest(
       "authTest",
       {
@@ -53,7 +52,10 @@ describe("[02c8a0e5] Generate Modal Contract", () => {
       },
     );
 
-    const request = { params: { id: "1" }, body: { values: { email: "test@earnest.com" } } };
+    const request = {
+      params: { id: "1" },
+      body: { values: { email: "test@earnest.com" } },
+    };
     const actions = [
       { action: "identify", statusCode: 201 },
       { action: "get-existing-user", hasLegacyLoan: false },
@@ -63,13 +65,19 @@ describe("[02c8a0e5] Generate Modal Contract", () => {
     const env = {
       S2S_APPLICATION_SERVICES_KEY: "S2S_APPLICATION_SERVICES_KEY",
       INTERNAL_REST_SERVICE_AUTH_KEY: "INTERNAL_REST_SERVICE_AUTH_KEY",
-      BASE_URL: "BASE_URL"
-    }
+      BASE_URL: "BASE_URL",
+    };
     const result: { [key: string]: unknown } = (
       await manifest.execute(context, input)
     ).toJSON() as { [key: string]: unknown };
 
-    const test = generateModalTemplate(request, actions, application, applications, env);
+    const test = generateModalTemplate(
+      request,
+      actions,
+      application,
+      applications,
+      env,
+    );
     assert.ok(test);
   });
 });

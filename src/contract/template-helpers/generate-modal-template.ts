@@ -58,15 +58,15 @@ export default function generateModalTemplate(
   actions,
   application,
   applications,
-  env
+  env,
 ) {
   const hasActiveIncompleteApp = hasActiveIncompleteApplication(
     request.params.id,
-    applications
+    applications,
   );
   const hasActivePostSubmissionApp = hasActivePostSubmissionApplication(
     request.params.id,
-    applications
+    applications,
   );
   const identityResponse = getAction(actions, "identify");
   const getExistLegacyUserResponse = getAction(actions, "get-existing-user");
@@ -99,10 +99,10 @@ export default function generateModalTemplate(
                     : `You started an application with us on ${
                         hasActivePostSubmissionApp
                           ? ISODateToMMDDYYYY(
-                              hasActivePostSubmissionApp?.root?.createdAt
+                              hasActivePostSubmissionApp?.root?.createdAt,
                             )
                           : ISODateToMMDDYYYY(
-                              hasActiveIncompleteApp?.root?.createdAt
+                              hasActiveIncompleteApp?.root?.createdAt,
                             )
                       }. Would you like to continue from where you left off?`,
                 asset: {
@@ -155,8 +155,8 @@ export default function generateModalTemplate(
                     hasActivePostSubmissionApp || hasActiveLegacyLoan
                       ? `${env.BASE_URL}/_/auth/login`
                       : !hasActiveIncompleteApp && !hasActivePostSubmissionApp
-                      ? `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
-                      : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
+                        ? `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
+                        : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
                   external: true,
                   analytics,
                 },

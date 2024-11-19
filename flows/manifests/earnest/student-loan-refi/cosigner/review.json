@@ -87,7 +87,7 @@
             }
           ], 
           "removeEmptyObjects": {"@": true},
-          "getSchools": "primary-get-school-name",
+          "getSchools": "cosigner-get-school-name",
           "getDegrees": "questions/primary/degree.get-degrees"
         },
         "back-button": {
