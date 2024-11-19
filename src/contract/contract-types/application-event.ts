@@ -75,7 +75,7 @@ class ApplicationEvent extends ContractExecutable<
 
   /**
    */
-  condition = (_, __, input: Input, definition: Definition) => {
+  condition = (_, input: Input, definition: Definition) => {
     if (!definition) return false;
     const method = input.request?.method;
 
@@ -112,12 +112,7 @@ class ApplicationEvent extends ContractExecutable<
    *
    * This function should probably return some information about the event that was created
    */
-  evaluate = async function (
-    context: Context,
-    executionContext,
-    input: Input,
-    definition: Definition,
-  ) {
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
     assert(
@@ -170,7 +165,7 @@ class ApplicationEvent extends ContractExecutable<
         event: definition && definition.event,
       });
 
-      this.error(executionContext, error);
+      this.error(error);
 
       /* ============================== *
        * TODO: consider alternative return types for this contract-type
@@ -196,7 +191,7 @@ class ApplicationEvent extends ContractExecutable<
       if (errorMessage && typeof errorMessage === "string") {
         const error = new Error(errorMessage);
 
-        this.error(executionContext, error);
+        this.error(error);
         return { event: definition.event };
       }
 
@@ -256,11 +251,13 @@ class ApplicationEvent extends ContractExecutable<
   };
 
   toJSON() {
-    if (!this.result) return null;
+    const result = super.toJSON() as Output;
+    if (!result) return null;
+
     return {
-      event: this.result?.event,
-      id: this.result?.application?.id,
-      createdAt: this.result?.createdAt,
+      event: result?.event,
+      id: result?.application?.id,
+      createdAt: result?.createdAt,
     };
   }
 }

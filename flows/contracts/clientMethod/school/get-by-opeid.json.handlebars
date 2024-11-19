@@ -1,4 +1,4 @@
-{{#with (lookup (contract 'application') (contract 'role'))}}
+{{#with (lookup @ref.application @ref.role)}}
   {{#if details.education.[0].opeid}}
     {
       "action": "getSchools",

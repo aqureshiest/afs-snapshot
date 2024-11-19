@@ -5,9 +5,19 @@
     {{! TODO: Move rate-adjustment input here}}
   },
   "reference": {
-    {{#with request.body.rateAdjustment.amount}}
+    {{#with request.body.partnerId as |partnerId|}}
+      "partnerId": {{{json partnerId}}},
+    {{/with}}
+    {{#with request.body.programId as |programId|}}
+      "programId": {{{json programId}}},
+    {{/with}}
+    {{#with request.body.rateAdjustment.amount as |discountAmount|}}
       {{! TODO: THIS IS THE WRONG PLACE FOR THIS, WHY WAS THIS PUT HERE }}
-      "partnerDiscountAmount": {{{json (string request.body.rateAdjustment.amount)}}},
+      "partnerDiscountAmount": {{{json (string discountAmount)}}},
+    {{/with}}
+    {{#with request.body.rateAdjustment.name as |partnerName|}}
+      {{! TODO: THIS IS THE WRONG PLACE FOR THIS, WHY WAS THIS PUT HERE }}
+      "partnerName": {{{json  partnerName}}},
     {{/with}}
     {{! TODO: make this more modular }}
     "product": "slr",
@@ -55,14 +65,19 @@
         {{/multiline}}{{/with}}
         {{#with request.body.income}}{{#multiline}}
           {
-            "income": [{
-              "amount": {{{ json value }}}
-              {{!
-                TODO: mapping between incomeType and income.type?
-                For now, we leave income type unspecified, rather than take
-                in something generic like "claimed annual income"
-              }}
-            }]
+            {{!
+              TODO: mapping between incomeType and income.type?
+              For now, we leave income type unspecified, rather than take
+              in something generic like "claimed annual income"
+            }}
+            "income": [
+              {{! the partner API just takes in one income amount, which LDS
+                refers to as "claimed annual income"}}
+              { "index": 0, "amount": {{{ json value }}} },
+              {{! LDS requires we supply two income amounts, so we add an empty
+                  "additional income" amount at index 1 }}
+              { "index": 1, "amount": {{{ json 0 }}} }
+            ]
           }
         {{/multiline}}{{/with}}
         {{#with request.body.assets}}{{#multiline}}

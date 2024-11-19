@@ -3,6 +3,7 @@
     "applicationId": "95d709d5-c99b-40fb-9f07-7e05f4aa8c0d",
     "decisioningToken": "724c72ad-f501-4408-a962-1490aba30c1c",
     "decisionOutcome": "Approved",
+    "expirationDate": "2030-01-01T00:00:00.000Z",
     "artifacts": {
       "priceCurve": [
         {

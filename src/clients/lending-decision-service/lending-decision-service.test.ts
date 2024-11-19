@@ -30,7 +30,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
     },
     application: null,
     request: {},
-  } as unknown as IContractInput<unknown>;
+  } as unknown as IContractInput;
   const root = uuidv4();
   const primary = uuidv4();
   const cosigner = uuidv4();

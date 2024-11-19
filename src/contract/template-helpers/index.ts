@@ -1,6 +1,7 @@
 import SensitiveString from "@earnest-labs/ts-sensitivestring";
 import * as typings from "@earnest/application-service-client/typings/codegen.js";
 
+export { default as raise } from "./raise.js";
 export { default as list } from "./list.js";
 export { default as contract } from "./contract.js";
 export { default as ajv } from "./ajv.js";
@@ -62,13 +63,29 @@ export const multiline = function (context) {
 
 export const noop = function (v1) {
   if (typeof v1?.fn === "function") {
-    v1.fn(this);
+    try {
+      v1.fn(this);
+    } catch (error) {
+      /* if the content of a noop block causes some sort of error,
+       * log it as a warning without breaking the whole render */
+      try {
+        const { self, context } = v1.data;
+        self.log(context, {
+          message: "error inside noop block helper",
+          level: "warn",
+          error,
+        });
+      } catch (err) {
+        /* safely ignore errors attempting to log the noop warning */
+        console.error(error);
+      }
+    }
   }
   return "";
 };
 
-export const eq = (v1, v2) => v1 === v2;
-export const ne = (v1, v2) => v1 !== v2;
+export const eq = (v1, v2) => v1 == v2;
+export const ne = (v1, v2) => v1 != v2;
 export const lt = (v1, v2) => v1 < v2;
 export const gt = (v1, v2) => v1 > v2;
 export const lte = (v1, v2) => v1 <= v2;
@@ -83,9 +100,11 @@ export const concat = (v1: string, v2: string) => (v1 ?? '').concat(v2 ?? '');
  */
 export function includes(array: unknown[], ...args: unknown[]) {
   return Array.prototype.slice.call(args, 0, -1).every((arg) => {
-    if (Array.isArray(array)) {
+    if (array != null && typeof array[Symbol.iterator] === "function") {
       for (const element of array || []) {
-        if (arg == element) return true;
+        if (arg == element) {
+          return true;
+        }
       }
     }
 
@@ -95,23 +114,44 @@ export function includes(array: unknown[], ...args: unknown[]) {
 
 export function and(...args) {
   const operands = Array.prototype.slice.call(args, 0, -1);
-  return Array.isArray(operands) && operands.length === 1
-    ? operands[0].every(Boolean)
-    : operands.every(Boolean);
+
+  if (Array.isArray(operands[0]) && operands.length === 1) {
+    return and(...operands[0], args[args.length - 1]);
+  }
+
+  return operands.every((a) =>
+    a && typeof a === "object" && Symbol.toPrimitive in a
+      ? a[Symbol.toPrimitive]()
+      : a,
+  );
 }
 
 export function or(...args) {
   const operands = Array.prototype.slice.call(args, 0, -1);
-  return Array.isArray(operands) && operands.length === 1
-    ? operands[0].some(Boolean)
-    : operands.some(Boolean);
+
+  if (Array.isArray(operands[0]) && operands.length === 1) {
+    return or(...operands[0], args[args.length - 1]);
+  }
+
+  return operands.some((a) =>
+    a && typeof a === "object" && Symbol.toPrimitive in a
+      ? a[Symbol.toPrimitive]()
+      : a,
+  );
 }
 
 export function coalesce(...args) {
   const operands = Array.prototype.slice.call(args, 0, -1);
-  return Array.isArray(operands) && operands.length === 1
-    ? operands[0].find(Boolean)
-    : operands.find(Boolean);
+
+  if (Array.isArray(operands[0]) && operands.length === 1) {
+    return coalesce(...operands[0], args[args.length - 1]);
+  }
+
+  return operands.find((a) =>
+    a && typeof a === "object" && Symbol.toPrimitive in a
+      ? a[Symbol.toPrimitive]()
+      : a,
+  );
 }
 
 export function encodeURIStr(str) {
@@ -126,8 +166,8 @@ export function number(v1) {
   return Number(String(v1).replace(/[^0-9.]/g, ""));
 }
 
-export function string(v1) {
-  return v1 != null ? String(v1) : "";
+export function string(...args) {
+  return Array.prototype.slice.call(args, 0, -1).join("");
 }
 
 export function month(v1) {
@@ -265,7 +305,14 @@ export function mathAdd(v1, v2) {
 export function sum(...args) {
   return Array.prototype.slice
     .call(args, 0, -1)
-    .reduce((a, b) => a + (Number(b) || 0), 0);
+    .filter(Boolean)
+    .reduce((a, b) => {
+      const n = Number(b);
+      if (!Number.isNaN(n)) {
+        return a + n;
+      }
+      return a;
+    }, 0);
 }
 
 export function multiply(...args) {

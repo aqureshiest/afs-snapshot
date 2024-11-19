@@ -52,7 +52,7 @@ declare module "api/handlers/representation-error.js" {
     ...resolverArgs: Parameters<ErrorRequestHandler>
   ) => ReturnType<ErrorRequestHandler>;
   type Context = PluginContext;
-  type Manifest = IManifest<unknown>;
+  type Manifest = IManifest;
   type Manifests = NonNullable<
     PluginContext["loadedPlugins"]["contractExecution"]["instance"]
   >["manifests"];

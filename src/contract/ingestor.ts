@@ -68,7 +68,7 @@ export const buildContracts: BuildContracts = async function buildContracts(
   context,
   path: string,
 ) {
-  return recursiveDo<Contracts<unknown>>(
+  return recursiveDo<Contracts>(
     context,
     path,
     constants.HANDLEBARS_FILE_REGEX,

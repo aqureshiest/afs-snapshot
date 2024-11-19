@@ -64,11 +64,12 @@ const representationErrorHandler: Handler = async function (
 
     if (errorPageManifest) {
       res.locals.manifest = errorPageManifest;
-      const results = await errorPageManifest.execute(
-        context,
-        { manifest: errorPageManifest },
-        { ...input, manifest, request: req, response: res },
-      );
+      const results = await errorPageManifest.execute(context, {
+        ...input,
+        manifest: errorPageManifest,
+        request: req,
+        response: res,
+      });
 
       if ([401, 403].includes(error.statusCode)) {
         res.clearCookie("session", {

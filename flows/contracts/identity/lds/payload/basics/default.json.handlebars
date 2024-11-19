@@ -1,7 +1,7 @@
 {{!
   Top-level details for the LDS decision payload
 }}
-{{#with (contract 'application') as |application|}}
+{{#with @ref.application as |application|}}
 {
   "applicationType":
   {{#if (eq application.tag.applicants "cosigned")}}
@@ -13,21 +13,21 @@
   {{/if}}
   {{! hard-coded? }}
   "initiator": "primary",
-  "isParentPlus": {{{ json (eq application.tag.applicants "parent_plus") }}},
   {{! hard-coded? }}
   "isInternational": false,
   {{! TODO: use tag for this? }}
   "isMedicalResidency": false,
   "requestMetadata": {
-    "referenceApplicationId": {{{json application.refId}}},
+    "rootApplicationId": {{{json application.id}}},
+    "applicationRefId": {{{json (number application.refId)}}},
     "applicationId": {{{json application.primary.id}}},
     {{! TODO: get userId from NEAS?}}
-    "userId": {{{json (
-      coalesce
-      application.primary.reference.userID
-      auth.artifacts.userId
-      )
-    }}}
+    {{#with (coalesce application.primary.reference.userID auth.artifacts.userId) as |userId|}}
+      "userId": {{{json userId }}}
+    {{ else }}
+      {{! LDS will not accept a null or undefined userId, so send them a blank string}}
+      "userId": ""
+    {{/with}}
     {{#if application.cosigner}},
     "cosignerApplicationId": {{{json application.cosigner.id}}},
     "cosignerUserId": {{{json (

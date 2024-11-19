@@ -25,13 +25,24 @@ export const ASYNC_CONTRACT = ">";
 export const LITERAL_CONTRACT = "@";
 
 export const RESERVED_CONTRACT_KEYS = {
-  [ROOT_CONTRACT]: "@root",
+  [ROOT_CONTRACT]: "@output",
   [SYNC_CONTRACT]: "@output",
   [ASYNC_CONTRACT]: "@async",
   [LITERAL_CONTRACT]: "@literal",
 };
 
 Object.freeze(RESERVED_CONTRACT_KEYS);
+
+export const REFERENCE_ACCESS_PROPERTIES = {
+  PREVIOUS: "@previous",
+  NEXT: "@next",
+  LAST: "@last",
+  ERROR: "@error",
+  INDEX: "@index",
+  ID: "@id",
+};
+
+Object.freeze(REFERENCE_ACCESS_PROPERTIES);
 
 /* ============================== *
  * Regex

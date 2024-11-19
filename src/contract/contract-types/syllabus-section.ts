@@ -4,7 +4,8 @@ class Section extends ContractExecutable<Definition, Transformation> {
   get executionName(): string {
     return "Section";
   }
-  transform(_, __, definition: Definition): Transformation {
+
+  transform(_, definition: Definition): Transformation {
     const stats = {
       total: 0,
       completed: 0,

@@ -2,14 +2,10 @@
   "action": "decisioning-artifacts",
   "client": "lendingDecisionServiceClient",
   "method": "get",
-  {{#each application.primary.details.decision as |decision|}}
-    {{#if (eq decision.type 'rate-check')}}
-      "uri": "/v1/artifact/decisioning-request/{{decision.decisionID}}/rate_check",
-    {{/if}}
-  {{/each}}
+  "uri": "/v1/artifact/decisioning-request/{{@ref.application.id}}/rate_check",
   "headers": {
     "Content-Type": "application/json",
-    "Authorization": "Bearer {{btoa env.S2S_KEY_LDS_APPLY_FLOW_SERVICE}}"
+    "Authorization": "Bearer {{env.S2S_KEY_LDS_APPLY_FLOW_SERVICE}}"
   }
 }
 

@@ -8,12 +8,12 @@ import Contract from "./contract.js";
  *   1. A representation of application data or some other product JSON
  *   2. A list of mutations that should occur on an application
  */
-export default class Manifest<I> implements ExecutableParent<I> {
+export default class Manifest {
   id: string;
 
   contractKeys: ManifestContracts;
-  contracts: Contracts<I>;
-  executables: Executables<I>;
+  contracts: Contracts;
+  executables: Executables;
   references: string[];
 
   /**
@@ -272,17 +272,15 @@ export default class Manifest<I> implements ExecutableParent<I> {
   static executionMiddleware(
     name: string,
     definition: ManifestJson,
-    contracts: Contracts<unknown>,
+    contracts: Contracts,
   ): {
     input: BoundHandler | undefined;
     output: BoundHandler | undefined;
   } {
     const { inputs, outputs } = definition;
 
-    const inputManifest =
-      inputs && new Manifest<unknown>(name, inputs, contracts);
-    const outputManifest =
-      outputs && new Manifest<Input<unknown>>(name, outputs, contracts);
+    const inputManifest = inputs && new Manifest(name, inputs, contracts);
+    const outputManifest = outputs && new Manifest(name, outputs, contracts);
 
     const inputHandler: BoundHandler | undefined =
       inputManifest &&
@@ -305,17 +303,15 @@ export default class Manifest<I> implements ExecutableParent<I> {
         const manifest = (res.locals.manifest = inputManifest);
 
         try {
-          const result = await manifest.execute(
-            context,
-            { errors },
-            {
-              ...input,
-              manifest,
-              request: req,
-              response: res,
-              env: context.env,
-            },
-          );
+          const result = await manifest.execute(context, {
+            ...input,
+            manifest,
+            request: req,
+            response: res,
+            env: context.env,
+          });
+
+          Object.assign(errors, result.errors);
 
           res.locals.input = result.toJSON() as typeof res.locals.input;
         } catch (error) {
@@ -333,11 +329,14 @@ export default class Manifest<I> implements ExecutableParent<I> {
         const manifest = outputManifest;
 
         try {
-          const result = await manifest.execute(
-            context,
-            { errors },
-            { ...input, manifest, request: req, response: res },
-          );
+          const result = await manifest.execute(context, {
+            ...input,
+            manifest,
+            request: req,
+            response: res,
+          });
+
+          Object.assign(errors, result.errors);
 
           if (Object.keys(errors).length) {
             return next();
@@ -357,7 +356,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
   constructor(
     name: string,
     contractKeys: ManifestContracts,
-    contracts: Contracts<I>,
+    contracts: Contracts,
   ) {
     this.id = name;
     this.contractKeys = contractKeys;
@@ -398,7 +397,7 @@ export default class Manifest<I> implements ExecutableParent<I> {
    */
   aggregateContracts(
     contractKeys: ManifestContracts[string],
-    contracts: Contracts<I>,
+    contracts: Contracts,
     mappingKey?: string,
   ) {
     /* ============================== *
@@ -421,12 +420,16 @@ export default class Manifest<I> implements ExecutableParent<I> {
      * its result, in an isolated context
      * ============================== */
 
-    if (typeof contractKeys === "object") {
+    if (contractKeys && typeof contractKeys === "object") {
       return new Manifest(
         this.id + (mappingKey ? "." + mappingKey : ""),
         contractKeys,
         contracts,
       );
+    }
+
+    if (typeof contractKeys !== "string") {
+      throw new TypeError("Cannot use contract literals as a reference key");
     }
 
     const [, key, version = constants.DEFAULT_VERSION] =
@@ -443,41 +446,28 @@ export default class Manifest<I> implements ExecutableParent<I> {
     return contract;
   }
 
-  input(
-    pluginContext: Context,
-    executionContext: ExecutionContext<I>,
-    input: I,
-  ) {
-    const { key, index, evaluations = {} } = executionContext;
-
-    const manifestExecution = new ManifestExecution({
-      id: this.id,
-      index,
-      parent: this,
-      evaluations,
-      sync: key !== constants.RESERVED_CONTRACT_KEYS[constants.ASYNC_CONTRACT],
-    }).input(pluginContext, executionContext, input);
-
-    return manifestExecution;
+  /**
+   */
+  async execute(pluginContext: Context, input: unknown, scope?: Executable) {
+    const instance = this.instantiate(scope);
+    instance.input(pluginContext, input, scope);
+    await instance.execute(pluginContext, input, scope);
+    return instance;
   }
 
-  async execute(
-    pluginContext: Context,
-    { evaluations = {}, ...executionContext }: ExecutionContext<I>,
-    input: I,
-  ) {
-    const executable = this.input(
-      pluginContext,
-      { evaluations, ...executionContext },
-      input,
-    );
+  instantiate(scope?: Executable, key?: string, index?: number) {
+    // if there is an existing scope for this manifest, ust that as the root ID
+    const id = this.id;
 
-    await executable.execute(
-      pluginContext,
-      { evaluations, ...executionContext },
-      input,
-    );
+    const instance = new ManifestExecution({
+      id,
+      key,
+      index,
+      parent: this,
+      sync: key !== constants.RESERVED_CONTRACT_KEYS[constants.ASYNC_CONTRACT],
+      scope,
+    });
 
-    return executable;
+    return instance;
   }
 }

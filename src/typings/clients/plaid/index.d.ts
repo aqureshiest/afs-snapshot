@@ -71,11 +71,11 @@ declare module "clients/plaid/index.js" {
   type PlaidRelayToken = CreditRelayCreateResponse;
   type Institution = IInstitution;
   type InstitutionsResponse = { institutions: Institutions };
-  type Input<I> = IContractInput<I>;
+  type Input<I> = IContractInput;
   type Application = IApplication;
 }
 
 declare module "clients/plaid/plaid.test.js" {
-  type ExecutionContext = IExecutionContext<unknown>;
+  type ExecutionContext = IExecutionContext;
   type Application = IApplication;
 }

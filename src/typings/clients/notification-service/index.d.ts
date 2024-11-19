@@ -28,12 +28,12 @@ declare module "../../../clients/notification-service/index.js" {
   interface NotificationRequestMethod<U = unknown, O = unknown> {
     (
       this: NotificationServiceClient,
-      input: Input<unknown>,
+      input: Input,
       context: ChassisPluginContext,
       payload: U,
     ): Promise<{ errors: Array<Error | IHttpError>; results?: O }>;
   }
 
-  type Input<I> = IContractInput<I>;
+  type Input = IContractInput;
   type HttpError = IHttpError;
 }

@@ -6,7 +6,7 @@ class PiiRequest extends ContractExecutable<Definition, Definition, Output> {
     return "PiiRequest";
   }
 
-  condition = (_, __, ___, definition: Definition) => {
+  condition = (_, __, definition: Definition) => {
     /**
      * TODO: Add authentication checks
      */
@@ -14,12 +14,7 @@ class PiiRequest extends ContractExecutable<Definition, Definition, Output> {
     return Boolean(definition && definition.id);
   };
 
-  evaluate = async (
-    context: Context,
-    executionContext,
-    input: Input,
-    definition: Definition,
-  ) => {
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
     const piiTokenService =
       context.loadedPlugins.piiTokenServiceClient?.instance;
     assert(
@@ -41,7 +36,7 @@ class PiiRequest extends ContractExecutable<Definition, Definition, Output> {
         error: ex,
       });
 
-      this.error(executionContext, error);
+      this.error(error);
     }
 
     return result;
