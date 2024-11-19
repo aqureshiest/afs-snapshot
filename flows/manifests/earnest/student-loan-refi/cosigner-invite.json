@@ -54,7 +54,7 @@
         "questions/cosigner/name.default",
         "questions/cosigner/email.full-refi-invite"
       ],
-      "back-button": "actions/back-buttons/full-refi.basic-info",
+      "back-button": "actions/back-buttons",
       "save_action": "actions/cosigner-invite",
       "cosigner_name_input_status": "questions/cosigner/name.status",
       "cosigner_email_input_status": "questions/cosigner/email.status",

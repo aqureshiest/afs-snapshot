@@ -3,7 +3,7 @@ import Client from "../client.js";
 
 export default class NotificationServiceClient extends Client {
   get clientName() {
-    return "NotificationSerrvice";
+    return "NotificationService";
   }
   private accessKey: string;
   constructor(accessKey: string, baseUrl: string) {
