@@ -166,8 +166,8 @@ export default function generateModalTemplate(
                 properties: {
                   manifest: `send-access-email-on-resume/${
                     hasActivePostSubmissionApp
-                      ? hasActivePostSubmissionApp?.root?.id
-                      : hasActiveIncompleteApp?.root?.id
+                      ? hasActivePostSubmissionApp?.id
+                      : hasActiveIncompleteApp?.id
                   }`,
                   method: "POST",
                   analytics,
