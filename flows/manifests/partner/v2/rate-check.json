@@ -3,7 +3,7 @@
     "inputs": {
       "<": "inputs",
       "application": {
-        "<": "application/single.v2",
+        "<": "application/single.flattened",
         "application": "application-by-id-param",
         "query": "application/lookup-query.rate-check"
       },
@@ -43,7 +43,7 @@
     "inputs": {
       "validation": [
         {
-          "<": "request-body",
+          "*": "request-body",
           "schema": "inputs/schema/request/rate-estimate"
         }
       ]
@@ -53,7 +53,7 @@
       "application": {
         "<": "application/single.pick-id",
         "application": {
-          "<": "application/single.v2",
+          "<": "application/single.flattened",
           "application": {
             "<": "application-from-id",
             "query": "application/lookup-query.rate-check",
@@ -75,7 +75,7 @@
                 "@": "primary"
               },
               "decisionType": {
-                "@": "rate-check"
+                "@": "rate-estimate"
               },
               "action": {
                 "@": "rate-estimate"
@@ -112,7 +112,7 @@
     "outputs": {
       "<": "response/rate-estimate",
       "application": {
-        "<": "application/single.v2",
+        "<": "application/single.flattened",
         "application": {
           "<": "application-from-id",
           "query": "application/lookup-query.rate-check"

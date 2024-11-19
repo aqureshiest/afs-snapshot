@@ -38,5 +38,5 @@ declare module "clients/NEAS/index.js" {
   type Claims = NeasClaims;
   type UserIDs = NeasUserIdMap;
   type ClientResponse<T> = Client.Response<T>;
-  type Input = IContractInput;
+  type Input = IContractInput<unknown>;
 }

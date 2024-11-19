@@ -65,7 +65,7 @@ describe("[4504ed10] Contract: Generice Client Method", () => {
       },
     );
 
-    const result = await manifest.execute(context, input);
+    const result = await manifest.execute(context, {}, input);
     const parsedResult = JSON.parse(JSON.stringify(result));
     assert.deepEqual(parsedResult?.results, MOCKED_RESPONSE);
   });
@@ -96,7 +96,7 @@ describe("[4504ed10] Contract: Generice Client Method", () => {
       },
     );
 
-    const result = await manifest.execute(context, input);
+    const result = await manifest.execute(context, {}, input);
     const parsedResult = JSON.parse(JSON.stringify(result));
     assert(parsedResult?.error);
   });

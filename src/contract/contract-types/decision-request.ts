@@ -10,11 +10,16 @@ class DecisionRequest extends ContractExecutable<
     return "DecisionRequest";
   }
 
-  condition = (_, __, definition: Definition) => {
-    return Boolean(definition?.id);
+  condition = (_, __, ___, definition: Definition) => {
+    return Boolean(definition && definition.id);
   };
 
-  evaluate = async (context: Context, input: Input, definition: Definition) => {
+  evaluate = async (
+    context: Context,
+    executionContext,
+    input: Input,
+    definition: Definition,
+  ) => {
     const lendingDecisionService =
       context.loadedPlugins.lendingDecisionServiceClient?.instance;
     assert(
@@ -38,7 +43,7 @@ class DecisionRequest extends ContractExecutable<
         method: definition && definition.decisionRequestMethod,
       });
 
-      this.error(error);
+      this.error(executionContext, error);
     }
 
     return result;

@@ -27,7 +27,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
 
   /**
    */
-  condition = (_, input: Input, definition: Definition) => {
+  condition = (_, __, input: Input, definition: Definition) => {
     const { application } = input;
 
     const { type } = definition;
@@ -45,7 +45,12 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
    *
    * This function should probably return some information about the event that was created
    */
-  evaluate = async (context: Context, input: Input, definition: Definition) => {
+  evaluate = async (
+    context: Context,
+    executionContext,
+    input: Input,
+    definition: Definition,
+  ) => {
     setImmediate(async () => {
       try {
         const analyticsServiceClient =
@@ -83,7 +88,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
           error,
           message: `[sc44e9r3] Failed to track Segment event. ${error?.message}`,
         });
-        this.error(error.message);
+        this.error(input, error.message);
       }
     });
     return { success: true };

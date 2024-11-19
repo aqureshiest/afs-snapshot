@@ -25,7 +25,7 @@
       }]
     }
   }}
-  {{#with @ref.rates as |rates|}}
+  {{#with (contract 'rates') as |rates|}}
     {{#if (and (lt rates.response.statusCode 400) (gte rates.response.statusCode 200))}}
       {{#each rates.results.prices as |rate index|}}{{#multiline}}
         {

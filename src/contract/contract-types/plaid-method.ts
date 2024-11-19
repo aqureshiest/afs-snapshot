@@ -7,7 +7,7 @@ class PlaidMethod extends ContractExecutable<Definition, Definition, Output> {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, definition: Definition) => {
+  condition = (_, __, ___, definition: Definition) => {
     return Boolean(definition.id);
   };
 
@@ -19,6 +19,7 @@ class PlaidMethod extends ContractExecutable<Definition, Definition, Output> {
    */
   evaluate = async function (
     context: Context,
+    executionContext,
     input: Input,
     definition: Definition,
   ) {
@@ -32,11 +33,11 @@ class PlaidMethod extends ContractExecutable<Definition, Definition, Output> {
         plaidClient[plaidMethod] as IPlaidMethod
       )(context, input.application, id, payload as Parameters<IPlaidMethod>[3]);
 
-      if (errors.length) this.error(errors);
+      if (errors.length) this.error(executionContext, errors);
 
       return results as Output;
     } catch (ex) {
-      this.error(ex);
+      this.error(executionContext, ex);
       return {
         method: definition.plaidMethod,
         ContractType: this.executionName,

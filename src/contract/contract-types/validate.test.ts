@@ -54,9 +54,7 @@ describe("[f6b2c5e3] Contract: Validate", () => {
         },
       );
 
-      const result = (await manifest.execute(context, input)).toJSON() as {
-        isValid: true;
-      };
+      const result = (await manifest.execute(context, {}, input)).toJSON();
       assert.equal(
         result.isValid,
         true,
@@ -87,9 +85,7 @@ describe("[f6b2c5e3] Contract: Validate", () => {
         },
       );
 
-      const result = (await manifest.execute(context, input)).toJSON() as {
-        isValid: true;
-      };
+      const result = (await manifest.execute(context, {}, input)).toJSON();
       assert.equal(
         result.isValid,
         false,
@@ -99,6 +95,7 @@ describe("[f6b2c5e3] Contract: Validate", () => {
 
     it("[88b719e7] triggers evaluation errors (if specified)", async (t) => {
       const input = {} as Input;
+      const errors = {};
 
       const manifest = new Manifest(
         "manifestTest",
@@ -119,11 +116,11 @@ describe("[f6b2c5e3] Contract: Validate", () => {
         },
       );
 
-      const instance = await manifest.execute(context, input);
-      const result = instance.toJSON();
-
+      const result = (
+        await manifest.execute(context, { errors }, input)
+      ).toJSON();
       assert.notEqual(
-        Object.keys(instance.errors).length,
+        Object.keys(errors).length,
         0,
         "The errors object did not contain any errors",
       );

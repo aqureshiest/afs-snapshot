@@ -1,5 +1,5 @@
 {
-  {{#with @ref.actions as |actions|}}
+  {{#with (contract 'actions') as |actions|}}
     "action": {
       "type": "navigate",
       "properties": {

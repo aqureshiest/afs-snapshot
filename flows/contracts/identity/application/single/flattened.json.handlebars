@@ -2,9 +2,9 @@
   Given an 'application' contract with a single root application, use the first applicant
 	as the default primary
 }}
-{{#with @ref.application as |application|}}
+{{#with (contract 'application') as |application|}}
   {{#obj}}
-    {{{ json application}}}
+    {{{ json application }}}
     {{#unless application.applicant}}
       {{{json (getApplicantWithRole ../request.params.id application) }}}
     {{/unless}}

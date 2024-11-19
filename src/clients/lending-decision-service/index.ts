@@ -561,7 +561,7 @@ export default class LendingDecisionServiceClient extends Client {
    * @returns {Promise<DecisionPostResponse>}
    */
   async postDecisionRequest(
-    input,
+    input: Input<unknown>,
     context: PluginContext,
     applicationId: string,
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,
@@ -768,7 +768,7 @@ export default class LendingDecisionServiceClient extends Client {
   }
 
   async rateCheckRequest(
-    input,
+    input: Input<unknown>,
     context: PluginContext,
     applicationId: string, // Applicant ID
     payload = {}, // eslint-disable-line @typescript-eslint/no-unused-vars,

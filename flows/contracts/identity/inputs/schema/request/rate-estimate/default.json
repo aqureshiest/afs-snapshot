@@ -9,9 +9,6 @@
     "partnerId": {
       "type": "string"
     },
-    "programId": {
-      "type": "string"
-    },
     "loanAmount": {
       "type": "number"
     },

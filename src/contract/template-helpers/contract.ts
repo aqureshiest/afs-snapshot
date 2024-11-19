@@ -18,77 +18,115 @@ const contractHelper: TemplateHelper = function (...args) {
   // type from the tuple index and–– Listen, I'm not happy about it either. Just go with it.
   const options = args[(args.length - 1) as 3] as HelperOptions;
 
-  const key = rawKey || `${options.loc.start.line}:${options.loc.start.column}`;
+  const key =
+    rawKey || `:${options.loc.start.line}:${options.loc.start.column}`;
 
-  const { context, self, ref } = options.data;
+  const { context, manifest, self } = options.data;
+  assert(manifest, "[a9232983] missing manifest");
 
   assert(self);
 
-  if ("fn" in options) {
-    // TODO: the raw contract body may change between renders;
-    // we should probably figure out a way to replace dynamic contracts
-    // that have already been marked as a dependency by another
-    if (self.evaluations[key]) {
-      return JSON.stringify(ref[rawKey]);
-    }
-
-    /* ============================== *
-     * TODO [1/4]: embedded contracts using the block form of the contract template
-     * helper should allow for a distinct frame with custom variables to be passed
-     *
-     * Read: https://handlebarsjs.com/api-reference/utilities.html#handlebars-createframe-data
-     * ============================== */
-
-    const definition = options.fn(this, options);
-
-    /* ============================== *
-     * TODO [2/4]: unless the definition is returned raw (as-is), it is going
-     * to be rendered by the containing contract before passing it as a definition
-     * to this contract, which inverts the typical rendering order
-     *
-     * Consider approaches that make dynamic contracts more consistent with
-     * pre-defined contracts
-     * ============================== */
-
-    const parent = new Contract({
-      type: options.hash.type,
-      raw: definition,
-      key: self.id + `(${key})`,
-    });
-
-    const instance = parent.instantiate(self, key);
-
-    Object.values(self.dependencies).forEach((dep) => {
-      if (dep.id !== instance.id) {
-        // TODO: making all these logs dependent on the self contract actually breaks some shit
-        instance.dependencies[dep.id] = dep;
-      }
-    });
-
-    self.evaluations[key] = instance;
-
-    instance.input(context, options.data.root, self);
-  }
+  const { evaluations } = self;
+  assert(evaluations, "[fd77f1ab] missing evaluations");
 
   /* ============================== *
-   * TODO [3/4]: When making a direct reference to a contract using the
-   * template-helper, we may have the option to
-   * ------------------------------ *
-   * TODO [4/4]: maybe it should be possible to use contracts as partials, with
-   * inner content passed through it?
+   * 1. Check the Manifest in scope for the keyed executable matching the
+   *    key and optional index (in the case of an array)
    * ============================== */
 
-  const value = ref[key];
+  const executableParent:
+    | undefined
+    | ExecutableParent<unknown>
+    | ExecutableParent<unknown>[] =
+    Array.isArray(manifest.executables[key]) && index !== undefined
+      ? manifest.executables[key][index]
+      : manifest.executables[key];
 
-  if (value && index != null) {
-    return value[index];
-  }
+  /* ============================== *
+   * 2. Check the evaluations for previously started or completed executables
+   *    matching the key and optional index (in the case of an array)
+   * ============================== */
 
+  const executable: undefined | Executable<unknown> | Executable<unknown>[] =
+    index !== undefined ? evaluations[key]?.[index] : evaluations[key];
+  /**
+   * Return the value for local executable parents or existing evaluation scope
+   */
+  const guaranteeExecutable = (
+    inherited?: Executable<unknown>,
+    parent?: ExecutableParent<unknown>,
+    i?: number,
+  ) => {
+    /* ============================== *
+     * 1. Create a new executable instance if there is a
+     * ============================== */
+    if (parent && (!inherited || inherited.parent.id !== parent.id)) {
+      const newExecutable = parent.input(
+        context,
+        { key, index: i, manifest, evaluations, self },
+        options.data.root,
+      );
+
+      if (i !== undefined) {
+        if (!Array.isArray(evaluations[key])) evaluations[key] = [];
+        evaluations[key][i] = newExecutable;
+      } else {
+        evaluations[key] = newExecutable;
+      }
+
+      return newExecutable.toJSON();
+    }
+
+    if (inherited) {
+      self.dependencies[inherited.id] = inherited;
+      inherited.dependents[self.id] = self;
+
+      return inherited.toJSON();
+    }
+  };
+
+  const contractValue = (() => {
+    if (executableParent) {
+      if (Array.isArray(executableParent)) {
+        return executableParent.map((parent, i) => {
+          const existing = Array.isArray(executable)
+            ? executable[i]
+            : undefined;
+          return guaranteeExecutable(existing, parent, i);
+        });
+      } else {
+        const existing = Array.isArray(executable) ? undefined : executable;
+        return guaranteeExecutable(existing, executableParent, index);
+      }
+    } else if (executable) {
+      return Array.isArray(executable)
+        ? executable.map((inherited, i) =>
+            guaranteeExecutable(inherited, undefined, i),
+          )
+        : guaranteeExecutable(executable);
+    } else if ("fn" in options) {
+      const definition = options.fn(this, options);
+
+      const executableParent = new Contract({
+        type: options.hash.type,
+        raw: definition,
+        key: self.parent.id + key,
+      });
+
+      const embedded = guaranteeExecutable(undefined, executableParent);
+
+      return JSON.stringify(embedded ?? "");
+    }
+  })();
+
+  /**
+   * If this is a block helper, jsonify the result and send it
+   */
   if ("fn" in options) {
-    return JSON.stringify(value);
+    return JSON.stringify(contractValue ?? "");
   }
 
-  return value;
+  return contractValue;
 };
 
 export default contractHelper;

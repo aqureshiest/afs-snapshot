@@ -10,19 +10,19 @@ class AccreditedSchoolServiceRequest extends ContractExecutable<
     return "AccreditedSchoolServiceRequest";
   }
 
-  condition = (_, __, definition: Definition) => {
+  condition = (_, __, ___, definition: Definition) => {
     /**
      * TODO: Add authentication checks
      */
     return Boolean(definition.accreditedSchoolServiceRequestMethod);
   };
 
-  evaluate = async function (
-    this: AccreditedSchoolServiceRequest,
+  evaluate = async (
     context: Context,
+    executionContext,
     input: Input,
     definition,
-  ) {
+  ) => {
     const accreditedSchoolServiceClient =
       context.loadedPlugins.accreditedSchoolService.instance;
     assert(
@@ -43,7 +43,7 @@ class AccreditedSchoolServiceRequest extends ContractExecutable<
         error: ex,
       });
 
-      this.error(error);
+      this.error(executionContext, error);
       return [];
     }
   };

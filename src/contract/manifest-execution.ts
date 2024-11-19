@@ -2,11 +2,12 @@ import Manifest from "./manifest.js";
 import Executable from "./executable.js";
 import * as constants from "./constants.js";
 
-export default class ManifestExecution extends Executable {
-  declare parent: Manifest;
+export default class ManifestExecution<I> extends Executable<I> {
+  declare parent: Manifest<I>;
 
-  declare __scopedEvaluations: Evaluations;
-  declare __scopedExecutables: ExecutableParents;
+  declare __scopedEvaluations: Evaluations<I>;
+
+  declare results: Array<Executable<I> | Array<Executable<I>>>;
 
   /**
    * Manifest evaluations will return the same evaluations reference it
@@ -15,104 +16,31 @@ export default class ManifestExecution extends Executable {
    * Assigning new evaluations
    */
   get evaluations() {
-    return new Proxy<Evaluations>(this.__scopedEvaluations, {
+    return new Proxy<Evaluations<I>>(this.__scopedEvaluations, {
       get: (_, prop) => {
-        const {
-          __scopedExecutables: executables,
-          __scopedEvaluations: evaluations,
-          __context: context,
-          __input: input,
-          __executionScope: executionScope,
-        } = this;
-
-        // if this manifest has an uninstantiated executable,
-        // instantiate it and add it to scoped evaluations
-        if (!(prop in evaluations) && prop in executables) {
-          const executable = executables[prop as string];
-
-          if (Array.isArray(executable)) {
-            const instances = executable.map((ex, i) =>
-              ex.instantiate(this, prop, i),
-            );
-
-            evaluations[prop as keyof Evaluations] = instances;
-            if (context && input) {
-              instances
-                .filter((instance) => !(instance.__context && instance.__input))
-                .forEach((instance) => instance.input(context, input, this));
-            }
-          } else {
-            const instance = executable.instantiate(this, prop as string);
-            evaluations[prop as keyof Evaluations] = instance;
-            if (context && input && !(instance.__input && instance.__context)) {
-              instance.input(context, input, this);
-            }
-          }
-
-          // evaluations[prop as keyof Evaluations];
-          // if there is a parent executable already within this scope, do not extend outside of this scope
-          // return this.__scopedEvaluations[prop as keyof Evaluations];
-        }
-
-        /**
-         * If this manifest has an evaluation in scope, return it
-         */
-        if (prop in evaluations) {
-          return evaluations[prop as keyof Evaluations];
-        }
-
-        // otherwise, default to default executable behavior
-        return super.evaluations[prop as keyof Evaluations];
+        return (
+          this.__scopedEvaluations[prop as keyof Evaluations<I>] ??
+          super.evaluations[prop as keyof Evaluations<I>]
+        );
       },
       set: (target, prop, value) => {
-        // TODO: how to safely access the parent executable scope if and only if
-        // the value is recognized as belonging to a parent scope
-        this.__scopedEvaluations[prop as keyof Evaluations] = value;
+        this.__scopedEvaluations[prop as keyof Evaluations<I>] = value;
         return true;
       },
     });
   }
 
-  get executables() {
-    return new Proxy<ExecutableParents>(this.__scopedExecutables, {
-      get: (_, prop) => {
-        if (prop in this.__scopedExecutables) {
-          return this.__scopedExecutables[prop as keyof ExecutableParents];
-        }
-
-        // Avoid recursive executables
-        // if (prop !== this.key) {
-        return super.executables[prop as keyof ExecutableParents];
-        //}
-      },
-      set: (target, prop, value) => {
-        this.__scopedExecutables[prop as keyof ExecutableParents] = value;
-        return true;
-      },
-    });
-  }
-
-  get result() {
-    const { evaluations } = this;
-
-    const evaluation =
-      evaluations[constants.RESERVED_CONTRACT_KEYS[constants.SYNC_CONTRACT]];
-
-    return Array.isArray(evaluation)
-      ? evaluation.map((e) => e.toJSON())
-      : evaluation.toJSON();
-  }
-
-  get finalized() {
-    const { evaluations } = this;
-    const evaluation =
-      evaluations[constants.RESERVED_CONTRACT_KEYS[constants.SYNC_CONTRACT]];
-
-    const isFinalized = Array.isArray(evaluation)
-      ? evaluation.every((evaluation) => evaluation.finalized)
-      : evaluation.finalized;
-
-    return isFinalized;
+  /**
+   * the last non-promise
+   */
+  get result(): Exclude<this["results"][number], Promise<unknown>> {
+    const nonPromiseResults = this.results.filter(
+      (result) => !(result instanceof Promise),
+    );
+    return nonPromiseResults[nonPromiseResults.length - 1] as Exclude<
+      this["results"][number],
+      Promise<unknown>
+    >;
   }
 
   get executionName(): string {
@@ -122,31 +50,28 @@ export default class ManifestExecution extends Executable {
   /**
    * ManifestExecution stores a reference to the inherited evaluations
    */
-  constructor(args: ExecutableArgs<unknown[]>) {
+  constructor(args: ExecutableArgs<I, unknown[]>) {
     super(args);
-
-    /* ============================== *
-     * Manifest executions will create their own scope for evaluations
-     * and executable parents, so that contracts inside can reach context
-     * outside of the manfiest, but not the other way around
-     * ============================== */
 
     Object.defineProperty(this, "__scopedEvaluations", {
       value: {},
       enumerable: false,
       writable: false,
-      configurable: true,
     });
+  }
 
-    const executables =
-      args.parent instanceof Manifest ? args.parent.executables : {};
+  isIncomplete(pluginContext, executionContext, input) {
+    const executable = this.results[0];
 
-    Object.defineProperty(this, "__scopedExecutables", {
-      value: executables,
-      enumerable: false,
-      writable: false,
-      configurable: true,
-    });
+    if (!executable) return true;
+
+    const executablesIncomplete = Array.isArray(executable)
+      ? executable.every((ex) =>
+          ex.isIncomplete(pluginContext, executionContext, input),
+        )
+      : executable.isIncomplete(pluginContext, executionContext, input);
+
+    return executablesIncomplete;
   }
 
   /**
@@ -154,27 +79,53 @@ export default class ManifestExecution extends Executable {
    * `self` executable, will create an immediate link to the root contract or
    * contracts
    */
-  input(pluginContext: PluginContext, input, scope?: Executable) {
-    super.input(pluginContext, input, scope);
+  input(
+    pluginContext: PluginContext,
+    executionContext: ExecutionContext,
+    input,
+  ) {
+    super.input(pluginContext, executionContext, input);
 
-    [constants.SYNC_CONTRACT, constants.ASYNC_CONTRACT]
-      .map((rootSymbol) => constants.RESERVED_CONTRACT_KEYS[rootSymbol])
-      .filter(
-        (rootKey) =>
-          rootKey in this.__scopedExecutables &&
-          !(rootKey in this.__scopedEvaluations),
-      )
-      .forEach((rootKey) => {
-        const evaluation = this.evaluations[rootKey];
+    [
+      constants.ROOT_CONTRACT,
+      constants.SYNC_CONTRACT,
+      constants.ASYNC_CONTRACT,
+    ].forEach((rootSymbol) => {
+      const rootKey = constants.RESERVED_CONTRACT_KEYS[rootSymbol];
 
-        if (Array.isArray(evaluation)) {
-          evaluation
-            .filter(Boolean)
-            .forEach((instance) => instance.input(pluginContext, input, this));
-        } else if (evaluation) {
-          evaluation.input(pluginContext, input, this);
-        }
-      });
+      const root = this.parent.executables[rootKey];
+
+      if (Array.isArray(root)) {
+        this.evaluations[rootKey] = root.map((executableParent, index) =>
+          executableParent.input(
+            pluginContext,
+            {
+              ...executionContext,
+              key: rootKey,
+              index,
+              manifest: this.parent,
+              self: this,
+              evaluations: this.evaluations,
+            },
+            input,
+          ),
+        );
+      } else if (root) {
+        // const index = this.index ?? executionContext.index;
+        this.evaluations[rootKey] = root.input(
+          pluginContext,
+          {
+            ...executionContext,
+            key: rootKey,
+            index: undefined,
+            manifest: this.parent,
+            self: this,
+            evaluations: this.evaluations,
+          },
+          input,
+        );
+      }
+    });
 
     return this;
   }
@@ -182,38 +133,48 @@ export default class ManifestExecution extends Executable {
   /**
    * Executing a manifest
    */
-  execute(pluginContext: PluginContext, input, scope?: Executable) {
-    if (this.__promise) {
-      return this.__promise;
-    }
+  async execute(
+    pluginContext: PluginContext,
+    executionContext: ExecutionContext,
+    input,
+  ) {
+    if (this.results.length) return this;
 
-    const asyncOperation =
-      this.__scopedEvaluations[
-        constants.RESERVED_CONTRACT_KEYS[constants.ASYNC_CONTRACT]
+    const index = this.index ?? executionContext.index;
+
+    const subExecutionContext = {
+      ...executionContext,
+      index,
+      manifest: this.parent,
+      self: this,
+      evaluations: this.evaluations,
+    };
+
+    /**
+     * Check for incomplete dependencies
+     * using the inhereted Executable behavior
+     */
+    await super.execute(pluginContext, subExecutionContext, input);
+
+    /**
+     * Set the results to either the sync contract or default to the root contract
+     */
+    this.results[0] =
+      this.evaluations[
+        constants.RESERVED_CONTRACT_KEYS[constants.SYNC_CONTRACT]
+      ] ||
+      this.evaluations[
+        constants.RESERVED_CONTRACT_KEYS[constants.ROOT_CONTRACT]
       ];
 
-    if (asyncOperation) {
-      if (Array.isArray(asyncOperation)) {
-        Promise.all(
-          asyncOperation.map((operation) =>
-            operation.execute(pluginContext, input, this).catch((error) => {
-              /* noop */
-            }),
-          ),
-        );
-      } else {
-        asyncOperation.execute(pluginContext, input, this).catch((error) => {
-          /* noop */
-        });
-      }
-    }
-
-    this.__promise = super.execute(pluginContext, input, this);
-
-    return this.__promise;
+    return this;
   }
 
   toJSON(): unknown {
-    return this.result;
+    const result = this.result;
+
+    return Array.isArray(result)
+      ? result.map((res) => res?.toJSON())
+      : result?.toJSON();
   }
 }

@@ -1,6 +1,6 @@
 {{#list}}
-  {{#each @ref.actions as |result|~}}
-    {{~#obj}}
+  {{#each (contract 'actions') as |result|}}
+    {{#obj}}
       { "action": {{{ json (coalesce result.action result.event) }}} }
       {{#if (or (eq result.success false) (eq result.success true))}}
         { "success": {{{ json result.success }}} }

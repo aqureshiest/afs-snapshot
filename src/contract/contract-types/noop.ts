@@ -5,9 +5,19 @@ class Noop extends ContractExecutable<void, symbol, symbol> {
     return "Noop";
   }
 
-  evaluate = async (_, __, definition) => {
-    return definition;
+  static DEFINITION = Symbol("definition");
+  static MUTATION = Symbol("mutation");
+
+  evaluate = async () => {
+    return Noop.DEFINITION;
   };
+
+  async mutate(context: Context) {
+    context.logger.warn({
+      message: "Noop contract mutated",
+    });
+    return Noop.MUTATION;
+  }
 }
 
 export default Noop;

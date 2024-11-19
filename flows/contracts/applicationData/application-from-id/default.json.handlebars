@@ -2,8 +2,16 @@
   The contract key 'application' can be any contract that resolves with an 'id'
   as a top-level key that corresponds to an application
 }}
-{
-  "id": {{{ json (coalesce @ref.application.id request.params.id) }}},
-  "query": {{{ json @ref.query }}},
-  "root": true
-}
+{{#with (coalesce application (contract 'application')) as |application|}}
+{{#with (contract 'query') as |query|}}
+  {{#obj}}
+    {{#multiline~}}
+    {
+      "id": {{{ json application.id }}},
+      "root": true
+    }
+    {{/multiline}}
+    { "query": {{{ json query }}} }
+  {{/obj}}
+{{else}} null {{/with}}
+{{else}} null {{/with}}

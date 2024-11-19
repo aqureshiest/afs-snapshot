@@ -8,7 +8,7 @@ const otherIncomeTypes = [
 ];
 
 const mapIncomeTypeToEmplStatus = function (incomes) {
-  const incomeEmployed = (incomes || []).find(
+  const incomeEmployed = incomes.find(
     (income) => income?.type === "employment",
   );
 
@@ -33,7 +33,7 @@ const mapIncomeTypeToEmplStatus = function (incomes) {
     }
   }
 
-  const incomeUnemployed = (incomes || []).find(
+  const incomeUnemployed = incomes.find(
     (income) => income?.type === "unspecified",
   );
 
@@ -41,7 +41,7 @@ const mapIncomeTypeToEmplStatus = function (incomes) {
     return "unemployed";
   }
 
-  const otherSourcesOfIncome = (incomes || []).filter((income) => {
+  const otherSourcesOfIncome = incomes.filter((income) => {
     if (otherIncomeTypes.includes(income?.type as string)) return income;
   });
 

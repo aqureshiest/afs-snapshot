@@ -1,6 +1,10 @@
 {{! Status and rates for partner rate-check API }}
-{
-  "status": {{{ json @ref.status}}},
-  "applicationUrl": {{{ json @ref.application.href }}},
-  "rates": {{{ json @ref.rates }}}
-}
+{{#obj}}
+  { "status": {{{ json (contract 'status') }}} }
+  {{#with (contract 'application') as |application|}}
+    { "applicationUrl": {{{ json application.href }}} }
+  {{else}}
+    { "applicationUrl": null }
+  {{/with}}
+  { "rates": {{{ json (contract 'rates') }}} }
+{{/obj}}

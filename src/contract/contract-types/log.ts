@@ -7,8 +7,18 @@ import ContractExecutable from "../contract-executable.js";
  */
 class Log extends ContractExecutable<Definition, unknown, void> {
   get executionName(): string {
-    return "Log";
+    return "Cookie";
   }
+
+  /**
+   * Do not process the authorization error checks until all dependencies have been processed
+   */
+  condition = function (this: Log, _, __, ___, definition: Definition | null) {
+    const incompleteDependencies = Object.values(this.dependencies).some(
+      (dependency) => dependency.isIncomplete(_, __, ___),
+    );
+    return !incompleteDependencies && Boolean(definition);
+  };
 
   /**
    * Iterate through a list of different authentication strategies and combine their
@@ -17,6 +27,7 @@ class Log extends ContractExecutable<Definition, unknown, void> {
   evaluate = async function (
     this: Log,
     context: Context,
+    executionContext: ExecutionContext,
     input: Input,
     definition: Definition,
   ) {

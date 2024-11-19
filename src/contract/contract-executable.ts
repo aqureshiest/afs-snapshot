@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Executable from "./executable.js";
-import Scope from "./scope.js";
 
 import { DEFAULT_OPTIONS } from "./handlebars.js";
 
@@ -19,117 +18,72 @@ export default abstract class ContractExecutable<
   Definition,
   Transformation = Definition,
   Evaluation = void,
-> extends Executable {
-  static Phase = Phase;
-
-  declare parent: Contract<unknown>;
-  declare scope: Scope<object>;
-
-  /**
-   * Contracts with an async component will skip rendering / transformation
-   */
-  declare __result: unknown;
-  /**
-   * Contracts with an async component lock themselves down as soon as the promise has started
-   */
-  declare __promise?: Promise<Evaluation>;
-
+> extends Executable<unknown> {
   get executionName(): string {
     return "Contract";
   }
 
-  /**
-   * When getting the result of a contract, it will cycle through the rendering and transformation
-   * phases, unless it has already begun async evaluation
-   *
-   * TODO: make contract types have less rigid evaluation pipelines
-   */
-  get result() {
-    if (this.__result !== undefined) {
-      return this.__result;
-    }
-    if (this.__promise !== undefined) {
-      return Executable.Pending;
-    }
+  static Phase = Phase;
 
-    const {
-      __context: context,
-      __input: input,
-      __executionScope: executionScope,
-    } = this;
+  declare parent: Contract<unknown>;
 
-    if (!context || !input) {
-      return Executable.Pending;
+  declare results: [
+    Definition?,
+    Transformation?,
+    Promise<Evaluation>?,
+    Evaluation?,
+  ];
+
+  get phase(): Phase {
+    if (this.results.length >= 4) {
+      return Phase.Evaluated;
     }
 
-    const definition = this.render(context, input);
-
-    const allDependenciesFinalized = super.finalized;
-
-    if (definition == null) {
-      if (allDependenciesFinalized) {
-        this.__result = Executable.Done;
-        return Executable.Done;
-      }
-
-      return Executable.Pending;
+    if (this.results.length >= 3) {
+      return Phase.Evaluating;
     }
 
-    if (!allDependenciesFinalized) {
-      return Executable.Pending;
+    if (this.results.length >= 2) {
+      return Phase.Transformed;
     }
 
-    const transformation = this.transform(context, definition, executionScope);
-
-    if (!this.condition || !this.evaluate) {
-      if (allDependenciesFinalized) {
-        this.__result = transformation;
-        return transformation;
-      }
-
-      return Executable.Pending;
+    if (this.results.length >= 1) {
+      return Phase.Definition;
     }
 
-    // if all dependencies are finalized, and this contract passes itw own condition for evaluating,
-    // then proceed past the point of no return
-    const shouldExecute = this.condition(
-      context,
-      input,
-      transformation,
-      executionScope,
-    );
+    return Phase.Initial;
+  }
 
-    if (!shouldExecute) {
-      if (allDependenciesFinalized) {
-        this.__result = Executable.Done;
-      }
-      return Executable.Done;
-    }
-
-    if (!allDependenciesFinalized) {
-      return Executable.Pending;
-    }
-
-    const promise = this.evaluate(
-      context,
-      input,
-      transformation,
-      executionScope,
-    );
-
-    this.__promise = promise.then((res) => {
-      this.__result = res ?? Executable.Done;
-      return res;
-    });
-
-    return Executable.Pending;
+  get isLocked() {
+    return this.phase >= Phase.Evaluating;
   }
 
   /**
-   * A contract is finalized as long as all dependencies are finalized,
+   * Return true if a contract instance is finished executing
    */
-  get finalized() {
-    return super.finalized && this.__result !== undefined;
+  isIncomplete(
+    pluginContext: Context,
+    executionContext: ExecutionContext<unknown>,
+    input: Input<unknown>,
+  ): boolean {
+    if (
+      this.phase === Phase.Transformed &&
+      this.results[1] &&
+      this.condition &&
+      this.condition(pluginContext, executionContext, input, this.results[1])
+    ) {
+      return true;
+    }
+
+    if (this.phase === Phase.Evaluating) {
+      return true;
+    }
+
+    if (this.phase === Phase.Initial) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -137,20 +91,17 @@ export default abstract class ContractExecutable<
    */
   render(
     pluginContext: Context,
-    input: unknown,
-    scope: Executable = this,
+    executionContext: ExecutionContext<unknown>,
+    input: Input<unknown>,
   ): Definition | void {
-    const ref = (this.scope =
-      this.scope ?? new Scope(pluginContext, input as object, scope));
+    const index = this.index ?? executionContext.index;
 
     try {
-      this.error(false);
       const definition = this.parent.template(input, {
         data: {
           context: pluginContext,
-          index: this.index,
-          scope,
-          ref,
+          ...executionContext,
+          index,
           self: this,
         },
         ...DEFAULT_OPTIONS,
@@ -163,17 +114,18 @@ export default abstract class ContractExecutable<
         error,
       });
 
-      this.error(new Error("Contract failed to render"));
+      this.error(executionContext, new Error("Contract failed to render"));
     }
   }
 
   /**
-   * Contracts do a bare-render on first input to map out additional dependencies,
-   * then cache the context, input and executable scope for obtaining the result
-   * through the result getter
    */
-  input(pluginContext: Context, input: unknown, executionScope?: Executable) {
-    super.input(pluginContext, input, executionScope);
+  input(
+    pluginContext: Context,
+    executionContext: ExecutionContext<unknown>,
+    input: Input<unknown>,
+  ) {
+    super.input(pluginContext, executionContext, input);
 
     /* ============================== *
      * The parent template is run once to check for contract references and
@@ -181,7 +133,7 @@ export default abstract class ContractExecutable<
      * become exposed as inner contracts are executed and re-transformed
      * ============================== */
 
-    this.render(pluginContext, input, this);
+    this.render(pluginContext, executionContext, input);
 
     return this;
   }
@@ -192,8 +144,8 @@ export default abstract class ContractExecutable<
    */
   transform(
     pluginContext: Context,
+    executionContext: ExecutionContext<unknown>,
     definition: Definition,
-    scope?: Executable,
   ): Transformation {
     return definition as unknown as Transformation;
   }
@@ -203,11 +155,11 @@ export default abstract class ContractExecutable<
    */
   condition(
     pluginContext: Context,
-    input: unknown,
+    executionContext: ExecutionContext<unknown>,
+    input: Input<unknown>,
     transformation: Transformation,
-    scope: Executable = this,
   ): boolean {
-    return Boolean(this.evaluate && transformation);
+    return false;
   }
 
   /**
@@ -215,33 +167,95 @@ export default abstract class ContractExecutable<
    */
   evaluate?: (
     pluginContext: Context,
-    input: unknown,
+    executionContext: ExecutionContext<unknown>,
+    input: Input<unknown>,
     transformation: Transformation,
-    scope?: Executable,
   ) => Promise<Evaluation>;
 
   /**
    * Use the execution context to
    */
-  execute(
+  async execute<I>(
     pluginContext: Context,
-    input: unknown,
-    executionScope: Executable = this,
-  ): Promise<unknown> {
-    if (this.__promise && !this.__result) {
-      return this.__promise;
+    executionContext: ExecutionContext<I>,
+    input: Input<I>,
+  ) {
+    // If the contract is already locked down, return it as-is;
+    if (this.phase >= Phase.Evaluating) {
+      await this.results[2];
+      return this;
     }
 
-    return super
-      .execute(pluginContext, input, executionScope)
-      .then(async (self: this) => {
-        Reflect.get(self, "result");
-        if (self.__promise && !self.__result) {
-          await self.__promise;
-        }
+    const index = this.index ?? executionContext.index;
+    const subExecutionContext = { ...executionContext, index, self: this };
 
-        return self;
-      });
+    do {
+      /**
+       * Check for incomplete dependencies
+       * using the inhereted Executable behavior
+       */
+      await super.execute(pluginContext, subExecutionContext, input);
+
+      /**
+       * once dependencies have been evaluated fully, the definition for this
+       * contract is rendered. This JSON shape will be the input for the
+       * transformation step
+       */
+      const definition = this.render(pluginContext, subExecutionContext, input);
+
+      this.results[0] = definition as unknown as Definition;
+
+      // The transformation step produces the final JSON for normal contracts,
+      // or the input for async contracts
+      const transformation = this.transform(
+        pluginContext,
+        subExecutionContext,
+        this.results[0],
+      );
+      this.results[1] = transformation;
+
+      // Contracts with an async component only run once when their conditions
+      // are met. As soon as a contract has its condition met, it will begin
+      // async evaluation and will no longer be triggered or re-evaluated
+      if (
+        this.results[1] !== undefined &&
+        this.evaluate &&
+        this.condition(
+          pluginContext,
+          subExecutionContext,
+          input,
+          this.results[1],
+        )
+      ) {
+        const promise =
+          this.results[2] ??
+          this.evaluate(
+            pluginContext,
+            subExecutionContext,
+            input,
+            this.results[1],
+          );
+        this.results[2] = promise;
+        this.results[3] = await promise;
+
+        /**
+         * Is this necessary?
+         */
+        this.render(pluginContext, subExecutionContext, input);
+
+        await Promise.all(
+          Object.values(this.dependents).map(async (dependent) => {
+            await dependent.execute(pluginContext, subExecutionContext, input);
+          }),
+        );
+      }
+    } while (
+      Object.values(this.dependencies).some((dependency) =>
+        dependency.isIncomplete(pluginContext, subExecutionContext, input),
+      )
+    );
+
+    return this;
   }
 
   [Symbol.toStringTag]() {

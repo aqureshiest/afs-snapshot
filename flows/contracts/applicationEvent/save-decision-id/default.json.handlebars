@@ -1,24 +1,25 @@
 {
-  "action": "save-decision",
   "event": "create",
   "payload": {
     {{!  TODO: For rate-checks, determine to which applicant the decision needs to be saved}}
-    "id": {{{ json @ref.application.primary.id }}},
+    {{#with (contract 'application') as |application|}}
+      "id": {{{ json application.primary.id }}},
+    {{/with}}
     "application": {
       "details": {{#obj}}
+        {{#with (contract 'decision') as |decision|}}
           {{#multiline}}
             {
               "decision": [
-                {{#with @ref.decision.results.data as |decisionData|}}
-                  {
-                    "decisionID": {{{ json decisionData.decisioningToken }}},
-                    "expiresAt": {{{ json decisionData.expirationDate }}},
-                    "type": "rate-check"
-                  }
-                {{/with}}
+                {
+                  "decisionID": {{{ json decision.results.data.decisioningToken }}},
+                  "type": "rate-check",
+                  "expiresAt": null
+                }
               ]
             }
           {{/multiline}}
+        {{/with}}
       {{/obj}}
     }
   }

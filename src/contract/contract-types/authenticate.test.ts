@@ -43,12 +43,13 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const errors = {};
 
-    const instance = await manifest.execute(context, input);
-    const result = instance.toJSON() as { [key: string]: unknown };
+    const result: { [key: string]: unknown } = (
+      await manifest.execute(context, { errors }, input)
+    ).toJSON() as { [key: string]: unknown };
 
     assert.notEqual(result?.isValid, false);
     assert.equal(
-      Object.keys(instance.errors).length,
+      Object.keys(errors).length,
       0,
       `Authentication had error(s): ${Object.values(errors).map((err: Error) => err.message)}`,
     );
@@ -79,13 +80,14 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const errors = {};
 
-    const instance = await manifest.execute(context, input);
-    const result = instance.toJSON() as { [key: string]: unknown };
+    const result: { [key: string]: unknown } = (
+      await manifest.execute(context, { errors }, input)
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, true);
 
     assert.equal(
-      Object.keys(instance.errors).length,
+      Object.keys(errors).length,
       0,
       `Authentication had error(s): ${Object.values(errors).map((err: Error) => err.message)}`,
     );
@@ -112,8 +114,9 @@ describe("[16ced898] Contract: Authenticate", () => {
 
     const errors = {};
 
-    const instance = await manifest.execute(context, input);
-    const result = instance.toJSON() as { [key: string]: unknown };
+    const result: { [key: string]: unknown } = (
+      await manifest.execute(context, { errors }, input)
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, false);
     assert.notEqual(
@@ -123,7 +126,7 @@ describe("[16ced898] Contract: Authenticate", () => {
     );
 
     assert.notEqual(
-      Object.keys(instance.errors).length,
+      Object.keys(errors).length,
       0,
       `Auth scheme did not produce errors`,
     );
@@ -154,14 +157,17 @@ describe("[16ced898] Contract: Authenticate", () => {
       },
     );
 
-    const instance = await manifest.execute(context, input);
-    const result = instance.toJSON() as { [key: string]: unknown };
+    const errors = {};
+
+    const result: { [key: string]: unknown } = (
+      await manifest.execute(context, { errors }, input)
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, true);
     assert.equal(result?.isAuthorized, false);
 
     assert.notEqual(
-      Object.keys(instance.errors).length,
+      Object.keys(errors).length,
       0,
       `Auth scheme did not produce errors`,
     );
@@ -192,14 +198,17 @@ describe("[16ced898] Contract: Authenticate", () => {
       },
     );
 
-    const instance = await manifest.execute(context, input);
-    const result = instance.toJSON() as { [key: string]: unknown };
+    const errors = {};
+
+    const result: { [key: string]: unknown } = (
+      await manifest.execute(context, { errors }, input)
+    ).toJSON() as { [key: string]: unknown };
 
     assert.equal(result?.isValid, false);
     assert.equal(result?.isAuthorized, false);
 
     assert.notEqual(
-      Object.keys(instance.errors).length,
+      Object.keys(errors).length,
       0,
       `Auth scheme did not produce errors`,
     );

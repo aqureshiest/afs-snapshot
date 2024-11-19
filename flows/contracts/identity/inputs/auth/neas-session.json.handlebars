@@ -10,38 +10,48 @@
   }}
   "isAuthorized": {{{ json (coalesce (contract 'authorization')) }}},
   {{! Mark this strategy as successful if the response includes `isValid` }}
-  {{{{log key="NEAS_DEBUG" }}}}
-    {
-      "message": "neas authorization",
-      "isValid": {{{json @ref.response.results.isValid}}},
-      "userId": {{{ json (coalesce @ref.response.results.userId @ref.response.results.candidateUserId) }}},
-      "applicationId": {{{json @ref.response.results.applicationId}}},
-      "claims": {{#obj}}
-        {{#each @ref.response.results.payload}}
-          { "{{@key}}": {{#if . includeZero=true}}true{{else}}false{{/if}} }
-        {{/each}}
+  {{#with (contract "response") as |response|}}
+    {{#log}}
+      {
+        "message": "neas authorization",
+        "isValid": {{{json response.results.isValid}}},
+        {{!
+          TODO [LA-1350]: candidateUserId will eventually be removed from
+          the NEAS claims; clean this up after that change has been made in NEAS
+        }}
+        "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}},
+        "applicationId": {{{json response.results.applicationId}}},
+        "claims": {{#obj}}
+          {{#each response.results.payload}}
+            { "{{@key}}": {{#if . includeZero=true}}true{{else}}false{{/if}} }
+          {{/each}}
+        {{/obj}}
+      }
+    {{/log}}
+    {{#if (and response.results.isValid (lt response.response.statusCode 400))}}
+      "isValid": true,
+      {{!  TODO: any claim obtained by the NEAS verify method should be mapped here }}
+      "artifacts": {{#obj}}
+          { "applicationId": {{{ json response.results.applicationId }}} }
+          { "exp": {{{ json response.results.exp }}} }
+          { "userId": {{{ json (coalesce response.results.userId response.results.candidateUserId) }}} }
+          { "email": {{{ json (coalesce response.results.emailId response.results.email) }}} }
+          {{! A userId in the response indicates that a user has verified who they are either through PII-verification or signing in }}
+          {{!
+            LA-1350: userId indicates a verified session UNLESS the claims
+            includes a `verified` flag that is explicitly false
+          }}
+          {{#if (and response.results.userId (ne response.results.notVerified true))}}
+            { "verified": true }
+          {{else}}
+            { "verified": false }
+          {{/if}}
       {{/obj}}
-    }
-  {{{{/log}}}}
-  {{#if (and @ref.response.results.isValid (lt @ref.response.response.statusCode 400))}}
-    "isValid": true,
-    {{!  TODO: any claim obtained by the NEAS verify method should be mapped here }}
-    "artifacts": {{#obj}}
-        { "applicationId": {{{ json @ref.response.results.applicationId }}} }
-        { "exp": {{{ json @ref.response.results.exp }}} }
-	{ "userId": {{{ json (coalesce @ref.response.results.userId response.results.candidateUserId) }}} }
-        { "email": {{{ json (coalesce response.results.emailId response.results.email) }}} }
-        {{! A userId in the response indicates that a user has verified who they are either through PII-verification or signing in }}
-        {{#if (and @ref.response.results.userId (ne @ref.response.results.notVerified true))}}
-          { "verified": true }
-        {{else}}
-          { "verified": false }
-        {{/if}}
-    {{/obj}}
-  {{else if (gte @ref.response.response.statusCode 400)}}
-    "isValid": false
+    {{else}}
+      "isValid": false
+    {{/if}}
   {{else}}
     "isValid": null
-  {{/if}}
+  {{/with}}
 }
 

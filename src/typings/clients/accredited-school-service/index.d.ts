@@ -33,7 +33,7 @@ declare module "clients/accredited-school-service/index.js" {
   type LoanType = ILoanType;
 
   type School = ISchool;
-  type Input<I> = IContractInput;
+  type Input<I> = IContractInput<I>;
   type SchoolDetails = ISchool & {
     loanTypes: LoanType;
     costOfAttendance: {

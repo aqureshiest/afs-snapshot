@@ -8,55 +8,60 @@ import type IManifest from "contract/manifest.js";
 import type Contract from "contract/contract.js";
 import type Executable from "contract/executable.js";
 
-interface IDependencies {
-  [key: string]: Executable;
+interface IDependencies<Input> {
+  [key: string]: Executable<Input>;
 }
 
 /**
  *
  */
-interface IExecutableInterface {
+interface IExecutableInterface<Input> {
+  input(
+    pluginContext: ChassisPluginContext,
+    executionContext: IExecutionContext<Input>,
+    input: Input,
+  ): Executable<Input>;
+  execute(
+    pluginContext: ChassisPluginContext,
+    executionContext: IExecutionContext<Input>,
+    input: Input,
+  ): Promise<Executable<Input>>;
+}
+
+interface IExecutableParent<Input> {
   id: string;
   input(
     pluginContext: ChassisPluginContext,
-    input: unknown,
-    scope?: Executable,
-  ): Executable;
+    executionContext: IExecutionContext<Input>,
+    input: Input,
+  ): Executable<Input>;
   execute(
     pluginContext: ChassisPluginContext,
-    input: unknown,
-    scope?: Executable,
-  ): Promise<unknown | void>;
+    executionContext: IExecutionContext<Input>,
+    input: Input,
+  ): Promise<unknown>;
 }
 
-type IExecutableParent = IManifest | Contract;
-
-interface IExecutableArgs<Results extends unknown[]> {
+interface IExecutableArgs<Input, Results extends unknown[]> {
   id: string;
-  key?: string;
   index?: number;
   sync?: boolean;
-  parent: IManifest | Contract;
+  parent: IExecutableParent<Input>;
   results?: Results;
-
-  scope?: Executable;
-
-  dependencies?: IDependencies;
-  dependents?: IDependencies;
-  evaluations?: IEvaluations;
-  executables?: Record<string, IExecutableParent>;
-  errors?: Record<string, Array<Error | IHttpError>>;
+  dependencies?: IDependencies<Input>;
+  dependents?: IDependencies<Input>;
+  evaluations?: IEvaluations<Input>;
 }
 
-interface IEvaluations {
-  [key: string]: Executable | Array<Executable>;
+interface IEvaluations<I> {
+  [key: string]: Executable<I> | Array<Executable<I>>;
 }
 
-interface IExecutionContext {
+interface IExecutionContext<Input> {
   /**
    * When present, indicates the top-level manifest
    */
-  manifest?: IManifest;
+  manifest?: IManifest<Input>;
   /**
    * When present, indicates which executable
    */
@@ -68,13 +73,13 @@ interface IExecutionContext {
   /**
    * When present, indicates the executable targeted by the above
    */
-  self?: Executable;
+  self?: Executable<Input>;
 
-  dependents?: IDependencies;
-  dependencies?: IDependencies;
+  dependents?: IDependencies<Input>;
+  dependencies?: IDependencies<Input>;
 
   // All known contract instances by key
-  evaluations?: IEvaluations;
+  evaluations?: IEvaluations<Input>;
   errors?: {
     [key: string]: Array<Error | IHttpError>;
   };
@@ -82,33 +87,37 @@ interface IExecutionContext {
 
 declare module "contract/executable.js" {
   type PluginContext = ChassisPluginContext;
-  type ExecutionContext = IExecutionContext;
-  type Dependencies = IDependencies;
-  type ExecutableInterface = IExecutableInterface;
-  type ExecutableArgs<Results extends unknown[]> = IExecutableArgs<Results>;
-  type ExecutableParent = IExecutableParent;
-  type ExecutableParents = Record<string, IExecutableParent>;
+  type ExecutionContext<Input> = IExecutionContext<Input>;
+  type Dependencies<Input> = IDependencies<Input>;
+  type ExecutableInterface<Input> = IExecutableInterface<Input>;
+  type ExecutableArgs<Input, Results extends unknown[]> = IExecutableArgs<
+    Input,
+    Results
+  >;
+  type ExecutableParent<Input> = IExecutableParent<Input>;
   type HttpError = IHttpError;
-  type Evaluations = IEvaluations;
+  type Evaluations<I> = IEvaluations<I>;
 }
 
 declare module "contract/manifest-execution.js" {
-  type ExecutableArgs<Results extends unknown[]> = IExecutableArgs<Results>;
-  type Manifest = IManifest;
+  type ExecutableArgs<Input, Results extends unknown[]> = IExecutableArgs<
+    Input,
+    Results
+  >;
+  type Manifest<Input> = IManifest<Input>;
   type PluginContext = ChassisPluginContext;
-  type ExecutionContext = IExecutionContext;
-  type Evaluations = IEvaluations;
-  type ExecutableParents = Record<string, IExecutableParent>;
+  type ExecutionContext = IExecutionContext<unknown>;
+  type Evaluations<I> = IEvaluations<I>;
 }
 
 declare module "contract/manifest.js" {
-  type ExecutableParent = IExecutableParent;
+  type ExecutableParent<Input> = IExecutableParent<Input>;
 }
 
 declare module "contract/contract.js" {
-  type ExecutableParent = IExecutableParent;
+  type ExecutableParent<Input> = IExecutableParent<Input>;
 }
 
 declare module "contract/contract-executable.js" {
-  type ExecutableParent = IExecutableParent;
+  type ExecutableParent<Input> = IExecutableParent<Input>;
 }

@@ -3,12 +3,16 @@
   from the inputs
 }}
 {{#obj}}
-  {{{ json @ref.application }}}
-  {{#each @ref.extras}}
-    {{#if extra}}
-      {{#multiline~}}
-        {{{ json extra }}}
-      {{~/multiline}}
-    {{/if}}
-  {{/each}}
+  {{#with (coalesce (contract 'application') application) as |application|}}
+    {{{ json application }}}
+  {{/with}}
+  {{#with (contract 'extras') as |extras|}}
+    {{#each extras as |extra|}}
+      {{#if extra}}
+        {{#multiline~}}
+          {{{ json extra }}}
+        {{~/multiline}}
+      {{/if}}
+    {{/each}}
+  {{/with}}
 {{/obj}}

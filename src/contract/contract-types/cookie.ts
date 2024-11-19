@@ -13,7 +13,13 @@ class Cookie extends ContractExecutable<Definition, Definition, Output> {
   /**
    * Do not process the authorization error checks until all dependencies have been processed
    */
-  condition = function (this: Cookie, _, __, definition: Definition | null) {
+  condition = function (
+    this: Cookie,
+    _,
+    __,
+    ___,
+    definition: Definition | null,
+  ) {
     return Boolean(definition);
   };
 
@@ -23,6 +29,7 @@ class Cookie extends ContractExecutable<Definition, Definition, Output> {
    */
   evaluate = async function (
     context: Context,
+    executionContext: ExecutionContext,
     input: Input,
     definition: Definition,
   ) {

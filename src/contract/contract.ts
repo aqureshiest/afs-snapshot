@@ -5,7 +5,7 @@ import { createHash } from "crypto";
 import * as constants from "./constants.js";
 import handlebars from "./handlebars.js";
 
-export default class Contract {
+export default class Contract<I> implements ExecutableParent<Input<I>> {
   id: string;
   name: string;
   version: string;
@@ -34,24 +34,52 @@ export default class Contract {
   }
 
   /**
-   *
+   * @param {Function} reviver - contract execution reviver that has the
+   * full manifest bound as a parameter to allow full referencing
    */
-  instantiate(scope: Executable, key: string, index?: number) {
-    const keyPath = !scope || key.startsWith(":") ? key : "." + key;
+  input(context, executionContext: ExecutionContext<I>, input) {
+    const { index, key = "", manifest } = executionContext;
+    const evaluations = (executionContext.evaluations =
+      executionContext.evaluations || {});
 
-    // define the contract instance ID by the path of the scope
+    const keyPath = !manifest || key.startsWith(":") ? key : "." + key;
+
     const id =
-      (scope?.id || "") + keyPath + (index != null ? `[${index}]` : "");
+      (manifest ? manifest.id : "") +
+      keyPath +
+      (index != null ? `[${index}]` : "");
 
-    const instance = new this.Constructor({
-      id,
-      key: key,
-      index: index,
+    const contractInstance = new this.Constructor({
       parent: this,
+      id,
+      index,
+      evaluations,
       sync: key !== constants.RESERVED_CONTRACT_KEYS[constants.ASYNC_CONTRACT],
-      scope,
-    });
+    }).input(context, executionContext, input);
 
-    return instance;
+    /* ============================== *
+     * Each unique mutation will be recorded in the mutations object. If a
+     * contract needs to be re-executed after mutations, previously run
+     * mutations will be used preferentially;
+     * ============================== */
+    const evaluationKey =
+      key || constants.RESERVED_CONTRACT_KEYS[constants.ROOT_CONTRACT];
+
+    const existingContract =
+      index != null
+        ? evaluations[evaluationKey]?.[index]
+        : evaluations[evaluationKey];
+
+    if (existingContract && existingContract.isLocked) {
+      return existingContract;
+    }
+
+    return contractInstance;
+  }
+
+  async execute(pluginContext, executionContext, input) {
+    const executable = this.input(pluginContext, executionContext, input);
+    await executable.execute(pluginContext, executionContext, input);
+    return executable;
   }
 }

@@ -24,10 +24,6 @@
   "bugs": {
     "url": "https://github.com/meetearnest/apply-flow-service/issues"
   },
-  "overrides": {
-    "parse-url": "8.1.0",
-    "parse-path": "5.0.0"
-  },
   "homepage": "https://github.com/meetearnest/apply-flow-service#readme",
   "dependencies": {
     "@earnest-labs/microservice-chassis": "4.4.514",
@@ -51,6 +47,7 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.1",
     "objection": "^3.0.4",
+    "package.json": "^2.0.1",
     "pg": "^8.11.1",
     "plaid": "^26.0.0",
     "redis": "^4.6.13",

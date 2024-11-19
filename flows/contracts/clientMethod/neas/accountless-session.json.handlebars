@@ -1,23 +1,13 @@
-{{! expects the previous action to be an application event that returns the ID
-  for the application for which we want to create an accountless session.
-
-  TODO: it is presently unclear whether or not we will want to have the
-  applicationId claim for accountless sessions tied to the root application
-  or an associated applicant. This contract will take whichever top-level
-  application was returned with the previous event
-}}
-{{#unless @ref.actions.[@previous].[@error]}}
-{
-  "action": "unauthenticated",
-  "client": "NeasClient",
-  "method": "post",
-  "uri": "/auth/identity/unauthenticated",
-  "body": {
-    "applicationId": {{{ json @ref.actions.[@previous].id }}}
+{{#with (contract 'actions' (sum @index -1)) as |event|}}
+  {
+    "action": "unauthenticated",
+    "client": "NeasClient",
+    "method": "post",
+    "uri": "/auth/identity/unauthenticated",
+    "body": {
+      "applicationId": {{{ json event.id }}}
+    }
   }
-}
 {{else}}
-{
-  "action": "unauthenticated"
-}
-{{/unless}}
+  null
+{{/with}}

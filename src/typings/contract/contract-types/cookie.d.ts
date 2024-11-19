@@ -7,9 +7,9 @@ import type { ExecutionContext as IExecutionContext } from "contract/executable.
 
 import type CookieContract from "contract/contract-types/cookie.js";
 declare module "contract/contract-types/cookie.js" {
-  type Input = IContractInput;
+  type Input = IContractInput<{ application: Application | null }>;
   type Context = ChassisPluginContext;
-  type ExecutionContext = IExecutionContext;
+  type ExecutionContext = IExecutionContext<unknown>;
 
   type Definition = {
     name: string;
@@ -22,5 +22,5 @@ declare module "contract/contract-types/cookie.js" {
 
 import "contract/contract-types/cookie.test.js";
 declare module "contract/contract-types/cookie.test.js" {
-  type Input = IContractInput;
+  type Input = IContractInput<unknown>;
 }

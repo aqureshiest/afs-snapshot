@@ -333,6 +333,6 @@ declare module "../../../clients/lending-decision-service/index.js" {
   type ArtifactGetResponse = IArtifactGetResponse;
   type FilteredPrices = IFilteredPrices;
 
-  type Input<I> = IContractInput;
+  type Input<I> = IContractInput<I>;
   type HttpError = IHttpError;
 }

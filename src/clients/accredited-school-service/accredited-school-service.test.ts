@@ -13,7 +13,7 @@ describe("[f8395630] Application Service Client", () => {
   const input = {
     application: null,
     request: {},
-  } as unknown as IContractInput;
+  } as IContractInput<{ application: unknown }>;
 
   before(async () => {
     const pkg = await readJsonFile("./package.json");

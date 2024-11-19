@@ -8,7 +8,7 @@ class Authenticate extends ContractExecutable<Definition, Output, Output> {
     return "Authenticate";
   }
 
-  transform(_, definition) {
+  transform(_, __, definition) {
     const { /*mode,*/ strategies } = definition;
 
     const authorization = strategies.reduce(
@@ -57,6 +57,7 @@ class Authenticate extends ContractExecutable<Definition, Output, Output> {
     this: Authenticate,
     _,
     __,
+    ___,
     authorization: Output | null,
   ) {
     return Boolean(authorization);
@@ -67,21 +68,24 @@ class Authenticate extends ContractExecutable<Definition, Output, Output> {
    * outputs
    */
   evaluate = async function (
-    this: Authenticate,
     context: Context,
+    executionContext: ExecutionContext,
     input: Input,
     authentication: Output,
   ) {
-    const { errors } = this;
+    const { errors } = executionContext;
 
     if (!errors || !(this.id in errors)) {
       if (authentication.isValid === false) {
-        this.error(createError.BadRequest("invalid credentials"));
+        this.error(
+          executionContext,
+          createError.BadRequest("invalid credentials"),
+        );
       } else if (authentication.isAuthorized === false) {
         if (authentication.strategies.length === 0) {
-          this.error(createError.Unauthorized());
+          this.error(executionContext, createError.Unauthorized());
         } else {
-          this.error(createError.Forbidden());
+          this.error(executionContext, createError.Forbidden());
         }
       }
     }
