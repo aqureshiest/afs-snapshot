@@ -289,15 +289,6 @@ export default class LendingDecisionServiceClient extends Client {
                 }
                 error
             }
-            ${
-              ["approved", "declined"].includes(status)
-                ? application?.applicants?.map((applicant, i) =>
-                    applicant
-                      ? `setApplicantStatus_${i}: setStatus(id: "${applicant.id}", meta: $meta, status: $status) { id, error }`
-                      : "",
-                  )
-                : ""
-            }
           }`,
           variables: {
             ...queryVars,
