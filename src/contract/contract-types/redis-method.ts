@@ -7,10 +7,10 @@ class RedisMethod extends ContractExecutable<Definition, Definition, Output> {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, definition: Definition) => {
+  condition(_, __, ___, definition: Definition) {
     if (definition?.key) return true;
     return false;
-  };
+  }
 
   /**
    * TODO: use the contracts definition to determine which redis volatile state method
@@ -18,12 +18,12 @@ class RedisMethod extends ContractExecutable<Definition, Definition, Output> {
    *
    * This function should return the result of the method called
    */
-  evaluate = async (
+  evaluate = async function (
     context: Context,
     executionContext,
     input: Input,
     definition: Definition,
-  ) => {
+  ) {
     const redisClient = context.loadedPlugins?.redis?.instance;
     assert(redisClient, "[c2eaa691] redisClient not instantiated");
 
@@ -40,7 +40,12 @@ class RedisMethod extends ContractExecutable<Definition, Definition, Output> {
        * Redis failures should be reported, but recovered from gracefully
        * ============================== */
       this.log(context, {
-        message: `[52d082da] failed ${this.executionName}:\n${ex.message}`,
+        level: "warn",
+        message: "RedisMethod contract failure",
+        redisRequest: {
+          method: definition.redisMethod,
+          key: definition.key,
+        },
         error: ex,
       });
 
