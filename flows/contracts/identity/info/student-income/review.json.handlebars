@@ -21,11 +21,7 @@
             {{#if details.asset.0.amount}}
                 {"id": "asset", "label": "Cash + retirement + investments", "value": "{{formatToUSCurrency details.asset.0.amount}}"}
             {{/if}}
-            {{#if (or (eq ../userState.employmentType 'retired') (eq 'retired' ( mapIncomeTypeToEmplStatus details.income )))}}
-                {"id": "additionalIncome", "label": "Additional Income (optional)", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
-            {{else if (or details.income.[1] details.income.[2] details.income.[3] details.income.[4] details.income.[5])}}
-                {"id": "additionalIncome", "label": "Additional Income (optional)", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
-            {{/if}}
+            {"id": "additionalIncome", "label": "Additional Income (optional)", "value": "{{formatToUSCurrency (sumIncomeAmountRange details.income 'amount' 1 5)}}"}
         {{/list}},
         "editAction": {
             "key": "",
