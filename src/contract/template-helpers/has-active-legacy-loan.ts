@@ -1,7 +1,7 @@
 // TODO --> remove these damn monolith references
 
 const hasActiveLegacyLoan = function (user: User): boolean {
-  if (!user) return false;
+  if (!(user && Array.isArray(user.applications))) return false;
 
   const activeLoans = user.applications.filter(
     (app) => !FINALIZED_APPLICATION_STATUSES.includes(app.loan.status),
