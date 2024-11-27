@@ -73,6 +73,20 @@
           "@": "Income Verification"
         }
       },
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "key": {
+            "@": "income-source-primary"
+          },
+          "label": {
+              "@": "Apply"
+          },
+          "value": {
+            "@": "81"
+          }
+        }
+      ],
       "back-button": "actions/back-buttons/full-refi.prev-address",
       "save_details_action": "actions/save-details/full-refi.income-source",
       "primary_income_employer_name_input_status": "questions/primary/employment/employer-name.status",

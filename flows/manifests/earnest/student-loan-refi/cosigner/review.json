@@ -96,6 +96,20 @@
           "then": "actions/back-buttons/full-refi/cosigner.income-source",
           "else": "actions/back-buttons/full-refi/cosigner.income-verification"
         },
+        "progress": [
+          {
+            "*": "stage.progress-item",
+            "key": {
+              "@": "review-cosigner"
+            },            
+            "label": {
+                "@": "Apply"
+            },
+            "value": {
+              "@": "100"
+            }
+          }
+        ],
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.cosigner",
         "actionsDashboard": "actions/homebase.default",

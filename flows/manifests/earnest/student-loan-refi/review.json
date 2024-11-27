@@ -93,6 +93,20 @@
           "then": "actions/back-buttons/full-refi.income-source",
           "else": "actions/back-buttons/full-refi.income-verification"
         },
+        "progress": [
+          {
+            "*": "stage.progress-item",
+            "key": {
+              "@": "review-primary"
+            },
+            "label": {
+                "@": "Apply"
+            },
+            "value": {
+              "@": "100"
+            }
+          }
+        ],
         "goToInterstitial": "actions/view-interstitial.primary",
         "actions": "actions/decision-request.primary",
         "actionsDashboard": "actions/homebase.default",

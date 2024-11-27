@@ -8,7 +8,7 @@
             "copy": {{{ json (contract 'submit_copy') }}},
             "action": {{{json (contract 'save_details_action')}}}
     },
-    "progress": 81,
+    "progress": {{{json (contract 'progress')}}},
     {{#if userState.additionalAmount}}
         "rows": {{{json (contract 'income-source-rows')}}}
     {{else}}

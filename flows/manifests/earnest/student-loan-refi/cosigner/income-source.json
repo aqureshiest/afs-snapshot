@@ -76,6 +76,20 @@
           "@": "Income Verification"
         }
       },
+      "progress": [
+        {
+          "*": "stage.progress-item",
+          "key": {
+            "@": "income-source-cosigner"
+          },
+          "label": {
+              "@": "Apply"
+          },
+          "value": {
+            "@": "81"
+          }
+        }
+      ],
       "back-button": "actions/back-buttons/full-refi/cosigner.prev-address",
       "save_details_action": "actions/save-details/full-refi/cosigner.income-source",
       "cosigner_income_employer_name_input_status": "questions/cosigner/employment/employer-name.status",

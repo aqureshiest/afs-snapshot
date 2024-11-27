@@ -41,7 +41,7 @@
     "back": {
         "action": {{{ json (contract 'back-button') }}}
     },
-    "progress": 100,
+    "progress": {{{json (contract 'progress')}}},
     "rows":  {{{ json (contract 'rows')}}}
 }
 {{else}} null {{/with}}
