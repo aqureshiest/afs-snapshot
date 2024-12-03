@@ -533,7 +533,7 @@ describe("[462fd166] manifest.execute", () => {
     const redisClient = new RedisClient(context);
     redisClient.client = {
       get: async function () {},
-    } as unknown as RedisClient["client"];
+    };
     // redisClient.connect(context)
     const state = {
       manifest: "test",
