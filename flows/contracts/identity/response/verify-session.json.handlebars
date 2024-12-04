@@ -1,4 +1,9 @@
 {
   "hasSession": {{json auth.isValid}},
-  "userId": {{{json auth.artifacts.userId}}}
+  "userId": {{{json auth.artifacts.userId}}},
+  "identifyTraits": {
+    "email": {{{ json auth.artifacts.email }}},
+    {{#if application.cosigner.id }}"cosigner_application_id": {{{json application.cosigner.id}}}{{/if}}
+    "primary_application_id": {{{json application.primary.id}}}
+  }
 }
