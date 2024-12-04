@@ -1,6 +1,7 @@
 import {
   hasActiveIncompleteApplication,
   hasActivePostSubmissionApplication,
+  hasPostSignatureLendingPlatformApplication,
   ISODateToMMDDYYYY,
   getAction,
 } from "./index.js";
@@ -68,6 +69,8 @@ export default function generateModalTemplate(
     request.params.id,
     applications,
   );
+  const hasPostSignatureLendingPlatformApp =
+    hasPostSignatureLendingPlatformApplication(request.params.id, applications);
   const identityResponse = getAction(actions, "identify");
   const getExistLegacyUserResponse = getAction(actions, "get-existing-user");
   const hasMonolithOrCognitoAccount =
@@ -141,8 +144,9 @@ export default function generateModalTemplate(
         // Primary Button
         {
           copy:
-            (hasMonolithOrCognitoAccount && hasActiveLegacyLoan) ||
+            (hasActiveLegacyLoan && !hasPostSignatureLendingPlatformApp) ||
             (hasMonolithOrCognitoAccount &&
+              hasPostSignatureLendingPlatformApp &&
               !hasActiveIncompleteApp &&
               !hasActivePostSubmissionApp)
               ? "Login"
@@ -152,11 +156,12 @@ export default function generateModalTemplate(
                 type: "navigate",
                 properties: {
                   goTo:
-                    hasActivePostSubmissionApp || hasActiveLegacyLoan
-                      ? `${env.BASE_URL}/_/auth/login`
-                      : !hasActiveIncompleteApp && !hasActivePostSubmissionApp
-                        ? `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
-                        : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
+                    !hasActiveIncompleteApp && !hasActivePostSubmissionApp
+                      ? hasActiveLegacyLoan &&
+                        !hasPostSignatureLendingPlatformApp
+                        ? `${env.BASE_URL}/_/auth/login`
+                        : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
+                      : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActivePostSubmissionApp ? hasActivePostSubmissionApp?.id : hasActiveIncompleteApp?.id}`,
                   external: true,
                   analytics,
                 },

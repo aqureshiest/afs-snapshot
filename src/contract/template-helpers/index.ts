@@ -525,12 +525,52 @@ export function hasActivePostSubmissionApplication(
     return null;
   }
 
+  const POST_SUBMISSION_APPLICATION_STATUSES: string[] = [
+    typings.ApplicationStatusName.AiRequested,
+    typings.ApplicationStatusName.Approved,
+    typings.ApplicationStatusName.Eligible,
+    typings.ApplicationStatusName.Review,
+    typings.ApplicationStatusName.Submitted,
+    typings.ApplicationStatusName.Verified,
+  ];
+
   return Object.values(applications)
     .filter(
       (app) =>
-        app?.tag?.active && app.id !== id && app.tag.status !== "incomplete",
+        app?.tag?.active &&
+        app.id !== id &&
+        app.status &&
+        POST_SUBMISSION_APPLICATION_STATUSES.includes(app.status.name!),
     )
     .pop();
+}
+
+export function hasPostSignatureLendingPlatformApplication(
+  id: string,
+  applications: typings.Application[],
+): boolean {
+  if (Array.isArray(applications) && !applications.length) {
+    return false;
+  }
+
+  const POST_SIGNATURE_APPLICATION_STATUSES: string[] = [
+    typings.ApplicationStatusName.Certified,
+    typings.ApplicationStatusName.Disbursed,
+    typings.ApplicationStatusName.Signed,
+    typings.ApplicationStatusName.VamCompleted,
+    typings.ApplicationStatusName.PayOffReady,
+    typings.ApplicationStatusName.Withdrawn,
+    typings.ApplicationStatusName.Canceled,
+  ];
+
+  const postSignatureApps = Object.values(applications).filter(
+    (app) =>
+      app.id !== id &&
+      app.status &&
+      POST_SIGNATURE_APPLICATION_STATUSES.includes(app.status.name!),
+  );
+
+  return Boolean(postSignatureApps.length);
 }
 
 export function ISODateToYYYYMMDD(dateStr: string) {
