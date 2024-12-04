@@ -18,9 +18,9 @@
             "cosigner-invite": {
                 "type": "object",
                 "properties": {
-                    "name": {{{json (schema 'questions/cosigner/name')}}},
+                    "name": {{{json (schema 'questions/cosigner/name')}}}
                     {{#with (contract 'email-validation') as |emailValidation|}}
-                      "email": {{{json emailValidation}}}
+                      ,"email": {{{json emailValidation}}}
                     {{/with}}
                 }
             }

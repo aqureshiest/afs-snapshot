@@ -1,1 +1,5 @@
-"While we aim to assist everyone, we regret to inform you that we are unable to offer a loan at this time.\n\nThis is because of the following reason(s):\n\n- Only U.S. Citizens and Permanent Residents are eligible to apply as a cosigner for this loan."
+{{#if (eq application.applicant.role "primary")}}
+    "While we aim to assist everyone, we regret to inform you that we are unable to offer a loan at this time.\n\nThis is because of the following reason(s):\n\n- At this time, U.S. citizens, permanent residents, conditional permanent residents, DACA, and Asylees are eligible to refinance student loans through Earnest. Visa holders with an H-1B are eligible with a qualifying U.S. based co-signer."
+{{else}}
+    "While we aim to assist everyone, we regret to inform you that we are unable to offer a loan at this time.\n\nThis is because of the following reason(s):\n\n- Only U.S. Citizens and Permanent Residents are eligible to apply as a cosigner for this loan."    
+{{/if}}
