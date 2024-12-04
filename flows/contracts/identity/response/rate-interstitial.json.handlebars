@@ -17,14 +17,18 @@
             {{!-- Denied but no keywords found--}}
             {{{json (contract 'rateUnable')}}},
           {{/if}}
-        {{else if rateResult.data.artifacts.tags}}
-          {{!-- no cosigner tags --}}
-          {{#if (searchDeniedArtifactTags rateResult.data.artifacts.tags)}}
-            {{!-- check if the tags contain the tag keywords --}}
+        {{else if rateResult.data.artifacts.tags}}{{!-- no cosigner tags --}}
+          {{#if (includes rateResult.data.artifacts.tags "RC_OfferCosigner")}}
+            {{!-- Primary got declined and we have the Offer cosigner tag. --}}
+            {{!-- Send primary to decline screen where they can invite cosigner --}}
             {{{json (contract 'rateDeclined')}}},
           {{else if (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable")}}
             {{!-- check if the tags contain the frozen keyword --}}
             {{{json (contract 'rateFrozen')}}},
+          {{else if (searchDeniedArtifactTags rateResult.data.artifacts.tags)}}
+            {{!-- if the primary got declined but no Offer cosigner tag --}}
+            {{!-- this is a hard decline --}}
+            {{{json (contract 'rateUnable')}}},
           {{else}}
             {{!-- Denied but no keywords found--}}
             {{{json (contract 'rateUnable')}}},

@@ -26,14 +26,18 @@
             {{!-- Denied but no keywords found--}}
             "latestRateResult":  "unable"
           {{/if}}
-        {{else if rateResult.data.artifacts.tags}}
-          {{!-- no cosigner tags --}}
-          {{#if (searchDeniedArtifactTags rateResult.data.artifacts.tags)}}
-            {{!-- check if the tags contain the tag keywords --}}
+        {{else if rateResult.data.artifacts.tags}}{{!-- no cosigner tags --}}
+          {{#if (includes rateResult.data.artifacts.tags "RC_OfferCosigner")}}
+            {{!-- Primary got declined and we have the Offer cosigner tag. --}}
+            {{!-- Send primary to decline screen where they can invite cosigner --}}
             "latestRateResult":  "declined"
           {{else if (includes rateResult.data.artifacts.tags "RC_FrozenCredit_Unable")}}
             {{!-- check if the tags contain the frozen keyword --}}
             "latestRateResult":  "frozen"
+          {{else if (searchDeniedArtifactTags rateResult.data.artifacts.tags)}}
+            {{!-- if the primary got declined but no Offer cosigner tag --}}
+            {{!-- this is a hard decline --}}
+            "latestRateResult":  "unable"
           {{else}}
             {{!-- Denied but no keywords found--}}
             "latestRateResult":  "unable"

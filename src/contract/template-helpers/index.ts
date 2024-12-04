@@ -495,7 +495,6 @@ export function getFinancialAccountsAsString(financialAccounts) {
 
 export function searchDeniedArtifactTags(tags) {
   const deniedTags = [
-    "RC_OfferCosigner",
     "RC_Primary_Decline",
     "RC_Cosigner_Decline",
   ];
