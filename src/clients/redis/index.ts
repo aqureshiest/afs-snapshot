@@ -34,13 +34,13 @@ export default class RedisClient {
       this.client = await createCluster({
         rootNodes: [
           {
-            url: `redis://${this.baseUrl}:${this.port}/0`,
+            url: `redis://${this.baseUrl}:${this.port}`,
           },
         ],
       });
     } else {
       this.client = await createClient({
-        url: `redis://${this.baseUrl}:${this.port}/0`,
+        url: `redis://${this.baseUrl}:${this.port}`,
       });
     }
     this.client.on("error", (err) => {
