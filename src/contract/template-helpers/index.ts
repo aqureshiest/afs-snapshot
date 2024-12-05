@@ -573,6 +573,31 @@ export function hasPostSignatureLendingPlatformApplication(
   return Boolean(postSignatureApps.length);
 }
 
+export function hasActivePostSignatureLendingPlatformApplication(
+  id: string,
+  applications: typings.Application[],
+): boolean {
+  if (Array.isArray(applications) && !applications.length) {
+    return false;
+  }
+
+  const POST_SIGNATURE_INACTIVE_APPLICATION_STATUSES: string[] = [
+    typings.ApplicationStatusName.Certified,
+    typings.ApplicationStatusName.Disbursed,
+    typings.ApplicationStatusName.Withdrawn,
+    typings.ApplicationStatusName.Canceled,
+  ];
+
+  const activePostSignatureApps = Object.values(applications).filter(
+    (app) =>
+      app.id !== id &&
+      app.status &&
+      !POST_SIGNATURE_INACTIVE_APPLICATION_STATUSES.includes(app.status.name!),
+  );
+
+  return Boolean(activePostSignatureApps.length);
+}
+
 export function ISODateToYYYYMMDD(dateStr: string) {
   if (dateStr) {
     return new Date(dateStr).toISOString().split("T")[0];
