@@ -189,96 +189,37 @@ describe("[462fd166] manifest.execute", () => {
 
     assert.deepEqual(parsed, [42]);
   });
-  const schema = {
-    type: "object",
-    $id: "nameSchema",
-    properties: {
-      first: {
-        type: "string",
-        pattern: "^[^@!¡¿?#$%^&*()_+]+$",
-        errorMessage: "First name is required.",
-      },
-      last: {
-        type: "string",
-        pattern: "^[^@!¡¿?#$%^&*()_+]+$",
-      },
-      middle: {
-        type: "string",
-        pattern: "^[^@!¡¿?#$%^&*()_+]+$",
-      },
-      title: {
-        type: "string",
-        pattern: "^[^@!¡¿?#$%^&*()_+]+$",
-      },
-    },
-    required: ["first", "last"],
-  };
-
-  it("[670555db] ajv helper validate", async () => {
-    const input = {} as Input<unknown>;
-    const name = {
-      first: "test",
-    };
-    const manifest = new Manifest(
-      "manifestAJV",
-      {
-        "*": "raw",
-        name: "name",
-      },
-      {
-        raw: {
-          default: new Contract({
-            key: "testContract",
-            raw: `{{{ajv 'validate' 'nameSchema' (json (contract 'name')) }}}`,
-          }),
-        },
-        name: {
-          default: new Contract({ key: "name", raw: JSON.stringify(name) }),
-        },
-      },
-    );
-    const ajv = context.loadedPlugins.schema.instance;
-    ajv.compile(schema);
-    const result = await manifest.execute(context, {}, input);
-
-    const parsed = JSON.parse(JSON.stringify(result));
-
-    assert.deepEqual(parsed, false);
-  });
-
-  it("[5eb35b03] ajv helper errors", async () => {
-    const input = {} as Input<unknown>;
-
-    const name = {
-      first: "test",
-    };
-    const manifest = new Manifest(
-      "manifestAJV",
-      {
-        "*": "raw",
-        name: "name",
-      },
-      {
-        raw: {
-          default: new Contract({
-            key: "testContract",
-            raw: `"{{{ajv 'errors' 'nameSchema' (json (contract 'name')) }}}"`,
-          }),
-        },
-        name: {
-          default: new Contract({ key: "name", raw: JSON.stringify(name) }),
-        },
-      },
-    );
-
-    const result = await manifest.execute(context, {}, input);
-    const parsed = JSON.parse(JSON.stringify(result));
-
-    assert.deepEqual(parsed, "data must be object");
-  });
 
   it("[05166b70] schema helper", async () => {
     const input = {} as Input<unknown>;
+
+    const schema = {
+      type: "object",
+      $id: "nameSchema",
+      properties: {
+        first: {
+          type: "string",
+          pattern: "^[^@!¡¿?#$%^&*()_+]+$",
+          errorMessage: "First name is required.",
+        },
+        last: {
+          type: "string",
+          pattern: "^[^@!¡¿?#$%^&*()_+]+$",
+        },
+        middle: {
+          type: "string",
+          pattern: "^[^@!¡¿?#$%^&*()_+]+$",
+        },
+        title: {
+          type: "string",
+          pattern: "^[^@!¡¿?#$%^&*()_+]+$",
+        },
+      },
+      required: ["first", "last"],
+    };
+
+    const ajv = context.loadedPlugins.schema.instance;
+    ajv.compile(schema);
 
     const manifest = new Manifest(
       "manifestAJV",
@@ -296,6 +237,8 @@ describe("[462fd166] manifest.execute", () => {
     );
 
     const result = await manifest.execute(context, {}, input);
+
+    console.log("RESULT", result);
     const parsed = JSON.parse(JSON.stringify(result));
 
     assert.deepEqual(parsed, schema);
@@ -577,70 +520,6 @@ describe("[462fd166] manifest.execute", () => {
       {},
       { response: res, ...input },
     );
-
-    assert(result);
-  });
-
-  it("[5d6c5ca8] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
-    const input = {} as Input<unknown>;
-    const manifest = new Manifest(
-      "manifestSyllabus",
-      {
-        "*": "raw",
-      },
-      {
-        raw: {
-          default: new Contract({
-            key: "testContract",
-            raw: `{
-            "status": "completed",
-            "statuses": ["completed", "completed", "completed"],
-            "mode": "stats",
-            "progress": {
-              "totalQuestions": 3,
-              "completedQuestions":0
-            },
-            "id": "asdasdasd"
-          }`,
-            type: "section",
-          }),
-        },
-      },
-    );
-
-    const result = await manifest.execute(context, {}, input);
-
-    assert(result);
-  });
-
-  it("[df40cd1a] it should execute an Syllabus contract-type when an id and a method keys exists in the definition", async () => {
-    const input = {} as Input<unknown>;
-    const manifest = new Manifest(
-      "manifestSyllabus",
-      {
-        "*": "raw",
-      },
-      {
-        raw: {
-          default: new Contract({
-            key: "testContract",
-            raw: `{
-            "status": "completed",
-            "statuses": ["completed", "completed", "completed"],
-            "mode": "section",
-            "progress": {
-              "totalQuestions": 3,
-              "completedQuestions":0
-            },
-            "id": "asdasdasd"
-          }`,
-            type: "section",
-          }),
-        },
-      },
-    );
-
-    const result = await manifest.execute(context, {}, input);
 
     assert(result);
   });

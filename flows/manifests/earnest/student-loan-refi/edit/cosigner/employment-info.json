@@ -52,14 +52,6 @@
         "onError.no-income"
       ],
       "save_edited_employment_details_action": "actions/save-details/full-refi/cosigner.edit-employment-refi",
-      "cosigner_employment_input_status": "questions/cosigner/employment.status",
-      "cosigner_income_employer_name_input_status": "questions/cosigner/employment/employer-name.status",
-      "cosigner_income_job_title_input_status": "questions/cosigner/employment/job-title.status",
-      "cosigner_income_start_date_input_status": "questions/cosigner/employment/start-date.status",
-      "cosigner_income_annual_income_input_status": "questions/cosigner/income/annual-income.status",
-      "cosigner_income_claimed_assets_input_status": "questions/cosigner/income/claimed-assets.status",
-      "cosigner_income_additional_income_input_status": "questions/cosigner/income/additional-income/review.status",
-      "cosigner_income_sources_of_income_input_status": "questions/cosigner/income/sources-of-income-retired.status",
       "redirect_homebase": "actions/homebase.default"
     }
   }

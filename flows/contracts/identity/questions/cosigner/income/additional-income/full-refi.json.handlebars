@@ -9,8 +9,6 @@
     {{else}}
       "value": ""
     {{/if}},
-    "status": {{{json (contract 'cosigner_income_additional_income_input_status')}}},
-    "error": "{{{ ajv 'errors' 'questions/cosigner/income/additional-income' additionalAmount }}}",
     "label": {
       "copy": "Total annual additional income (optional)"
     }

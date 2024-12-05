@@ -63,7 +63,6 @@
       ],
       "back-button": "actions/back-buttons/full-refi.income",
       "save_amount_details_action": "actions/save-details/full-refi.amount",
-      "primary_amount_input_status": "questions/primary/amount.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

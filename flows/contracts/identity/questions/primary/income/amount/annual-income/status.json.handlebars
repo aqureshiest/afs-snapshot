@@ -1,7 +1,0 @@
-{{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/income/amount/annual-income' details.income.0.amount) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

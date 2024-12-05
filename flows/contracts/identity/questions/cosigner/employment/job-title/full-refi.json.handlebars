@@ -6,7 +6,6 @@
       "type": "inputText",
       "placeholder": "Job title",
       "value": "{{{details.income.0.title}}}",
-      "status": {{{json (contract 'cosigner_income_job_title_input_status')}}},
       "label": {  
         "copy": "Job title"
       },
@@ -32,8 +31,7 @@
             "value": "future"
           }
         ]
-      ],
-      "error": "{{{ ajv 'errors' 'questions/cosigner/employment/job-title' details.income.0.title}}}"
+      ]
   }
 }
 {{/with}}

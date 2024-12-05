@@ -9,7 +9,6 @@
       {{else}}
         "value": "",
       {{/if}}
-      "status": {{{json (contract 'primary_income_annual_income_input_status')}}},
       "label": {
         "copy": "Annual individual income before taxes"
       },
@@ -50,7 +49,6 @@
           }
         ]
       ],
-      "error": "{{{ ajv 'errors' 'questions/primary/income/amount/annual-income' details.income.0.amount }}}",
       "hint": "This could include wage income, bonuses, and commissions, subject to verification later."
   }
 }

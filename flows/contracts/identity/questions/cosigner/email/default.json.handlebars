@@ -5,12 +5,10 @@
         "key": "email",
         "type": "inputEmail",
         "placeholder": "Email",
-        "status": {{{json (contract 'cosigner_email_input_status')}}},
         "value": "{{{ details.email }}}",
         "label": {
             "copy": "Email"
         },
-        "error": "{{{ajv 'errors' 'questions/cosigner/email' details.email}}}",
         "hint": "We’ll use this email to share updates about this application, our products, and our services. Enter email to agree."
     }
 }

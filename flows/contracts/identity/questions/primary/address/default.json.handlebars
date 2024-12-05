@@ -47,8 +47,7 @@
           "zip": {
               "copy": {{#if (contract 'zipLabel')}} {{{ json (contract 'zipLabel') }}} {{else}} "Zipcode" {{/if}}
           }
-      },
-      "error": "{{{ ajv 'errors' 'questions/primary/address' applicant.details.location }}}"
+      }
   }
 }
 {{/applicantById}}

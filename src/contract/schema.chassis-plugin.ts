@@ -38,6 +38,9 @@ export const plugin: Plugin<unknown> = {
       keyword: "dateThreshold",
     });
     ajv.addKeyword({
+      keyword: "deepEmailValidator",
+    });
+    ajv.addKeyword({
       keyword: "requiredParentFields",
     });
     ajv.addKeyword({

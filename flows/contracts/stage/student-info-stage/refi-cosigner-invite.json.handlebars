@@ -2,7 +2,6 @@
     "key": "full-refi-cosigner-invite",
     "type": "form",
     "label": "Cosigner Invite",
-    "status": "notStarted",
     "showProgress": false,
     {{#if (contract "analytics")}}
         "analytics": {{{json (contract 'analytics')}}},
@@ -13,6 +12,7 @@
     },
     "steps": {{{json (contract 'steps')}}},
     "validation": {
+        "$async": true,
         "type": "object",
         "properties": {
             "cosigner-invite": {

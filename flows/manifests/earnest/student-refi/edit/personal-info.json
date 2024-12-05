@@ -37,12 +37,6 @@
     "onError.unauthorized"
   ],
   "save_edited_details_action": "actions/save-details.save-personal-info-review",
-  "primary_dob_input_status": "questions/primary/dateOfBirth.status",
-  "primary_phone_input_status": "questions/primary/phone.status",
-  "primary_address_input_status": "questions/primary/address.status",
-  "primary_citizenship_input_status": "questions/primary/citizenship.status",
-  "primary_name_input_status": "questions/primary/name.status",
-  "primary_email_input_status": "questions/primary/email.status",
   "decryptPiiSsn": "pii-get-primary-ssn",
   "current-address-validation": {
     "*": "questions/primary/address/validation",

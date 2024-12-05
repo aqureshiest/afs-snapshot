@@ -77,11 +77,6 @@ declare module "contract/template-helpers/obj.js" {
   type TemplateHelper = ITemplateHelper;
 }
 
-import "contract/template-helpers/ajv.js";
-declare module "contract/template-helpers/ajv.js" {
-  type TemplateHelper = ITemplateHelper<[string, string, unknown]>;
-}
-
 import "contract/template-helpers/maskValue.js";
 declare module "contract/template-helpers/maskValue.js" {
   type TemplateHelper = ITemplateHelper<[string, string]>;

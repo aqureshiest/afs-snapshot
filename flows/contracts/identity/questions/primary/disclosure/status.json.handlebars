@@ -1,7 +1,0 @@
-{{#with application}}
-  {{#if (ajv 'validate' 'questions/disclosure' details.consent.disclosure) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

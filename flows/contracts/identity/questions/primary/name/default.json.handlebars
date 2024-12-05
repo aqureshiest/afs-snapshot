@@ -8,15 +8,13 @@
             "first": "First name",
             "last": "Last name"
         },
-        "status": {{{json (contract 'primary_name_input_status')}}},
         "value": {
             "first": {{#if details.name.first}}{{{json details.name.first}}}{{else}}""{{/if}},
             "last": {{#if details.name.last}}{{{json details.name.last}}}{{else}}""{{/if}}
         },
         "label": {
             "copy": "Full legal name"
-        },
-        "error": "{{{ ajv 'errors' 'questions/primary/name' details.name }}}"
+        }
     }
 }
 {{/with}}

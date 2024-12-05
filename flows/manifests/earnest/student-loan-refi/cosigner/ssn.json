@@ -69,7 +69,6 @@
       "decryptPiiSsn": "pii.get-token",
       "back-button": "actions/back-buttons/full-refi/cosigner.income",
       "save_details_action": "actions/save-details/full-refi/cosigner.ssn",
-      "cosigner_ssn_input_status": "questions/cosigner/ssn.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

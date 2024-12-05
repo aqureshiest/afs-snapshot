@@ -3,7 +3,6 @@ import * as typings from "@earnest/application-service-client/typings/codegen.js
 
 export { default as list } from "./list.js";
 export { default as contract } from "./contract.js";
-export { default as ajv } from "./ajv.js";
 export { default as schema } from "./schema.js";
 export { default as obj } from "./obj.js";
 export { default as spread } from "./spread.js";

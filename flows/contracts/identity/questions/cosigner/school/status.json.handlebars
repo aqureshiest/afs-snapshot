@@ -1,7 +1,0 @@
-{{#with application.cosigner}}
-  {{#if (ajv 'validate' 'questions/cosigner/school' details.education) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

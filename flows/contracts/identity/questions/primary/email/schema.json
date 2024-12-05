@@ -2,6 +2,7 @@
   "type": "string",
   "minLength": 1,
   "format": "email",
+  "deepEmailValidator": true,
   "errorMessage": {
     "minLength": "Email is required.",
     "type": "Invalid email.",

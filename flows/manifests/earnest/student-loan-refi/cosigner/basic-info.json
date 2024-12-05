@@ -73,9 +73,6 @@
       ],
       "back-button": "actions/back-buttons/full-refi/cosigner.basic-info",
       "save_basic_info_details_action": "actions/save-details/full-refi/cosigner.basic-info",
-      "cosigner_dob_input_status": "questions/cosigner/dateOfBirth.status",
-      "cosigner_phone_input_status": "questions/cosigner/phone.status",
-      "cosigner_name_input_status": "questions/cosigner/name.status",
       "email-validation": "questions/cosigner/email/validation",
       "redirect_homebase": "actions/homebase.default",
       "onError": []

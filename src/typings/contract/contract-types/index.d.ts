@@ -117,30 +117,6 @@ declare module "contract/contract-types/plaid-method.js" {
   type Output = { [key: string]: unknown } | Array<Output> | undefined;
 }
 
-import "contract/contract-types/syllabus-section.js";
-declare module "contract/contract-types/syllabus-section.js" {
-  type Context = ChassisPluginContext;
-  type ProgressStats = {
-    totalQuestions: number;
-    completedQuestions: number;
-  };
-  type Definition = {
-    status: string;
-    statuses: string[];
-    mode: "section" | "stats";
-    progress: ProgressStats;
-    [key: string]: unknown;
-  };
-  type Transformation = {
-    progress: ProgressStats;
-    [key: string]: unknown;
-  };
-
-  type MinimalApplication = {
-    id: string;
-  };
-}
-
 import "contract/contract-types/application-data.js";
 declare module "contract/contract-types/application-data.js" {
   type Input = IContractInput<unknown>;

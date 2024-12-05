@@ -9,11 +9,9 @@
       {{else}}
         "value": "",
       {{/if}}
-      "status": {{{json (contract 'cosigner_income_claimed_assets_input_status')}}},
       "label": {
         "copy": "Cash + retirement + investments"
       },
-      "error": "{{{ ajv 'errors' 'questions/cosigner/income/claimed-assets' details.asset.0.amount }}}",
       "hint": "Estimated total of your retirement, investments and savings accounts plus your average checking account balance. This can help us evaluate your financial stability leading to potentially lower rates."
   }
 }

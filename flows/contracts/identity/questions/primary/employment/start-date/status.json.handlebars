@@ -1,7 +1,0 @@
-{{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/employment/start-date' details.income.0.start) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

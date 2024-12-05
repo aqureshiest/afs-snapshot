@@ -1,7 +1,0 @@
-{{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/income/sources-of-income-retired' details.income.1.type) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

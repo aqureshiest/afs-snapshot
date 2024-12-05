@@ -1,7 +1,0 @@
-{{#with application.cosigner}}
-  {{#if (ajv 'validate' 'questions/cosigner/income/additional-income' additionalAmount) }}
-     "completed"
-  {{else}}
-     "incomplete"
-  {{/if}}
-{{/with}}

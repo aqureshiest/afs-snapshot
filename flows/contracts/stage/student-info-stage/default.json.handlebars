@@ -5,10 +5,10 @@
         "key": "student-info",
         "type": "form",
         "label": "Primary Info",
-        "status": "notStarted",
         "showProgress": true,
         "steps": {{{json (contract 'steps')}}},
         "validation": {
+            "$async": true,
             "type": "object",
             "properties": {
                 "education": {

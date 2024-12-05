@@ -4,12 +4,10 @@
         "key": "email",
         "type": "inputEmail",
         "placeholder": "Email",
-        "status": {{{json (contract 'cosigner_email_input_status')}}},
         "value": {{#if application.cosigner}} "{{{ application.cosigner.details.email }}}" {{else}} "" {{/if}},
         "label": {
             "copy": "Cosigner's email"
         },
-        "error": {{#if application.cosigner}} "{{{ajv 'errors' 'questions/primary/email' application.cosigner.details.email}}}" {{else}} "" {{/if}},
         "hint": "By Clicking on 'Send Invite', I agree to the :ActionButton[ :props[{styleAsLink: true, button: { copy: 'Cosigner Information Sharing Consent', action: { type: 'navigate', properties: { goTo: 'https://www.earnest.com/cosigner-consent', external: true, target: '_blank' } } } }]]"
         {{! pending to add the link to the consent }}
     }

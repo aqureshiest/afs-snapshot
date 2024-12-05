@@ -1,7 +1,0 @@
-{{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/name' details.name) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

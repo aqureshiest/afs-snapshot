@@ -7,15 +7,13 @@
             "first": "First name",
             "last": "Last name"
         },
-        "status": {{{json (contract 'cosigner_name_input_status')}}},
         "value": {
             "first": {{#if application.cosigner.details.name.first}}{{{json application.cosigner.details.name.first}}}{{else}}""{{/if}},
             "last": {{#if application.cosigner.details.name.last}}{{{json application.cosigner.details.name.last}}}{{else}}""{{/if}}
         },
         "label": {
             "copy": "Cosigner's full legal name"
-        },
-        "error": {{#if application.cosigner}} "{{{ ajv 'errors' 'questions/cosigner/name' application.cosigner.details.name }}}" {{else}} "" {{/if}}
+        }
     }
 }
 

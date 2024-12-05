@@ -1,7 +1,0 @@
-{{#with application.primary}}
-  {{#if (ajv 'validate' 'questions/primary/residency-end-date' details.education.0.residencyEndDate) }}
-     "completed"
-  {{else}} 
-     "incomplete"
-  {{/if}}
-{{/with}}

@@ -9,7 +9,6 @@
       {{else}}
         "value": "",
       {{/if}}
-      "status": {{{json (contract 'primary_income_claimed_assets_input_status')}}},
       "label": {
         "copy": "Cash + retirement + investments"
       },
@@ -71,7 +70,6 @@
           }
         ]
       ],
-      "error": "{{{ ajv 'errors' 'questions/primary/income/amount/claimed-assets' details.asset.0.amount }}}",
       "hint": "Including this can help us evaluate your financial stability leading to potentially lower rates."
   }
 }

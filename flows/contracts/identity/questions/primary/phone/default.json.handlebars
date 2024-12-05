@@ -4,12 +4,10 @@
     "definition": {
         "key": "phone",
         "type": "inputPhone",
-        "status": {{{json (contract 'primary_phone_input_status')}}},
         "value": "{{details.phone.0.number}}",
         "label": {
             "copy": "Phone number"
         },
-        "error": "{{{ ajv 'errors' 'questions/primary/phone' details.phone }}}",
         "hint": [
             {
             "key": "phone-modal",

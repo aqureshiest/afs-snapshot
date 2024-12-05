@@ -5,7 +5,6 @@
       "key": "jobTitle",
       "type": "inputText",
       "value": "{{{details.income.0.title}}}",
-      "status": {{{json (contract 'primary_income_job_title_input_status')}}},
       "label": {  
         "copy": "Job title"
       },
@@ -52,8 +51,7 @@
             "value": "future"
           }
         ]
-      ],
-      "error": "{{{ ajv 'errors' 'questions/primary/employment/job-title' details.income.0.title}}}"
+      ]
   }
 }
 {{/with}}

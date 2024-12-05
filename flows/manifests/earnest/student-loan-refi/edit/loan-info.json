@@ -39,7 +39,6 @@
       "back-button": "actions/back-buttons/full-refi.review",
       "save_edited_details_action": "actions/save-details/full-refi.edit-loan-refi",
       "onError": ["onError.unauthorized", "onError.min-refi-amount-error"],
-      "primary_loan_input_status": "questions/primary/loan.status",
       "redirect_homebase": "actions/homebase.default"
     }
   }

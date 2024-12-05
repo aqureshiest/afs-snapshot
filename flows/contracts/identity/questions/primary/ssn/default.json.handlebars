@@ -4,13 +4,11 @@
     "definition": {
         "key": "ssn",
         "type": "inputSsn",
-        "status": {{{json (contract 'primary_ssn_input_status')}}},
         "value": "{{{contract "decryptPiiSsn"}}}",
         "obfuscate": true,
         "label": {
             "copy": "Social security number"
-        },
-        "error": "{{{ ajv 'errors' 'questions/primary/ssn' ssnTokenURI }}}"
+        }
     }
 }
 {{/with}}

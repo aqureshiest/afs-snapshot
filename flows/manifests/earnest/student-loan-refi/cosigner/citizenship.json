@@ -65,7 +65,6 @@
       ],
       "back-button": "actions/back-buttons/full-refi/cosigner.address",
       "save_citizenship_details_action": "actions/save-details/full-refi/cosigner.citizenship",
-      "cosigner_citizenship_input_status": "questions/cosigner/citizenship.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

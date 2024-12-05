@@ -62,12 +62,6 @@
         "questions/cosigner/ssn.default"
       ],
       "save_edited_details_action": "actions/save-details/full-refi/cosigner.edit-full-refi",
-      "cosigner_dob_input_status": "questions/cosigner/dateOfBirth.status",
-      "cosigner_phone_input_status": "questions/cosigner/phone.status",
-      "cosigner_address_input_status": "questions/primary/address.status",
-      "cosigner_citizenship_input_status": "questions/cosigner/citizenship.status",
-      "cosigner_name_input_status": "questions/cosigner/name.status",
-      "cosigner_email_input_status": "questions/cosigner/email.status",
       "decryptPiiSsn": "pii.get-token",
       "current-address-validation": {
         "*": "questions/primary/address/validation",

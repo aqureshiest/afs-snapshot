@@ -6,7 +6,6 @@
       "type": "inputText",
       "placeholder": "Employer name",
       "value": "{{{details.income.0.employer}}}",
-      "status": {{{json (contract 'primary_income_employer_name_input_status')}}},
       "label": {  
         "copy": "Employer name"
       },
@@ -25,8 +24,7 @@
             "value": "future"
           }
         ]
-      ],
-      "error": "{{{ ajv 'errors' 'questions/primary/employment/employer-name' details.income.0.employer }}}"
+      ]
   }
 }
 {{/with}}

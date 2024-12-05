@@ -4,7 +4,6 @@
   "definition": {
       "key": "startDate",
       "type": "inputDate",
-      "status": {{{json (contract 'primary_income_start_date_input_status')}}},
       "value": 
         {{#if details.income.0.start}}
         {
@@ -38,8 +37,7 @@
             "value": "future"
           }
         ]
-      ],
-      "error": "{{{ ajv 'errors' 'questions/primary/employment/start-date'  details.income.0.start }}}"
+      ]
   }
 }
 {{/with}}

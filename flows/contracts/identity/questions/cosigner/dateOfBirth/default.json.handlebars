@@ -5,7 +5,6 @@
     "definition": {
         "key": "dateOfBirth",
         "type": "inputDate",
-        "status": {{{json (contract 'cosigner_dob_input_status')}}},
         "value": 
           {{#if details.dateOfBirth}}
           {
@@ -24,8 +23,7 @@
         "label": {
           "copy": "Date of birth"
         },
-        "hint": "",
-        "error": "{{{ ajv 'errors' 'questions/cosigner/dateOfBirth' details.dateOfBirth }}}"
+        "hint": ""
     }
 }
 {{/with}}

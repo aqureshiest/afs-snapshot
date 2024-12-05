@@ -92,10 +92,6 @@
       ],
       "back-button": "actions/back-buttons/full-refi/cosigner.prev-address",
       "save_details_action": "actions/save-details/full-refi/cosigner.income-source",
-      "cosigner_income_employer_name_input_status": "questions/cosigner/employment/employer-name.status",
-      "cosigner_income_additional_income_input_status": "questions/cosigner/income/additional-income.status",
-      "cosigner_income_start_date_input_status": "questions/cosigner/employment/start-date.status",
-      "cosigner_employment_input_status": "questions/cosigner/employment.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

@@ -67,7 +67,6 @@
       "decryptPiiSsn": "pii.get-token",
       "back-button": "actions/back-buttons/full-refi.amount",
       "save_details_action": "actions/save-details/full-refi.ssn",
-      "primary_ssn_input_status": "questions/primary/ssn/full-refi.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

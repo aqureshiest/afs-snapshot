@@ -2,7 +2,6 @@
     "key": "student-info",
     "type": "form",
     "label": "Primary Info",
-    "status": "notStarted",
     "showProgress": true,
     "pageLayout":{{{json (contract 'pageLayout')}}},
     "seo": {
@@ -10,6 +9,7 @@
     },
     "steps": {{{json (contract 'steps')}}},
     "validation": {
+        "$async": true,
         "type": "object",
         "properties": {
             "basic": {

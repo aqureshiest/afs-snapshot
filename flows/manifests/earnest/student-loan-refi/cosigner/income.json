@@ -68,9 +68,6 @@
     ],
       "back-button": "actions/back-buttons/full-refi/cosigner.citizenship",
       "save_income_details_action": "actions/save-details/full-refi/cosigner.income",
-      "cosigner_income_annual_income_input_status": "questions/cosigner/income/annual-income.status",
-      "cosigner_income_claimed_assets_input_status": "questions/cosigner/income/claimed-assets.status",
-      "cosigner_income_additional_income_input_status": "questions/cosigner/income/additional-income.status",
       "redirect_homebase": "actions/homebase.default",
       "onError": []
     }

@@ -5,12 +5,10 @@
         "key": "email",
         "type": "inputEmail",
         "placeholder": "Email",
-        "status": {{{json (contract 'primary_email_input_status')}}},
         "value": "{{{ primary.details.email }}}",
         "label": {
             "copy": "Email"
         },
-        "error": "{{{ajv 'errors' 'questions/primary/email' primary.details.email}}}",
         "hint": "We’ll use this email to share updates about this application, our products, and our services. Enter email to agree."
     }
 }

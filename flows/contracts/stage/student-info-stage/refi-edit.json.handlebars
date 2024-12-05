@@ -3,11 +3,11 @@
     "key": "student-personal-info-edit",
     "type": "form",
     "label": "Edit Primary Info",
-    "status": "notStarted",
     "showProgress": true,
     "pageLayout": {{{json (contract 'pageLayout')}}},
     "steps": {{{json (contract 'steps')}}},
     "validation": {
+        "$async": true,
         "type": "object",
         "properties": {
             "editPersonalInfo": {

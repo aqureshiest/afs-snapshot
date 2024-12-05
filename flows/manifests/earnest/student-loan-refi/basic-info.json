@@ -38,9 +38,6 @@
     ],
     "back-button": "actions/back-buttons/full-refi.basic-info",
     "save_basic_info_details_action": "actions/save-details/full-refi.basic-info",
-    "primary_dob_input_status": "questions/primary/dateOfBirth.status",
-    "primary_phone_input_status": "questions/primary/phone.status",
-    "primary_name_input_status": "questions/primary/name.status",
     "redirect_homebase": "actions/homebase.default",
     "onError": []
   }

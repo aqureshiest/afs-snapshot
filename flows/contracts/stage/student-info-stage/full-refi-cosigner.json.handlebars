@@ -2,7 +2,6 @@
     "key": "full-refi-cosigner",
     "type": "form",
     "label": "Basic Info",
-    "status": "notStarted",
     "pageLayout":{{{json (contract 'pageLayout')}}},
     {{#if (contract "analytics")}}
         "analytics":{{{json (contract 'analytics')}}},
@@ -22,6 +21,7 @@
     },
     "steps": {{{json (contract 'steps')}}},
     "validation": {
+        "$async": true,
         "type": "object",
         "properties": {
             "basic": {
