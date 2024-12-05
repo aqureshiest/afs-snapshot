@@ -196,11 +196,8 @@
                 "label": {
                   "@": "Graduation date or last attendance date"
                 },
-                "deps": [
-                  {
-                    "@": "education.residencyEndDate"
-                  }
-                ],
+                "omitDay": {"@": true},
+                "deps": [{"@": "education.residencyEndDate"}],
                 "value": "earnest-student-loan-refi/values.graduation-date"
               },
               {
