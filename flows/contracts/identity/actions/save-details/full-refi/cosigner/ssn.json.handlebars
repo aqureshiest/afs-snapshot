@@ -1,18 +1,30 @@
 {
-    "key": "save-ssn-full-refi",
-    "type": "request",
-    "properties": {
-        "analytics": {
-            "name": "Rate Check Submitted",
-            "product": "slr",
-            "role": "{{{application.applicant.role}}}",
-            "source": "rate check",
-            "application_id": "{{{application.id}}}",
-            "primary_application_id": "{{{application.primary.id}}}",
-            "cosigner_application_id": "{{{application.cosigner.id}}}"
-        },
-        "manifest": "save-details/full-refi/cosigner/ssn/{{application.cosigner.id}}",
-        "method": "POST",
-        "onError": {{{json (contract 'onError')}}}
-    }
+  "key": "save-ssn-full-refi",
+  "type": "request",
+  "properties": {
+    "analytics": [
+      {
+        "name": "Rate Check Submitted",
+        "product": "slr",
+        "role": "{{{application.applicant.role}}}",
+        "source": "rate check",
+        "application_id": "{{{application.id}}}",
+        "primary_application_id": "{{{application.primary.id}}}",
+        "cosigner_application_id": "{{{application.cosigner.id}}}"
+      },
+      {
+        "name": "Rate Check Section Submitted",
+        "product": "slr",
+        "role": "{{{application.applicant.role}}}",
+        "source": "rate check",
+        "application_id": "{{{application.id}}}",
+        "primary_application_id": "{{{application.primary.id}}}",
+        "cosigner_application_id": "{{{application.cosigner.id}}}",
+        "section": "identity"
+      }
+    ],
+    "manifest": "save-details/full-refi/cosigner/ssn/{{application.cosigner.id}}",
+    "method": "POST",
+    "onError": {{{json (contract 'onError')}}}
+  }
 }
