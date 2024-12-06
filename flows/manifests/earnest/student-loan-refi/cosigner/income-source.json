@@ -66,15 +66,30 @@
         "questions/cosigner/employment/job-title.full-refi",
         "questions/cosigner/employment/start-date.full-refi"
       ],
-      "submit_copy":{
+      "submit_button": {
         "*": "actions.conditional",
         "if": "conditionals.skip-income-verification",
         "then": {
-          "@": "Review Application"
+          "*": "actions.with-copy",
+          "copy": {
+            "@": "Review Application"
+          },
+          "action": "actions/save-details/full-refi/cosigner.income-source"
         },
-        "else": {
-          "@": "Income Verification"
-        }
+        "else": [{
+          "*": "actions.with-copy",
+          "copy": {
+            "@": "Review Application"
+          },
+          "conditional": "earnest-student-loan-refi/pages/income-source.self-employed",
+          "action": "actions/save-details/full-refi/cosigner.income-source"
+        },{
+          "*": "actions.with-copy",
+          "copy": {
+            "@": "Income Verification"
+          },
+          "action": "actions/save-details/full-refi/cosigner.income-source"
+        }]
       },
       "progress": [
         {

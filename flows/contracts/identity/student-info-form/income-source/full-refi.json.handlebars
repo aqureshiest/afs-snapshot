@@ -4,10 +4,7 @@
     "back": {
         "action": {{{ json (contract 'back-button') }}}
     },
-    "submit": {
-            "copy": {{{ json (contract 'submit_copy') }}},
-            "action": {{{json (contract 'save_details_action')}}}
-    },
+    "submit": {{{ json (contract 'submit_button') }}},
     "progress": {{{json (contract 'progress')}}},
     {{#if userState.additionalAmount}}
         "rows": {{{json (contract 'income-source-rows')}}}
