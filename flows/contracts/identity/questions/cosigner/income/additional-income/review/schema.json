@@ -1,37 +1,44 @@
 {
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "type": {
-        "type": "string",
-        "enum": [
-          "rental",
-          "k1",
-          "social_security_or_pension",
-          "child_support_or_alimony",
-          "disability"
-        ],
+  "oneOf": [
+    {"const": ""},
+    {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "rental",
+              "k1",
+              "social_security_or_pension",
+              "child_support_or_alimony",
+              "disability"
+            ],
+            "errorMessage": {
+              "enum": "Please select a source of income."
+            }
+          },
+          "value": {
+            "type": "number",
+            "maximum": 9999999,
+            "minimum": 1,
+            "errorMessage": {
+              "maximum": "The maximum amount is $9,999,999.",
+              "minimum": "Please enter an amount greater than 0."
+            }
+          }
+        },
+        "required": ["type", "value"],
         "errorMessage": {
-          "enum": "Please select a source of income."
+         "required": "Amount and types are required."
         }
       },
-      "value": {
-        "type": "number",
-        "maximum": 9999999,
-        "errorMessage": {
-          "maximum": "The maximum amount is $9,999,999."
-        }
+      "errorMessage": {
+        "type": "Amount and types are required.",
+        "minimum": "Please enter an amount greater than 0.",
+        "minItems": "Select at least one income type."
       }
-    },
-    "required": ["type", "value"],
-    "errorMessage": {
-     "required": "Amount and types are required."
     }
-  },
-  "errorMessage": {
-    "type": "Amount and types are required.",
-    "minimum": "Please enter an amount greater than 0.",
-    "minItems": "Select at least one income type."
-  }
+  ]
 }

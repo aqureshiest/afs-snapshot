@@ -39,7 +39,7 @@
             "*": "application/single.flattened",
             "application": "application-by-id-param"
         },
-        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill"],
+        "actions": ["set-applicant-submitted", "decision-request", "analytics/full-refi.server-application-fully-submitted", "decision-backfill"],
         "get-statuses": "applicants/status.get-applicant-status",
         "partner-attribution": "partner.application-submitted",
         "set-timestamp": "redis.set-decision-request-timestamp",

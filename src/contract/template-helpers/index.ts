@@ -223,12 +223,16 @@ export function formatPhoneNumber(v1) {
   }
 }
 
-export function reviewDateFormatter(v1) {
+export function reviewDateFormatter(v1, omitDay) {
   if (v1) {
     // Date from Application Service is formatted as yyyy-mm-dd
     const dateSplit = v1.split("-");
 
-    // return date format as mm-dd-yyyy to UI
+    // return date format as mm-yyyy to UI
+    if (omitDay === "true") {
+      return `${dateSplit[1]}/${dateSplit[0]}`;
+    }
+    
     return `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;
   }
 }
