@@ -1,6 +1,6 @@
 {
     "*": "rate-estimate-results-view",
-    "landing_stage": "rate-estimate-results/cosigner.rate-estimate-declined",
+    "landing_stage": "rate-estimate-results/cosigner.rate-estimate-unable",
     "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
     "pageLayout": {
         "*": "stage/layout",

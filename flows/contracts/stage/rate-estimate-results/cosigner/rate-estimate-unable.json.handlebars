@@ -12,7 +12,7 @@
     "primary_application_id": "{{{application.primary.id}}}",
     "cosigner_application_id": "{{{application.cosigner.id}}}",
     "value": "{{{formatCentsToDollars (multiply application.details.amount.requested 0.13)}}}",
-    "decision_code": "D",
+    "decision_code": "U",
     "can_invite_cosigner": "n",
     "login": "n",
     "estimate_id": "{{{application.lendingDecisionID.0.decisionID}}}",
@@ -62,13 +62,15 @@
             "goTo": "/{{application.brand}}/student-loan-refi/previous-address/{{application.cosigner.id}}",
             "analytics": {
               "name": "Application Started",
-              "product": "slr",
-              "source": "application",
-              "application_id": "{{{application.id}}}",
-              "primary_application_id": "{{{application.primary.id}}}",
-              "cosigner_application_id": "{{{application.cosigner.id}}}",
-              "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-              "role": "{{{application.applicant.role}}}"
+              "properties": {
+                "product": "slr",
+                "source": "application",
+                "application_id": "{{{application.id}}}",
+                "primary_application_id": "{{{application.primary.id}}}",
+                "cosigner_application_id": "{{{application.cosigner.id}}}",
+                "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+                "role": "{{{application.applicant.role}}}"
+              }
             }
           }
         }
