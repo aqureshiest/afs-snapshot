@@ -134,7 +134,7 @@ export default function generateModalTemplate(
     name: "Existing Application Selection Type",
     product: "slr",
     role: application?.applicant?.role,
-    source: "application",
+    source: "rate check",
     application_id: application?.id,
     primary_application_id: application?.primary?.id,
     cosigner_application_id: application?.cosigner?.id,
@@ -194,8 +194,6 @@ export default function generateModalTemplate(
 
   // Secondary Buttons
   if (hasActiveIncompleteApp && !hasActivePostSubmissionApp) {
-    analytics.selection = "resume app";
-
     if (hasMonolithOrCognitoAccount) {
       buttons.componentProps.buttons.push({
         copy: "Continue new application",
@@ -204,7 +202,10 @@ export default function generateModalTemplate(
           properties: {
             goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${application.id}`,
             external: true,
-            analytics,
+            analytics: {
+              ...analytics,
+              selection: "new app",
+            },
           },
         },
       });
@@ -216,7 +217,10 @@ export default function generateModalTemplate(
           properties: {
             manifest: `send-verification-email/${request.params.id}`,
             method: "POST",
-            analytics,
+            analytics: {
+              ...analytics,
+              selection: "new app",
+            },
           },
         },
       });
