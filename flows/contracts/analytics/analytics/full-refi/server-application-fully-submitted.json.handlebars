@@ -4,6 +4,7 @@
     {
       "type": "track",
       "event": "Server Application Fully Submitted",
+      "userId": {{{ json (coalesce application.cosigner.reference.userID application.cosigner.reference.userIdBeforeVerifyingThroughEmailId) }}},
       "payload":{
         "product": "slr",
         "loan_type": "{{{mapLoanType application.tag.applicants}}}",
@@ -22,6 +23,7 @@
     {
       "type": "track",
       "event": "Server Application Fully Submitted",
+      "userId": {{{ json (coalesce application.primary.reference.userID application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
       "payload":{
         "product": "slr",
         "loan_type": "{{{mapLoanType application.tag.applicants}}}",
