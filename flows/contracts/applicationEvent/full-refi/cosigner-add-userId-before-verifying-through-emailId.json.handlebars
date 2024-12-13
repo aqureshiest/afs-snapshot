@@ -1,6 +1,5 @@
-{{noop (contract 'cosigner') (contract 'user') (contract 'remove-reference')}}
 {{#with (contract 'cosigner') as |cosigner|}}
-  {{#with (contract 'remove-reference') as |remove-reference|}}
+  {{noop (contract 'remove-reference')}}
     {{#with (contract 'user') as |user|}}
       {{#with (coalesce user.results.userId user.results.userIdMap.user_id) as |userId| }}
         {
@@ -18,5 +17,4 @@
        }
       {{else}} null {{/with}}
     {{else}} null {{/with}}
-  {{else}} null {{/with}}
 {{else}} null {{/with}}
