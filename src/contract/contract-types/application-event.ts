@@ -32,11 +32,11 @@ const MUTATIVE_EVENTS = Object.freeze([
   "createRelationship",
   "setStatus",
   "removeDetails",
+  "removeReferences",
 ]);
 
 const DESTRUCTIVE_EVENTS = Object.freeze([
   "deleteRelationship",
-  "removeReferences",
 ]);
 
 class ApplicationEvent extends ContractExecutable<
@@ -124,7 +124,6 @@ class ApplicationEvent extends ContractExecutable<
       applicationServiceClient,
       "[7d3b096f] ApplicationServiceClient not instantiated",
     );
-
     /* ============================== *
      * Fetch input types to dynamically
      * build mutation request

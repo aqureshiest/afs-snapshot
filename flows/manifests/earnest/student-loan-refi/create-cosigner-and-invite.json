@@ -31,6 +31,7 @@
         {
           "<": "neas.send-cosigner-invite",
           "reference": "full-refi.cosigner-add-userId-before-verifying-through-emailId",
+	  "remove-reference": "full-refi.remove-cosigner-userId-before-verifying-through-emailId",
           "user": {
             "<": "actions/result.fallback",
             "action": { "@": "identify-user" },

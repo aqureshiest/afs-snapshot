@@ -18,7 +18,19 @@
     },
     "fields": "application { id root { id } }"
   }
-{{else}}
-  null
-{{/if}}
+{{else if (includes application.tags "cosigned")}}
+  {{#with (contract "remove-reference") as |removeReferenceEvent|}}
+    {
+      "event": "addDetails",
+      "payload": {
+        "id": {{{json ../application.cosigner.id}}},
+        "details": {
+	  "name": {{{json ../request.body.values.name}}},
+	  "email": "{{../request.body.values.email}}"
+        }
+      },
+      "fields": "application { id root { id } }"
+    }
+  {{else}} null {{/with}}
+{{else}} null {{/if}}
   
