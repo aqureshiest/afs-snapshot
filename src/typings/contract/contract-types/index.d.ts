@@ -148,6 +148,7 @@ declare module "contract/contract-types/analytics.js" {
     event: string;
     type: string;
     anonymousId: string;
+    userId?: string;
     payload: { serverProperties: map } & map;
   };
   type Cookies = {

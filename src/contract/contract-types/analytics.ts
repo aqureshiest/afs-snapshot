@@ -101,18 +101,21 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
   ) {
     const { application, auth } = input;
 
-    const userId = auth?.artifacts?.userId;
-
-    const { event, payload, anonymousId } = definition;
+    const { event, payload, userId: defUserId, anonymousId: defAnonymousId,  } = definition;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { serverProperties, ...properties } = payload;
+
+    // User Identity props can be passed in the definition or derived from request
+    const userId = defUserId || auth?.artifacts?.userId;
+    const anonymousId = defAnonymousId || cookies.ajs_anonymous_id;
+
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { actionKey, formValue, title, manifest, ...payloadProps } =
       properties;
 
     const props: TrackParams = {
-      ...(userId ? { userId } : {}),
-      anonymousId: cookies.ajs_anonymous_id,
+      userId,
+      anonymousId,
       event: event,
       properties: {
         ...payloadProps,
