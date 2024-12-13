@@ -1,12 +1,14 @@
-{
-  "event": "removeReferences",
-  "payload": {
-    "id": "{{ application.cosigner.id}}",
-    "references": [
-      {
-        "referenceType": "userIdBeforeVerifyingThroughEmailId"
-      }
-    ]
-  },
-  "fields": "application { id root { id } }"
-}
+{{#if @root.application.cosigner.reference.userIdBeforeVerifyingThroughEmailId}}
+  {
+    "event": "removeReferences",
+    "payload": {
+      "id": "{{ application.cosigner.id}}",
+      "references": [
+        {
+          "referenceType": "userIdBeforeVerifyingThroughEmailId"
+        }
+      ]
+    },
+    "fields": "application { id root { id } }"
+  }
+{{else}} null {{/if}}

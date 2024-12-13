@@ -1,20 +1,22 @@
-{{noop (contract 'cosigner') (contract 'user')}}
+{{noop (contract 'cosigner') (contract 'user') (contract 'remove-reference')}}
 {{#with (contract 'cosigner') as |cosigner|}}
-  {{#with (contract 'user') as |user|}}
-    {{#with (coalesce user.results.userId user.results.userIdMap.user_id) as |userId| }}
-      {
-        "event": "addReferences",
-        "payload": {
-          "id": "{{ cosigner.id}}",
-          "references": [
-            {
-              "referenceId": {{{json (string userId)}}},
-              "referenceType": "userIdBeforeVerifyingThroughEmailId"
-            }
-          ]
-        },
-        "fields": "application { id }"
-     }
-     {{else}} null {{/with}}
+  {{#with (contract 'remove-reference') as |remove-reference|}}
+    {{#with (contract 'user') as |user|}}
+      {{#with (coalesce user.results.userId user.results.userIdMap.user_id) as |userId| }}
+        {
+          "event": "addReferences",
+          "payload": {
+            "id": "{{ cosigner.id}}",
+            "references": [
+              {
+                "referenceId": {{{json (string userId)}}},
+                "referenceType": "userIdBeforeVerifyingThroughEmailId"
+              }
+            ]
+          },
+          "fields": "application { id }"
+       }
+      {{else}} null {{/with}}
+    {{else}} null {{/with}}
   {{else}} null {{/with}}
 {{else}} null {{/with}}
