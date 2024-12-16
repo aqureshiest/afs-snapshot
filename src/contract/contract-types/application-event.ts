@@ -260,6 +260,8 @@ class ApplicationEvent extends ContractExecutable<
       event: this.result?.event,
       id: this.result?.application?.id,
       createdAt: this.result?.createdAt,
+      /* eslint-disable  @typescript-eslint/no-explicit-any */
+      raw: this.result as any
     };
   }
 }
