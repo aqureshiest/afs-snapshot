@@ -4,6 +4,7 @@
   "pageLayout": "sidebar",
   "steps": [
     "student-info-form/basic.refi",
+    "student-info-form/education.refi-v1",
     "student-info-form/address/current-address.refi",
     "student-info-form/address/previous-address.refi",
     "student-info-form/employment",
@@ -76,6 +77,15 @@
   "onError": [
     "onError.unauthorized"
   ],
+  "student-education-info-rows": [
+    "info/student-education.full-refi",
+    "questions/primary/school.refi-edit",
+    "questions/primary/degree.refi-edit",
+    "questions/primary/graduationDate.default"
+  ],
+  "getSchools": "get-schools",
+  "getDegrees": "questions/primary/degree.get-degrees",
+  "getPrimarySchoolName": "primary-get-school-name",
   "back-button": "actions/back-buttons.basic-info",
   "noop_details_action": "actions/noop-details.primary",
   "save_primary_details_action": "actions/save-details.primary",

@@ -232,7 +232,7 @@ export function reviewDateFormatter(v1, omitDay) {
     if (omitDay === "true") {
       return `${dateSplit[1]}/${dateSplit[0]}`;
     }
-    
+
     return `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;
   }
 }
@@ -497,10 +497,7 @@ export function getFinancialAccountsAsString(financialAccounts) {
 }
 
 export function searchDeniedArtifactTags(tags) {
-  const deniedTags = [
-    "RC_Primary_Decline",
-    "RC_Cosigner_Decline",
-  ];
+  const deniedTags = ["RC_Primary_Decline", "RC_Cosigner_Decline"];
   return deniedTags.some((v) => tags.includes(v));
 }
 

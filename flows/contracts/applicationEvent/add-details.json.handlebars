@@ -64,6 +64,9 @@
               {{/each}}
             {{/list}} }
           {{/if}}
+          {{#if (or school degree graduationDate)}}
+            {"education": [{"index": 0 {{#if school }}, "opeid": "{{school.opeid8}}" {{/if}} {{#if degree}}, "degree": "{{degree}}" {{/if}} {{#if graduationDate}}, "graduationDate": "{{dateObjToString graduationDate}}" {{/if}} }]}
+          {{/if}}
         {{/with}}
       {{/obj}}
     },

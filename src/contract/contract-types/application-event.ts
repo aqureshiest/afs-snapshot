@@ -35,9 +35,7 @@ const MUTATIVE_EVENTS = Object.freeze([
   "removeReferences",
 ]);
 
-const DESTRUCTIVE_EVENTS = Object.freeze([
-  "deleteRelationship",
-]);
+const DESTRUCTIVE_EVENTS = Object.freeze(["deleteRelationship"]);
 
 class ApplicationEvent extends ContractExecutable<
   Definition,
@@ -261,7 +259,7 @@ class ApplicationEvent extends ContractExecutable<
       id: this.result?.application?.id,
       createdAt: this.result?.createdAt,
       /* eslint-disable  @typescript-eslint/no-explicit-any */
-      raw: this.result as any
+      raw: this.result as any,
     };
   }
 }

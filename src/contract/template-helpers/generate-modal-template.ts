@@ -72,10 +72,11 @@ export default function generateModalTemplate(
   );
   const hasPostSignatureLendingPlatformApp =
     hasPostSignatureLendingPlatformApplication(request.params.id, applications);
-  const hasActivePostSignatureLendingPlatformApp = hasActivePostSignatureLendingPlatformApplication(
-    request.params.id,
-    applications,
-  );
+  const hasActivePostSignatureLendingPlatformApp =
+    hasActivePostSignatureLendingPlatformApplication(
+      request.params.id,
+      applications,
+    );
   const identityResponse = getAction(actions, "identify");
   const getExistLegacyUserResponse = getAction(actions, "get-existing-user");
   const hasMonolithOrCognitoAccount =
@@ -163,7 +164,8 @@ export default function generateModalTemplate(
                   goTo:
                     !hasActiveIncompleteApp && !hasActivePostSubmissionApp
                       ? (hasActiveLegacyLoan &&
-                        !hasPostSignatureLendingPlatformApp) || hasActivePostSignatureLendingPlatformApp
+                          !hasPostSignatureLendingPlatformApp) ||
+                        hasActivePostSignatureLendingPlatformApp
                         ? `${env.BASE_URL}/_/auth/login`
                         : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-with-legacy-account/${application.id}`
                       : `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActivePostSubmissionApp ? hasActivePostSubmissionApp?.id : hasActiveIncompleteApp?.id}`,

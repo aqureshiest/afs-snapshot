@@ -101,7 +101,12 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
   ) {
     const { application, auth } = input;
 
-    const { event, payload, userId: defUserId, anonymousId: defAnonymousId,  } = definition;
+    const {
+      event,
+      payload,
+      userId: defUserId,
+      anonymousId: defAnonymousId,
+    } = definition;
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const { serverProperties, ...properties } = payload;
 
