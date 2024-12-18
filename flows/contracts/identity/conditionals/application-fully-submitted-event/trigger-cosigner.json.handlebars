@@ -1,0 +1,10 @@
+{{!-- Trigger cosigner event --}}
+{{#if (eq (mapLoanType application.tag.applicants) "cosigned")}}
+  {{#if (eq application.primary.status.name "submitted")}}
+    {{json (contract "event")}}
+  {{else}}
+    {}
+  {{/if}}
+{{else}}
+ {}
+{{/if}}

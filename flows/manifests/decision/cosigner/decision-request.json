@@ -1,52 +1,82 @@
-[{
-    "methods": ["post"],
-    "parameters": [{
-        "key": "id",
-        "format": "uuid"
-    }],
-    "inputs":{
-        "*": "inputs",
-        "application": {
-            "*": "application/single.flattened",
-            "application": "application-by-id-param"
+[
+    {
+        "methods": [
+            "post"
+        ],
+        "parameters": [
+            {
+                "key": "id",
+                "format": "uuid"
+            }
+        ],
+        "inputs": {
+            "*": "inputs",
+            "application": {
+                "*": "application/single.flattened",
+                "application": "application-by-id-param"
+            },
+            "applications": [],
+            "applicationState": "application-state",
+            "userState": "user-state",
+            "env": "inputs/env.ens",
+            "auth": {
+                "*": "auth-artifacts",
+                "strategies": [
+                    {
+                        "*": "inputs/auth.neas-session",
+                        "response": "neas.verify-token",
+                        "authorization": [
+                            "inputs/auth.neas-application-auth",
+                            "inputs/auth.neas-user-auth",
+                            "inputs/auth.neas-monolith-auth"
+                        ]
+                    },
+                    {
+                        "*": "inputs/auth.internal-bearer",
+                        "token": "inputs/auth.bearer-token",
+                        "authorization": [
+                            "inputs/auth.lending-decisioning-webhook"
+                        ]
+                    }
+                ]
+            }
         },
-        "applications": [],
-        "applicationState": "application-state",
-        "userState": "user-state",
-        "env": "inputs/env.ens",
-        "auth": {
-            "*": "auth-artifacts",
-            "strategies": [
+        "outputs": {
+            "*": "response.interstitial",
+            "updatedApplication": {
+                "*": "application/single.flattened",
+                "application": "application-by-id-param"
+            },
+            "actions": [
+                "set-applicant-submitted",
+                "decision-request",
                 {
-                    "*": "inputs/auth.neas-session",
-                    "response": "neas.verify-token",
-                    "authorization": [
-                        "inputs/auth.neas-application-auth",
-                        "inputs/auth.neas-user-auth",
-                        "inputs/auth.neas-monolith-auth"
-                    ]
+                    "*": "conditionals/application-fully-submitted-event.trigger-cosigner",
+                    "event": {
+                        "*": "analytics/full-refi.server-application-fully-submitted",
+                        "for": {
+                            "@": "cosigner"
+                        }
+                    }
                 },
                 {
-                    "*": "inputs/auth.internal-bearer",
-                    "token": "inputs/auth.bearer-token",
-                    "authorization": ["inputs/auth.lending-decisioning-webhook"]
-                }
-            ]
+                    "*": "conditionals/application-fully-submitted-event.trigger-primary-from-cosigner",
+                    "event": {
+                        "*": "analytics/full-refi.server-application-fully-submitted",
+                        "for": {
+                            "@": "primary"
+                        }
+                    }
+                },
+                "decision-backfill",
+                "ens.cosigner-submitted"
+            ],
+            "get-statuses": "applicants/status.get-applicant-status",
+            "partner-attribution": "partner.application-submitted",
+            "set-timestamp": "redis.set-decision-request-timestamp",
+            "statusAction": "actions/decision-request.applicationStatus",
+            "syllabus": "actions/decision-request.syllabus",
+            "redirect_homebase": "actions/homebase.default"
         }
-    },
-    "outputs": {
-        "*": "response.interstitial",
-        "updatedApplication": {
-            "*": "application/single.flattened",
-            "application": "application-by-id-param"
-        },
-        "actions": ["set-applicant-submitted", "decision-request", "decision-backfill", "ens.cosigner-submitted"],
-        "get-statuses": "applicants/status.get-applicant-status",
-        "partner-attribution": "partner.application-submitted",
-        "set-timestamp": "redis.set-decision-request-timestamp",
-        "statusAction": "actions/decision-request.applicationStatus",
-        "syllabus": "actions/decision-request.syllabus",
-        "redirect_homebase": "actions/homebase.default"
     }
-
-}]
+]

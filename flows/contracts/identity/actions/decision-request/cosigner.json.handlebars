@@ -12,18 +12,7 @@
       "income_verification_method": {{{mapIncomeVerificationMethod application.cosigner.details.financialAccounts}}},
       "employment_type": "{{{mapIncomeTypeToEmplStatus application.cosigner.details.income}}}",
       "value": "{{{formatCentsToDollars (multiply application.details.amount.requested 0.55)}}}"{{!-- factor defined by DnA --}}
-    }{{#if (and (eq (mapLoanType application.tag.applicants) "cosigned") (eq application.primary.status.name "submitted"))}},
-    {
-      "name": "Application Fully Submitted",
-      "product": "slr",
-      "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-      "role": "{{{application.applicant.role}}}",
-      "application_id": "{{{application.id}}}",
-      "primary_application_id": "{{{application.primary.id}}}",
-      "cosigner_application_id": "{{{application.cosigner.id}}}"
-    }
-    {{/if}}
-    ],
+    }],
     "method": "POST",
     "onError": {{{json (contract 'onError')}}}
   }
