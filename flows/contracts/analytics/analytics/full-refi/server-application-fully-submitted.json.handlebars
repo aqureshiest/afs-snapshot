@@ -1,44 +1,38 @@
-{{#if (eq application.applicant.role "primary")}}
-  {{!-- Check for cosigner and submitted --}}
-  {{#if (and (eq (mapLoanType application.tag.applicants) "cosigned") (eq application.cosigner.status.name "submitted"))}}
-    {
-      "type": "track",
-      "event": "Server Application Fully Submitted",
-      "userId": {{{ json (coalesce application.cosigner.reference.userID application.cosigner.reference.userIdBeforeVerifyingThroughEmailId) }}},
-      "deviceId": {{{ json application.cosigner.details.deviceId }}},
-      "payload":{
-        "product": "slr",
-        "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-        "source": "application",
-        {{!-- We are triggering the opposite role --}}
-        "role": "cosigner",
-        "application_id": "{{{application.id}}}",
-        "primary_application_id": "{{{application.primary.id}}}",
-        "cosigner_application_id": "{{{application.cosigner.id}}}"
-      }
-    }
-  {{else}}
-    {}
-  {{/if}}
+{{#if (eq (contract "for") "primary")}}
+{
+  "type": "track",
+  "event": "Server Application Fully Submitted",
+  "userId": {{{ json (coalesce application.primary.reference.userID application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
+  "deviceId": {{{ json application.primary.details.deviceId }}},
+  "payload":{
+    "product": "slr",
+    "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+    "source": "application",
+    {{!-- We are triggering the opposite role --}}
+    "role": "primary",
+    "application_id": "{{{application.id}}}",
+    {{#if application.cosigner.id}}
+      "cosigner_application_id": "{{{application.cosigner.id}}}",
+    {{/if}}
+    "primary_application_id": "{{{application.primary.id}}}"
+  }
+}
 {{else}}
-  {{#if (eq application.primary.status.name "submitted")}}
-    {
-      "type": "track",
-      "event": "Server Application Fully Submitted",
-      "userId": {{{ json (coalesce application.primary.reference.userID application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
-      "deviceId": {{{ json application.primary.details.deviceId }}},
-      "payload":{
-        "product": "slr",
-        "loan_type": "{{{mapLoanType application.tag.applicants}}}",
-        "source": "application",
-        {{!-- We are triggering the opposite role --}}
-        "role": "primary",
-        "application_id": "{{{application.id}}}",
-        "primary_application_id": "{{{application.primary.id}}}",
-        "cosigner_application_id": "{{{application.cosigner.id}}}"
-      }
-    }
-  {{else}}
-    {}
-  {{/if}}
+{
+  "type": "track",
+  "event": "Server Application Fully Submitted",
+  "userId": {{{ json (coalesce application.cosigner.reference.userID application.cosigner.reference.userIdBeforeVerifyingThroughEmailId) }}},
+  "deviceId": {{{ json application.cosigner.details.deviceId }}},
+  "payload":{
+    "product": "slr",
+    "loan_type": "{{{mapLoanType application.tag.applicants}}}",
+    "source": "application",
+    "role": "cosigner",
+    "application_id": "{{{application.id}}}",
+    {{#if application.cosigner.id}}
+      "cosigner_application_id": "{{{application.cosigner.id}}}",
+    {{/if}}
+    "primary_application_id": "{{{application.primary.id}}}"
+  }
+}
 {{/if}}

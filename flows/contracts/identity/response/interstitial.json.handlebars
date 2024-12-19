@@ -8,6 +8,7 @@
     {{#if (and (contract 'actions' 0) (contract 'get-statuses')) }}
       {{#noop}}{{ contract 'analytics' }}{{/noop}}
       {{#noop }}{{{contract 'set-timestamp'}}}{{/noop}}
+      {{#noop }}{{{contract 'server-events'}}}{{/noop}}
       {
         "action": {
           "key": "submitInterstitial",
