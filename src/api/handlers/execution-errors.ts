@@ -15,15 +15,26 @@ const executionErrors: Handler = async function (context, req, res, next) {
     .reduce(
       (a, b) => [
         ...a,
-        ...b.map((error) =>
-          error instanceof HttpError ? error : createError(500, error),
-        ),
+        ...b.map((error) => {
+          if (error instanceof HttpError) {
+            return error;
+          } else {
+            context.logger.error({
+              message: "Raw error",
+              manifest: {
+                id: manifest.id,
+              },
+              error: error,
+            });
+            return createError(500, error);
+          }
+        }),
       ],
-      [] as HttpError[],
+      [] as HttpError[]
     )
     .sort(
       (a: HttpError, b: HttpError) =>
-        Number(b.statusCode) - Number(a.statusCode),
+        Number(b.statusCode) - Number(a.statusCode)
     ) as HttpError[];
 
   if (sortedErrors.length) {
