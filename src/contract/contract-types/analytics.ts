@@ -91,7 +91,7 @@ class Analytics extends ContractExecutable<Definition, Definition, Output> {
         this.error(input, error.message);
       }
     });
-    return { success: true };
+    return {};
   };
 
   private buildTrackProps(
