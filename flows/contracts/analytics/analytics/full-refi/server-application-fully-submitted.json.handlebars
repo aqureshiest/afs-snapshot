@@ -3,7 +3,7 @@
   "type": "track",
   "event": "Server Application Fully Submitted",
   "userId": {{{ json (coalesce application.primary.reference.userID application.primary.reference.userIdBeforeVerifyingThroughEmailId) }}},
-  "deviceId": {{{ json application.primary.details.deviceId }}},
+  "anonymousId": {{{ json application.primary.details.deviceId }}},
   "payload":{
     "product": "slr",
     "loan_type": "{{{mapLoanType application.tag.applicants}}}",
@@ -22,7 +22,7 @@
   "type": "track",
   "event": "Server Application Fully Submitted",
   "userId": {{{ json (coalesce application.cosigner.reference.userID application.cosigner.reference.userIdBeforeVerifyingThroughEmailId) }}},
-  "deviceId": {{{ json application.cosigner.details.deviceId }}},
+  "anonymousId": {{{ json application.cosigner.details.deviceId }}},
   "payload":{
     "product": "slr",
     "loan_type": "{{{mapLoanType application.tag.applicants}}}",
