@@ -12,8 +12,7 @@
         "info/student-loan-amount/review.default",
         "info/student-employment/review.default",
         "questions/primary/consent.default",
-        "questions/primary/disclosure.default",
-        "questions/primary/disclosure.disclaimer"
+        "questions/primary/disclosure.default"
     ],
     "back-button": "actions/back-buttons.self-employed",
     "onError": ["onError.unauthorized"],

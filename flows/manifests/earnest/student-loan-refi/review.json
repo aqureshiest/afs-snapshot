@@ -69,8 +69,7 @@
               "then":[
                   "questions/primary/consent.default",
                   "questions/primary/intent.default",
-                  "questions/primary/disclosure.default",
-                  "questions/primary/disclosure.disclaimer"
+                  "questions/primary/disclosure.default"
                 ],
               "disclosureLinks": [
                   "questions/primary/disclosure/links.terms-of-services",
