@@ -517,6 +517,25 @@ export function hasActiveIncompleteApplication(
     .pop();
 }
 
+export function hasActiveIncompleteApplicationRootIds(
+  id: string,
+  applications: typings.Application[],
+) {
+  if (!id || (Array.isArray(applications) && !applications.length)) {
+    return null;
+  }
+
+  return Object.values(applications)
+    .filter(
+      (app) =>
+        app?.tag?.active &&
+        app.id !== id &&
+        app.tag.status === "incomplete" &&
+        app?.root?.tag?.status !== "withdrawn",
+    )
+    .map((app) => app?.root?.id);
+}
+
 export function hasActivePostSubmissionApplication(
   id: string,
   applications: typings.Application[],

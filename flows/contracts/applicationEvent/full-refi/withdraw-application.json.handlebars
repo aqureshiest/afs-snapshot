@@ -4,11 +4,12 @@
   (hasActiveIncompleteApplication (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications)
 )}}
   {
-    "event": "setStatus",
+    "event": "setStatuses",
     "rehydrate": false,
     "payload": {
       "status": "withdrawn",
-      "id": "{{ lookup (lookup (hasActiveIncompleteApplication (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications) "root") "id" }}"
+      "id": "{{ application.id }}",
+      "applicationIds":  {{{json (hasActiveIncompleteApplicationRootIds (lookup (getApplicantByEmail auth.artifacts.email application) "id") applications)}}}
     },
     "fields": "application { id }"
   }
