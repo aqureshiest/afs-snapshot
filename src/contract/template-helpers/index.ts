@@ -514,7 +514,7 @@ export function hasActiveIncompleteApplication(
       (app) =>
         app?.tag?.active && app.id !== id && app.tag.status === "incomplete",
     )
-    .pop();
+    .shift();
 }
 
 export function hasActiveIncompleteApplicationRootIds(
@@ -531,7 +531,7 @@ export function hasActiveIncompleteApplicationRootIds(
         app?.tag?.active &&
         app.id !== id &&
         app.tag.status === "incomplete" &&
-        app?.root?.tag?.status !== "withdrawn",
+        app?.root?.status?.name !== "withdrawn",
     )
     .map((app) => app?.root?.id);
 }
