@@ -528,10 +528,7 @@ export function hasActiveIncompleteApplicationRootIds(
   return Object.values(applications)
     .filter(
       (app) =>
-        app?.tag?.active &&
-        app.id !== id &&
-        app.tag.status === "incomplete" &&
-        app?.root?.status?.name !== "withdrawn",
+        app?.tag?.active && app.id !== id && app.tag.status === "incomplete",
     )
     .map((app) => app?.root?.id);
 }
