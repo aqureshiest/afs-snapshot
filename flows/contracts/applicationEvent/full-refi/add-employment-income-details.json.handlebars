@@ -43,8 +43,12 @@
                       {{/if}}
                   {{/list}}
                 } 
-                {{#if ../application.primary.details.asset}}
+                {{#if (and (eq ../request.params.id ../application.primary.id) ../application.primary.details.asset)}}
                   {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{../application.primary.details.asset.0.amount}}} }]}
+                {{else if (and (eq ../request.params.id ../application.cosigner.id) ../application.cosigner.details.asset)}}
+                  {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{../application.cosigner.details.asset.0.amount}}} }]}
+                {{else if (and (eq ../request.params.id ../application.benefactor.id) ../application.benefactor.details.asset)}}
+                  {"asset": [{"index": 0, "type": "claimed_total_assets", "amount": {{{../application.benefactor.details.asset.0.amount}}} }]}
                 {{/if}}
             {{/obj}}
       },

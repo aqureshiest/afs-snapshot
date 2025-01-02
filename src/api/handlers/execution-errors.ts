@@ -30,11 +30,11 @@ const executionErrors: Handler = async function (context, req, res, next) {
           }
         }),
       ],
-      [] as HttpError[]
+      [] as HttpError[],
     )
     .sort(
       (a: HttpError, b: HttpError) =>
-        Number(b.statusCode) - Number(a.statusCode)
+        Number(b.statusCode) - Number(a.statusCode),
     ) as HttpError[];
 
   if (sortedErrors.length) {

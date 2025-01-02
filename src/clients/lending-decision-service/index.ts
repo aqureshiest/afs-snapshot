@@ -1031,23 +1031,33 @@ export default class LendingDecisionServiceClient extends Client {
     );
 
     /**
-     * Special case income details for V2 full app submission
+     * Special case income details for V2 cosigner full app submission
+     *
+     * For a cosigned full app decision. LDS needs the income entity details
+     * to be a non-empty array value
+     *
+     * If the applicant does not have any other sources of income besides their
+     * stated employment income, we use that value from their employment details
+     * and mark the income type as `claimed_annual_income`
      */
     if (
       decisionType === "application" &&
       decisionAPIVersion === "v2" &&
       appType === "cosigned"
     ) {
-      if (
-        incomeDetails &&
-        incomeDetails.length === 0 &&
-        employmentDetails &&
-        employmentDetails.length >= 1
-      ) {
+      if (Array.isArray(incomeDetails) && !incomeDetails.length) {
+        const incomeValue =
+          Array.isArray(employmentDetails) && employmentDetails.length
+            ? employmentDetails[0].amount
+            : Array.isArray(retiredEmploymentDetails) &&
+                retiredEmploymentDetails.length
+              ? retiredEmploymentDetails[0].amount
+              : 0;
+
         incomeDetails = [
           {
             incomeType: "claimed_annual_income",
-            value: employmentDetails[0].amount,
+            value: incomeValue,
           },
         ];
       }
@@ -1086,7 +1096,7 @@ export default class LendingDecisionServiceClient extends Client {
     };
 
     /*
-     * The end result formatted for LDS
+     * The end result formatted for LDS.
      */
     let formattedPayload = {
       entityInfo: entityDetails,
