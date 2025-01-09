@@ -1,6 +1,7 @@
 {
     "*": "rate-estimate-results-view",
     "landing_stage": "rate-estimate-results/primary.rate-estimate-declined",
+    "skipIncomeVerification": "conditionals.skip-income-verification",
     "pageLayout": {
         "*": "stage/layout",
         "header": [

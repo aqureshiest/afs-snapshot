@@ -43,6 +43,7 @@
     "outputs": {
       "*": "rate-estimate-results-view",
       "landing_stage": "rate-estimate-results/cosigner.rate-estimate-approved",
+      "skipIncomeVerification": "conditionals.skip-income-verification",
       "analytics": "actions/analytics/full-refi/cosigner.rate-page-event",
       "pageLayout": {
         "*": "stage/layout",

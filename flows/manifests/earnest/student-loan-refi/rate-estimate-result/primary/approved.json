@@ -36,6 +36,7 @@
     "outputs": {
         "*": "rate-estimate-results-view",
         "landing_stage": "rate-estimate-results/primary.rate-estimate-approved",
+        "skipIncomeVerification": "conditionals.skip-income-verification",
         "pageLayout": {
             "*": "stage/layout",
             "header": [

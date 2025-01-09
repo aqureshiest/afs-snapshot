@@ -21,6 +21,8 @@
     "education_highest_degree": "{{{application.applicant.details.education.0.degree}}}",
     "citizenship": "{{{application.primary.details.location.0.citizenship}}}",
     "personal_info_state": "{{{lookup (findCurrentAddress application.primary.details.location) "state"}}}",
+    
+    "skip_income_verification": {{{json (contract "skipIncomeVerification")}}},
     "serverProperties": {
       "name": "Rate Check Results Received"
     }
