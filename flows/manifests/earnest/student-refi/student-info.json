@@ -97,5 +97,5 @@
   "save_primary_retired_income_details_action": "actions/save-details.retired-incomes",
   "current-address-validation": {"*": "questions/primary/address/validation"},
   "previous-address-validation": {"*": "questions/primary/address/validation", "matchesAgainstPath": {"@": "currentAddress.currentAddress"}, "matchesError": {"@": "Your previous address cannot match your current address."}},
-  "redirect_homebase": "actions/homebase.default"
+  "redirect_earnest": "actions/navigate.earnest-home"
 }

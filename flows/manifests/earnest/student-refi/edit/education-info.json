@@ -20,6 +20,7 @@
     "getDegrees": "questions/primary/degree.get-degrees",
     "getPrimarySchoolName": "primary-get-school-name",
     "redirect_homebase": "actions/homebase.default",
+    "redirect_earnest": "actions/navigate.earnest-home",
     "current-address-validation": "questions/primary/address/validation",
     "previous-address-validation": "questions/primary/address/validation"
 }

@@ -2,6 +2,7 @@
   "methods": ["get"],
   "inputs": {
     "*": "inputs",
+    "env": "inputs/env.default",
     "auth": {
       "*": "auth-artifacts",
       "strategies": [
@@ -22,6 +23,7 @@
     "landing_stage": { 
       "*": "landing.primer-full-refi", 
       "layout": "layout.full-refi-primer",
+      "redirect_earnest": "actions/navigate.earnest-home",
       "headerLabel": {
         "@": "Let's get started refinancing your loans."
       },

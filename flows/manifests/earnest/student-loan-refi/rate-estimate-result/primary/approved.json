@@ -41,7 +41,7 @@
             "header": [
               {
                 "*": "stage/layout/header.logo",
-                "action": "actions/navigate.homebase"
+                "action": "actions/navigate.earnest-home"
               },
               {
                 "*": "stage/layout/header.sidebar",

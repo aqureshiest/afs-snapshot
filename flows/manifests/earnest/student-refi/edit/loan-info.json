@@ -13,6 +13,7 @@
     "save_edited_details_action": "actions/save-details.save-loan-review",
     "onError": ["onError.unauthorized", "onError.min-refi-amount-error"],
     "redirect_homebase": "actions/homebase.default",
+    "redirect_earnest": "actions/navigate.earnest-home",
     "current-address-validation": "questions/primary/address/validation",
     "previous-address-validation": "questions/primary/address/validation"
   }

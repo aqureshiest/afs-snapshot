@@ -56,5 +56,6 @@
         "@": "Your previous address cannot match your current address."
       }
   },
-  "redirect_homebase": "actions/homebase.default"
+  "redirect_homebase": "actions/homebase.default",
+  "redirect_earnest": "actions/navigate.earnest-home"
 }
