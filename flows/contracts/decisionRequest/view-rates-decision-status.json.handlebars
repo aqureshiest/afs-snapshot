@@ -1,0 +1,34 @@
+{{#if (eq application.tag.applicants "cosigned")}}
+  {{#if application.cosigner.details.decision.length}}
+    {{#with (getMostRecentRateInquiry application.cosigner.details.decision) as |decision| }}
+      {
+        "decisionRequestMethod": "getDecision",
+        "id": "{{{decision.decisionID}}}"
+      }
+    {{/with}}
+  {{else}}
+    null
+  {{/if}} 
+{{else if (eq application.tag.applicants "parent")}}
+  {{#if application.benefactor.details.decision.length}}
+    {{#with (getMostRecentRateInquiry application.benefactor.details.decision) as |decision| }}
+      {
+        "decisionRequestMethod": "getDecision",
+        "id": "{{{decision.decisionID}}}"
+      }
+    {{/with}}
+  {{else}}
+    null
+  {{/if}} 
+{{else}}
+  {{#if application.primary.details.decision.length}}
+    {{#with (getMostRecentRateInquiry application.primary.details.decision) as |decision| }}
+      {
+        "decisionRequestMethod": "getDecision",
+        "id": "{{{decision.decisionID}}}"
+      }
+    {{/with}}
+  {{else}}
+    null
+  {{/if}} 
+{{/if}}

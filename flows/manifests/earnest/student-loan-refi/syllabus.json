@@ -19,7 +19,8 @@
         },
         {
           "*": "stage/layout/header.sidebar",
-          "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support", "stage/layout/header/sidebar-items.logout"]
+          "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support", "stage/layout/header/sidebar-items.logout"],
+          "view-rates-decision-status": "view-rates-decision-status"
         }
       ],
       "banner": {

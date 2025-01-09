@@ -46,7 +46,8 @@
               "items": [
                 "stage/layout/header/sidebar-items.rates",
                 "stage/layout/header/sidebar-items.support"
-              ]
+              ],
+              "view-rates-decision-status": "view-rates-decision-status"
             }
           ]
         },

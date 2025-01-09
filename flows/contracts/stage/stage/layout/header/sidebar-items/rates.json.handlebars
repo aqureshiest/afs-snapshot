@@ -1,34 +1,50 @@
 {{#if (eq application.tag.applicants "cosigned")}}
   {{#if application.cosigner.details.decision.length}}
-    {
-      "copy": "View rates",
-      "action": {
-        "type": "modal",
-        "properties": {
-          "type": "manifest",
-          "definition": {
-            "manifest": "{{application.reference.brand}}/student-loan-refi/content/rates-modal/{{{application.cosigner.id}}}"
+    {{#with (contract 'view-rates-decision-status') as |result| }}
+      {{#if (eq result.data.decisionOutcome 'Approved') }}
+        {
+          "copy": "View rates",
+          "action": {
+            "type": "modal",
+            "properties": {
+              "type": "manifest",
+              "definition": {
+                "manifest": "{{../application.reference.brand}}/student-loan-refi/content/rates-modal/{{{../application.cosigner.id}}}"
+              }
+            }
           }
         }
-      }
-    }
+      {{else}}
+        {}
+      {{/if}}
+    {{else}}
+      {}
+    {{/with}}
   {{else}}
     {}
   {{/if}}
 {{else}}
   {{#if application.primary.details.decision.length}}
-    {
-      "copy": "View rates",
-      "action": {
-        "type": "modal",
-        "properties": {
-          "type": "manifest",
-          "definition": {
-            "manifest": "{{application.reference.brand}}/student-loan-refi/content/rates-modal/{{{application.applicant.id}}}"
+    {{#with (contract 'view-rates-decision-status') as |result| }}
+      {{#if (eq result.data.decisionOutcome 'Approved') }}
+        {
+          "copy": "View rates",
+          "action": {
+            "type": "modal",
+            "properties": {
+              "type": "manifest",
+              "definition": {
+                "manifest": "{{../application.reference.brand}}/student-loan-refi/content/rates-modal/{{{../application.applicant.id}}}"
+              }
+            }
           }
         }
-      }
-    }
+      {{else}}
+        {}
+      {{/if}}
+    {{else}}
+      {}
+    {{/with}}
   {{else}}
     {}
   {{/if}}
