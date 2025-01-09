@@ -2,7 +2,7 @@
   "type": "number",
   "maximum": 9999999,
   "errorMessage": {
-    "type": "Cash + retirement + investments is required.",
+    "type": "This is an eligibility requirement. Please enter an amount greater than $0.",
     "maximum": "The maximum amount is $9,999,999."
   }
 }
