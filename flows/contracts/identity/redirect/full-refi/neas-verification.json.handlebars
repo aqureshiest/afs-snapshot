@@ -2,7 +2,7 @@
   "action": {
     "type": "navigate",
     "properties": {
-      "goTo": "{{env.BASE_URL}}/_/auth/neasauth/instant_verify?email={{escapeUrlParam (lookup (lookup (getApplicant request.params.id application) "details") "email")}}",
+      "goTo": "{{env.BASE_URL}}/_/auth/neasauth/instant_verify?email={{escapeUrlParam (lookup (lookup (getApplicant request.params.id application) "details") "email")}}&targetUrl=/_/apply/resume-new-application/{{request.params.id}}",
       "external": true
     }
   },

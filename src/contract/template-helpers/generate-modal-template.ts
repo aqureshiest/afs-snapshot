@@ -202,7 +202,7 @@ export default function generateModalTemplate(
         action: {
           type: "navigate",
           properties: {
-            goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${application.id}`,
+            goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume-new-application/${application.id}`,
             external: true,
             analytics: {
               ...analytics,
