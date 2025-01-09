@@ -12,6 +12,7 @@
         "application": "application-by-id-param"
       },
       "userState": "user-state",
+      "env": "inputs/env.default",
       "auth": {
         "*": "auth-artifacts",
         "strategies": [

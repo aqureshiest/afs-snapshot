@@ -18,6 +18,7 @@
       "applications": [],
       "applicationState": "application-state",
       "userState": "user-state",
+      "env": "inputs/env.default",
       "auth": {
         "*": "auth-artifacts",
         "strategies": [

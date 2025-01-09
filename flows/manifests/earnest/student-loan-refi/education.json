@@ -15,6 +15,7 @@
         "*": "application/single.flattened",
         "application": "application-by-id-param"
       },
+      "env": "inputs/env.default",
       "applications": [],
       "applicationState": "application-state",
       "userState": "user-state",
