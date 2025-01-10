@@ -1,7 +1,23 @@
 {
     "*": "refi-review",
     "stage": "review.refi",
-    "pageLayout": "sidebar",
+    "pageLayout": {
+        "*": "stage/layout",
+        "header": [
+            {
+                "*": "stage/layout/header.logo",
+                "action": "actions/navigate.earnest-home"
+            },
+            {
+                "*": "stage/layout/header.sidebar",
+                "items": [
+                    "stage/layout/header/sidebar-items.support",
+                    "stage/layout/header/sidebar-items.logout"
+                ]
+            }
+        ],
+        "banner": "stage/layout/banner/templates.big-kahuna-banner"
+    },
     "steps": [
         "student-info-form/review.refi"
     ],
@@ -30,7 +46,9 @@
     "goToInterstitial": "actions/view-interstitial.primary",
     "actions": "actions/decision-request.primary",
     "actionsDashboard": "actions/homebase.default",
-    "onError": ["onError.unauthorized"],
+    "onError": [
+        "onError.unauthorized"
+    ],
     "getDegrees": "questions/primary/degree.get-degrees",
     "disclosureLinks": [
         "questions/primary/disclosure/links.terms-of-services",

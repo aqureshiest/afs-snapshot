@@ -49,7 +49,8 @@
               ],
               "view-rates-decision-status": "view-rates-decision-status"
             }
-          ]
+          ],
+          "banner": "stage/layout/banner/templates.big-kahuna-banner"
         },
         "steps": [
             "student-info-form/review.full-refi"
