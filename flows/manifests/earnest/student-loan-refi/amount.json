@@ -41,7 +41,7 @@
           {
             "*": "stage/layout/header.sidebar",
             "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"],
-          "view-rates-decision-status": "view-rates-decision-status"
+            "view-rates-decision-status": "view-rates-decision-status"
           }
         ]
       },
@@ -58,7 +58,7 @@
           "@": "90"
         }
       }
-    ],
+      ],
       "student-info-amount-rows": [
         "info/student-info.amount",
         "questions/primary/amount.full-refi"

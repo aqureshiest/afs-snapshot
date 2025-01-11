@@ -1,8 +1,8 @@
 {
     "type": "number",
-    "maximum": 9999999,
+    "maximum": 1000000,
     "errorMessage": {
       "type": "Refinance amount is required.",
-      "maximum": "The maximum amount is $9,999,999."
+      "maximum": "The maximum amount is $1,000,000."
     }
   }
