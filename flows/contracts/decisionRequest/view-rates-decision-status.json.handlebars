@@ -9,7 +9,7 @@
   {{else}}
     null
   {{/if}} 
-{{else if (eq application.tag.applicants "parent")}}
+{{else if (eq application.tag.applicants "parent_plus")}}
   {{#if application.benefactor.details.decision.length}}
     {{#with (getMostRecentRateInquiry application.benefactor.details.decision) as |decision| }}
       {
