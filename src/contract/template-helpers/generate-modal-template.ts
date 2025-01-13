@@ -15,6 +15,15 @@ interface Template {
       definition: {
         content: unknown[];
       };
+      analytics?: {
+        name: string;
+        product: string;
+        role: string;
+        source: string;
+        application_id: string;
+        primary_application_id: string;
+        cosigner_application_id: string;
+      };
     };
   };
 }
@@ -88,6 +97,15 @@ export default function generateModalTemplate(
       type: "modal",
       properties: {
         type: "flexible",
+        analytics: {
+          name: "Existing Application Modal Loaded",
+          product: "slr",
+          role: application?.applicant?.role,
+          source: "rate check",
+          application_id: application?.id,
+          primary_application_id: application?.primary?.id,
+          cosigner_application_id: application?.cosigner?.id,
+        },
         definition: {
           content: [
             {
