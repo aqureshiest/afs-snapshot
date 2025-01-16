@@ -6,15 +6,11 @@ class Error extends ContractExecutable<Definition, Definition, Output> {
     return "Error";
   }
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, definition: Definition) => {
+  condition = (_, __, definition: Definition) => {
     return Boolean(definition.error);
   };
-  evaluate = async (
-    _,
-    evaluationContext,
-    input: Input,
-    definition: Definition,
-  ) => {
+
+  evaluate = async (_, input: Input, definition: Definition) => {
     const { statusCode = 500, error: message, ...properties } = definition;
 
     const errorMessages = Array.isArray(message) ? message : [message];
@@ -23,7 +19,7 @@ class Error extends ContractExecutable<Definition, Definition, Output> {
       createError(statusCode, errorMessage, properties),
     );
 
-    this.error(evaluationContext, errors);
+    this.error(errors);
     return {
       error: definition.error,
       contractType: this.executionName,

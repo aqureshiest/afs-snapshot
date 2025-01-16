@@ -5,7 +5,7 @@ import type { IncomingHttpHeaders } from "http";
 
 import "contract/contract-types/generic-client-method.js";
 declare module "contract/contract-types/generic-client-method.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     client: keyof Context["loadedPlugins"];
@@ -39,5 +39,5 @@ declare module "contract/contract-types/generic-client-method.js" {
 
 import "contract/contract-types/generic-client-method.test.js";
 declare module "contract/contract-types/generic-client-method.test.js" {
-  type Input<I> = IContractInput<I>;
+  type Input<I> = IContractInput;
 }

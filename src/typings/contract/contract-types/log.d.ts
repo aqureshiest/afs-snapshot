@@ -7,14 +7,14 @@ import { Application } from "@earnest/application-service-client/typings/codegen
 import type { ExecutionContext as IExecutionContext } from "contract/executable.js";
 
 declare module "contract/contract-types/log.js" {
-  type Input = IContractInput<{ application: Application | null }>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
-  type ExecutionContext = IExecutionContext<unknown>;
+  type ExecutionContext = IExecutionContext;
 
   type Definition = LogEntry;
 }
 
 import "contract/contract-types/log.test.js";
 declare module "contract/contract-types/log.test.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
 }

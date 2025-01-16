@@ -7,5 +7,5 @@ declare module "clients/client.js" {
   interface Context {
     logger: PluginContext["logger"];
   }
-  type Input<I> = IContractInput<I>;
+  type Input = IContractInput;
 }

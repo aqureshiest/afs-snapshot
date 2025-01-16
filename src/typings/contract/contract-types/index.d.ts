@@ -17,7 +17,7 @@ import type { ExecutionContext as IExecutionContext } from "contract/executable.
 interface IContractArguments<D, I> {
   id: string;
   definition: D;
-  input: IContractInput<I>;
+  input: IContractInput;
   context: ChassisPluginContext;
 }
 interface IError {
@@ -28,12 +28,12 @@ interface IError {
 import "contract/contract-executable.js";
 declare module "contract/contract-executable.js" {
   type Context = ChassisPluginContext;
-  type Contract<I> = IContract<I>;
+  type Contract<I> = IContract;
 }
 
 import "contract/contract-types/noop.js";
 declare module "contract/contract-types/noop.js" {
-  type Input<I> = IContractInput<I>;
+  type Input<I> = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = boolean;
 
@@ -67,7 +67,7 @@ interface IMutationSchema {
 
 import "contract/contract-types/application-event.js";
 declare module "contract/contract-types/application-event.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     event: EventName;
@@ -94,7 +94,7 @@ import type {
 } from "clients/plaid/index.js";
 import "contract/contract-types/plaid-method.js";
 declare module "contract/contract-types/plaid-method.js" {
-  type Input = IContractInput<{ application: Application }>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   interface Definition {
     plaidMethod:
@@ -119,11 +119,11 @@ declare module "contract/contract-types/plaid-method.js" {
 
 import "contract/contract-types/application-data.js";
 declare module "contract/contract-types/application-data.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
 
   type LookupDefinition =
-    | { id: string }
+    | { id: string; required: boolean }
     | {
         criteria: ApplicationSearchCriteria[];
         limit?: Scalars["Int"]["input"];
@@ -141,7 +141,7 @@ declare module "contract/contract-types/application-data.js" {
 
 import "contract/contract-types/analytics.js";
 declare module "contract/contract-types/analytics.js" {
-  type Input = IContractInput<{ application: Application }>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type map = { [key: string]: string } & { [key: string]: Array<string> };
   type Definition = {
@@ -162,7 +162,7 @@ declare module "contract/contract-types/analytics.js" {
 import "contract/contract-types/decision-request.js";
 import { IWebhookEventPayload } from "../../clients/lending-decision-service/index.js";
 declare module "contract/contract-types/decision-request.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     decisionRequestMethod:
@@ -183,7 +183,7 @@ declare module "contract/contract-types/decision-request.js" {
 
 import "contract/contract-types/redis-method.js";
 declare module "contract/contract-types/redis-method.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     redisMethod:
@@ -203,7 +203,7 @@ declare module "contract/contract-types/redis-method.js" {
 
 import "contract/contract-types/pii-request.js";
 declare module "contract/contract-types/pii-request.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     piiRequestMethod: "saveToken" | "getTokenValue";
@@ -219,7 +219,7 @@ declare module "contract/contract-types/pii-request.js" {
 
 import "contract/contract-types/accredited-school-service-request.js";
 declare module "contract/contract-types/accredited-school-service-request.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     accreditedSchoolServiceRequestMethod: "getSchools";
@@ -235,7 +235,7 @@ declare module "contract/contract-types/accredited-school-service-request.js" {
 
 import "contract/contract-types/neas-request.js";
 declare module "contract/contract-types/neas-request.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     neasMethod:
@@ -252,7 +252,7 @@ declare module "contract/contract-types/neas-request.js" {
 
 import "contract/contract-types/error.js";
 declare module "contract/contract-types/error.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     statusCode?: number;

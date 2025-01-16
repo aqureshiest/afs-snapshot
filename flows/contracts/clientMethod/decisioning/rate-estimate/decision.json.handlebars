@@ -2,7 +2,7 @@
   "action": "decisioning-artifacts",
   "client": "lendingDecisionServiceClient",
   "method": "get",
-  "uri": "/v1/artifact/application/{{@ref.application.id}}/rate_check",
+  "uri": "/v1/decision/{{@ref.application.primary.details.decision.0.decisionID}}",
   "headers": {
     "Content-Type": "application/json",
     "Authorization": "Bearer {{env.S2S_KEY_LDS_APPLY_FLOW_SERVICE}}"

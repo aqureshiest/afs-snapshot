@@ -44,7 +44,7 @@ describe("[0a1e8486] Contract: Log", () => {
     const logFn = t.mock.fn();
     t.mock.method(context.logger, "log", logFn);
 
-    await manifest.execute(context, {}, input);
+    await manifest.execute(context, input);
 
     assert.equal(logFn.mock.callCount(), 1);
   });

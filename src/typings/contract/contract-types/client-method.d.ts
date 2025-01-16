@@ -5,12 +5,17 @@ import type { IncomingHttpHeaders } from "http";
 
 import "contract/contract-types/client-method.js";
 declare module "contract/contract-types/client-method.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
   type Definition = {
     client: keyof Context["loadedPlugins"];
     method: HttpRequest.Method;
     action?: string;
+    /**
+     * If true the evaluation will self-report an error with the response body
+     * if the response status code is not between 200 and 399 (inclusive)
+     */
+    required?: boolean;
   } & Client.Request;
 
   type Transformation =
@@ -35,5 +40,5 @@ declare module "contract/contract-types/client-method.js" {
 
 import "contract/contract-types/client-method.test.js";
 declare module "contract/contract-types/client-method.test.js" {
-  type Input<I> = IContractInput<I>;
+  type Input<I> = IContractInput;
 }

@@ -2,6 +2,7 @@ import assert from "node:assert";
 import ContractExecutable from "../contract-executable.js";
 import createError from "http-errors";
 import { IncomingMessage } from "http";
+import path from "node:path";
 
 const VALID_CLIENTS = Object.freeze([
   "accreditedSchoolService",
@@ -25,11 +26,7 @@ class ClientMethod extends ContractExecutable<
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, transformation: Transformation | null) => {
-    const incompleteDependencies = Object.values(this.dependencies).some(
-      (dependency) => dependency.isIncomplete(_, __, ___),
-    );
-
+  condition = (_, __, transformation: Transformation | null) => {
     const canSendRequest =
       transformation &&
       transformation.uri &&
@@ -38,7 +35,7 @@ class ClientMethod extends ContractExecutable<
         transformation.client as (typeof VALID_CLIENTS)[number],
       );
 
-    return !incompleteDependencies && Boolean(canSendRequest);
+    return Boolean(canSendRequest);
   };
 
   /**
@@ -47,18 +44,14 @@ class ClientMethod extends ContractExecutable<
    *
    * This function should return the result of the method called
    */
-  evaluate = async (
-    context: Context,
-    executionContext,
-    input: Input,
-    definition: Definition,
-  ) => {
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
     const clientName = definition.client as (typeof VALID_CLIENTS)[number];
     const client = context.loadedPlugins[clientName]?.instance;
 
     assert(client, `[b7949087] invalid client '${clientName}'`);
 
-    const { method, uri, body, query, headers, resiliency } = definition;
+    const { action, required, method, uri, body, query, headers, resiliency } =
+      definition;
 
     try {
       const { results, response } = await client.request(
@@ -73,6 +66,30 @@ class ClientMethod extends ContractExecutable<
         context,
       );
 
+      /* ============================== *
+       * Client methods that are defined as required will surface the failed request as a contract execution error
+       * ============================== */
+
+      if (
+        required &&
+        (!response.statusCode ||
+          response.statusCode >= 400 ||
+          response.statusCode < 200)
+      ) {
+        /* ============================== *
+         * TODO: determine if it's safe to record or transmit non-200 response bodies along with the other error data
+         * ============================== */
+        const error = createError(response.statusCode || 500, {
+          cause: {
+            contract: this.parent.id,
+            url: path.join(client.baseUrl, uri),
+            method,
+            action,
+          },
+        });
+        this.error(error);
+      }
+
       return {
         action: definition.action,
         results,
@@ -83,7 +100,7 @@ class ClientMethod extends ContractExecutable<
         },
       };
     } catch (error) {
-      this.error(executionContext, error);
+      this.error(error);
 
       this.log(context, {
         error,

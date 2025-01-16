@@ -1,13 +1,5 @@
-{{#with (contract 'application') as |application|}}
-  {{#obj}}
-    { "id": {{{json application.id }}} }
-    {{#if application.primary}}
-      { "primary": {{{ json application.primary.id }}} }
-    {{/if}}
-    {{#if application.cosigner}}
-      { "cosigner": {{{ json application.cosigner.id }}} }
-    {{/if}}
-  {{/obj}}
-{{else}}
-  null
-{{/with}}
+{
+  "id": {{{ json @ref.application.id }}},
+  "primary": {{{ json @ref.application.primary.id }}},
+  "cosigner": {{{ json @ref.application.cosigner.id }}}
+}

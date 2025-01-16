@@ -1,5 +1,5 @@
 const mapIncomeVerificationMethod = function (financialAccounts) {
-  const accounts = financialAccounts.map((account) => {
+  const accounts = (financialAccounts || []).map((account) => {
     return account.plaidAccessToken ? "plaid" : "manual";
   });
 

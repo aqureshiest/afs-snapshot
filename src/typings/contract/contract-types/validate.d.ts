@@ -6,9 +6,9 @@ import type { SchemaObject, ErrorObject } from "ajv";
 import type { ExecutionContext as IExecutionContext } from "contract/executable.js";
 
 declare module "contract/contract-types/validate.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
-  type ExecutionContext = IExecutionContext<unknown>;
+  type ExecutionContext = IExecutionContext;
 
   type Definition = {
     schema: SchemaObject;
@@ -34,5 +34,5 @@ declare module "contract/contract-types/validate.js" {
 
 import "contract/contract-types/validate.test.js";
 declare module "contract/contract-types/validate.test.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
 }

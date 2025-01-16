@@ -6,11 +6,11 @@ import type { ExecutionContext as IExecutionContext } from "contract/executable.
 
 import type AuthenticateContract from "contract/contract-types/authenticate.js";
 declare module "contract/contract-types/authenticate.js" {
-  type Input = IContractInput<{ application: Application | null }>;
+  type Input = IContractInput;
   type Context = ChassisPluginContext;
-  type ExecutionContext = IExecutionContext<unknown>;
+  type ExecutionContext = IExecutionContext;
 
-  type Auth = NonNullable<IContractInput<unknown>["auth"]>;
+  type Auth = NonNullable<IContractInput["auth"]>;
 
   const enum AuthMode {
     Optional = "optional",
@@ -27,5 +27,5 @@ declare module "contract/contract-types/authenticate.js" {
 
 import "contract/contract-types/authenticate.test.js";
 declare module "contract/contract-types/authenticate.test.js" {
-  type Input = IContractInput<unknown>;
+  type Input = IContractInput;
 }

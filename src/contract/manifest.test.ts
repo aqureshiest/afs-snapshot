@@ -32,7 +32,7 @@ describe("[462fd166] manifest.execute", () => {
 
   describe("[34e19187] embedded", () => {
     it("[775702ec] executes an embedded contract", async () => {
-      const input = {} as Input<unknown>;
+      const input = {} as Input;
       const manifest = new Manifest(
         "manifestTest",
         {
@@ -47,7 +47,7 @@ describe("[462fd166] manifest.execute", () => {
         },
       );
 
-      const result = (await manifest.execute(context, {}, input)).toJSON();
+      const result = (await manifest.execute(context, input)).toJSON();
 
       assert.equal(result, 42);
 
@@ -56,7 +56,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[be92134e] runs without error", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -69,12 +69,12 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
     assert(result);
   });
 
   it("[ef16134b] contract references", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -93,7 +93,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -101,7 +101,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[c98ac5ae] list helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -122,7 +122,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -130,7 +130,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[6b6d7ced] list helper (merged)", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -155,7 +155,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -163,7 +163,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[4c881b62] list helper (unique)", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -183,7 +183,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -191,7 +191,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[05166b70] schema helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     const schema = {
       type: "object",
@@ -236,16 +236,14 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
-
-    console.log("RESULT", result);
+    const result = await manifest.execute(context, input);
     const parsed = JSON.parse(JSON.stringify(result));
 
     assert.deepEqual(parsed, schema);
   });
 
   it("[2eeb43a0] it should throw when executing an ApplicationEvent contract-type if a request to getEventInputTypes fails", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     mock.method(applicationServiceClient, "getEventInputTypes", () => {
       throw new Error("failed to get event inputs");
@@ -273,11 +271,11 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    await assert.rejects(manifest.execute(context, {}, input));
+    await assert.rejects(manifest.execute(context, input));
   });
 
   it("[5995320f] it should throw when executing an ApplicationEvent contract-type if an event doesn't exist on eventInputTypes", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     mock.method(applicationServiceClient, "getEventInputTypes", () => {
       applicationServiceClient.eventInputTypes = {
@@ -309,12 +307,12 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    await assert.rejects(manifest.execute(context, {}, input));
+    await assert.rejects(manifest.execute(context, input));
     mock.reset();
   });
 
   it("[1b2bbdaa] it should execute an ApplicationEvent contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     applicationServiceClient.eventInputTypes = {
       createApplication: {
@@ -357,14 +355,14 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     assert(result);
   });
 
   /*
   it("[d177ce53] it should execute an Error contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     const manifest = new Manifest("manifestError", {
       key: "errorTestContract",
@@ -387,7 +385,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[d177ce53] it should execute an Error contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     const manifest = new Manifest(context, "manifestError", {
       key: "errorTestContract",
@@ -411,7 +409,7 @@ describe("[462fd166] manifest.execute", () => {
   */
 
   it("[9edd8cee] it should execute an ApplicationData contract-type when an id exists in the definition", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
@@ -439,13 +437,13 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     assert(result);
   });
 
   it("[5d6c5ca8] it should execute an plaidMethod contract-type when an id and a method keys exists in the definition", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestPlaidMethod",
       {
@@ -466,13 +464,13 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     assert(result);
   });
 
   it("[813a2d8a] it should execute an redisMethod contract-type when an id and a method keys exists in the definition", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const redisClient = new RedisClient(context);
     redisClient.client = {
       get: async function () {},
@@ -517,7 +515,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-      {},
+
       { response: res, ...input },
     );
 
@@ -525,7 +523,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[411017c5] it should execute an ApplicationData contract-type when criteria exists in the definition", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     mock.method(applicationServiceClient, "sendRequest", () => {
       return {
@@ -551,7 +549,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     assert(result);
   });
@@ -583,7 +581,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
 
     mock.method(analyticsServiceClient, "track", () => {
       return true;
@@ -640,7 +638,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as Input<unknown>;
+    } as Input;
 
     mock.method(analyticsServiceClient, "track", () => {
       return true;
@@ -676,7 +674,7 @@ describe("[462fd166] manifest.execute", () => {
       request: {
         method: "POST",
       },
-    } as Input<unknown>;
+    } as Input;
 
     mock.method(analyticsServiceClient, "track", () => {
       return true;
@@ -704,7 +702,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     assert(result);
   });
@@ -715,7 +713,7 @@ describe("[462fd166] manifest.execute", () => {
       request: {
         method: "POST",
       },
-    } as Input<unknown>;
+    } as Input;
 
     mock.method(analyticsServiceClient, "track", () => {
       return true;
@@ -747,7 +745,7 @@ describe("[462fd166] manifest.execute", () => {
   */
 
   it("[885jutry] it should execute an DecisionRequest contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     const manifest = new Manifest(
       "manifestDecisionRequest",
@@ -769,12 +767,12 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
     assert(result);
   });
 
   it("[7p5kkyur] it should execute an AccreditedSchoolServiceRequest contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     const manifest = new Manifest(
       "manifestAccreditedSchoolRequest",
@@ -795,12 +793,12 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
     assert(result);
   });
 
   it("[4r3ggwqq] it should execute an Cookie contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     const manifest = new Manifest(
       "manifestCookie",
@@ -822,12 +820,12 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
     assert(result);
   });
 
   it("[2y2ffwcp] it should execute an Neas-Request contract-type", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
 
     mock.method(neasServiceClient, "createAccountlessSession", () => {
       return "";
@@ -851,12 +849,12 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
     assert(result);
   });
 
   it("[ae226507] obj helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -879,7 +877,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -902,7 +900,7 @@ describe("[462fd166] manifest.execute", () => {
           primary: { id: 1 },
           cosigner: { id: 2 },
         },
-      }) as unknown as Input<unknown>;
+      }) as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -925,7 +923,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const resultPrimary = await manifest.execute(context, {}, input(1));
+    const resultPrimary = await manifest.execute(context, input(1));
     const parsedPrimary = JSON.parse(JSON.stringify(resultPrimary));
     assert.deepEqual(parsedPrimary, {
       applicantId: 1,
@@ -933,7 +931,7 @@ describe("[462fd166] manifest.execute", () => {
       isCosigner: false,
     });
 
-    const resultCosigner = await manifest.execute(context, {}, input(2));
+    const resultCosigner = await manifest.execute(context, input(2));
     const parsedCosigner = JSON.parse(JSON.stringify(resultCosigner));
     assert.deepEqual(parsedCosigner, {
       applicantId: 2,
@@ -943,7 +941,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[ba9215d8] maybe helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -963,7 +961,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -974,7 +972,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[ba5215d8] getSchoolInputValue helper - NO SCHOOLS", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -993,7 +991,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1032,7 +1030,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[ba9215d8] spread helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1054,7 +1052,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1066,7 +1064,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[15d54c05] spread helper - empty definition", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1088,7 +1086,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1098,7 +1096,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[15d54g5s] keyString Helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1113,7 +1111,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result)) as string;
     const splitKey = parsed.split("-");
@@ -1124,7 +1122,7 @@ describe("[462fd166] manifest.execute", () => {
   });
 
   it("[1h5a4g5s] last8Years Helper", async () => {
-    const input = {} as Input<unknown>;
+    const input = {} as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1141,7 +1139,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const { last8Years } = JSON.parse(JSON.stringify(result)) || {};
 
@@ -1225,7 +1223,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1283,7 +1281,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
     assert.deepEqual(parsed, {
@@ -1411,7 +1409,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1431,7 +1429,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1479,7 +1477,7 @@ describe("[462fd166] manifest.execute", () => {
           ],
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1498,7 +1496,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1525,7 +1523,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1544,7 +1542,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1571,7 +1569,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1590,7 +1588,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1610,7 +1608,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1629,7 +1627,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1649,7 +1647,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1668,7 +1666,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1698,7 +1696,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(
       "manifestTest",
       {
@@ -1722,7 +1720,7 @@ describe("[462fd166] manifest.execute", () => {
       },
     );
 
-    const result = await manifest.execute(context, {}, input);
+    const result = await manifest.execute(context, input);
 
     const parsed = JSON.parse(JSON.stringify(result));
 
@@ -1827,7 +1825,7 @@ describe("[462fd166] manifest.execute", () => {
           },
         },
       },
-    } as unknown as Input<unknown>;
+    } as unknown as Input;
     const manifest = new Manifest(context, "manifestTest", {
       "*": new Contract({
         raw: `

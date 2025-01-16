@@ -3,6 +3,7 @@ import type {
   default as IContract,
   Input as IContractInput,
 } from "contract/contract.js";
+
 import type {
   default as IExecutable,
   ExecutableInterface as IExecutableInterface,
@@ -10,9 +11,14 @@ import type {
   ExecutableParent as IExecutableParent,
 } from "contract/executable.js";
 
-interface ITemplateData<I> extends IExecutionContext<IContractInput<I>> {
+import type { default as Scope } from "contract/scope.js";
+
+interface ITemplateData extends IExecutionContext {
   context: ChassisPluginContext;
-  root: IContractInput<I>;
+  root: IContractInput;
+  scope: IExecutable;
+  self: IExecutable;
+  ref: Scope<object>;
 }
 
 import type IContractExecutable from "contract/contract-executable.js";
@@ -21,27 +27,27 @@ import type { HelperOptions as IHelperOptions } from "handlebars";
 interface ITemplateHelper<T extends unknown[] = []> {
   <I>(
     this: unknown,
-    ...args: [...T, Omit<IHelperOptions, "data"> & { data: ITemplateData<I> }] &
+    ...args: [...T, Omit<IHelperOptions, "data"> & { data: ITemplateData }] &
       unknown[]
   ): unknown;
 }
 
 import "contract/template-helpers/contract.js";
 declare module "contract/template-helpers/contract.js" {
-  type ExecutableParent<I> = IExecutableParent<IContractInput<I>>;
-  type Executable<I> = IExecutable<IContractInput<I>>;
-  type Contract<I> = IContract<I>;
+  type ExecutableParent<I> = IExecutableParent;
+  type Executable<I> = IExecutable;
+  type Contract<I> = IContract;
   type ContractType = IContractExecutable<unknown, unknown, unknown>;
   type TemplateHelper = ITemplateHelper;
-  type TemplateData = ITemplateData<unknown>;
+  type TemplateData = ITemplateData;
 
   type Position = {
     line: number;
     column: number;
   };
 
-  type HelperOptions = IHelperOptions & {
-    data: ITemplateData<unknown>;
+  type HelperOptions = Omit<IHelperOptions, "data"> & {
+    data: ITemplateData;
     loc: {
       start: Position;
       end: Position;
@@ -53,7 +59,7 @@ import "contract/template-helpers/log.js";
 declare module "contract/template-helpers/log.js" {
   type TemplateHelper = ITemplateHelper;
   type HelperOptions = IHelperOptions & {
-    data: ITemplateData<unknown>;
+    data: ITemplateData;
   };
 }
 
@@ -107,4 +113,10 @@ declare module "contract/template-helpers/applicantById.js" {
   type TemplateHelper = ITemplateHelper<
     [string, Array<{ [key: string]: unknown }>]
   >;
+}
+
+import "contract/template-helpers/raise.js";
+declare module "contract/template-helpers/raise.js" {
+  type TemplateHelper = ITemplateHelper<[string, number | undefined]>;
+  type HelperOptions = IHelperOptions;
 }

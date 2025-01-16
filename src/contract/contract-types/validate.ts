@@ -18,7 +18,6 @@ class Validate extends ContractExecutable<
   transform(
     this: Validate,
     context: Context,
-    executionContext: ExecutionContext,
     definition: Definition,
   ): Transformation {
     const { schema, payload, onError } = definition;
@@ -43,20 +42,12 @@ class Validate extends ContractExecutable<
   }
 
   /**
-   * Only do validation evaluation if
-   */
-  condition(this: Validate, _, __, ___, transformation: Transformation) {
-    return Boolean(transformation.errors);
-  }
-
-  /**
    * Iterate through a list of different authentication strategies and combine their
    * outputs
    */
   evaluate = async function (
     this: Validate,
     context: Context,
-    executionContext: ExecutionContext,
     input: Input,
     transformation: Transformation,
   ) {
@@ -73,7 +64,7 @@ class Validate extends ContractExecutable<
         const httpError = createError(statusCode, message, {
           cause: validationError,
         });
-        this.error(executionContext, httpError);
+        this.error(httpError);
       });
     }
 

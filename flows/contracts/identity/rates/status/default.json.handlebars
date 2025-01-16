@@ -1,8 +1,38 @@
-{{#with (contract 'artifacts') as |artifacts|}}
-  {{#if (eq artifacts.results.data.decisionOutcome "Approved")}}
-    "approved"
+{{#with @ref.decision as |artifactResponse|}}
+  {{#if (eq artifactResponse.response.statusCode 404)}}
+    "not_complete"
+  {{else if (gte artifactResponse.response.statusCode 400)}}
+    "unable"
   {{else}}
-    null
+    {{#with artifactResponse.results.data.decisionOutcome as |outcome|}}
+      {{#if (eq outcome "Approved")}}
+        "approved"
+      {{else if (eq outcome "Denied")}}
+        {{#if @ref.artifacts.results.data.artifacts.cosignerTags}}
+          {{#if (searchDeniedArtifactTags @ref.artifacts.results.data.artifacts.cosignerTags)}}
+            "denied"
+          {{else if (includes @ref.artifacts.results.data.artifacts.cosignerTags "RC_FrozenCredit_Unable")}}
+            "frozen"
+          {{else}}
+            "unable"
+          {{/if}}
+        {{else if @ref.artifacts.results.data.artifacts.tags}}
+          {{#if (searchDeniedArtifactTags @ref.artifacts.results.data.artifacts.tags)}}
+            "denied"
+          {{else if (includes @ref.artifacts.results.data.artifacts.tags "RC_FrozenCredit_Unable")}}
+            "frozen"
+          {{else}}
+            "unable"
+          {{/if}}
+        {{else}}
+          "unable"
+        {{/if}}
+      {{else}}
+        "unable"
+      {{/if}}
+    {{else}}
+      "unable"
+    {{/with}}
   {{/if}}
 {{else}}
   null

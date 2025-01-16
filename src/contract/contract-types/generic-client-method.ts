@@ -12,19 +12,14 @@ class GenericClientMethod extends ContractExecutable<
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  condition = (_, __, ___, definition: Definition | null) => {
+  condition = (_, __, definition: Definition | null) => {
     if (definition) {
       return Boolean(definition.method && definition.uri && definition.baseUrl);
     }
     return false;
   };
 
-  evaluate = async (
-    context: Context,
-    executionContext,
-    input: Input,
-    definition: Definition,
-  ) => {
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
     assert(definition, `[591af6b9] missing definitions`);
     const genericClient = new Client({ baseUrl: definition.baseUrl });
     assert(genericClient, `[de484650] invalid client '${genericClient}'`);
@@ -55,7 +50,7 @@ class GenericClientMethod extends ContractExecutable<
         },
       };
     } catch (error) {
-      this.error(executionContext, error);
+      this.error(error);
       return {
         action: definition.action,
         error,

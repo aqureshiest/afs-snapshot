@@ -41,9 +41,12 @@ type IMethod = "get" | "post" | "put" | "patch" | "delete" | "use";
  */
 interface IManifestContracts {
   [key: string]:
+    | null
     | string
+    | number
+    | boolean
     | IManifestContracts
-    | Array<string | IManifestContracts>;
+    | Array<null | string | number | boolean | IManifestContracts>;
 }
 
 /**
@@ -63,13 +66,13 @@ type IManifestJson = {
   outputs: IManifestContracts;
 };
 
-type IContractManifest<I> = Manifest<I>;
+type IContractManifest = Manifest;
 type IContractManifests = Record<string, Record<IMethod, IManifestJson>>;
 
 declare module "contract/manifest.js" {
-  type ContractManifest<I> = IContractManifest<I>;
+  type ContractManifest = IContractManifest;
   type ContractManifests = IContractManifests;
-  type Input<I> = IContractInput<I>;
+  type Input = IContractInput;
   type Method = IMethod;
   type Permissions = IPermissions;
   type Parameter = IParameter;
@@ -80,20 +83,20 @@ declare module "contract/manifest.js" {
   type Context = ChassisPluginContext;
 
   type ManifestJson = IManifestJson;
-  type ExecutableInterface<I> = IExecutableInterface<IContractInput<I>>;
-  type ExecutionContext<I> = IExecutionContext<IContractInput<I>>;
+  type ExecutableInterface = IExecutableInterface;
+  type ExecutionContext = IExecutionContext;
 }
 
 import "contract/manifest.test.js";
 declare module "contract/manifest.test.js" {
-  type Input<I> = IContractInput<I>;
-  type Manifest<I> = IContractManifest<I>;
+  type Input = IContractInput;
+  type Manifest = IContractManifest;
 }
 
 import "contract/ingestor.js";
 declare module "contract/ingestor.js" {
   type ManifestJson = IManifestJson;
-  type Manifest<I> = IContractManifest<I>;
+  type Manifest = IContractManifest;
   type Manifests = IContractManifests;
   type ManifestContracts = IManifestContracts;
 
@@ -101,7 +104,7 @@ declare module "contract/ingestor.js" {
     (
       context: ChassisPluginContext,
       path: string,
-      contracts: Contracts<unknown>,
+      contracts: Contracts,
     ): Promise<{ totalManifests: number; manifests: Manifests }>;
   }
 }

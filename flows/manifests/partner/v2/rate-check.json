@@ -3,7 +3,7 @@
     "inputs": {
       "<": "inputs",
       "application": {
-        "<": "application/single.flattened",
+        "<": "application/single.v2",
         "application": "application-by-id-param",
         "query": "application/lookup-query.rate-check"
       },
@@ -11,7 +11,8 @@
         "<": "inputs/env.combine",
         "groups": [
           "inputs/env.pii",
-          "inputs/env.decisioning"
+          "inputs/env.decisioning",
+          "inputs/env.calculator"
         ]
       },
       "auth": {
@@ -43,7 +44,7 @@
     "inputs": {
       "validation": [
         {
-          "*": "request-body",
+          "<": "request-body",
           "schema": "inputs/schema/request/rate-estimate"
         }
       ]
@@ -53,7 +54,7 @@
       "application": {
         "<": "application/single.pick-id",
         "application": {
-          "<": "application/single.flattened",
+          "<": "application/single.v2",
           "application": {
             "<": "application-from-id",
             "query": "application/lookup-query.rate-check",
@@ -75,7 +76,7 @@
                 "@": "primary"
               },
               "decisionType": {
-                "@": "rate-estimate"
+                "@": "rate-check"
               },
               "action": {
                 "@": "rate-estimate"
@@ -112,13 +113,14 @@
     "outputs": {
       "<": "response/rate-estimate",
       "application": {
-        "<": "application/single.flattened",
+        "<": "application/single.v2",
         "application": {
           "<": "application-from-id",
           "query": "application/lookup-query.rate-check"
         }
       },
       "artifacts": "decisioning/rate-estimate.artifact",
+      "decision": "decisioning/rate-estimate.decision",
       "status": "rates/status",
       "rates": {
         "<": "rates.partner",

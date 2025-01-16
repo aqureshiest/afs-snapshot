@@ -6,16 +6,11 @@ class NeasRequest extends ContractExecutable<Definition, Definition, Output> {
     return "NeasRequest";
   }
 
-  condition = (_, __, ___, transformation: Definition) => {
+  condition = (_, __, transformation: Definition) => {
     return Boolean(transformation && transformation.neasMethod);
   };
 
-  evaluate = async (
-    context: Context,
-    executionContext,
-    input: Input,
-    definition: Definition,
-  ) => {
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
     const neasClientService = context.loadedPlugins.NeasClient?.instance;
     assert(
       neasClientService,
@@ -27,7 +22,7 @@ class NeasRequest extends ContractExecutable<Definition, Definition, Output> {
       result = await neasClientService[definition.neasMethod](context, input);
     } catch (ex) {
       context.logger.error(ex);
-      this.error(input, ex);
+      this.error(ex);
     }
 
     return result;

@@ -95,6 +95,6 @@ declare module "../../../clients/calculator-service/index.js" {
   type GetMinPaymentPrice = IGetMinPaymentPrice;
   type GetMinPaymentPricePayload = IGetMinPaymentPricePayload;
   type GetMinPaymentPriceResponse = IGetMinPaymentPriceResponse;
-  type Input<I> = IContractInput<I>;
+  type Input<I> = IContractInput;
   type HttpError = IHttpError;
 }

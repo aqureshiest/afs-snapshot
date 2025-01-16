@@ -1,0 +1,18 @@
+{{!
+  Takes a root application graph and presents relevant default information about the applicants
+}}
+{{#obj}}
+  {{#with @ref.application as |application|}}
+    {{{ json application }}}
+    {{#unless application.primary}}
+      {{#if (eq application.applicants.length 1)}}
+	{{#with application.applicants.[0] as |primary|}}
+	  { "primary": {{{ json primary }}} }
+	  {{#each primary.relationships as |relationship|}}
+	    { "{{relationship.relationship}}": {{{ json (getApplicant relationship.id application.applicants) }}} }
+	  {{/each}}
+	{{/with}}
+      {{/if}}
+    {{/unless}}
+  {{/with}}
+{{/obj}}

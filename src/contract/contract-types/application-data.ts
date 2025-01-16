@@ -16,19 +16,14 @@ class ApplicationData extends ContractExecutable<
     return "ApplicationData";
   }
 
-  condition = (_, __, ___, transformation: Definition | null) => {
+  condition = (_, ___, transformation: Definition | null) => {
     return Boolean(transformation);
   };
 
   /**
    *
    */
-  evaluate = async (
-    context: Context,
-    executionContext,
-    input: Input,
-    definition: Definition,
-  ) => {
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
     const applicationServiceClient =
       context.loadedPlugins.applicationServiceClient.instance;
 
@@ -47,9 +42,13 @@ class ApplicationData extends ContractExecutable<
           context,
         )) as unknown as { application: Application };
 
+        if (definition.required && !application) {
+          this.error(createError(404, "application not found"));
+        }
+
         return application;
       } catch (err) {
-        this.error(executionContext, err);
+        this.error(err);
         return {} as unknown as Application;
       }
     } else if (definition && "criteria" in definition) {

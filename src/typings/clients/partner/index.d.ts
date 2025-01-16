@@ -34,7 +34,7 @@ declare module "../../../clients/partner/index.js" {
     ): Promise<{ errors: Array<Error | IHttpError>; results?: O }>;
   }
 
-  type Input<I> = IContractInput<I>;
+  type Input<I> = IContractInput;
   type HttpError = IHttpError;
   type AttributionEventRequest = {
     user_id?: string;

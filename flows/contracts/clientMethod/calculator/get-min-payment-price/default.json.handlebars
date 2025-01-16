@@ -1,42 +1,41 @@
 {{!
   The 'prices' contract is expected to be a decisioning service artifact response;
 }}
-{{#with (contract 'artifacts') as |artifactsRequest|}}
-  {{#if (and (gte artifactsRequest.response.statusCode 200) (lt artifactsRequest.response.statusCode 400))}}
+{{#with @ref.artifacts as |artifacts|}}
+  {{#if (and (gte artifacts.response.statusCode 200) (lt artifacts.response.statusCode 400) (artifacts.results.data.artifacts.priceCurve))}}
     {
+      "action": "get-min-payment-price",
       "client": "calculatorServiceClient",
+      "required": true,
       "method": "post",
       {{! TODO: determine a more default behavior if a product cannot be determined}}
-      {{#with (contract 'application') as |application|}}
-        "uri": "/payment-schedules/{{ coalesce application.product 'slr'}}/ream",
-      {{/with}}
+      "uri": "/payment-schedules/{{ coalesce @ref.application.reference.product 'slr'}}/ream",
       "headers": {
         "Content-Type": "application/json",
-        "Authorization": "Bearer {{btoa env.S2S_KEY_AFS_CALCULATOR_SERVICE}}"
+        "Authorization": "Bearer {{{../env.S2S_KEY_AFS_CALCULATOR_SERVICE}}}"
       },
       "body": {
-        {{#with (contract 'termsToInclude') as |termsToInclude|}}
-            "prices": {{#list}}{{#with artifactsRequest.results.data.artifacts as |artifacts|~}}
-              {{~#each artifacts.priceCurve as |price|~}}{{#each price.rates as |rate|~}}
-                {{~#if (includes termsToInclude price.term_months)~}}{{#multiline}}
-                  {
-                    "rateInBps": {{{ json (product rate.rate 100) }}},
-                    "uwLoanTermInMonths": {{{ json price.term_months }}},
-                    "rateType": {{{ json rate.rate_type }}},
-                    "startingPrincipalBalanceInCents":
-                      {{{ json artifacts.softApprovedAmount }}},
-                      {{! TODO: remove timezone from date? }}
-                    "date": {{{ json artifacts.softInquiryDate }}},
-                    "dateType": "fti",
-                    "priceId": {{{ json @index }}}
-                  }
-              {{/multiline}}{{~/if~}}{{~/each}}{{~/each}}{{~/with}}{{/list}}
-        {{else}}
-          "prices": []
-        {{/with}}
+        "prices": {{#list}}{{#with artifacts.results.data.artifacts as |artifacts|~}}
+          {{~#each artifacts.priceCurve as |price|~}}{{#each price.rates as |rate|~}}
+            {{~#if (includes @ref.termsToInclude price.term_months)~}}{{#multiline}}
+              {
+                "rateInBps": {{{ json (product rate.rate 100) }}},
+                "uwLoanTermInMonths": {{{ json price.term_months }}},
+                "rateType": {{{ json rate.rate_type }}},
+                "startingPrincipalBalanceInCents":
+                  {{{ json @ref.application.details.amount.requested }}},
+                  {{! TODO: remove timezone from date? }}
+                "date": {{{ json artifacts.softInquiryDate }}},
+                "dateType": "fti",
+                "priceId": {{{ json @index }}}
+              }
+          {{/multiline}}{{~/if~}}{{~/each}}{{~/each}}{{~/with}}{{/list}}
       }
     }
-
-  {{else}}null{{/if}}
-{{else}}null{{/with}}
+  {{else}}
+    {}
+  {{/if}}
+{{else}}
+  null
+{{/with}}
 

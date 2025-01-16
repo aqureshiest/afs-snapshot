@@ -67,9 +67,8 @@ describe("[02c8a0e5] Generate Modal Contract", () => {
       INTERNAL_REST_SERVICE_AUTH_KEY: "INTERNAL_REST_SERVICE_AUTH_KEY",
       BASE_URL: "BASE_URL",
     };
-    const errors = {};
     const result: { [key: string]: unknown } = (
-      await manifest.execute(context, { errors }, input)
+      await manifest.execute(context, input)
     ).toJSON() as { [key: string]: unknown };
 
     const test = generateModalTemplate(
