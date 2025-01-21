@@ -86,62 +86,54 @@
     },
     "demographicData": {
       "type": "object",
+      "required": ["firstName", "lastName", "dob", "ssn", "email", "phoneNumber", "address", "citizenshipStatus", "claimedHousingPayment"],
       "properties": {
         "firstName": {
           "type": [
-            "string",
-            "null"
+            "string"
           ]
         },
         "lastName": {
           "type": [
-            "string",
-            "null"
+            "string"
           ]
         },
         "dob": {
           "type": [
             "object",
             "number",
-            "string",
-            "null"
+            "string"
           ]
         },
         "ssn": {
           "type": [
-            "string",
-            "null"
+            "string"
           ]
         },
         "email": {
           "type": [
-            "string",
-            "null"
+            "string"
           ]
         },
         "phoneNumber": {
           "type": [
-            "string",
-            "null"
+            "string"
           ]
         },
         "address": {
           "type": [
-            "object",
-            "null"
+            "object"
           ],
           "$ref": "#/$defs/address"
         },
         "citizenshipStatus": {
           "type": [
-            "string",
-            "null"
+            "string"
           ]
         },
         "claimedHousingPayment": {
           "type": [
-            "number",
-            "null"
+            "number"
           ]
         }
       }
@@ -222,6 +214,7 @@
     },
     "rateAdjustment": {
       "type": "object",
+      "required": ["name", "amount"],
       "properties": {
         "name": {
           "type": "string"

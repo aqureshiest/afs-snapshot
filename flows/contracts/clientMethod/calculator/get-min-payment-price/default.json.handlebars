@@ -2,7 +2,7 @@
   The 'prices' contract is expected to be a decisioning service artifact response;
 }}
 {{#with @ref.artifacts as |artifacts|}}
-  {{#if (and (gte artifacts.response.statusCode 200) (lt artifacts.response.statusCode 400) (artifacts.results.data.artifacts.priceCurve))}}
+  {{#if (and (gte artifacts.response.statusCode 200) (lt artifacts.response.statusCode 400))}}
     {
       "action": "get-min-payment-price",
       "client": "calculatorServiceClient",
