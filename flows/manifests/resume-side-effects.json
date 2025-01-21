@@ -11,8 +11,9 @@
       "application": "application-by-id-param"
     },
     "applications": {
-      "*": "applications-by-email"
-    },
+      "*": "applications-by-email",
+      "query": "application/search-query"
+     },
     "applicationState": "application-state",
     "auth": {
       "*": "auth-artifacts",
