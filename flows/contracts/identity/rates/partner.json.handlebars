@@ -26,16 +26,22 @@
     }
   }}
   {{#with @ref.rates as |rates|}}
-    {{#if (and (lt rates.response.statusCode 400) (gte rates.response.statusCode 200) (artifacts.results.data.artifacts.priceCurve))}}
-      {{#each rates.results.prices as |rate index|}}{{#multiline}}
-        {
-          "monthlyPayment": {{{ json rate.minimumPaymentAmountInCents}}},
-          "interest": {{{ json rate.rateInBps}}},
-          "length": {{{ json rate.uwLoanTermInMonths }}},
-          "totalAmountPaid": {{{ json (product rate.paymentSchedule.totalAmountPaidInDollars 100)}}},
-          "rateType": {{{ json rate.rateType}}}
-        }
-      {{/multiline}}{{/each}}
+    {{#if (and (lt rates.response.statusCode 400) (gte rates.response.statusCode 200)) }}
+      {{#if (gt rates.results.prices.length 0)}}
+        {{#each rates.results.prices as |rate index|}}{{#multiline}}
+          {
+            "monthlyPayment": {{{ json rate.minimumPaymentAmountInCents}}},
+            "interest": {{{ json rate.rateInBps}}},
+            "length": {{{ json rate.uwLoanTermInMonths }}},
+            "totalAmountPaid": {{{ json (product rate.paymentSchedule.totalAmountPaidInDollars 100)}}},
+            "rateType": {{{ json rate.rateType}}}
+          }
+        {{/multiline}}{{/each}}
+       {{else}}
+        null
+      {{/if}}
+    {{else}}
+      {}
     {{/if}}
   {{/with}}
 {{/list}}
