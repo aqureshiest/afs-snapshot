@@ -29,8 +29,8 @@
     "artifacts": {{#obj}}
         { "applicationId": {{{ json @ref.response.results.applicationId }}} }
         { "exp": {{{ json @ref.response.results.exp }}} }
-	{ "userId": {{{ json (coalesce @ref.response.results.userId response.results.candidateUserId) }}} }
-        { "email": {{{ json (coalesce response.results.emailId response.results.email) }}} }
+	{ "userId": {{{ json (coalesce @ref.response.results.userId @ref.response.results.candidateUserId) }}} }
+        { "email": {{{ json (coalesce @ref.response.results.emailId @ref.response.results.email) }}} }
         {{! A userId in the response indicates that a user has verified who they are either through PII-verification or signing in }}
         {{#if (and @ref.response.results.userId (ne @ref.response.results.notVerified true))}}
           { "verified": true }
