@@ -78,8 +78,9 @@
       {{/with}}
       "loanInfo": {
         "claimedLoanAmount": {{{json application.details.amount.requested}}}
-      },
-      "ratesInfo": {
+      }
+      {{#if (and application.reference.partnerName application.reference.partnerDiscountAmount)}}
+      ,"ratesInfo": {
         "rateAdjustmentInfo": {
           {{! TODO: v2 conventions?}}
           "name": {{{json application.reference.partnerName}}},
@@ -87,6 +88,7 @@
           "amount": {{{json (number application.reference.partnerDiscountAmount)}}}
         }
       }
+      {{/if}}
     }
   }
 }
