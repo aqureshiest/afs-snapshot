@@ -12,15 +12,16 @@
           "lastName": {{{json name.last}}},
           "dob": {{{json dateOfBirth}}},
           "email": {{{json email}}},
-          "phoneNumber": {{{json phone.[0].number}}}
+          
+          "phoneNumber": {{#if ( and phone (gt phone.length 0) )}} {{{json phone.[0].number}}} {{else}} "" {{/if}},
           {{#with location.[0].citizenship as |citizenship|}}
-            {{#if (eq citizenship "citizen")}},
+            {{#if (eq citizenship "citizen")}}
               "citizenshipStatus": "us_citizen"
-            {{else}},
+            {{else}}
               "citizenshipStatus": "other"
-            {{/if}}
+            {{/if}},
           {{/with}}
-          {{#with application.primary.reference}},
+          {{#with application.primary.reference}}
             "ssn": {{{json ssnTokenURI}}}
           {{/with}},
           "addresses": {{#list}}{{#each location}}{{#multiline}}

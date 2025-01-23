@@ -86,7 +86,7 @@
     },
     "demographicData": {
       "type": "object",
-      "required": ["firstName", "lastName", "dob", "ssn", "email", "phoneNumber", "address", "citizenshipStatus", "claimedHousingPayment"],
+      "required": ["firstName", "lastName", "dob", "ssn", "email", "address", "citizenshipStatus", "claimedHousingPayment"],
       "properties": {
         "firstName": {
           "type": [
