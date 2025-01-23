@@ -33,7 +33,7 @@
         "action": {
           "*": "actions/navigate",
           "goTo": "earnest-student-loan-refi/urls.previous-address",
-          "analytics": "analytics/full-refi.cosigner-invited"
+          "analytics": "actions/analytics/full-refi.cosigner-invited"
         }
       }]
     },
