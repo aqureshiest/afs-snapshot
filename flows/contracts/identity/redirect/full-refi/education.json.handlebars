@@ -2,10 +2,10 @@
     "action": {
         "type": "navigate",
         "properties": {
-        "goTo": "earnest/student-loan-refi/education/{{application.applicant.id}}"
+        "goTo": "earnest/student-loan-refi/{{#if (eq application.applicant.role "cosigner")}}cosigner/{{/if}}education/{{application.applicant.id}}"
         }
     },
-    {{! returning actions is not needed, but left for debugin }}
+    {{! returning actions is not needed, but left for debuging }}
     "result": {{{ json (contract 'actions') }}},
     "error": {{{json error}}}
 }
