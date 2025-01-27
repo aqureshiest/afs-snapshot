@@ -2036,4 +2036,103 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       ),
     );
   });
+
+  it("[574878e1] should return applicant's CIS info with loans details", async () => {
+    const applicationID = uuidv4();
+    const application = {
+      id: applicationID,
+    };
+
+    const cisInfoLoansDetails = [
+      { "loanId": "52860762", "loanProgramCode": "ER", "loanStatusCode": "RPMT" },
+      { "loanId": "45470730", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+      { "loanId": "45470731", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+    ];
+
+    const applicantCisInfo = client.applicantCisInfo(context, application, cisInfoLoansDetails);
+
+    assert(applicantCisInfo.loans);
+    assert(applicantCisInfo.loans.length === 3);
+    assert(applicantCisInfo.loans[0].loanKey);
+    assert(applicantCisInfo.loans[0].loanKey.id);
+    assert(applicantCisInfo.loans[0].loanProgramCode);
+    assert(applicantCisInfo.loans[0].loanStatusCode);
+  });
+
+  it("[e3dbea2e] should include cisInfo in formatRequestPayload for primary_only, v2, and rate-check", async () => {
+    const applicationID = uuidv4();
+    const cisInfoLoansDetails = [
+      { "loanId": "52860762", "loanProgramCode": "ER", "loanStatusCode": "RPMT" },
+      { "loanId": "45470730", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+      { "loanId": "45470731", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+    ];
+    const application = {
+      id: applicationID,
+        primary: {
+          details: {
+            cisInfoLoans: cisInfoLoansDetails
+          }
+        }
+    };
+
+    const formatRequestPayload = await client.formatRequestPayload({}, context, application, 'primary', 'rate-check', 'primary_only', 'v2');
+    
+    assert(formatRequestPayload.cisInfo);
+    assert(formatRequestPayload.cisInfo.loans);
+    assert(formatRequestPayload.cisInfo.loans.length === 3);
+    assert(formatRequestPayload.cisInfo.loans[0].loanKey);
+    assert(formatRequestPayload.cisInfo.loans[0].loanKey.id);
+    assert(formatRequestPayload.cisInfo.loans[0].loanProgramCode);
+    assert(formatRequestPayload.cisInfo.loans[0].loanStatusCode);
+  });
+
+  it("[ab104e2d] should include cisInfo in formatRequestPayload for primary_only, v2, and application", async () => {
+    const applicationID = uuidv4();
+    const cisInfoLoansDetails = [
+      { "loanId": "52860762", "loanProgramCode": "ER", "loanStatusCode": "RPMT" },
+      { "loanId": "45470730", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+      { "loanId": "45470731", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+    ];
+    const application = {
+      id: applicationID,
+        primary: {
+          details: {
+            cisInfoLoans: cisInfoLoansDetails
+          }
+        }
+    };
+
+    const formatRequestPayload = await client.formatRequestPayload({}, context, application, 'primary', 'application', 'primary_only', 'v2');
+    
+    assert(formatRequestPayload.cisInfo);
+    assert(formatRequestPayload.cisInfo.loans);
+    assert(formatRequestPayload.cisInfo.loans.length === 3);
+    assert(formatRequestPayload.cisInfo.loans[0].loanKey);
+    assert(formatRequestPayload.cisInfo.loans[0].loanKey.id);
+    assert(formatRequestPayload.cisInfo.loans[0].loanProgramCode);
+    assert(formatRequestPayload.cisInfo.loans[0].loanStatusCode);
+  });
+
+  it("[4a1508be] should not include cisInfo for v1 applications or non primary_only applications", async () => {
+    const applicationID = uuidv4();
+    const cisInfoLoansDetails = [
+      { "loanId": "52860762", "loanProgramCode": "ER", "loanStatusCode": "RPMT" },
+      { "loanId": "45470730", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+      { "loanId": "45470731", "loanProgramCode": "GS", "loanStatusCode": "RPMT" },
+    ];
+    const application = {
+      id: applicationID,
+        primary: {
+          details: {
+            cisInfoLoans: cisInfoLoansDetails
+          }
+        }
+    };
+
+    let formatRequestPayload = await client.formatRequestPayload({}, context, application, 'primary', 'application', 'primary_only', 'v1');
+    assert(!formatRequestPayload.cisInfo);
+
+    formatRequestPayload = await client.formatRequestPayload({}, context, application, 'primary', 'application', 'cosigned', 'v2');
+    assert(!formatRequestPayload.cisInfo);
+  });
 });

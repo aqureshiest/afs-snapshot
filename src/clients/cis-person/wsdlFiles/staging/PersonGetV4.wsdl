@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+	targetNamespace="http://www.slma.com/ES/PersonGetV4"
+	xmlns:tns="http://www.slma.com/ES/PersonGetV4"
+	xmlns:smwsh="http://www.salliemae.com/webservices/infrastructure/200709"
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	
+	xmlns:pg="http://www.slma.com/cis/Person.Get_4.0"
+	>
+	<wsdl:types>
+		<xs:schema targetNamespace="http://www.slma.com/ES/PersonGetV4">
+			<xs:element name="inputFault">
+				<xs:annotation><xs:documentation>
+					Fault returned if there was some issue with the input that prevented processing.
+				</xs:documentation></xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="errorCode" type="xs:int" />
+						<xs:element name="errorMessage" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="serviceFault">
+				<xs:annotation><xs:documentation>
+					Fault returned if there was some issue with the service that prevented processing.
+				</xs:documentation></xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="errorCode" type="xs:int" />
+						<xs:element name="errorMessage" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="requestID">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">
+						The id for this request, this may be a UUID or AIA Correlation Id 
+						example UUID:
+						6bc495d7-ed69-4508-961e-170de1a4a310 
+						example AIA	Correl Id:
+						414d51204d414536414c20202020202008d5684a572d0620
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="48" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:schema>
+		<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="unqualified"
+			targetNamespace="http://www.salliemae.com/webservices/infrastructure/200709">
+			<s:include schemaLocation="../../schemas/SMWebServiceHeader.xsd" />
+		</s:schema>
+		<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="unqualified"
+			targetNamespace="http://www.slma.com/cis/Person.Get_4.0">
+			<s:include schemaLocation="../../schemas/Person.Get_4.0.xsd" />
+		</s:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="SMWebServiceHeader">
+		<wsdl:part name="SMWebServiceHeader"
+			element="smwsh:SMWebServiceHeader" />
+	</wsdl:message>
+	
+	<wsdl:message name="PersonGetIn">
+		<wsdl:part name="request" element="pg:person.get.request" />
+	</wsdl:message>
+	<wsdl:message name="PersonGetOut">
+		<wsdl:part name="response" element="pg:person.get.response" />
+	</wsdl:message>
+
+	<wsdl:message name="requestID">
+		<wsdl:part name="requestID" element="tns:requestID" />
+	</wsdl:message>
+	<wsdl:message name="inputFault">
+		<wsdl:part name="inputFault" element="tns:inputFault" />
+	</wsdl:message>
+	<wsdl:message name="serviceFault">
+		<wsdl:part name="serviceFault" element="tns:serviceFault" />
+	</wsdl:message>
+	
+	<wsdl:portType name="CISPersonGetV4WSService">
+		<wsdl:operation name="GetV40">
+			<wsdl:input message="tns:PersonGetIn" />
+			<wsdl:output message="tns:PersonGetOut" />
+			<wsdl:fault name="inputFault" message="tns:inputFault" />
+			<wsdl:fault name="serviceFault" message="tns:serviceFault" />
+		</wsdl:operation>
+	</wsdl:portType>
+	
+	<wsdl:binding name="CISPersonGetV4WSServiceSoapBinding" type="tns:CISPersonGetV4WSService">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetV40">
+			<soap:operation style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<soap:header message="tns:SMWebServiceHeader"
+					part="SMWebServiceHeader" use="literal">
+				</soap:header>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<soap:header message="tns:requestID"
+					part="requestID" use="literal">
+				</soap:header>
+			</wsdl:output>
+			<wsdl:fault name="inputFault">
+				<soap:fault name="inputFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="serviceFault">
+				<soap:fault name="serviceFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	<wsdl:service name="CISPersonGetV4WSService">
+		<wsdl:port name="CISPersonGetV4WSService" binding="tns:CISPersonGetV4WSServiceSoapBinding">
+			<soap:address location="https://wsmb2bproxyagility2.navient.com/apigateway/com.slma.ai01.b2b.CISv40.Person.Get" />
+		</wsdl:port>
+	</wsdl:service>
+	
+</wsdl:definitions>

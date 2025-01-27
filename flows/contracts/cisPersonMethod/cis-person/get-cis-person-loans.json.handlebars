@@ -1,0 +1,11 @@
+{{#if request.params.id}}
+  {
+    "cisPersonMethod": "getCisPersonLoans",
+    "id": "{{request.params.id}}",
+    {{#with request.body.values}}
+      "value": "{{ssn}}"
+    {{/with}}
+  }
+{{else}}
+  null
+{{/if}} 

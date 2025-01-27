@@ -137,6 +137,11 @@ fragment ApplicantFragment on Application {
     consent {
       disclosure
     }
+    cisInfoLoans {
+      loanId
+      loanProgramCode
+      loanStatusCode
+    }
   }
   status {
     name

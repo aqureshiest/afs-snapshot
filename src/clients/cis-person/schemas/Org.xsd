@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.slma.com/cis/org.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:slma="http://www.slma.com/slma" xmlns:sys="http://www.slma.com/systems" xmlns:lp="http://www.slma.com/cis/loanProgram.xsd" targetNamespace="http://www.slma.com/cis/org.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/systems" schemaLocation="SLMASystems.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/loanProgram.xsd" schemaLocation="LoanProgram.xsd"/>
+	<xs:complexType name="OrgKey" abstract="true"/>
+	<xs:complexType name="LocationKey" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="OrgKey"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LocationIDKey">
+	    <xs:annotation>
+     	  <xs:documentation xml:lang="en">
+             LocationIDKey instances should be considered a weak reference.  Beyond your current CIS session, Federal Org IDs should be used 
+          </xs:documentation>
+    	</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="LocationKey">
+				<xs:sequence>
+					<xs:element name="id" type="LocationID" />
+					<xs:element name="sourceDatabase" type="OrgSourceDatabase" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DirectLendingIDKey">
+	    <xs:annotation>
+     	  <xs:documentation xml:lang="en">
+             DL ID is only for School 
+          </xs:documentation>
+    	</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="LocationKey">
+				<xs:sequence>
+					<xs:element name="id" type="DirectLendingID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FederalLocationIDKey" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="LocationKey" />
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SchoolFederalIDKey">
+		<xs:complexContent>
+			<xs:extension base="FederalLocationIDKey">
+				<xs:sequence>
+					<xs:element name="id" type="SchoolFederalLocationID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LenderFederalIDKey">
+		<xs:complexContent>
+			<xs:extension base="FederalLocationIDKey">
+				<xs:sequence>
+					<xs:element name="id" type="LenderFederalLocationID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GuarantorFederalIDKey">
+		<xs:complexContent>
+			<xs:extension base="FederalLocationIDKey">
+				<xs:sequence>
+					<xs:element name="id" type="GuarantorFederalLocationID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ServicerFederalIDKey">
+		<xs:complexContent>
+			<xs:extension base="FederalLocationIDKey">
+				<xs:sequence>
+					<xs:element name="id" type="FederalLocationID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+    <!-- for use when type of location is not known -->
+	<xs:complexType name="GenericFederalIDKey">
+		<xs:complexContent>
+			<xs:extension base="LocationKey">
+				<xs:sequence>
+					<xs:element name="id" type="FederalLocationID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="DirectLendingID">
+		<xs:restriction base="xs:string">
+		    <xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LocationID">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:maxInclusive value="9999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SchoolFederalLocationID">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="LenderFederalLocationID">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GuarantorFederalLocationID">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Org" abstract="true">
+		<xs:sequence>
+			<xs:element name="name" type="OrgName"  minOccurs="0"/>
+			<!-- Leave these out? 
+      <xs:element name="systemsInfo" type="sys:SystemsInfo" minOccurs="0" maxOccurs="1"  />
+        -->
+			<!-- Include in Gets, not Searches -->
+			<xs:element name="effectiveRange" type="sys:EffectiveRange"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Location">
+		<xs:complexContent>
+			<xs:extension base="Org">
+				<xs:sequence>
+					<xs:element name="key" type="LocationKey"  minOccurs="0"/>
+					<xs:element name="federalOrgID" type="FederalLocationIDKey"  minOccurs="0"/>  <!-- move this to extension?  RST 12/30/2008 -->
+				</xs:sequence>
+				<xs:attribute name="locationRole" type="LocationRole" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- recommend using an extension of FederalLocationIDKey instead -->
+	<xs:simpleType name="FederalLocationID">
+		<xs:restriction base="xs:string">
+		    <xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="SchoolLocation">
+		<xs:complexContent>
+			<xs:extension base="Location">
+				<xs:sequence>
+					<xs:element name="directLendingID" type="DirectLendingID"  minOccurs="0"/>					
+					<xs:element name="callSegmentCode" type="CallSegmentCode"  minOccurs="0"/>					
+					<xs:element name="primaryStateGroup" type="LocationStateCode"  minOccurs="0"/>
+					<xs:element name="sallieMaeManaged" type="xs:boolean"  minOccurs="0"/>
+					<!-- <xs:element name="role" type="LocationRole" fixed="SCHL"  minOccurs="0"/> -->
+					<xs:element name="schoolType" type="SchoolTypeCode"  minOccurs="0"/>
+					<!-- QST for Ken C:  Should school type be decomposed into multiple fields to accomodate foreign, 2 year, proprietary schools -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LenderLocation">
+		<xs:complexContent>
+			<xs:extension base="Location">
+				<!--xs:sequence>
+				</xs:sequence-->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GuarantorLocation">
+		<xs:complexContent>
+			<xs:extension base="Location">
+				<!--xs:sequence>
+				</xs:sequence-->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="OrgName">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LocationRole">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LNDR"/>
+			<xs:enumeration value="SCHL"/>
+			<xs:enumeration value="GNTR"/>
+			<xs:enumeration value="LNDRSVCR"/>
+			<xs:enumeration value="SCHLSVCR"/>
+			<xs:enumeration value="GNTRSVCR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LocationStateCode">
+		<xs:union memberTypes="slma:StateCode LocationStateCodeExtension"/>
+	</xs:simpleType>
+	<xs:simpleType name="LocationStateCodeExtension">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="YY"/>
+			<xs:enumeration value="FO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="State">
+		<xs:sequence>
+			<xs:element name="code" type="LocationStateCode"/>
+			<xs:element name="name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="SchoolTypeCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="2YR"/>
+			<xs:enumeration value="UGRAD"/>
+			<xs:enumeration value="GRAD"/>
+			<xs:enumeration value="FRGN"/>
+			<xs:enumeration value="PROP"/>
+			<xs:enumeration value="COMM"/>
+			<xs:enumeration value="4YR"/>
+			<xs:enumeration value="CORR"/>
+			<xs:enumeration value="NURS"/>
+			<xs:enumeration value="PRIV"/>
+			<xs:enumeration value="PUBL"/>
+			<xs:enumeration value="TECH"/>
+			<xs:enumeration value="TRADE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CallSegmentCode">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]?[0-9]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NonEdOrganizationID">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OrgSourceDatabase">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CIS"/>
+			<xs:enumeration value="CDDB"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -48,7 +48,7 @@ type IGetMinPaymentPricePayload = {
   prices: Array<IGetMinPaymentPrice>;
   metaData?: {
     userId: number;
-    loanId: number;
+    loanId: string;
     feature: SlrFeature;
   };
 };

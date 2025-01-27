@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="http://www.slma.com/cis/Person.Get_4.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:slma="http://www.slma.com/slma"
+	xmlns:rl="http://www.slma.com/cis/personRole.xsd" 
+	xmlns:cp="http://www.slma.com/cis/contactPoint.xsd"
+	targetNamespace="http://www.slma.com/cis/Person.Get_4.0"
+	xmlns:prsn="http://www.slma.com/cis/person.xsd"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/person.xsd" schemaLocation="Person.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/personRole.xsd" schemaLocation="PersonRole.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/contactPoint.xsd" schemaLocation="ContactPoint.xsd"/>
+
+	<xs:element name="person.get.request" type="tns:request"></xs:element>
+
+	<xs:element name="person.get.response" type="tns:response"></xs:element>
+
+	<xs:complexType name="request">
+		<xs:sequence>
+			<xs:element name="personKey" type="prsn:PersonKey" maxOccurs="2"/>
+		</xs:sequence>
+		<xs:attribute name="retrievePersonData" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="activeContactPointsOnly" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="displayLoans" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="checkForCampaigns" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="checkForSourceSystems" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="checkForPIF" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="retrieveSurveyItems" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="retrieveScores" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="retrieveSpecialProcess" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveClassPassThroughData" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrievePurgedPersonID" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrievePDFConfirmationCd" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveUPromiseID" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveTermsOfServiceVersion" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveAddressValidateInfo" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrievePersonRoleContactCodes" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveAutoDialerConsentLastChangedDate" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveAutoDialerConsentLastVerifiedDate" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveTextConsentInfo" type="xs:boolean" use="optional" default="false"/>			
+		<xs:attribute name="retrieveExtraSourceIDsForCPs" type="xs:boolean" use="optional" default="false"/>	
+		<xs:attribute name="retrieveProductData" type="xs:boolean" use="optional" default="false"/>	
+		<xs:attribute name="retrieveLoanSourceSystemKeys" type="xs:boolean" use="optional" default="false"/>	
+		<xs:attribute name="retrievePaymentReminder" type="xs:boolean" use="optional" default="false"/>	
+		<xs:attribute name="retrieveImageConfirmationTS" type="xs:boolean" use="optional" default="false"/>	
+		<xs:attribute name="retrieveActiveStudentLoanRelationshipInd" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="retrievePaymentFraudIndicator" type="xs:boolean" use="optional" default="false"/>	
+	</xs:complexType>
+
+	<xs:complexType name="response">
+		<xs:sequence>
+			<xs:element name="person" type="prsn:Person" maxOccurs="2" minOccurs="0"/>
+			<xs:element name="role" type="rl:PersonRole" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="contactPoint" type="cp:ContactPoint" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="classPersonDemoInfo" type="prsn:ClassPersonDemoInfo" maxOccurs="1" minOccurs="0"/>
+			<xs:element name="classPersonLoanInfo" type="prsn:ClassPersonLoanInfo" maxOccurs="1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+</xs:schema>

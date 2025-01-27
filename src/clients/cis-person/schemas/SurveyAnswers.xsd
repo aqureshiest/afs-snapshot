@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.slma.com/cis/surveyAnswers.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:slma="http://www.slma.com/slma" xmlns:sys="http://www.slma.com/systems" xmlns:org="http://www.slma.com/cis/org.xsd" targetNamespace="http://www.slma.com/cis/surveyAnswers.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/systems" schemaLocation="SLMASystems.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/org.xsd" schemaLocation="Org.xsd"/>
+	<xs:complexType name="SurveyAnswers">
+		<xs:sequence>
+			<xs:element name="surveyQuestion" type="SurveyQuestion"  minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SurveyQuestion" abstract="true"/>
+	<xs:complexType name="AnticipatedGrossIncomeAmount">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:decimal" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CareerIndustry">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AnticipatedCity">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AnticipatedState">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="slma:StateCode" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReportedExternalLoanAmountCode">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="ExternalLoanAmount" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentSchoolEnrollmentFlag">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="EnrollmentCode" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentPreviousDegreeName">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="DegreeCode" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentReportedSeperationDate">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:date" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentSchoolMajorName">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentFutureDegreeName">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="DegreeCode" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentGraduationPlan">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentReportedCurrentSchoolAttending">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="org:SchoolFederalLocationID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentReportedNeedAmount">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="xs:unsignedLong" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentReportedGradeLevel">
+		<xs:complexContent>
+			<xs:extension base="SurveyQuestion">
+				<xs:sequence>
+					<xs:element name="answer" type="GradeLevelCode" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ExternalLoanAmount">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="00_05"/>
+			<xs:enumeration value="05_10"/>
+			<xs:enumeration value="10_15"/>
+			<xs:enumeration value="15_20"/>
+			<xs:enumeration value="20_25"/>
+			<xs:enumeration value="25_30"/>
+			<xs:enumeration value="30_35"/>
+			<xs:enumeration value="35_40"/>
+			<xs:enumeration value="40_45"/>
+			<xs:enumeration value="45_50"/>
+			<xs:enumeration value="50PL"/>
+			<xs:enumeration value="UNKN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GradeLevelCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="K1"/>
+			<xs:enumeration value="G1"/>
+			<xs:enumeration value="G2"/>
+			<xs:enumeration value="G3"/>
+			<xs:enumeration value="G4"/>
+			<xs:enumeration value="G5"/>
+			<xs:enumeration value="G6"/>
+			<xs:enumeration value="G7"/>
+			<xs:enumeration value="G8"/>
+			<xs:enumeration value="G9"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="11"/>
+			<xs:enumeration value="12"/>
+			<xs:enumeration value="00"/>
+			<xs:enumeration value="01"/>
+			<xs:enumeration value="02"/>
+			<xs:enumeration value="03"/>
+			<xs:enumeration value="04"/>
+			<xs:enumeration value="05"/>
+			<xs:enumeration value="06"/>
+			<xs:enumeration value="07"/>
+			<xs:enumeration value="08"/>
+			<xs:enumeration value="09"/>
+			<!-- Kindergarten -->
+			<!-- First Grade -->
+			<!-- Second Grade -->
+			<!-- Third Grade -->
+			<!-- Fourth Grade -->
+			<!-- Fifth Grade -->
+			<!-- Sixth Grade -->
+			<!-- Seventh Grade -->
+			<!-- Eighth Grade -->
+			<!-- Ninth Grade -->
+			<!-- Tenth Grade -->
+			<!-- Eleventh Grade -->
+			<!-- Twelfth Grade -->
+			<!-- Correspondence or remedial school -->
+			<!-- First year (freshman) -->
+			<!-- Second year (sophomore) -->
+			<!-- Third year (junior) -->
+			<!-- Fourth year (senior) -->
+			<!-- Fifth year undergraduate -->
+			<!-- First year graduate -->
+			<!-- Second year graduate -->
+			<!-- Third year graduate -->
+			<!-- Fourth year graduate -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DegreeCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AD"/>
+			<xs:enumeration value="BA"/>
+			<xs:enumeration value="BS"/>
+			<xs:enumeration value="CT"/>
+			<xs:enumeration value="DR"/>
+			<xs:enumeration value="JD"/>
+			<xs:enumeration value="MA"/>
+			<xs:enumeration value="MBA"/>
+			<xs:enumeration value="MD"/>
+			<xs:enumeration value="MS"/>
+			<xs:enumeration value="OT"/>
+			<xs:enumeration value="PHS"/>
+			<xs:enumeration value="DCM"/>
+			<xs:enumeration value="DDS"/>
+			<xs:enumeration value="DO"/>
+			<xs:enumeration value="DPM"/>
+			<xs:enumeration value="DVM"/>
+			<xs:enumeration value="MHL"/>
+			<xs:enumeration value="OD"/>
+			<xs:enumeration value="PH"/>
+			<!-- Associates Degree -->
+			<!-- Bachelor of Arts -->
+			<!-- Bachelors of Science -->
+			<!-- Certificate -->
+			<!-- DR -->
+			<!-- Law (L.L.B. or J.D.)  -->
+			<!-- Master of Arts -->
+			<!-- Master of Business Administration -->
+			<!-- Medicine, General (M.D.) -->
+			<!-- Master of Science -->
+			<!-- Other Certificate/Diploma -->
+			<!-- Doctor’s degree (Ph. D.) -->
+			<!-- Chiropractic (D.C. or D.C.M.)  -->
+			<!-- Dentistry (D.D.S. or D.M.D.)  -->
+			<!-- Osteopathic Medicine (D.O.)  -->
+			<!-- Podiatry (D.P.M., D.P., or Pod.D.)  -->
+			<!-- Veterinary Medicine (D.V.M.) -->
+			<!-- Theology (M.Div., M.H.L., B.D., or Ordination)  -->
+			<!-- Optometry (O.D.)  -->
+			<!-- Pharmacy (Pharm.D.) -->
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="EnrollmentCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="F"/>
+			<xs:enumeration value="H"/>
+			<xs:enumeration value="L"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

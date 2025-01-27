@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<xs:schema targetNamespace="http://www.slma.com/cis/loanProgram.xsd"
+                  elementFormDefault="qualified"
+                  xmlns="http://www.slma.com/cis/loanProgram.xsd"
+                  xmlns:mstns="http://tempuri.org/XMLSchema.xsd"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:sys="http://www.slma.com/systems"
+                  xmlns:slma="http://www.slma.com/slma"
+                 >
+  <xs:import namespace="http://www.slma.com/systems"
+     schemaLocation="SLMASystems.xsd" />
+  <xs:import namespace="http://www.slma.com/slma"
+     schemaLocation="SLMATypes.xsd" />
+  
+  <xs:simpleType name="LoanProgramID">
+    <xs:restriction base="xs:unsignedLong">
+      <xs:maxInclusive value="9999999999999"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="LoanProgram">
+    <xs:sequence>
+      <xs:element name="key" type="LoanProgramKey" minOccurs="1" maxOccurs="1"  />
+      <xs:element name="code" type="LoanProgramCode" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="type" type="LoanProgramTypeCode" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="name" type="LoanProgramName"  minOccurs="0" maxOccurs="1"  />
+
+      <!-- Leave these out? 
+      <xs:element name="systemsInfo" type="sys:SystemsInfo" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="effectiveRange" type="sys:EffectiveRange" minOccurs="0" maxOccurs="1"  />
+      -->
+</xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="LoanProgramKey" />
+
+  <xs:complexType name="LoanProgramIDKey">
+    <xs:complexContent>
+      <xs:extension base="LoanProgramKey">
+        <xs:sequence>
+          <xs:element name="id" type="LoanProgramID" minOccurs="1" maxOccurs="1"  />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="LoanProgramCodeKey">
+    <xs:complexContent>
+      <xs:extension base="LoanProgramKey">
+        <xs:sequence>
+          <xs:element name="code" type="LoanProgramCode" minOccurs="1" maxOccurs="1"  />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoanProgramCriteria">
+    <xs:attribute name="activeOnly" type="xs:boolean" use="optional" default="true"/>
+  </xs:complexType>
+
+  <xs:complexType name="LoanProgramTypeCriteria">
+    <xs:complexContent>
+      <xs:extension base="LoanProgramCriteria">
+        <xs:sequence>
+          <xs:element name="filter" type="LoanProgramTypeFilter" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoanProgramFilter" abstract="true"/>
+
+  <xs:complexType name="LoanProgramTypeFilter">
+    <xs:complexContent>
+      <xs:extension base="LoanProgramFilter">
+        <xs:attribute name="value" type="LoanProgramTypeCode" use="required"/>       
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType> 
+
+  
+  
+  <xs:simpleType name="LoanProgramCode">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[(0-9),(A-Z)]{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LoanProgramTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FFELP"/>
+      <xs:enumeration value="PRIV"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LoanProgramName">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LoanProductCode">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[(0-9),(A-Z)]{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="LoanProductName">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  
+    <xs:simpleType name="LoanProductDescription">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+</xs:schema>

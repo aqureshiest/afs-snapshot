@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<xs:schema targetNamespace="http://www.slma.com/systems"
+                  elementFormDefault="qualified"
+                  xmlns="http://www.slma.com/systems"
+                  xmlns:sys="http://www.slma.com/systems"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="SystemsInfo">
+    <xs:sequence>
+      <xs:element name="creationDateTime" type="xs:dateTime" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="creationID" type="xs:string" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="updateDateTime" type="xs:dateTime" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="updateID" type="xs:string" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="SourceIdentifier" type="xs:string" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="classID" type="xs:string" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="effectiveDeleteSourceID" type="xs:string" minOccurs="0" maxOccurs="1" nillable="false" />
+      <xs:element name="updateSourceID" type="xs:string" minOccurs="0" maxOccurs="1" nillable="false" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EffectiveRange">
+    <xs:sequence>
+      <xs:element name="beginDate" type="xs:date" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="endDate" type="xs:date" minOccurs="0" maxOccurs="1"  />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

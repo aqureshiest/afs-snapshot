@@ -260,3 +260,21 @@ declare module "contract/contract-types/error.js" {
   };
   type Output = { [key: string]: unknown };
 }
+
+import "contract/contract-types/cis-person-method.js";
+declare module "contract/contract-types/cis-person-method.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    cisPersonMethod: "getCisPersonLoans";
+    id: string;
+    value: string;
+  };
+
+  type MinimalApplication = {
+    id: string;
+  };
+
+  type CisPersonLoanOutput = { [key: string]: unknown }
+  type Output = Array<CisPersonLoanOutput>;
+}

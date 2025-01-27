@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="http://www.salliemae.com/webservices/infrastructure/200709" 
+           elementFormDefault="qualified" 
+           xmlns:tns="http://www.salliemae.com/webservices/infrastructure/200709" 
+>
+  
+    <xs:element name="SMWebServiceHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:annotation>
+          <xs:documentation>
+            This is the Sallie Mae Web Services Header.  This will be filled out by all clients that call web 
+            services.  The Web Services Management (WSM) product will log the information.  
+
+            Fields:  appName = (required) Client Name.
+            appVersion = (required) Client Version.
+            appMode = (optional) Additional field to point to option.
+            appComponent = (optional) The module within the application.
+            sessionID = (optional) Session ID of client for later identification.		
+            userName = (optional) User name for authentication.
+          </xs:documentation>
+        </xs:annotation>
+  
+        <xs:element minOccurs="1" maxOccurs="1" name="appContext" type="tns:AppContext" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+ 
+  <xs:complexType name="AppContext">
+  	<xs:sequence>
+        	<xs:element minOccurs="1" maxOccurs="1" name="appName" type="tns:AppName" />
+        	<xs:element minOccurs="1" maxOccurs="1" name="appVersion" type="tns:AppVersion" />
+        	<xs:element minOccurs="0" maxOccurs="1" name="appMode" type="tns:AppMode" />
+              	<xs:element minOccurs="0" maxOccurs="1" name="appComponent" type="tns:AppComponent" />
+              	<xs:element minOccurs="0" maxOccurs="1" name="sessionID" type="tns:SessionID" />
+              	<xs:element minOccurs="0" maxOccurs="1" name="loginContext" type="tns:LoginContext" />
+        </xs:sequence>
+   </xs:complexType>
+  
+  <xs:simpleType name="AppName">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"></xs:maxLength>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AppVersion">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="10"></xs:maxLength>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AppMode">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"></xs:maxLength>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AppComponent">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"></xs:maxLength>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SessionID">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"></xs:maxLength>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="LoginContext">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:documentation>
+          This is the Sallie Mae Web Services Header LoginContext  This will be filled out by all clients that 
+          call web services.  This is part of the Sallie Mae Web Services Header schema.  The Web Services 
+          Management (WSM) product will log the information.  
+
+          Fields:   userName = (optional) User name for authentication.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:element name="userName" type="tns:UserName" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="UserName">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"></xs:maxLength>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="CorrelId" type="xs:string" />
+</xs:schema>

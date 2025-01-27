@@ -20,3 +20,6 @@
 (Attached any useful screenshots)
 - Following attachments capture before and after fix..
 
+## Skip steps
+[skip bearer]
+[skip prettier]

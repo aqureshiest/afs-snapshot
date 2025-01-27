@@ -167,6 +167,15 @@ interface IDecisionEntity {
   loanInfo: {
     claimedLoanAmount: typings.AmountDetail["requested"];
   };
+  cisInfo?: {
+    loans: Array<{
+      loanKey: {
+        id: typings.CisInfoLoansDetail["loanId"];
+      },
+      loanProgramCode: typings.CisInfoLoansDetail["loanProgramCode"];
+      loanStatusCode: typings.CisInfoLoansDetail["loanStatusCode"];
+    }>;
+  }
 }
 
 interface IApplicationDecisionDetails {

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.slma.com/cis/personRole.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sys="http://www.slma.com/systems" xmlns:slma="http://www.slma.com/slma" xmlns:prsn="http://www.slma.com/cis/person.xsd" xmlns:ln="http://www.slma.com/cis/loan.xsd" xmlns:lp="http://www.slma.com/cis/loanProgram.xsd" targetNamespace="http://www.slma.com/cis/personRole.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.slma.com/systems" schemaLocation="SLMASystems.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/person.xsd" schemaLocation="Person.xsd"/>
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/loan.xsd" schemaLocation="Loan.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/loanProgram.xsd" schemaLocation="LoanProgram.xsd"/>
+	<xs:complexType name="PersonRole" abstract="true">
+		<xs:sequence>
+			<xs:element name="personKey" type="prsn:PersonKey" nillable="false" minOccurs="0"/>
+			<xs:element name="systemsInfo" type="sys:SystemsInfo" nillable="false" minOccurs="0"/>
+			<xs:element name="effectiveRange" type="sys:EffectiveRange" nillable="false" minOccurs="0"/>
+			<xs:element name="personAddressContactCd" type="xs:string" nillable="false" minOccurs="0"/>
+			<xs:element name="personPhoneContactCd" type="xs:string" nillable="false" minOccurs="0"/>
+			<xs:element name="personEmailContactCd" type="xs:string" nillable="false" minOccurs="0"/>
+			<xs:element name="personAttorneyContactCd" type="xs:string" nillable="false" minOccurs="0"/>
+			<xs:element name="products" type="Products" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PersonLoanRole" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="PersonRole">
+				<xs:sequence>
+					<xs:element name="contactPreferenceFlag" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="disabilityFlag" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="bankruptcyFlag" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="loans" type="Loans" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="RoleTypeCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BORR"/>
+			<xs:enumeration value="STUD"/>
+			<xs:enumeration value="COS"/>
+			<xs:enumeration value="CBOR"/>
+			<xs:enumeration value="CMKR"/>
+			<xs:enumeration value="JBORR"/>
+			<xs:enumeration value="REF"/>
+			<xs:enumeration value="LEAD"/>
+			<xs:enumeration value="IELIG"/>
+			<xs:enumeration value="CREF"/>
+			<xs:enumeration value="ROTHR"/>
+			<xs:enumeration value="AUTH"/>
+			<xs:enumeration value="PRIM"/>
+			<xs:enumeration value="SCDY"/>
+			<!-- new -->
+			<!-- end new -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Borrower">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="BORR"/>
+					<!-- removed
+          <xs:element name="loanDefaultFlag" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true" />
+          -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ExternalLoanAmount">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="00_05"/>
+			<xs:enumeration value="05_10"/>
+			<xs:enumeration value="10_15"/>
+			<xs:enumeration value="15_20"/>
+			<xs:enumeration value="20_25"/>
+			<xs:enumeration value="25_30"/>
+			<xs:enumeration value="30_35"/>
+			<xs:enumeration value="35_40"/>
+			<xs:enumeration value="40_45"/>
+			<xs:enumeration value="45_50"/>
+			<xs:enumeration value="50PL"/>
+			<xs:enumeration value="UNKN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BorrowerStatusCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BKRP"/>
+			<xs:enumeration value="DCSD"/>
+			<xs:enumeration value="DSBL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Student">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="STUD"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoSigner">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="COS"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoBorrower">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="CBOR"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoMaker">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="CMKR"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="JointBorrower">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="JBORR"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Reference">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="REF"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="InfoEligible">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="IELIG"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoReference">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="CREF"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Other">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="ROTHR"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Authorized">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="AUTH"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Primary">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="PRIM"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Secondary">
+		<xs:complexContent>
+			<xs:extension base="PersonLoanRole">
+				<xs:sequence>
+					<xs:element name="roleTypeCode" type="RoleTypeCode" fixed="SCDY"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Loans">
+		<xs:sequence>
+			<xs:element name="loan" type="Loan" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Loan">
+		<xs:sequence>
+			<xs:element name="loanKey" type="ln:LoanKey" minOccurs="0" maxOccurs="1" />
+			<xs:element name="sourceSystemKey" type="ln:SourceSystemKey" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="systemsInfo" type="sys:SystemsInfo" minOccurs="0" maxOccurs="1" />
+			<xs:element name="effectiveRange" type="sys:EffectiveRange" minOccurs="0" maxOccurs="1" />
+			<xs:element name="loanProgramCode" type="lp:LoanProgramCode" minOccurs="0" maxOccurs="1" />
+			<xs:element name="loanStatusCode" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="ownerDENumber" type="ln:FederalLocationID" minOccurs="0" maxOccurs="1" />
+			<xs:element name="servicingBranchID" type="ln:ServicingBranchID" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Products">
+		<xs:sequence>
+			<xs:element name="product" type="Product" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Product">
+		<xs:sequence>
+			<xs:element name="productGroupID" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="productGroupDescription" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="roleTypeCode" type="RoleTypeCode" minOccurs="0" maxOccurs="1" />
+			<xs:element name="sourceAccountID" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="systemsInfo" type="sys:SystemsInfo" minOccurs="0" maxOccurs="1" />
+			<xs:element name="effectiveRange" type="sys:EffectiveRange" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<!--
+  <xs:complexType name="SkipTracingLead">
+    <xs:complexContent>
+      <xs:extension base="PersonRole">
+        <xs:sequence>
+          <xs:element name="roleTypeCode" type="RoleTypeCode" minOccurs="1" maxOccurs="1" fixed="LEAD" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Prospect">
+    <xs:complexContent>
+      <xs:extension base="PersonRole">
+        <xs:sequence>
+          <xs:element name="roleTypeCode" type="RoleTypeCode" minOccurs="1" maxOccurs="1" fixed="PRSP" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  -->
+</xs:schema>

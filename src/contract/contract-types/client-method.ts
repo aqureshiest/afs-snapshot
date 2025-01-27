@@ -14,6 +14,8 @@ const VALID_CLIENTS = Object.freeze([
   "piiTokenServiceClient",
   "calculatorServiceClient",
   "partnerClient",
+  "cisPersonClient",
+  "optimizelyClient",
 ] as const);
 
 class ClientMethod extends ContractExecutable<

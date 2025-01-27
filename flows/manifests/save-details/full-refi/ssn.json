@@ -28,7 +28,8 @@
       "*": "actions/result.results",
       "actions": [
         "pii.save-token",
-        "full-refi.add-edit-reference"
+        "full-refi.add-edit-reference",
+        "cis-person.get-cis-person-loans"
       ]
     }
   }

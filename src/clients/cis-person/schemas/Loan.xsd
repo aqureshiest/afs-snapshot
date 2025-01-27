@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.slma.com/cis/loan.xsd" elementFormDefault="qualified" xmlns="http://www.slma.com/cis/loan.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sys="http://www.slma.com/systems" xmlns:slma="http://www.slma.com/slma" xmlns:lp="http://www.slma.com/cis/loanProgram.xsd">
+	<xs:import namespace="http://www.slma.com/systems" schemaLocation="SLMASystems.xsd"/>
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/loanProgram.xsd" schemaLocation="LoanProgram.xsd"/>
+	<xs:simpleType name="LoanID">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:maxInclusive value="9999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Loan">
+		<xs:sequence>
+			<xs:element name="key" type="LoanKey" minOccurs="1" maxOccurs="1" />
+			<xs:element name="sourceSystemKey" type="SourceSystemKey" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="externalOnlyFlag" type="xs:boolean" minOccurs="0" maxOccurs="1" />
+			<xs:element name="statusCode" type="LoanStatusCode" minOccurs="0" maxOccurs="1" />
+			<xs:element name="loanProgramCode" type="lp:LoanProgramCode" minOccurs="0" maxOccurs="1" />
+			<xs:element name="systemsInfo" type="sys:SystemsInfo" minOccurs="0" maxOccurs="1" />
+			<xs:element name="effectiveRange" type="sys:EffectiveRange" minOccurs="0" maxOccurs="1" />
+			<xs:element name="ownerDENumber" type="FederalLocationID" minOccurs="0" maxOccurs="1" />
+			<xs:element name="servicingBranchID" type="ServicingBranchID" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType abstract="true" name="LoanKey"/>
+	<xs:complexType name="LoanIDKey">
+		<xs:complexContent>
+			<xs:extension base="LoanKey">
+				<xs:sequence>
+					<xs:element name="id" type="LoanID" minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SourceSystemKey">
+		<xs:complexContent>
+			<xs:extension base="LoanKey">
+				<xs:sequence>
+					<xs:element name="sourceID" type="xs:string" minOccurs="1" maxOccurs="1" />
+					<xs:element name="sourceTableName" type="xs:string" minOccurs="1" maxOccurs="1" />
+					<xs:element name="sourceTableKey1" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey2" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey3" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey4" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey5" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey6" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey7" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey8" type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="sourceTableKey9" type="xs:string" minOccurs="0" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ClassLoanKey">
+		<xs:complexContent>
+			<xs:extension base="LoanKey">
+				<xs:sequence>
+					<xs:element name="primaryPersonSSN" type="slma:SSN" minOccurs="1" maxOccurs="1" />
+					<xs:element name="classAccountSuffix" type="xs:int" minOccurs="1" maxOccurs="1" />
+					<xs:element name="classLoanNumber" type="xs:int" minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FDRLoanKey">
+		<xs:complexContent>
+			<xs:extension base="LoanKey">
+				<xs:sequence>
+					<xs:element name="FDRLoanID" type="xs:string" minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="LoanStatusCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="APP"/>
+			<xs:enumeration value="DFRM"/>
+			<xs:enumeration value="FORB"/>
+			<xs:enumeration value="GRAC"/>
+			<xs:enumeration value="INTM"/>
+			<xs:enumeration value="PIF"/>
+			<xs:enumeration value="RPMT"/>
+			<xs:enumeration value="SCHL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FederalLocationID">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9][0-9][0-9][0-9][0-9][0-9]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LoanProductCode">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+			<!--
+      <xs:pattern value="[0-9]{3}" />
+      -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ServicingBranchID">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

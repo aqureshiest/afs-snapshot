@@ -1108,6 +1108,19 @@ export default class LendingDecisionServiceClient extends Client {
       },
     } as DecisionEntity;
 
+    if (appType === 'primary_only' && decisionAPIVersion === 'v2') {
+      const cisInfoLoansDetails = this.applicantCisInfo(
+        context,
+        application,
+        details.cisInfoLoans
+      );
+
+      formattedPayload = {
+        ...formattedPayload,
+        ...(cisInfoLoansDetails ? { cisInfo: cisInfoLoansDetails } : {}),
+      };
+    }
+
     /**
      * If decisionType is 'rate-check' we do not include
      * employment or financial account details in request payload
@@ -1577,6 +1590,44 @@ export default class LendingDecisionServiceClient extends Client {
         });
     }
     return [];
+  }
+
+  /**
+   *  Formats the CIS Info Loans details into a Decision Entity loans object array
+   * @param cisInfoLoansDetails
+   * @returns  {DecisionEntity["cisInfo"]}
+   */
+  private applicantCisInfo(
+    context: PluginContext,
+    application: typings.Application,
+    cisInfoLoansDetails: typings.Details["cisInfoLoans"]
+  ): DecisionEntity['cisInfo'] | null {
+    if (cisInfoLoansDetails) {
+      const loansDetails = cisInfoLoansDetails
+        .filter((loanInfo) => loanInfo)
+        .map((loanInfo) => {
+          return {
+            loanKey: {
+              id: loanInfo?.loanId,
+            },
+            loanProgramCode: loanInfo?.loanProgramCode,
+            loanStatusCode: loanInfo?.loanStatusCode,
+          };
+        });
+
+      return {
+        loans: loansDetails || [],
+      };
+    }
+
+    this.log(
+      {
+        rootID: application.id,
+        message: `[a0478d45] No CIS Info Loans details found`,
+      },
+      context
+    );
+    return null;
   }
 
   /**

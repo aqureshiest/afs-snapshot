@@ -16,6 +16,11 @@ export { default as log } from "./log.js";
 export { default as validate } from "./validate.js";
 
 /* ============================== *
+ * Cis Person
+ * ============================== */
+export { default as cisPersonMethod } from "./cis-person-method.js";
+
+/* ============================== *
  * Decision
  * ============================== */
 export { default as decisionRequest } from "./decision-request.js";

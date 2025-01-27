@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.slma.com/cis/person.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:slma="http://www.slma.com/slma" xmlns:sys="http://www.slma.com/systems" xmlns:srvy="http://www.slma.com/cis/surveyAnswers.xsd" targetNamespace="http://www.slma.com/cis/person.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/systems" schemaLocation="SLMASystems.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/surveyAnswers.xsd" schemaLocation="SurveyAnswers.xsd"/>
+	<xs:complexType name="PersonKey" abstract="true">
+			<xs:attribute name="identifierDomain" type="IdentifierDomain" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="PersonIDKey">
+		<xs:complexContent>
+			<xs:extension base="PersonKey">
+				<xs:sequence>
+					<xs:element name="id" type="PersonID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SSNKey">
+		<xs:complexContent>
+			<xs:extension base="PersonKey">
+				<xs:sequence>
+					<xs:element name="socialSecurityNumber" type="slma:SSN" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PersonKeyRefKey">
+		<xs:complexContent>
+			<xs:extension base="PersonKey">
+				<xs:sequence>
+					<xs:element name="sourceID" type="xs:string" minOccurs="1"/>
+					<xs:element name="sysTableName" type="xs:string" minOccurs="1"/>
+					<xs:element name="sysTableKey1" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey2" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey3" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey4" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey5" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey6" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey7" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey8" type="xs:string" minOccurs="0"/>
+					<xs:element name="sysTableKey9" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="CINKey">
+		<xs:complexContent>
+			<xs:extension base="PersonKey">
+				<xs:sequence>
+					<xs:element name="cin" type="slma:CIN" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CampaignKey">
+		<xs:complexContent>
+			<xs:extension base="PersonKey">
+				<xs:sequence>
+					<xs:element name="pin" type="CampaignPIN" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="CampaignPIN">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{10}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PersonID">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:maxInclusive value="9999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Person">
+		<xs:sequence>
+			<xs:element name="key" type="PersonKey"  minOccurs="0"/>
+			<xs:element name="consolidatedKey" type="ConsolidatedPersonKey"  minOccurs="0"/>
+			<xs:element name="socialSecurityNumber" type="slma:SSN"  minOccurs="0"/>
+			<xs:element name="name" type="Name"  minOccurs="0"/>
+			<xs:element name="birthDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="citizenshipCode" type="slma:CitizenshipCode"  minOccurs="0"/>
+			<xs:element name="genderCode" type="slma:GenderCode"  minOccurs="0"/>
+			<xs:element name="legalResidence" type="LegalResidence"  minOccurs="0"/>
+			<xs:element name="immigrationAlienNumber" type="xs:string"  minOccurs="0"/>
+			<xs:element name="driversLicense" type="DriversLicense"  minOccurs="0"/>
+			<xs:element name="foreignLanguage" type="slma:ForeignLanguageCode"  minOccurs="0"/>
+			<xs:element name="maritalStatus" type="slma:MaritalStatusCode"  minOccurs="0"/>
+			<xs:element name="childrenCount" type="xs:unsignedInt"  minOccurs="0"/>
+			<xs:element name="borrowerSpouseNotificationFlag" type="xs:boolean"  minOccurs="0"/>
+			<xs:element name="studentProjectedSeparationDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="systemsInfo" type="sys:SystemsInfo"  minOccurs="0"/>
+			<xs:element name="effectiveRange" type="sys:EffectiveRange"  minOccurs="0"/>
+			<xs:element name="originatingDataSource" type="OriginatingSourceCode"  minOccurs="0"/>
+			<xs:element name="originatingDataSourceID" type="slma:OriginatingSourceID"  minOccurs="0"/>
+			<xs:element name="dataOwnerCode" type="DataOwnerCode"  minOccurs="0"/>
+			<xs:element name="pdfConfirmationCode" type="PDFConfirmationCode"  minOccurs="0"/>
+			<xs:element name="pdfConfirmationDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="termsOfServiceVersion" type="xs:string"  minOccurs="0"/>
+			<xs:element name="termsOfServiceVersionDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="cin" type="slma:CIN"  minOccurs="0"/>
+			<xs:element name="sourceSystemIDs" type="SourceSystemIDs"  minOccurs="0"/>
+			<xs:element name="upromiseID" type="xs:string"  minOccurs="0"/>
+			<xs:element name="upromiseParticipationCode" type="UpromiseParticipationCode"  minOccurs="0"/>
+			<xs:element name="reportedUpromiseParticipationCode" type="ReportedUpromiseParticipationCode"  minOccurs="0"/>
+			<xs:element name="reportedUpromiseParticipationDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="permissionsLastReviewDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="currentSchoolDEID" type="CurrentSchoolDEID"  minOccurs="0"/>
+			<xs:element name="lifeEvents" type="LifeEvents"  minOccurs="0"/>
+			<xs:element name="marketing" type="MarketingInfo"  minOccurs="0"/>
+			<xs:element name="scores" type="Scores"  minOccurs="0"/>
+			<xs:element name="specialProcesses" type="SpecialProcesses"  minOccurs="0"/>
+			<xs:element name="classPassThroughData" type="ClassPassThroughData"  minOccurs="0"/>
+			<xs:element name="purgedPersonIDs" type="PurgedPersonIDs"  minOccurs="0"/>
+			<xs:element name="paymentReminder" type="xs:string" minOccurs="0"/>
+			<xs:element name="imageConfirmationTS" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="paymentFraudIndicator" type="xs:boolean"  minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="activeStudentLoanRelationshipInd" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="MarketingInfo">
+		<xs:sequence>
+			<xs:element name="marketingIndividualId" type="xs:unsignedLong"  minOccurs="0"/>
+			<xs:element name="marketingEligibilityCode" type="MarketingEligibilityCode"  minOccurs="0"/>
+			<xs:element name="surveyItems" type="SurveyItems"  minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="hasCampaigns" type="xs:boolean" use="optional"/>
+		<!-- For retrieval only -->
+	</xs:complexType>
+	<xs:complexType name="Name">
+		<xs:sequence>
+			<xs:element name="last" type="xs:string"  minOccurs="0"/>
+			<xs:element name="first" type="xs:string"  minOccurs="0"/>
+			<xs:element name="middleInitial" type="xs:string"  minOccurs="0"/>
+			<xs:element name="suffix" type="xs:string"  minOccurs="0"/>
+			<xs:element name="nickName" type="xs:string"  minOccurs="0"/>
+			<xs:element name="prefix" type="xs:string"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LegalResidence">
+		<xs:sequence>
+			<xs:element name="state" type="slma:StateCode"  minOccurs="0"/>
+			<xs:element name="beginDate" type="xs:date"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DriversLicense">
+		<xs:sequence>
+			<xs:element name="number" type="xs:string"  minOccurs="0"/>
+			<xs:element name="state" type="slma:StateCode"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MarketingEligibilityCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ELIG"/>
+			<xs:enumeration value="NELIG"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DataOwnerCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CIS"/>
+			<xs:enumeration value="OKGA"/>
+			<xs:enumeration value="LAGA"/>
+			<xs:enumeration value="IAGA"/>
+			<xs:enumeration value="ARGA"/>
+			<xs:enumeration value="RIGA"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OriginatingSourceCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AUFL"/>
+			<xs:enumeration value="CAM"/>
+			<xs:enumeration value="CLNG"/>
+			<xs:enumeration value="CMNLINE"/>
+			<xs:enumeration value="CRDTBUR"/>
+			<xs:enumeration value="GUARRPTG"/>
+			<xs:enumeration value="NCOA"/>
+			<xs:enumeration value="NSLDS"/>
+			<xs:enumeration value="PRSN"/>
+			<xs:enumeration value="BORR"/>
+			<xs:enumeration value="CBOR"/>
+			<xs:enumeration value="REF"/>
+			<xs:enumeration value="PRNT"/>
+			<xs:enumeration value="SPSE"/>
+			<xs:enumeration value="STUD"/>
+			<xs:enumeration value="INFOELIG"/>
+			<xs:enumeration value="THRDPRTY"/>
+			<xs:enumeration value="SOCSEC"/>
+			<xs:enumeration value="SKIPVNDR"/>
+			<xs:enumeration value="LNDR"/>
+			<xs:enumeration value="SCHL"/>
+			<xs:enumeration value="SVCR"/>
+			<xs:enumeration value="OTH"/>
+			<xs:enumeration value="CDTR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SourceSystemIDs">
+		<xs:sequence>
+			<xs:element name="sourceSystemID" type="xs:string"  minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Permissions">
+		<xs:sequence>
+			<xs:element name="permission" type="Permission"   minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Permission">
+		<xs:sequence>
+			<xs:element name="permissionID"  minOccurs="1" type="xs:string"/>
+			<xs:element name="description"  minOccurs="0" type="xs:string"/>
+			<xs:element name="valueCode"  minOccurs="0" type="xs:string"/>
+			<xs:element name="consentIPAddress"  minOccurs="0" type="ConsentIPAddress"/>
+			<xs:element name="updateDateTime"  minOccurs="0" type="xs:dateTime"/>
+			<xs:element name="updateID"  minOccurs="0" type="xs:string"/>
+			<xs:element name="dataSourceCode"  minOccurs="0" type="xs:string"/>
+			<xs:element name="affiliateChangeID"  minOccurs="0" type="xs:string"/>
+			<xs:element name="changeHistory"  minOccurs="0" maxOccurs="1" type="PermissionHistory"/>
+			<xs:element name="defaultCode" minOccurs="0" maxOccurs="1" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PermissionHistory">
+		<xs:sequence>
+			<xs:element name="permissionUpdate" type="PermissionUpdate" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PermissionUpdate">
+		<xs:sequence>
+			<xs:element name="histDateTime"  minOccurs="1" type="xs:dateTime"/>
+			<xs:element name="histCreateID"  minOccurs="1" type="xs:string"/>
+			<xs:element name="histValueCode"  minOccurs="0" type="xs:string"/>
+			<xs:element name="histValueCodeChanged"  minOccurs="1" type="xs:string"/>
+			<xs:element name="histConsentIPAddress"  minOccurs="0" type="ConsentIPAddress"/>
+			<xs:element name="histConsentIPChanged"  minOccurs="1" type="xs:string"/>
+			<xs:element name="histDataSourceCode"  minOccurs="0" type="xs:string"/>
+			<xs:element name="histDataSourceCodeChanged"  minOccurs="1" type="xs:string"/>
+			<xs:element name="histAffiliateChangeID"  minOccurs="0" type="xs:string"/>
+			<xs:element name="histAffiliateChangeIDChanged"  minOccurs="1" type="xs:string"/>
+			<xs:element name="histUpdateDateTime"  minOccurs="0" type="xs:dateTime" />
+			<xs:element name="histUpdateDateTimeChanged"  minOccurs="0" type="xs:string"/>
+			<xs:element name="histUpdateID"   minOccurs="0" type="xs:string"/>
+			<xs:element name="histUpdateIDChanged"  minOccurs="0" type="xs:string"/>
+            <xs:element name="histSourceIdentifier"  minOccurs="0" type="xs:string" />
+			<xs:element name="histSourceIdentifierChanged"  minOccurs="0" type="xs:string"/>
+			<xs:element name="histEffectiveBeginDate"  minOccurs="0" maxOccurs="1" type="xs:date"/>
+			<xs:element name="histEffectiveBeginDateChanged"  minOccurs="0" type="xs:string"/>
+			<xs:element name="histEffectiveEndDate"  minOccurs="0" maxOccurs="1" type="xs:date"/>			
+			<xs:element name="histEffectiveEndDateChanged"  minOccurs="0" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:simpleType name="PermissionTypeCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EmailMarketing"/>
+			<xs:enumeration value="EmailServicing"/>
+			<xs:enumeration value="Email1098E"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PDFConfirmationCode">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UpromiseParticipationCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="YES"/>
+			<xs:enumeration value="NO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReportedUpromiseParticipationCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="JOIN"/>
+			<xs:enumeration value="YES"/>
+			<xs:enumeration value="NO"/>
+			<xs:enumeration value="CNCL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PermissionsReviewCounter">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{0,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ConsentIPAddress">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="LifeEvents">
+		<xs:sequence>
+			<xs:element name="lifeEvent" type="LifeEvent" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LifeEvent">
+		<xs:sequence>
+			<xs:element name="lifeEventID" type="xs:unsignedLong"  minOccurs="1"/>
+			<xs:element name="typeCode"  minOccurs="1" type="LifeEventTypeCode"/>
+			<xs:element name="createDateTime"  minOccurs="0" type="xs:dateTime"/>
+			<xs:element name="effectiveBeginDate"  minOccurs="0" type="xs:date"/>
+			<xs:element name="effectiveEndDate"  minOccurs="0" type="xs:date"/>
+			<xs:element name="originatingSourceCode"  minOccurs="0" type="OriginatingSourceCode"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LifeEventTypeCode">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="SurveyItems">
+		<xs:sequence>
+			<xs:element name="surveyItem" type="SurveyItem" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SurveyItem">
+		<xs:sequence>
+			<xs:element name="itemLabelName"  minOccurs="1" type="xs:string"/>
+			<xs:element name="itemAnswerText"  minOccurs="0" type="xs:string"/>
+			<xs:element name="systemsInfo" type="sys:SystemsInfo"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="SurveyItemFormatCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AMT"/>
+			<xs:enumeration value="CHAR"/>
+			<xs:enumeration value="DATE"/>
+			<xs:enumeration value="NUM"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CurrentSchoolDEID">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PermissionSourceCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EMAIL"/>
+			<xs:enumeration value="FAX"/>
+			<xs:enumeration value="PHONE"/>
+			<xs:enumeration value="USPS"/>
+			<xs:enumeration value="WEB"/>
+			<xs:enumeration value="REPLICATED"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AffiliateChangeID">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AFFILIATE"/>
+			<xs:enumeration value="SALLIE MAE"/>
+			<xs:enumeration value="TRUE CAREERS"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:complexType name="Scores">
+		<xs:sequence>
+			<xs:element name="score" type="Score" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Score">
+		<xs:sequence>
+		    <xs:element name="number" type="xs:double" minOccurs="0"/>
+		    <xs:element name="numberCategoryCode" type="xs:int"  minOccurs="0"/>
+			<xs:element name="groupID" type="xs:int"  minOccurs="0"/>
+			<xs:element name="groupDaysHoldNumber" type="xs:int"  minOccurs="0"/>
+			<xs:element name="groupHeldMaturityDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="lastCalculatedDate" type="xs:date" />
+			<xs:element name="eligibilityRatingCode" type="xs:string"   minOccurs="0"/> <!-- length="2" -->
+			<xs:element name="eligibilityIndicatorCode" type="xs:string"  minOccurs="0"/> <!-- length="1" -->
+			<xs:element name="modelCode" type="xs:string"  /> <!-- maxLength="32" -->
+			<xs:element name="modelSubCode" type="xs:string"  minOccurs="0"/> <!-- maxLength="64" -->
+			<xs:element name="accountTierNumber" type="xs:string"  minOccurs="0"/> <!-- length="10" -->
+			<xs:element name="accountNodeNumber" type="xs:string"  minOccurs="0"/> <!-- length="10" -->
+			<xs:element name="delinquentBucketAccount" type="xs:string"  minOccurs="0"/> <!-- length="7" -->
+			<xs:element name="departmentId" type="xs:string"  minOccurs="0"/> <!-- length="3" -->
+			<xs:element name="riskIndicatorCode1" type="xs:string"  minOccurs="0"/> <!-- length="9" -->
+			<xs:element name="riskIndicatorCode2" type="xs:string"  minOccurs="0"/> <!-- length="9" -->
+			<xs:element name="riskIndicatorCode3" type="xs:string"  minOccurs="0"/> <!-- length="9" -->
+			<xs:element name="systemsInfo" type="sys:SystemsInfo"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+    <xs:complexType name="SpecialProcesses">
+        <xs:sequence>
+            <xs:element name="specialProcess" type="SpecialProcess" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SpecialProcess">
+        <xs:sequence>
+			<xs:element name="specialProcessID" type="xs:string" minOccurs="0"/>
+            <xs:element name="specialProcessName" type="xs:string"/>
+            <xs:element name="specialProcessNameDescription" type="xs:string" minOccurs="0"/>
+            <xs:element name="specialProcessItemCd" type="xs:string"/>
+            <xs:element name="effectiveEndDt" type="xs:date" minOccurs="0"/>
+            <xs:element name="systemsInfo" type="sys:SystemsInfo"  minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClassPassThroughData">
+        <xs:sequence>
+			<xs:element name="billOptOutCosigner" type="xs:string" minOccurs="0"/>
+            <xs:element name="USPSeBillCode" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+	<xs:complexType name="PurgedPersonIDs">
+		<xs:sequence>
+			<xs:element name="id" type="PersonID" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="IdentifierDomain">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SLM"/>
+			<xs:enumeration value="ED"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ConsolidatedPersonKey">
+		<xs:sequence>
+			<xs:element name="keyFromSLM" type="ConsolidatedKey" minOccurs="0"/>
+			<xs:element name="keyFromED" type="ConsolidatedKey" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ConsolidatedKey">
+		<xs:sequence>
+			<xs:element name="key" type="PersonIDKey" />
+			<xs:element name="updateDateTime" type="xs:dateTime" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <xs:complexType name="ClassPersonDemoInfo">
+        <xs:sequence>
+			<xs:element name="socialSecurityNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="lastName" type="xs:string" minOccurs="0"/>
+            <xs:element name="firstName" type="xs:string" minOccurs="0"/>
+            <xs:element name="middleName" type="xs:string" minOccurs="0"/>
+            <xs:element name="LSCID" type="xs:string" minOccurs="0"/>
+            <xs:element name="birthDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="primPhoneNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="secPhoneNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="terPhoneNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressLine1" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressLine2" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressCity" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressState" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressZipCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressCountryName" type="xs:string" minOccurs="0"/>
+            <xs:element name="emailAddress" type="xs:string" minOccurs="0"/>
+            <xs:element name="emailValidFlag" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClassPersonLoanInfo">
+        <xs:sequence>
+			<xs:element name="classLoan" type="ClassLoan" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClassLoan">
+        <xs:sequence>
+			<xs:element name="borrowerSSN" type="xs:string" minOccurs="0"/>
+            <xs:element name="borrowerAcctSfx" type="xs:string" minOccurs="0"/>
+            <xs:element name="LSCID" type="xs:string" minOccurs="0"/>
+            <xs:element name="recTypeCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="loanSeqNum" type="xs:string" minOccurs="0"/>
+            <xs:element name="loanID" type="xs:string" minOccurs="0"/>
+            <xs:element name="loanStatusCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="loanExternalSvcrCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="loanCreationDateTime" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

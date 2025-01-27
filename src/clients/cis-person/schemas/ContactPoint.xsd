@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--changed ContactRoleCode to required per change 173906 -->
+<xs:schema xmlns="http://www.slma.com/cis/contactPoint.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:slma="http://www.slma.com/slma" xmlns:sys="http://www.slma.com/systems" xmlns:prsn="http://www.slma.com/cis/person.xsd" targetNamespace="http://www.slma.com/cis/contactPoint.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.slma.com/slma" schemaLocation="SLMATypes.xsd"/>
+	<xs:import namespace="http://www.slma.com/systems" schemaLocation="SLMASystems.xsd"/>
+	<xs:import namespace="http://www.slma.com/cis/person.xsd" schemaLocation="Person.xsd"/>
+	<xs:simpleType name="ContactPointID">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:maxInclusive value="9999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ContactPoint" abstract="true">
+		<xs:sequence>
+			<xs:element name="key" type="ContactPointKey"  minOccurs="0"/>
+			<xs:element name="consolidatedKey" type="ConsolidatedCPKey"  minOccurs="0"/>
+			<xs:element name="consolidatedPersonKey" type="prsn:ConsolidatedPersonKey"  minOccurs="0"/>
+			<!-- Changed min occurs to 0 for personKey -->
+			<xs:element name="personKey" type="prsn:PersonKey"  minOccurs="0"/>
+			<xs:element name="contactRoleCode" type="ContactRoleCode"  minOccurs="0"/>
+			<xs:element name="locationCode" type="ContactPointLocationCode"  minOccurs="0"/>
+			<xs:element name="lastVerificationDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="systemsInfo" type="sys:SystemsInfo"  minOccurs="0"/>
+			<xs:element name="effectiveRange" type="sys:EffectiveRange"  minOccurs="0"/>
+			<xs:element name="originatingDataSource" type="xs:string"  minOccurs="0"/>
+			<xs:element name="originatingDataSourceID" type="slma:OriginatingSourceID"  minOccurs="0"/>
+			<xs:element name="contactPreferenceFlag" type="xs:boolean"  minOccurs="0"/>
+			<xs:element name="contactLastUnusableDate" type="xs:date"  minOccurs="0"/>
+			<xs:element name="contactLastUnusableCode" type="ContactLastUnusableCode"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContactPointKey" abstract="true">
+	</xs:complexType>
+	<xs:complexType name="ContactPointIDKey">
+		<xs:complexContent>
+			<xs:extension base="ContactPointKey">
+				<xs:sequence>
+					<xs:element name="id" type="ContactPointID" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ClassAuxKey">
+
+		<xs:complexContent>
+			<xs:extension base="ContactPointKey">
+				<xs:sequence>
+					<xs:element name="primaryPersonSSN" type="slma:SSN" />
+					<!-- new  -->
+					<xs:element name="suffixKey" type="PersonSuffixKey" maxOccurs="unbounded"/>
+					<!-- Replaces
+          <xs:element name="classAccountSuffix" type="xs:int" minOccurs="1" maxOccurs="1"  />
+          <xs:element name="classAuxSequenceNumber" type="xs:int" minOccurs="1" maxOccurs="1"  />          
+            -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- New type -->
+	<xs:complexType name="PersonSuffixKey">
+		<xs:sequence>
+			<xs:element name="classAccountSuffix" type="xs:int" />
+			<xs:element name="classAuxSequenceNumber" type="xs:int" />
+		</xs:sequence>
+	</xs:complexType>
+	<!--  End new type -->
+	
+	<xs:complexType name="EagleGroupKey">
+		<xs:complexContent>
+			<xs:extension base="ContactPointKey">
+				<xs:sequence>
+					<xs:element name="eagleGroupKey" type="slma:EagleGroup" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+		
+	<xs:complexType name="Address">
+		<xs:complexContent>
+			<xs:extension base="ContactPoint">
+				<xs:sequence>
+					<xs:element name="address" type="slma:Address"  minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Phone">
+		<xs:complexContent>
+			<xs:extension base="ContactPoint">
+				<xs:sequence>
+					<xs:element name="phone" type="slma:Phone"  minOccurs="0"/>
+					<xs:element name="autoDialerConsent" type="slma:ConsentType" minOccurs="0"/>
+					<xs:element name="consentLastChangedOn" type="xs:date" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>
+							This element is only used by the Get services.
+							This should NOT be used in the input for the add/update services
+							This is for auto dial consent last changed on
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="autoDialerConsentLastVerifiedOn" type="xs:date" minOccurs="0"/>
+					<xs:element name="textConsent" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>
+							As of 06/2011, the valid values of the text consent are
+							a)	‘Y’ = we have explicit consent from the consumer to Text their Cell Phone
+							b)	‘N’ = we have been told not to text their Cell Phone by the consumer.
+							c)	Blank = the consumer has not given indication either way.
+							d)	‘L’ = Never Text. This will be shared from the Never Auto Dial population.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="textConsentLastChangedOn" type="xs:date" minOccurs="0"/>
+					<xs:element name="textConsentLastVerifiedOn" type="xs:date" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Note: Last Bounceback Date will never be returned for roles -->
+	<xs:complexType name="Email">
+		<xs:complexContent>
+			<xs:extension base="ContactPoint">
+				<xs:sequence>
+					<xs:element name="email" type="slma:Email"  minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ContactPointLocationCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SCHL"/>
+			<xs:enumeration value="HOME"/>
+			<xs:enumeration value="WORK"/>
+			<xs:enumeration value="CELL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ContactPointVerificationCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="VRFD"/>
+			<xs:enumeration value="UVRF"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ContactRoleCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ALT"/>
+			<xs:enumeration value="PRIM"/>
+			<xs:enumeration value="TEMP"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ContactLastUnusableCode">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ConsolidatedCPKey">
+		<xs:sequence>
+			<xs:element name="keyFromSLM" type="ConsolidatedKey" minOccurs="0"/>
+			<xs:element name="keyFromED" type="ConsolidatedKey" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ConsolidatedKey">
+		<xs:sequence>
+			<xs:element name="key" type="ContactPointIDKey" />
+			<xs:element name="updateDateTime" type="xs:dateTime" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
