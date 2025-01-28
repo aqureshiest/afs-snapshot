@@ -445,7 +445,7 @@ export default class LendingDecisionServiceClient extends Client {
       });
       throw error;
     }
-
+    const applicationId = results.data.applicationId;
     const priceCurve =
       results.data.artifacts?.combinedPriceCurve &&
       results.data.artifacts.combinedPriceCurve.length > 0
@@ -458,16 +458,15 @@ export default class LendingDecisionServiceClient extends Client {
       throw error;
     }
 
-    const softApprovedAmount = results.data.artifacts
-      ?.cosignerSoftApprovedAmount
-      ? results.data.artifacts.cosignerSoftApprovedAmount
-      : results.data.artifacts.softApprovedAmount;
-
     const softInquiryDate = results.data.artifacts?.cosignerSoftInquiryDate
       ? results.data.artifacts.cosignerSoftInquiryDate
       : results.data.artifacts.softInquiryDate;
 
-    const filteredPrices = this.filterPriceCurve(context, priceCurve);
+    const filteredPrices = this.filterPriceCurve(
+      context,
+      applicationId,
+      priceCurve,
+    );
 
     // If we somehow got no prices, throw an error
     if (!filteredPrices || (filteredPrices && filteredPrices.length === 0)) {
@@ -496,6 +495,14 @@ export default class LendingDecisionServiceClient extends Client {
       context,
       calculatorPayload,
     )) as unknown as GetMinPaymentPriceResponse;
+
+    this.log(
+      {
+        id: applicationId,
+        message: `[8eb4dace] payments: ${JSON.stringify(payments)}`,
+      },
+      context,
+    );
 
     const ratesAndPayments = payments?.prices?.map((price) => {
       return {
@@ -2038,15 +2045,46 @@ export default class LendingDecisionServiceClient extends Client {
 
   private filterPriceCurve(
     context: PluginContext,
+    applicationId: string,
     priceCurve: ArtifactGetResponse["data"]["artifacts"]["priceCurve"],
   ): Array<FilteredPrices> {
     try {
-      return priceCurve
-        .filter((price) => {
-          if (Object.values(TermLengths).includes(price.term_months as number))
-            return price;
-        })
-        .flatMap((price) => {
+      let filteredPrices;
+
+      /**
+       * Standard Term Lengths are
+       * 60 months
+       * 84 months
+       * 120 months
+       * 180 months
+       * 240 months
+       */
+      const standardTermLengthPriceCurve = priceCurve.filter((price) => {
+        if (Object.values(TermLengths).includes(price.term_months as number))
+          return price;
+      });
+
+      if (
+        !standardTermLengthPriceCurve ||
+        (standardTermLengthPriceCurve &&
+          standardTermLengthPriceCurve.length === 0)
+      ) {
+        // Non-standard length Terms
+        filteredPrices = priceCurve
+          .filter((price, index) => {
+            return price.term_months % 12 === 0;
+          })
+          .flatMap((price) => {
+            return price.rates.map((rate) => {
+              return {
+                rate: Math.round(rate.rate * 100),
+                rateType: rate.rate_type,
+                term: price.term_months,
+              };
+            });
+          });
+      } else {
+        filteredPrices = standardTermLengthPriceCurve.flatMap((price) => {
           return price.rates.map((rate) => {
             return {
               rate: Math.round(rate.rate * 100),
@@ -2055,6 +2093,16 @@ export default class LendingDecisionServiceClient extends Client {
             };
           });
         });
+      }
+
+      this.log(
+        {
+          id: applicationId,
+          message: `[fe1d37f1] filtered priceCurve: ${JSON.stringify(filteredPrices)}`,
+        },
+        context,
+      );
+      return filteredPrices;
     } catch (error) {
       this.log(
         {

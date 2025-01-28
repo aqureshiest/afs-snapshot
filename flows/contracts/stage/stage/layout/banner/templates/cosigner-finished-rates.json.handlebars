@@ -1,19 +1,31 @@
 {{! TODO: the condition for showing this banner is imprecise; this should be substituted by a
     check of the artifact from LDS to ensure that the decision:
-      1. has rates
+      1. has rates - (is approved)
       2. has not expired
 }}
-{{#if (and (eq application.applicant.role "primary") application.cosigner.details.decision.length)}}
-{
-  {{#if (contract "secondaryAction")}}
-    "additionalButtonProps": {{{json (contract "secondaryAction")}}},
+{{#if (eq application.applicant.role "primary") }}
+  {{#if application.cosigner.details.decision.length}}
+    {{#with (contract 'view-rates-decision-status') as |result| }}
+      {{#if (eq result.data.decisionOutcome 'Approved') }}
+        {
+          {{#if (contract "secondaryAction")}}
+            "additionalButtonProps": {{{json (contract "secondaryAction")}}},
+          {{/if}}
+          {{#if (contract "primaryAction")}}
+            "actionButtonProps": {{{json (contract "primaryAction")}}},
+          {{/if}}
+          "variant": {{{json (maybe (contract "variant") "contrast")}}},
+          "text": {{{json (maybe (contract "copy") "Your cosigner has completed rate check and cosigned rate estimates are available")}}}
+        }
+      {{else}}
+        null
+      {{/if}}
+    {{else}}
+      null
+    {{/with}}
+  {{else}}
+    null
   {{/if}}
-  {{#if (contract "primaryAction")}}
-    "actionButtonProps": {{{json (contract "primaryAction")}}},
-  {{/if}}
-  "variant": {{{json (maybe (contract "variant") "contrast")}}},
-  "text": {{{json (maybe (contract "copy") "Your cosigner has completed rate check and cosigned rate estimates are available")}}}
-}
 {{else}}
 null
 {{/if}}
