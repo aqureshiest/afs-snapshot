@@ -15,9 +15,12 @@
       {{! TODO: THIS IS THE WRONG PLACE FOR THIS, WHY WAS THIS PUT HERE }}
       "partnerDiscountAmount": {{{json (string discountAmount)}}},
     {{/with}}
-    {{#with request.body.rateAdjustment.name as |partnerName|}}
+    {{#with request.body.rateAdjustment.name as |partnerDiscountName|}}
       {{! TODO: THIS IS THE WRONG PLACE FOR THIS, WHY WAS THIS PUT HERE }}
-      "partnerName": {{{json  partnerName}}},
+      "partnerDiscountName": {{{json partnerDiscountName}}},
+    {{/with}}
+    {{#with request.body.partnerName as |partnerName|}}
+      "partnerName": {{{json partnerName}}},
     {{/with}}
     {{! TODO: make this more modular }}
     "product": "slr",

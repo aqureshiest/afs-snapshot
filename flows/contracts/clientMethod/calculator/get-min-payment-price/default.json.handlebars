@@ -20,7 +20,7 @@
             {{~#each artifacts.priceCurve as |price|~}}{{#each price.rates as |rate|~}}
               {{~#if (includes @ref.termsToInclude price.term_months)~}}{{#multiline}}
                 {
-                  "rateInBps": {{{ json (product rate.rate 100) }}},
+                  "rateInBps": {{{ json (MathRound (product rate.rate 100)) }}},
                   "uwLoanTermInMonths": {{{ json price.term_months }}},
                   "rateType": {{{ json rate.rate_type }}},
                   "startingPrincipalBalanceInCents":

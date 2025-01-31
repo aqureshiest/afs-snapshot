@@ -91,6 +91,7 @@ export const lte = (v1, v2) => v1 <= v2;
 export const gte = (v1, v2) => v1 >= v2;
 export const not = (v1) => !v1;
 export const notNull = (v1) => v1 !== null;
+export const isNull = (v1) => v1 === null;
 export const concat = (v1: string, v2: string) => (v1 ?? "").concat(v2 ?? "");
 
 /**
@@ -256,7 +257,12 @@ export function formatToUSCurrency(...args) {
     ...(noDecimal ? { minimumFractionDigits: 0 } : {}),
   });
 }
-
+export function MathTrunc(v1) {
+  return Math.trunc(v1);
+}
+export function MathRound(v1) {
+  return Math.round(v1);
+}
 export function formatPhoneNumber(v1) {
   if (v1) {
     return `${v1.substring(0, 3)}-${v1.substring(3, 6)}-${v1.substring(6, 10)}`;

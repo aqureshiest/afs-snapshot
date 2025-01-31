@@ -2,11 +2,15 @@
   "type": "object",
   "required": [
     "partnerId",
+    "partnerName",
     "loanAmount",
     "demographicData"
   ],
   "properties": {
     "partnerId": {
+      "type": "string"
+    },
+    "partnerName": {
       "type": "string"
     },
     "programId": {
