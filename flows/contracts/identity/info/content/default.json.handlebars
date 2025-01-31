@@ -1,0 +1,8 @@
+{
+  "type": "info",
+  "definition": {
+      "key": {{#if (contract "key")}}{{{json (contract "key")}}}{{else}}"info-content"{{/if}},
+      "type": "infoContent",
+      "content": {{#if (contract "content")}}{{{json (contract "content")}}}{{else}}[]{{/if}}
+  }
+}

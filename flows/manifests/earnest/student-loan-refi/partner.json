@@ -1,0 +1,152 @@
+[
+  {
+    "methods": [
+      "get"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid"
+      }
+    ],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "env": "inputs/env.default",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": {
+              "*": "neas.verify-token",
+              "token": "header.idtoken"
+            },
+            "mode": "optional",
+            "authorization": []
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "stage",
+      "stage": {
+        "*": "stage.form",
+        "stageKey": {
+          "@": "partner-landing"
+        },
+        "stageLabel": {
+          "@": "Partner Landing"
+        },
+        "stageValidation": {
+          "*": "earnest-student-loan-refi/pages/partner.validation"
+        },
+        "stageLayout": {
+          "*": "stage/layout",
+          "header": [
+            {
+              "*": "stage/layout/header.logo",
+              "action": "actions/navigate.earnest-home"
+            },
+            {
+              "*": "stage/layout/header.partner-logo"
+            },
+            {
+              "*": "stage/layout/header.sidebar",
+              "items": [
+                "stage/layout/header/sidebar-items.support"
+              ]
+            }
+          ]
+        },
+        "stageSteps": [
+          {
+            "*": "stage.form-step",
+            "stepKey": {
+              "@": "landing"
+            },
+            "stepLabel": {
+              "@": "Landing"
+            },
+            "stepSaveAction": {
+              "*": "actions.rate-decision-based",
+              "rateResult": "view-rates-decision-status",
+              "rateApproved": {
+                "*": "actions/navigate",
+                "goTo": {
+                  "*": "earnest-student-loan-refi/urls.partner-rates",
+                  "status": {
+                    "@": "approved"
+                  }
+                }
+              },
+              "rateUnable": {
+                "*": "actions/navigate",
+                "goTo": {
+                  "*": "earnest-student-loan-refi/urls.partner-rates",
+                  "status": {
+                    "@": "unable"
+                  }
+                }
+              },
+              "rateFrozen": {
+                "*": "actions/navigate",
+                "goTo": {
+                  "*": "earnest-student-loan-refi/urls.partner-rates",
+                  "status": {
+                    "@": "frozen"
+                  }
+                }
+              },
+              "rateDeclined": {
+                "*": "actions/navigate",
+                "goTo": {
+                  "*": "earnest-student-loan-refi/urls.partner-rates",
+                  "status": {
+                    "@": "declined"
+                  }
+                }
+              }
+            },
+            "onError": [],
+            "stepSaveCopy": {
+              "@": "See my rates"
+            },
+            "stepRows": [
+              {
+                "*": "info/header",
+                "key": {
+                  "@": "header"
+                },
+                "copy": {
+                  "@": "Welcome! Let's lock in your rate."
+                },
+                "subCopy": {
+                  "@": "Just one more step - we need your consent to show your full rate estimates."
+                }
+              },
+              {
+                "*": "info/content",
+                "content": "landing.partner"
+              },
+              {
+                "*": "questions/primary/disclosure.partner",
+                "disclosureLinks": [
+                  "questions/primary/disclosure/links.terms-of-services",
+                  "questions/primary/disclosure/links.privacy-policy",
+                  "questions/primary/disclosure/links.privacy-notice",
+                  "questions/primary/disclosure/links.consent-electronic-communications",
+                  "questions/primary/disclosure/links.loss-of-benefits",
+                  "questions/primary/disclosure/links.earnest-loan-application-solicitation"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{{#with (partnerLogo application.reference.partnerName) as |partner|}}
+  {
+    {{#if (contract "action")}}
+    "action": {{{json (contract "action")}}},
+    {{/if}}
+    "asset": {
+      "type": "LocalAsset",
+      "name": "{{partner}}"
+    }
+  }
+{{else}}
+  {}
+{{/with}}
