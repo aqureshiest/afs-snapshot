@@ -1115,11 +1115,11 @@ export default class LendingDecisionServiceClient extends Client {
       },
     } as DecisionEntity;
 
-    if (appType === 'primary_only' && decisionAPIVersion === 'v2') {
+    if (appType === "primary_only" && decisionAPIVersion === "v2") {
       const cisInfoLoansDetails = this.applicantCisInfo(
         context,
         application,
-        details.cisInfoLoans
+        details.cisInfoLoans,
       );
 
       formattedPayload = {
@@ -1607,8 +1607,8 @@ export default class LendingDecisionServiceClient extends Client {
   private applicantCisInfo(
     context: PluginContext,
     application: typings.Application,
-    cisInfoLoansDetails: typings.Details["cisInfoLoans"]
-  ): DecisionEntity['cisInfo'] | null {
+    cisInfoLoansDetails: typings.Details["cisInfoLoans"],
+  ): DecisionEntity["cisInfo"] | null {
     if (cisInfoLoansDetails) {
       const loansDetails = cisInfoLoansDetails
         .filter((loanInfo) => loanInfo)
@@ -1632,7 +1632,7 @@ export default class LendingDecisionServiceClient extends Client {
         rootID: application.id,
         message: `[a0478d45] No CIS Info Loans details found`,
       },
-      context
+      context,
     );
     return null;
   }

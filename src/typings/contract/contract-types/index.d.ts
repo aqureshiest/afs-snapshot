@@ -275,6 +275,22 @@ declare module "contract/contract-types/cis-person-method.js" {
     id: string;
   };
 
-  type CisPersonLoanOutput = { [key: string]: unknown }
+  type CisPersonLoanOutput = { [key: string]: unknown };
   type Output = Array<CisPersonLoanOutput>;
+}
+
+import "contract/contract-types/optimizely-method.js";
+declare module "contract/contract-types/optimizely-method.js" {
+  type Input = IContractInput;
+  type Context = ChassisPluginContext;
+  type Definition = {
+    optimizelyMethod: "getFeatureFlags";
+    userId: string;
+    featureFlagKeys: { [key: string]: Array<string> };
+    attributes?: { [key: string]: unknown };
+  };
+  type MinimalApplication = {
+    id: string;
+  };
+  type Output = { [key: string]: boolean };
 }

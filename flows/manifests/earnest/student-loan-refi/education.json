@@ -32,6 +32,11 @@
             ]
           }
         ]
+      },
+      "features": {
+        "*": "optimizely-feature.feature-flags-artifacts",
+        "flags": "optimizely-feature/flags.default",
+        "optimizelyGetFeatures": "get-feature-flag"
       }
     },
     "outputs": {

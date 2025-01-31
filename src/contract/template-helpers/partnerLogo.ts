@@ -1,29 +1,29 @@
 const PARTNER_MAP = {
   engine: {
     logo: "logos.partnerLogoEngine",
-    names: ["engine"]
+    names: ["engine"],
   },
   gradfin: {
     logo: "logos.partnerLogoGradfin",
-    names: ["gradfin"]
+    names: ["gradfin"],
   },
   juno: {
     logo: "logos.partnerLogoJuno",
-    names: ["juno"]
+    names: ["juno"],
   },
   purefy: {
     logo: "logos.partnerLogoPurefy",
-    names: ["purefy"]
+    names: ["purefy"],
   },
   sparrow: {
     logo: "logos.partnerLogoSparrow",
-    names: ["sparrow"]
+    names: ["sparrow"],
   },
   splash: {
     logo: "logos.partnerLogoSplash",
-    names: ["splash"]
-  }
-}
+    names: ["splash"],
+  },
+};
 
 /**
  * Block helper that takes a valid JSON object and spreads it to an encapsulating object

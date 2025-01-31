@@ -1,7 +1,11 @@
 import assert from "node:assert";
 import ContractExecutable from "../contract-executable.js";
 
-class CisPersonMethod extends ContractExecutable<Definition, Definition, Output> {
+class CisPersonMethod extends ContractExecutable<
+  Definition,
+  Definition,
+  Output
+> {
   get executionName(): string {
     return "CisPersonMethod";
   }
@@ -10,17 +14,9 @@ class CisPersonMethod extends ContractExecutable<Definition, Definition, Output>
     return Boolean(definition && definition.id);
   };
 
-  evaluate = async (
-    context: Context,
-    input: Input,
-    definition: Definition,
-  ) => {
-    const cisPersonClient =
-      context.loadedPlugins.cisPersonClient?.instance;
-    assert(
-      cisPersonClient,
-      "[fd5f985f] CIS Person Client not instantiated",
-    );
+  evaluate = async (context: Context, input: Input, definition: Definition) => {
+    const cisPersonClient = context.loadedPlugins.cisPersonClient?.instance;
+    assert(cisPersonClient, "[fd5f985f] CIS Person Client not instantiated");
 
     let result;
     try {

@@ -1,15 +1,15 @@
-import PluginContext from '@earnest-labs/microservice-chassis/PluginContext.js';
-import { Event } from '@earnest/application-service-client/typings/codegen.js';
-import assert from 'node:assert';
-import * as path from 'node:path';
-import Client from '../client.js';
+import PluginContext from "@earnest-labs/microservice-chassis/PluginContext.js";
+import { Event } from "@earnest/application-service-client/typings/codegen.js";
+import assert from "node:assert";
+import * as path from "node:path";
+import Client from "../client.js";
 import {
   Client as SoapClient,
   createClientAsync,
   ClientSSLSecurity,
-} from 'soap';
+} from "soap";
 
-import { FeatureFlagKey } from '../optimizely/client.js';
+import { FeatureFlagKey } from "../optimizely/client.js";
 
 const gql = String.raw;
 
@@ -23,10 +23,10 @@ export default class CisPersonClient extends Client {
   public ClientSSLSecurity: typeof ClientSSLSecurity;
 
   constructor(getPersonWSDL: string, key: Buffer, cert: Buffer) {
-    const options = { baseUrl: 'baseUrl' };
+    const options = { baseUrl: "baseUrl" };
     super(options);
-    this.appName = 'apply-flow-service';
-    this.appVersion = '1.0';
+    this.appName = "apply-flow-service";
+    this.appVersion = "1.0";
     this.getPersonWSDL = getPersonWSDL;
     this.key = key;
     this.cert = cert;
@@ -36,20 +36,20 @@ export default class CisPersonClient extends Client {
 
   public async createCisPersonClient(
     context: PluginContext,
-    id: string
+    id: string,
   ): Promise<SoapClient> {
     this.log(
       {
-        message: 'creating-cis-person-client',
+        message: "creating-cis-person-client",
         getPersonWSDL: this.getPersonWSDL,
         id,
       },
-      context
+      context,
     );
 
     try {
       const xmlPath = path.resolve(
-        `src/clients/cis-person/wsdlFiles/${this.getPersonWSDL}`
+        `src/clients/cis-person/wsdlFiles/${this.getPersonWSDL}`,
       );
       const cisPersonClient = await this.createClientAsync(xmlPath, {
         wsdl_options: { cert: this.cert, key: this.key },
@@ -60,14 +60,14 @@ export default class CisPersonClient extends Client {
           strictSSL: false,
           rejectUnauthorized: false,
           forever: true,
-        })
+        }),
       );
 
       cisPersonClient.addSoapHeader({
-        'smwsh:SMWebServiceHeader': {
-          'smwsh:appContext': {
-            'smwsh:appName': this.appName,
-            'smwsh:appVersion': this.appVersion,
+        "smwsh:SMWebServiceHeader": {
+          "smwsh:appContext": {
+            "smwsh:appName": this.appName,
+            "smwsh:appVersion": this.appVersion,
           },
         },
       });
@@ -80,7 +80,7 @@ export default class CisPersonClient extends Client {
           getPersonWSDL: this.getPersonWSDL,
           id,
         },
-        context
+        context,
       );
 
       throw error;
@@ -90,39 +90,39 @@ export default class CisPersonClient extends Client {
   public async fetchPerson(
     context: PluginContext,
     ssn: string,
-    id: string
+    id: string,
   ): Promise<CisPerson> {
     this.log(
       {
-        message: 'fetching-person',
+        message: "fetching-person",
         id,
       },
-      context
+      context,
     );
 
     try {
       const cisPersonClient = await this.createCisPersonClient(context, id);
       const cisPerson = await cisPersonClient.GetV40Async({
         attributes: {
-          'xmlns:ns2': 'http://www.slma.com/cis/person.xsd',
-          retrievePersonData: 'true',
-          activeContactPointsOnly: 'true',
-          displayLoans: 'true',
+          "xmlns:ns2": "http://www.slma.com/cis/person.xsd",
+          retrievePersonData: "true",
+          activeContactPointsOnly: "true",
+          displayLoans: "true",
         },
-        'pg:personKey': {
+        "pg:personKey": {
           attributes: {
-            'xsi:type': 'ns2:SSNKey',
+            "xsi:type": "ns2:SSNKey",
           },
-          'ns2:socialSecurityNumber': ssn ? ssn.replace(/\D/g, '') : '',
+          "ns2:socialSecurityNumber": ssn ? ssn.replace(/\D/g, "") : "",
         },
       });
 
       this.log(
         {
-          message: 'cis-person-retrieved',
+          message: "cis-person-retrieved",
           id,
         },
-        context
+        context,
       );
 
       if (!cisPerson[0]) {
@@ -133,7 +133,7 @@ export default class CisPersonClient extends Client {
             error,
             id,
           },
-          context
+          context,
         );
 
         throw error;
@@ -141,10 +141,10 @@ export default class CisPersonClient extends Client {
 
       this.log(
         {
-          message: '[de2bf48a] person-fetched',
+          message: "[de2bf48a] person-fetched",
           id,
         },
-        context
+        context,
       );
 
       return cisPerson[0];
@@ -154,7 +154,7 @@ export default class CisPersonClient extends Client {
           error,
           id,
         },
-        context
+        context,
       );
 
       throw error;
@@ -164,14 +164,14 @@ export default class CisPersonClient extends Client {
   public getCisInfoLoans(
     context: PluginContext,
     cisPerson: CisPerson,
-    id: string
+    id: string,
   ): CisInfoLoan {
     this.log(
       {
-        message: '[7ce391f7] getting CIS Info Loans',
+        message: "[7ce391f7] getting CIS Info Loans",
         id,
       },
-      context
+      context,
     );
 
     const loans =
@@ -188,22 +188,22 @@ export default class CisPersonClient extends Client {
 
   public async checkCisPersonFlag(
     context: PluginContext,
-    id: string
+    id: string,
   ): Promise<boolean> {
     const optimizelyClient = context.loadedPlugins.optimizelyClient?.instance;
-    assert(optimizelyClient, '[22473dd7] Optimizely Client not instantiated');
+    assert(optimizelyClient, "[22473dd7] Optimizely Client not instantiated");
 
     try {
-      return await optimizelyClient['getFeatureFlag'](
-        FeatureFlagKey.CIS_PERSON
+      return await optimizelyClient["getFeatureFlag"](
+        FeatureFlagKey.CIS_PERSON,
       );
     } catch (error) {
       this.log(
         {
-          message: '[98c9287b] Failed getting cis_person feature flag',
+          message: "[98c9287b] Failed getting cis_person feature flag",
           id,
         },
-        context
+        context,
       );
 
       return false;
@@ -213,15 +213,15 @@ export default class CisPersonClient extends Client {
   private async addCisInfoLoanToDetails(
     context: PluginContext,
     id: string,
-    cisInfoLoans: CisInfoLoan
+    cisInfoLoans: CisInfoLoan,
   ) {
     const errors: Error[] = [];
 
     this.log(
       {
-        message: '[48171d15] adding cisInfoLoans to Details',
+        message: "[48171d15] adding cisInfoLoans to Details",
       },
-      context
+      context,
     );
 
     try {
@@ -229,10 +229,10 @@ export default class CisPersonClient extends Client {
         context.loadedPlugins.applicationServiceClient?.instance;
       assert(
         applicationService,
-        '[0f2b2d8e] Application Service not instantiated'
+        "[0f2b2d8e] Application Service not instantiated",
       );
 
-      const ASresponse = (await applicationService['sendRequest'](
+      const ASresponse = (await applicationService["sendRequest"](
         {
           query: gql`
             mutation ($id: UUID!, $details: AddDetailInput, $meta: EventMeta) {
@@ -256,16 +256,16 @@ export default class CisPersonClient extends Client {
             details: {
               cisInfoLoans,
             },
-            meta: { service: 'apply-flow-service' },
+            meta: { service: "apply-flow-service" },
           },
         },
-        context
+        context,
       )) as unknown as { addDetails: Event };
 
       if (ASresponse.addDetails.error) {
         errors.push(
-          new Error('application-service-error'),
-          new Error(ASresponse.addDetails.error)
+          new Error("application-service-error"),
+          new Error(ASresponse.addDetails.error),
         );
       }
 
@@ -276,10 +276,10 @@ export default class CisPersonClient extends Client {
 
         this.log(
           {
-            message: '[e1da05f4] cisInfoLoans added to Details',
+            message: "[e1da05f4] cisInfoLoans added to Details",
             id,
           },
-          context
+          context,
         );
 
         return { errors, results };
@@ -291,7 +291,7 @@ export default class CisPersonClient extends Client {
         {
           error: ex,
         },
-        context
+        context,
       );
 
       errors.push(ex);
@@ -303,20 +303,20 @@ export default class CisPersonClient extends Client {
   public async getCisPersonLoans(
     context: PluginContext,
     id: string,
-    ssn: string
+    ssn: string,
   ) {
     const isFeatureFlagCisPersonEnabled = await this.checkCisPersonFlag(
       context,
-      id
+      id,
     );
 
     if (!isFeatureFlagCisPersonEnabled) {
       this.log(
         {
-          message: '[a39af79e] cis_person feature flag disabled',
+          message: "[a39af79e] cis_person feature flag disabled",
           id,
         },
-        context
+        context,
       );
 
       return;
@@ -325,10 +325,10 @@ export default class CisPersonClient extends Client {
     try {
       this.log(
         {
-          message: '[3ebd74e7] getting-cis-person-loans',
+          message: "[3ebd74e7] getting-cis-person-loans",
           id,
         },
-        context
+        context,
       );
 
       const personFetched = await this.fetchPerson(context, ssn, id);
@@ -340,7 +340,7 @@ export default class CisPersonClient extends Client {
         const cisInfoLoanDetailsAdded = await this.addCisInfoLoanToDetails(
           context,
           id,
-          cisInfoLoans
+          cisInfoLoans,
         );
 
         return cisInfoLoanDetailsAdded.results;
@@ -348,10 +348,10 @@ export default class CisPersonClient extends Client {
 
       this.log(
         {
-          message: '[70c097f7] no cisInfoLoans found',
+          message: "[70c097f7] no cisInfoLoans found",
           id,
         },
-        context
+        context,
       );
       return cisInfoLoans;
     } catch (error) {
@@ -359,7 +359,7 @@ export default class CisPersonClient extends Client {
         {
           error,
         },
-        context
+        context,
       );
 
       throw error;

@@ -1,0 +1,9 @@
+{{#if auth.artifacts.userId}}
+  {
+    "optimizelyMethod": "getFeatureFlags",
+    "userId": "{{{auth.artifacts.userId}}}",
+    "featureFlagKeys": {{{json @ref.flags}}}
+  }
+{{else}}
+  {}
+{{/if}}

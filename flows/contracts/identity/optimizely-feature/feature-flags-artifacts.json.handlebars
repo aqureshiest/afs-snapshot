@@ -1,0 +1,12 @@
+{{! General-purpose feature flag aggregator; }}
+{{!--
+    This file will be dynamically generated to contain
+    the feature flags defined  /identity/optimizely-feature/flags/*
+    Will look like:
+    {
+      'flagA': true,
+      'flagB': false,
+      ...
+    }
+--}}
+{{{ json @ref.optimizelyGetFeatures }}}

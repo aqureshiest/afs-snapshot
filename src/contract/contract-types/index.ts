@@ -21,6 +21,11 @@ export { default as validate } from "./validate.js";
 export { default as cisPersonMethod } from "./cis-person-method.js";
 
 /* ============================== *
+ * Optimizely
+ * ============================== */
+export { default as optimizelyMethod } from "./optimizely-method.js";
+
+/* ============================== *
  * Decision
  * ============================== */
 export { default as decisionRequest } from "./decision-request.js";

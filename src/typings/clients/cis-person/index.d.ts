@@ -26,8 +26,8 @@ declare module "clients/cis-person/client.js" {
   };
   type Role = {
     loans?: {
-      loan?: Array<Loan> | Loan
-    }
+      loan?: Array<Loan> | Loan;
+    };
     [key: string]: unknown;
   };
   type CisPerson = {

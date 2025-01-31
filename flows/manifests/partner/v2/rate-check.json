@@ -26,6 +26,11 @@
             ]
           }
         ]
+      },
+      "features": {
+        "*": "optimizely-feature.feature-flags-artifacts",
+        "flags": "optimizely-feature/flags.default",
+        "optimizelyGetFeature": "get-feature-flag"
       }
     }
   },
@@ -101,6 +106,11 @@
           "inputs/env.calculator",
           "inputs/env.decisioning"
         ]
+      },
+      "features": {
+        "*": "optimizely-feature.feature-flags-artifacts",
+        "flags": "optimizely-feature/flags.default",
+        "optimizelyGetFeature": "get-feature-flag"
       }
     },
     "parameters": [

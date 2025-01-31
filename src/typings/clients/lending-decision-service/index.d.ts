@@ -171,11 +171,11 @@ interface IDecisionEntity {
     loans: Array<{
       loanKey: {
         id: typings.CisInfoLoansDetail["loanId"];
-      },
+      };
       loanProgramCode: typings.CisInfoLoansDetail["loanProgramCode"];
       loanStatusCode: typings.CisInfoLoansDetail["loanStatusCode"];
     }>;
-  }
+  };
 }
 
 interface IApplicationDecisionDetails {
