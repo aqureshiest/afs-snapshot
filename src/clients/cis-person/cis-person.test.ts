@@ -112,14 +112,10 @@ describe("[b8dcinbp] CIS Person Client", () => {
 
       mock.method(cisPersonClient, "createCisPersonClient", mockFn);
 
-      await assert.rejects(
-        cisPersonClient.fetchPerson(context, "1111-11-1111", "123456789"),
-        (error: Error) => {
-          assert.equal(mockFn.mock.calls.length, 1);
-          assert.equal(error.message, "Network error");
-          return true;
-        },
-      );
+      const personFetched = await cisPersonClient.fetchPerson(context, "1111-11-1111", "123456789");
+      assert.deepStrictEqual(personFetched, {});
+
+      assert.equal(mockFn.mock.calls.length, 1);
     });
 
     it("[9pke3jnn] Should handle empty response", async () => {
@@ -135,14 +131,9 @@ describe("[b8dcinbp] CIS Person Client", () => {
 
       mock.method(cisPersonClient, "createCisPersonClient", mockFn);
 
-      await assert.rejects(
-        cisPersonClient.fetchPerson(context, "1111-11-1111", "123456789"),
-        (error: Error) => {
-          assert.equal(mockFn.mock.calls.length, 1);
-          assert.equal(error.message, `[ec7690fd] Person not found`);
-          return true;
-        },
-      );
+      const personFetched = await cisPersonClient.fetchPerson(context, "1111-11-1111", "123456789");
+      assert.deepStrictEqual(personFetched, {});
+      assert.equal(mockFn.mock.calls.length, 1);
     });
   });
 
