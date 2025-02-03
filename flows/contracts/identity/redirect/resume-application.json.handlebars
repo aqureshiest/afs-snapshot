@@ -1,45 +1,73 @@
 {{#noop}}{{contract 'actions'}}{{/noop}}
 {{#if request.params.id }}
-  {{!-- v1 resume --}}
-  {{#if (eq application.product "student-refi")}}
-    {{#if (and (hasValues applicationState) applicationState.manifest )}}
-      {{#with applicationState }}
-        {{#if step}}
-          "{{manifest}}?step={{step}}"
-        {{else}}
-          "{{manifest}}"
-        {{/if}}
-      {{/with}}
+  {{#if (and (notNull application.reference.partnerName) (notNull application.reference.partnerId) )}}
+  {{!-- Partner API resume--}}
+    {{#if (and (isNull application.referene.userId) (isNull application.reference.userIdBeforeVerifyingThroughEmailId))}}
+    {{!== if no user has claimed the app ==}}
+      "{{application.reference.brand}}/student-loan-refi/partner/{{application.applicants.0.id}}"
     {{else}}
-        "{{application.brand}}/student-refi/{{request.params.id}}"
+    {{!== if a user has claimed the app ==}}
+      {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
+      {{!-- check to get the applicant based on logged user id --}}
+        {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}
+        {{!-- if the logged user has an appState --}}
+          {{#with ../applicationState }}
+            {{#if step}}
+              "{{manifest}}?step={{step}}"
+            {{else}}
+              "{{manifest}}"
+            {{/if}}
+          {{/with}}
+        {{else}}
+        {{!-- user has no appState, redirect to the basic info page --}}
+          "{{../application.brand}}/{{mapProductForRedirect ../application.product}}/basic-info-partner/{{applicant.id}}"
+        {{/if}}
+      {{else}}
+        null
+      {{/with}}
     {{/if}}
   {{else}}
-    {{!-- v2 - conditional to refresh rate-estimates --}}
-    {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
-     {{!-- will refresh rate-estimates if the following conditions are meet
-          - the app has decisions, 
-          - the most recent rate inquiry is expired, 
-          - the app is not submitted, 
-          - and the applicant is not the primary in a cosigned app
-       --}}
-      {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted") (not (and ../application.cosigner.id (eq ../application.primary.id applicant.id) ) ))}}
-        "{{../application.brand}}/student-loan-refi/refresh-rate-estimates/{{applicant.id}}"
-      {{else}}
-          {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}
-            {{#with ../applicationState }}
-              {{#if step}}
-                "{{manifest}}?step={{step}}"
-              {{else}}
-                "{{manifest}}"
-              {{/if}}
-            {{/with}}
+    {{!-- v1 resume --}}
+    {{#if (eq application.product "student-refi")}}
+      {{#if (and (hasValues applicationState) applicationState.manifest )}}
+        {{#with applicationState }}
+          {{#if step}}
+            "{{manifest}}?step={{step}}"
           {{else}}
-            "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if applicant.id}}{{#if (eq ../application.cosigner.id applicant.id)}}/cosigner{{else}}/basic-info{{/if}}/{{applicant.id}}"{{/if}}
+            "{{manifest}}"
           {{/if}}
+        {{/with}}
+      {{else}}
+          "{{application.brand}}/student-refi/{{request.params.id}}"
       {{/if}}
     {{else}}
-      null
-    {{/with}}
+      {{!-- v2 - conditional to refresh rate-estimates --}}
+      {{#with (getApplicantByUserID auth.artifacts.userId application) as |applicant|}}
+      {{!-- will refresh rate-estimates if the following conditions are meet
+            - the app has decisions, 
+            - the most recent rate inquiry is expired, 
+            - the app is not submitted, 
+            - and the applicant is not the primary in a cosigned app
+        --}}
+        {{#if (and (gt applicant.details.decision.length 0) (isExpired (getMostRecentRateInquiry applicant.details.decision)) (ne applicant.status.name "submitted") (not (and ../application.cosigner.id (eq ../application.primary.id applicant.id) ) ))}}
+          "{{../application.brand}}/student-loan-refi/refresh-rate-estimates/{{applicant.id}}"
+        {{else}}
+            {{#if (and (hasValues ../applicationState) ../applicationState.manifest )}}
+              {{#with ../applicationState }}
+                {{#if step}}
+                  "{{manifest}}?step={{step}}"
+                {{else}}
+                  "{{manifest}}"
+                {{/if}}
+              {{/with}}
+            {{else}}
+              "{{../application.brand}}/{{mapProductForRedirect ../application.product}}{{#if applicant.id}}{{#if (eq ../application.cosigner.id applicant.id)}}/cosigner{{else}}/basic-info{{/if}}/{{applicant.id}}"{{/if}}
+            {{/if}}
+        {{/if}}
+      {{else}}
+        null
+      {{/with}}
+    {{/if}}
   {{/if}}
 {{else}}
   null

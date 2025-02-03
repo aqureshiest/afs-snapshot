@@ -5,23 +5,51 @@ const PARTNER_MAP = {
   },
   gradfin: {
     logo: "logos.partnerLogoGradfin",
-    names: ["gradfin"],
+    names: ["gradfin", "gradfin-slr"],
   },
   juno: {
     logo: "logos.partnerLogoJuno",
-    names: ["juno"],
+    names: ["juno", "juno-slr"],
   },
   purefy: {
     logo: "logos.partnerLogoPurefy",
-    names: ["purefy"],
+    names: ["purefy", "purefy-slr"],
   },
   sparrow: {
     logo: "logos.partnerLogoSparrow",
-    names: ["sparrow"],
+    names: ["sparrow", "sparrow-slr"],
   },
   splash: {
     logo: "logos.partnerLogoSplash",
-    names: ["splash"],
+    names: ["splash", "splashfinancial-slr"],
+  },
+  studentloanhero: {
+    logo: "logos.partnerLogoStudentLoanHero",
+    names: ["studentloanhero-slr"],
+  },
+  nerdwallet: {
+    logo: "logos.partnerLogoNerdWallet",
+    names: ["nerdwallet-slr"],
+  },
+  lendingtree: {
+    logo: "logos.partnerLogoLendingTree",
+    names: ["lendingtree-slr"],
+  },
+  bankrate: {
+    logo: "logos.partnerLogoBankrate",
+    names: ["bankrate-slr"],
+  },
+  spinwheel: {
+    logo: "logos.partnerLogoSpinwheel",
+    names: ["spinwheel-slr"],
+  },
+  evenfinancial: {
+    logo: "logos.partnerLogoEvenFinancial",
+    names: ["evenfinancial-slr"],
+  },
+  credible: {
+    logo: "logos.partnerLogoCredible",
+    names: ["credible-slr"],
   },
 };
 

@@ -1,0 +1,41 @@
+[{
+  "methods": ["post"],
+  "parameters": [ { "key": "id", "format": "uuid" } ],
+  "inputs": {
+    "*": "inputs",
+    "env": "inputs/env.neas-irs-joint",
+    "application": {
+      "*": "application/single.flattened",
+      "application": "application-by-id-param"
+    },
+    "applications": {
+      "*": "applications-by-email",
+      "query": "application/search-query"
+     },
+    "userState": "user-state",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": {
+            "*": "neas.verify-token",
+            "token": "header.idtoken"
+          },
+          "mode": "optional",
+          "authorization": []
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "redirect",
+    "redirect": "redirect/full-refi.previous-address",
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "full-refi.add-details-full-refi"
+      ]
+    }
+  }
+}]

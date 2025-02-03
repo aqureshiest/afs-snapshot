@@ -1,0 +1,70 @@
+[{
+  "methods": ["get"],
+  "parameters": [{
+    "key": "id",
+    "format": "uuid"
+  }],
+  "inputs": {
+    "*": "inputs",
+    "application": {
+      "*": "application/single.flattened",
+      "application": "application-by-id-param"
+    },
+    "env": "inputs/env.default",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": "neas.verify-token",
+          "authorization": [
+            "inputs/auth.neas-application-auth",
+            "inputs/auth.neas-user-auth"
+          ]
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "*": "full-refi",
+    "stage": "student-info-stage.full-refi",
+    "pageLayout": {
+      "*": "stage/layout",
+      "header": [
+        {
+          "*": "stage/layout/header.logo",
+          "action": "actions/navigate.earnest-home"
+        },
+        {
+          "*": "stage/layout/header.sidebar",
+          "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"],
+          "view-rates-decision-status": "view-rates-decision-status"
+        }
+      ]
+    },
+    "steps": [
+      "student-info-form/basic.full-refi-partner"
+    ],
+    "student-info-basic-rows": [
+      "info/student-info.refi",
+      "questions/primary/dateOfBirth.default",
+      "questions/primary/phone.default",
+      "info/student-disclaimer.full-refi"
+    ],
+    "progress": [
+      {
+        "*": "stage.progress-item",
+        "label": {
+          "@": "Apply"
+        },
+        "value": {
+          "@": "1"
+        }
+      }
+    ],
+    "back-button": "actions/back-buttons/full-refi.basic-info",
+    "save_basic_info_details_action": "actions/save-details/full-refi.basic-info-partner",
+    "redirect_homebase": "actions/homebase.default",
+    "onError": []
+  }
+}]
