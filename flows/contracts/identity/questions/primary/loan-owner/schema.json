@@ -1,0 +1,11 @@
+{
+  "type": "string",
+  "enum": [
+    "true",
+    "false"
+  ],
+  "errorMessage": {
+    "enum": "Please select an option"
+  },
+  "required": ["loan-owner"]
+}

@@ -41,6 +41,7 @@
             "amount": {
                 "type": "object",
                 "properties": {
+                    "loan-owner": {{{json (schema 'questions/primary/loan-owner')}}},
                     {{#if (eq (stateFromAddress application.primary.details.location) "NM")}}
                         "amount": {{{json (schema 'questions/primary/amount/schemas/nm')}}}
                     {{else if (eq (stateFromAddress application.primary.details.location) "CA")}}

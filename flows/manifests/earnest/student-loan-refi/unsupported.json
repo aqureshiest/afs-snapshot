@@ -1,0 +1,82 @@
+[
+  {
+    "methods": [
+      "get"
+    ],
+    "parameters": [
+      {
+        "key": "id",
+        "format": "uuid"
+      }
+    ],
+    "inputs": {
+      "*": "inputs",
+      "application": {
+        "*": "application/single.flattened",
+        "application": "application-by-id-param"
+      },
+      "applications": [],
+      "applicationState": "application-state",
+      "userState": "user-state",
+      "auth": {
+        "*": "auth-artifacts",
+        "strategies": [
+          {
+            "*": "inputs/auth.neas-session",
+            "response": "neas.verify-token",
+            "authorization": [
+              "inputs/auth.neas-application-auth",
+              "inputs/auth.neas-user-auth",
+              "inputs/auth.neas-monolith-auth"
+            ]
+          }
+        ]
+      }
+    },
+    "outputs": {
+      "*": "stage",
+      "stage": {
+        "*": "stage.view",
+        "stageKey": {
+          "@": "cosigner-inelegible"
+        },
+        "stageLabel": {
+          "@": "Regrettably, we're unable to consider you for a loan."
+        },
+        "stageLayout": {
+          "*": "stage/layout",
+          "header": [
+            {
+              "*": "stage/layout/header.logo",
+              "action": "actions/navigate.earnest-home"
+            },
+            {
+              "*": "stage/layout/header.sidebar",
+              "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"],
+              "view-rates-decision-status": "view-rates-decision-status"
+            }
+          ]
+        },
+        "stageContent": [
+          {
+            "*": "flexible-content/items/header",
+            "asset": {
+              "*": "asset/local",
+              "icon": "asset/local/illustrations.warning",
+              "centered": {
+                "@": "true"
+              }
+            },
+            "copy": {
+              "@": "Regrettably, we're unable to consider you for a loan."
+            },
+            "subCopy": "earnest-student-loan-refi/pages/loan-owner.ineligible"
+          },
+          {
+            "*": "info/ineligible-disclosure"
+          }
+        ]
+      }
+    }
+  }
+]

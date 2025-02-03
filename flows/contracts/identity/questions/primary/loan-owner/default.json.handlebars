@@ -1,0 +1,19 @@
+{{#with application.primary}}
+{
+  "type": "input",
+  "definition": {
+      "key": "loan-owner",
+      "type": "inputRadio",
+      "layout": "default",
+      "direction": "column",
+      "items": [
+        { "id": "yes", "value": "true", "label": "Yes, this is my loan" },
+        { "id": "no", "value": "false", "label": "No, I co-signed for someone else" }
+      ],
+      "value": "{{userState.loan-owner}}",
+      "label": {
+          "copy": "Are you the primary borrower?"
+      }
+  }
+}
+{{/with}}
