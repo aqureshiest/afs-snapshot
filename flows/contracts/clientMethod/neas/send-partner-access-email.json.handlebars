@@ -1,0 +1,28 @@
+{{#with (contract 'actions' (sum @index -2)) as |identify|}}
+  {{#if (and
+    (gte identify.response.statusCode 200)
+    (lt identify.response.statusCode 400)
+  )}}
+    {{#if (or
+      (hasActiveIncompleteApplication ../application.applicant.id ../applications)
+      (hasActivePostSubmissionApplication ../application.applicant.id ../applications)
+    )}}
+     { "action": "send-partner-access-email"}
+   {{else}}
+      {
+        "action": "send-partner-access-email",
+        "client": "NeasClient",
+        "method": "post",
+        "uri": "/auth/identity/access-code/send",
+        "body": {
+          "applicationId": {{{json ../application.id}}},
+          "emailId": {{{json ../application.details.email}}}
+        }
+      }
+    {{/if}}
+  {{else}}
+    { "action": "send-partner-access-email" }
+  {{/if}}
+{{else}}
+    { "action": "send-partner-access-email" }
+{{/with}}

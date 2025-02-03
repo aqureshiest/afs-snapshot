@@ -7,7 +7,7 @@ import {
   getAction,
 } from "./index.js";
 
-interface Template {
+export interface Template {
   action: {
     type: string;
     properties: {
@@ -28,7 +28,7 @@ interface Template {
   };
 }
 
-interface ButtonTemplate {
+export interface ButtonTemplate {
   key: string;
   type: string;
   componentProps: {
@@ -41,7 +41,7 @@ interface ButtonTemplate {
   };
 }
 
-interface Button {
+export interface Button {
   copy: string;
   action: {
     type: string;

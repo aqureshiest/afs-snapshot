@@ -22,6 +22,7 @@ export { default as applicantById } from "./applicantById.js";
 export { default as maybe } from "./maybe.js";
 export { default as hasActiveLegacyLoan } from "./has-active-legacy-loan.js";
 export { default as generateModalTemplate } from "./generate-modal-template.js";
+export { default as generateModalTemplateV2 } from "./generate-modal-template-v2.js";
 export { default as partnerLogo } from "./partnerLogo.js";
 
 export function every(array: string[], condition: string, ...args: unknown[]) {

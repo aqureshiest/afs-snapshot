@@ -26,31 +26,18 @@
           "authorization": []
         }
       ]
-    },
-    "features": {
-      "*": "optimizely-feature.feature-flags-artifacts",
-      "flags": "optimizely-feature/flags.default",
-      "optimizelyGetFeature": "get-feature-flag"
     }
   },
   "outputs": {
-    "*": "redirect/full-refi.identity-conflict",
-    "redirect-education": "redirect/full-refi.education",
+    "*": "redirect/partner.identity-conflict",
+    "redirect-basic-info": "redirect/partner.basic-info",
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "full-refi.add-details-full-refi",
-        "neas.identify",
+        "neas.identify-from-partner",
         "session",
-        "neas.send-access-email",
-        "add-userId-before-verifying-through-emailId",
-        {
-          "*": "actions/result.legacy-result",
-          "action": {
-            "<": "internal-rest-service.existing-user",
-            "get-existing-user": "internal-rest-service.get-existing-user"
-          }
-        }
+        "neas.send-partner-access-email",
+        "add-userId-before-verifying-through-emailId"
       ]
     }
   }

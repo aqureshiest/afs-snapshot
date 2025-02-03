@@ -1,0 +1,10 @@
+{
+  "action": "identify",
+  "client": "NeasClient",
+  "method": "post",
+  "uri": "/auth/identity/identify",
+  "body": {
+    "emailId": {{{json application.details.email}}},
+    "idToken": {{{ json (coalesce request.headers.idtoken request.headers.idToken) }}}
+  }
+}

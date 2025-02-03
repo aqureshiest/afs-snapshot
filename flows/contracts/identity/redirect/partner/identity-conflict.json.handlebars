@@ -1,0 +1,11 @@
+{{#with (contract 'actions') as |actions|}}
+  {{#if (or
+    (eq actions.[0].statusCode 409) 
+    (boolean (hasActiveIncompleteApplication ../request.params.id ../applications))
+    (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications))
+  )}}
+    {{{json (generateModalTemplateV2 ../request actions ../application ../applications ../env)}}}
+  {{else}}
+    {{{json (contract 'redirect-basic-info')}}}
+  {{/if}}
+{{else}} null {{/with}} 
