@@ -69,6 +69,16 @@ enum TermLengths {
   "20 year" = 240,
 }
 
+enum Product {
+  SLR = 'slr',
+  PL = 'pl',
+}
+
+enum DecisionType {
+  RATE_CHECK = 'rate-check',
+  APPLICATION = 'application',
+}
+
 export default class LendingDecisionServiceClient extends Client {
   get clientName() {
     return "LendingDecisionService";
@@ -79,6 +89,38 @@ export default class LendingDecisionServiceClient extends Client {
     const options = { baseUrl };
     super(options);
     this.accessKey = accessKey;
+  }
+
+  async decisionRequest(
+    product: Product,
+    decisionType: DecisionType,
+    body: { [key: string]: unknown },
+    context: PluginContext,
+  ): Promise<DecisionPostResponse> {
+    const { results, response } = await this.post<DecisionPostResponse>(
+      {
+        uri: `/v2/decisioning-request/${product}/${decisionType}`,
+        headers: {
+          ...this.headers,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+        body,
+        resiliency: {
+          attempts: 3,
+          delay: 1000,
+          timeout: 30000,
+          test: ({ response }) =>
+            Boolean(response.statusCode && response.statusCode <= 500),
+        },
+      },
+      context,
+    );
+
+    if (response.statusCode && response.statusCode >= 400) {
+      throw new Error(`[3177fa74] Decision request failed: ${response.statusMessage}`)
+    }
+
+    return results;
   }
 
   /**

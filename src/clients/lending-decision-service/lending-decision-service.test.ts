@@ -303,6 +303,7 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       },
     ],
   };
+
   before(async () => {
     const pkg = await readJsonFile("./package.json");
     pkg.logging = { level: "error" };
@@ -2170,5 +2171,49 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       "v2",
     );
     assert(!formatRequestPayload.cisInfo);
+  });
+
+  it("[8d5f328f] should send a decision request", async () => {
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decisioning Request is processed.",
+          data: {
+            decisioningToken: "16719670-a754-4719-a185-4f7e875bc04c",
+            seedId: "12341234123412341234123421",
+            status: "completed",
+            journeyApplicationStatus: "waiting_review",
+            decisionOutcome: "Application Review",
+            journeyToken: "J-w34tsdgae4541234d",
+            journeyApplicationToken: "JA-asdfasert45634",
+          },
+        },
+        response: {
+          statusCode: 200,
+        },
+      };
+    });
+
+    assert.doesNotThrow(async () => { await client.decisionRequest("pl", "rate-check", {}, context) });
+  });
+
+  it("[2adC5C1e] should throw an error when the reponse status code is >= 400", async () => {
+    mock.method(client, "post", async () => {
+      return {
+        results: {
+          message: "Decision Request Failed",
+        },
+        response: {
+          statusCode: 400,
+          statusMessage: 'Decision Request Failed'
+        },
+      };
+    });
+
+    assert.rejects(
+      async () => { await client.decisionRequest("pl", "rate-check", {}, context) },
+      Error,
+      '[3177fa74] Decision request failed: Decison Request Failed'
+    );
   });
 });
