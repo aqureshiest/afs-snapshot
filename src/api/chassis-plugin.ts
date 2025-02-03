@@ -1,11 +1,15 @@
 import assert from "node:assert";
 import cookieParser from "cookie-parser";
 import express from "express";
+import httpContext from "express-http-context";
 
 import * as handlers from "./handlers/index.js";
 import wrapAsyncHandler from "./wrap-async-handler.js";
-import * as constants from "./constants.js";
-import authMiddleware from "./auth/index.js";
+import { getEndpointsFromGlob } from "./v2-proto/index.js";
+import applicationContext from "./v2-proto/middleware/applications/index.js";
+import authenticationContext from "./v2-proto/middleware/auth/index.js";
+import chassisContext from "./v2-proto/middleware/chassis-context.js";
+import metaContext from "./v2-proto/middleware/meta-context.js";
 
 export const plugin: Plugin = {
   name: "api",
@@ -13,14 +17,34 @@ export const plugin: Plugin = {
   registerOrder: 1,
   register: async (context: Context) => {
     context.application.use(cookieParser());
+    context.application.use(httpContext.middleware);
 
     const manifestExecution = context.loadedPlugins.contractExecution.instance;
-
     assert(manifestExecution, "[b737cbc1] Manifests not instantiated");
-
     const { manifests, contracts, Manifest } = manifestExecution;
 
     const router = express.Router();
+
+    /* ============================== *
+     * START - V2 Prototype Endpoints *
+     * ============================== */
+
+    // Fetch v2 endpoints, and register them as express routes
+    if (context.env.APP_ENV !== "production") {
+      const v2Endpoints = await getEndpointsFromGlob();
+      v2Endpoints.forEach(({ endpoint, method, manifest, middleware, handler }) => {
+        router[method.toLowerCase()](
+          endpoint,
+          metaContext(context, { endpoint, manifest, method }), // assigns `meta` to httpContext
+          chassisContext(context), // assigns `context` to httpContext
+          ...(middleware || []), // Endpoint specific middleware
+          handler // Express handler
+        );
+      });
+    }
+    /* ============================== *
+     * END - V2 Prototype *
+     * ============================== */
 
     Object.keys(manifests).forEach((key) => {
       const manifestMethods = manifests[key];
@@ -34,7 +58,7 @@ export const plugin: Plugin = {
           const { input, output } = Manifest.executionMiddleware(
             key,
             definition,
-            contracts,
+            contracts
           );
 
           /* ============================== *
@@ -51,26 +75,26 @@ export const plugin: Plugin = {
             if (input) {
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, input),
+                wrapAsyncHandler(context, input)
               );
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, handlers.executionErrors),
+                wrapAsyncHandler(context, handlers.executionErrors)
               );
             }
 
             if (output) {
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, output),
+                wrapAsyncHandler(context, output)
               );
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, handlers.executionErrors),
+                wrapAsyncHandler(context, handlers.executionErrors)
               );
             }
           });
-        },
+        }
       );
     });
 

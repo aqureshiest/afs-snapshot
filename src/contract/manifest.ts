@@ -163,6 +163,7 @@ export default class Manifest {
               // If universal definitions already exist, add them before custom definitions
               if (!(key in methodDefinition)) {
                 Object.assign(methodDefinition, {
+                  // @ts-expect-error - idk
                   [key]: { ...universalDefinition } || {},
                 });
               }
