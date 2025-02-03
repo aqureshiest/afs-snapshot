@@ -68,7 +68,10 @@
           }
         ],
         "banner": {
-          "*": "stage/layout/banner/templates.rate-estimates-refreshed"
+          "*": "actions.conditional",
+          "if": "conditionals.partner-discount",
+          "then": "stage/layout/banner/templates.partner-discount-banner",
+          "else": "stage/layout/banner/templates.rate-estimates-refreshed"
         }
       },
       "progress": [
