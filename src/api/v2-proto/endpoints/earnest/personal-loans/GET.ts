@@ -14,57 +14,72 @@ export default {
   middleware: [authenticationMiddleware({}), getApplicationMiddleware()],
   handler: async (req: Request, res: Response) => {
     const { manifest } = httpContext.get("meta");
+    const context = httpContext.get("context");
+    
+    context.logger.info("Building Page JSON - PL Primer");
 
-    const json = form({
-      manifest,
-      id: req.params.id || "",
-      label: "Personal Loans",
-      steps: [
-        {
-          key: "personal-loans",
-          label: "Personal Loans",
-          submit: {
-            copy: "Apply",
-            disabled: true,
-            action: requestAction({ manifest }),
-          },
-          rows: [
-            infoHeader({
-              header: {
-                copy: "Personal Loans",
-                subCopy: "Submitting this page will create an personal loan application using the email below with Betty Hooper as the applicant.",
-              },
-            }),
-            infoContent({
-              content: [
-                {
-                  key: keyGen("list"),
-                  type: "list",
-                  componentProps: {
-                    items: [
-                      {
-                        copy: "Submit this page to create an application",
-                      },
-                      {
-                        copy: "Choose loan amount, and decision",
-                      },
-                      {
-                        copy: "View rates",
-                      },
-                      {
-                        copy: "Submit for decision",
-                      }
-                    ],
-                  },
+    try {
+      const json = form({
+        manifest,
+        id: req.params.id || "",
+        label: "Personal Loans",
+        steps: [
+          {
+            key: "personal-loans",
+            label: "Personal Loans",
+            submit: {
+              copy: "Apply",
+              disabled: true,
+              action: requestAction({ manifest }),
+            },
+            rows: [
+              infoHeader({
+                header: {
+                  copy: "Personal Loans",
+                  subCopy:
+                    "Submitting this page will create an personal loan application using the email below with Betty Hooper as the applicant.",
                 },
-              ],
-            }),
-            inputEmail(),
-          ],
-        },
-      ],
-    });
+              }),
+              infoContent({
+                content: [
+                  {
+                    key: keyGen("list"),
+                    type: "list",
+                    componentProps: {
+                      items: [
+                        {
+                          copy: "Submit this page to create an application",
+                        },
+                        {
+                          copy: "Choose loan amount, and decision",
+                        },
+                        {
+                          copy: "View rates",
+                        },
+                        {
+                          copy: "Submit for decision",
+                        },
+                      ],
+                    },
+                  },
+                ],
+              }),
+              inputEmail(),
+            ],
+          },
+        ],
+      });
 
-    return res.json(json);
+      return res.json(json);
+    } catch (error) {
+      context.logger.error({
+        message: "Failed to build Page JSON - PL Primer",
+        error: {
+          message: error.message,
+          stack: error.stack,
+        },
+      });
+      return res.status(500).json({ error: error.message });
+    }
   },
 };

@@ -13,8 +13,7 @@ export const inputAddressToDetail = (
         {
           index: 0,
           type: "primary",
-          ...(street ? { street1: street } : {}),
-          ...(apt ? { street2: apt } : {}),
+          ...(street ? { street1: street, street2: apt || "" } : {}),
           ...(city ? { city } : {}),
           ...(state ? { state } : {}),
           ...(zip ? { zip } : {}),
