@@ -55,6 +55,7 @@ fragment ApplicantFragment on Application {
     monolithLoanID
     monolithUserID
     partnerName
+    partnerId
     product
     rateMapTag
     rateMapVersion

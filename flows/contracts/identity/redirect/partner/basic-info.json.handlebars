@@ -2,7 +2,7 @@
   "action": {
     "type": "navigate",
     "properties": {
-      "goTo": "TODO"
+      "goTo": "/{{application.brand}}/student-loan-refi/{{#if (isNull application.reference.partnerId)}}previous-address{{else}}basic-info-partner{{/if}}/{{request.params.id}}"
     }
   },
   "result": {{{ json (contract 'actions') }}},

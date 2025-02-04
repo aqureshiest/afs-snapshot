@@ -1,0 +1,89 @@
+[{
+    "methods": ["get"],
+    "parameters": [{
+        "key": "id",
+        "format": "uuid"
+    }],
+    "inputs":{
+        "*": "inputs",
+        "application": {
+            "*": "application/single.flattened",
+            "application": "application-by-id-param"
+        },
+        "applications": [],
+        "applicationState": "application-state",
+        "userState": "user-state",
+        "env": "inputs/env.default",
+        "features": {
+          "*": "optimizely-feature.feature-flags-artifacts",
+          "flags": "optimizely-feature/flags.default",
+          "optimizelyGetFeature": "get-feature-flag"
+        }
+    },
+    "outputs": {
+        "*": "rate-estimate-results-view",
+        "landing_stage": "rate-estimate-results/primary.rate-estimate-approved",
+        "skipIncomeVerification": "conditionals.skip-income-verification",
+        "pageLayout": {
+            "*": "stage/layout",
+            "header": [
+              {
+                "*": "stage/layout/header.logo",
+                "action": "actions/navigate.earnest-home"
+              },
+              {
+                "*": "stage/layout/header.sidebar",
+                "items": ["stage/layout/header/sidebar-items.rates", "stage/layout/header/sidebar-items.support"],
+                "view-rates-decision-status": "view-rates-decision-status"
+              }
+            ],
+            "banner": {
+                "*": "actions.conditional",
+                "if": "conditionals.partner-discount",
+                "then": "stage/layout/banner/templates.partner-discount-banner",
+                "else": "stage/layout/banner/templates.rate-estimates-refreshed"
+            }
+          },
+        "progress": [
+            {
+                "*": "stage.progress-item",
+                "key": {
+                    "@": "approved-get-rates"
+                },
+                "label": {
+                    "@": "Get Rates"
+                },
+                "value": {
+                    "@": "100"
+                }
+            },
+            {
+                "*": "stage.progress-item",
+                "key": {
+                    "@": "approved-apply"
+                },
+                "label": {
+                    "@": "Apply"
+                },
+                "value": {
+                    "@": "0"
+                }
+            },
+            {
+                "*": "stage.progress-item",
+                "key": {
+                    "@": "approved-choose-plan"
+                },
+                "label": {
+                    "@": "Choose Plan"
+                },
+                "value": {
+                    "@": "0"
+                }
+            }
+        ],
+        "analytics": "actions/analytics/full-refi.rate-estimate-page-event",
+        "getPaymentsAndRates": "rate-estimate-prices",
+        "redirect_homebase": "actions/homebase.default"
+    }
+}]

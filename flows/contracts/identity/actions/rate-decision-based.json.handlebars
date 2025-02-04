@@ -1,6 +1,5 @@
 {{!-- Statuses: unable | frozen | declined | approved --}}
 {{#with (contract "rateResult") as |rateResult|}}
-  {{log "RRESULT" rateResult}}
   {{#if (eq rateResult.data.decisionOutcome 'Approved')}}
     {{{json (contract 'rateApproved')}}}
   {{else if (eq rateResult.data.decisionOutcome 'Denied') }}

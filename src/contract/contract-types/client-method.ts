@@ -54,7 +54,6 @@ class ClientMethod extends ContractExecutable<
 
     const { action, required, method, uri, body, query, headers, resiliency } =
       definition;
-
     try {
       const { results, response } = await client.request(
         method,

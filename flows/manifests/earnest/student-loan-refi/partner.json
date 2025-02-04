@@ -15,21 +15,7 @@
         "*": "application/single.flattened",
         "application": "application-by-id-param"
       },
-      "env": "inputs/env.default",
-      "auth": {
-        "*": "auth-artifacts",
-        "strategies": [
-          {
-            "*": "inputs/auth.neas-session",
-            "response": {
-              "*": "neas.verify-token",
-              "token": "header.idtoken"
-            },
-            "mode": "optional",
-            "authorization": []
-          }
-        ]
-      }
+      "env": "inputs/env.default"
     },
     "outputs": {
       "*": "stage",

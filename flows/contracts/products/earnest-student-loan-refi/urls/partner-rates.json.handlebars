@@ -1,1 +1,1 @@
-"{{application.reference.brand}}/student-loan-refi/rate-estimate-result/{{#if (eq application.applicant.role "cosigner")}}cosigner/{{else}}primary/{{/if}}{{{contract "status"}}}/{{{application.applicant.id}}}"
+"{{application.reference.brand}}/student-loan-refi/rate-estimate-result/{{#if (eq application.applicant.role "cosigner")}}cosigner/{{else}}primary/{{/if}}{{{contract "status"}}}{{#if (notNull application.reference.partnerId)}}-partner{{/if}}/{{{application.applicant.id}}}"

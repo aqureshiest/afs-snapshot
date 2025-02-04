@@ -34,7 +34,8 @@
     "actions": {
       "*": "actions/result.results",
       "actions": [
-        "neas.identify-from-partner",
+        "neas.identify-user-partner",
+        "neas.accountless-session",
         "session",
         "neas.send-partner-access-email",
         "add-userId-before-verifying-through-emailId"
