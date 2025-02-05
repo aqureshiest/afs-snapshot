@@ -15,8 +15,8 @@
         "method": "post",
         "uri": "/auth/identity/access-code/send",
         "body": {
-          "applicationId": {{{json ../application.id}}},
-          "emailId": {{{json ../application.details.email}}}
+          "applicationId": {{{json ../request.params.id}}},
+          "emailId": {{{json ../application.applicants.0.details.email}}}
         }
       }
     {{/if}}
