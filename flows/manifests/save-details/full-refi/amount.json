@@ -28,7 +28,6 @@
     "outputs": {
       "*": "response.full-refi-amount",
       "redirect": "redirect/full-refi.ssn",
-      "redirect_unsupported": "redirect/full-refi.unsupported",
       "min-refi-amount-error": "onError.min-refi-amount-error",
       "actions": {
         "*": "actions/result.results",

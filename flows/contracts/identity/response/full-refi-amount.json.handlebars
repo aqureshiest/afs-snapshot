@@ -1,7 +1,7 @@
 {{#noop}}{{ contract 'analytics' }}{{/noop}}
 {{#if (lt (formatDollarsToCents request.body.values.amount) (stateMinLoan application.primary.details.location))}}
   {{{json (contract 'min-refi-amount-error')}}}
-{{else if (eq request.body.values.loan-owner "true")}}
+{{else}}
   {
     "action": {
       "type": "navigate",
@@ -12,14 +12,5 @@
     {{! returning actions is not needed, but left for debugin }}
     "result": {{{ json (contract 'actions') }}},
     "error": {{{json error}}}
-  }
-{{else}}
-  {
-    "action": {
-      "type": "navigate",
-      "properties": {
-        "goTo": {{{ json (contract 'redirect_unsupported') }}}
-      }
-    }
   }
 {{/if}}

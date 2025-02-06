@@ -66,8 +66,7 @@
       ],
       "student-info-amount-rows": [
         "info/student-info.amount",
-        "questions/primary/amount.full-refi",
-        "questions/primary/loan-owner"
+        "questions/primary/amount.full-refi"
       ],
       "back-button": "actions/back-buttons/full-refi.income",
       "save_amount_details_action": "actions/save-details/full-refi.amount",
