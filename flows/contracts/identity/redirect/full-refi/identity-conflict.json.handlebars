@@ -1,5 +1,8 @@
 {{#with (contract 'actions') as |actions|}}
-  {{#if (or
+  {{!-- This line takes users to the next screen when the only active app is the current one --}}
+  {{#if (and (boolean (isIncompleteSameAsCurrent ../request.params.id ../applications)) auth.artifacts.isAuthorized)}}
+    {{{json (contract 'redirect-education')}}}
+  {{ else if (or
     (or (eq actions.[0].statusCode 409) (eq actions.[1].statusCode 409))
     (boolean (hasActiveIncompleteApplication ../request.params.id ../applications))
     (boolean (hasActivePostSubmissionApplication ../request.params.id ../applications))

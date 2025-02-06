@@ -571,6 +571,22 @@ export function hasActiveIncompleteApplication(
     )
     .shift();
 }
+/**
+ * If the last application is incomplete and it is the current application
+ * this function will return true
+ * @param id
+ * @param applications
+ * @returns boolean
+ */
+export function isIncompleteSameAsCurrent(
+  id: string,
+  applications: typings.Application[],
+) {
+  const incompleteApps = (applications || []).filter(
+    (app) => app?.tag?.active && app.tag.status === "incomplete",
+  );
+  return incompleteApps.length === 1 && incompleteApps[0].id === id;
+}
 
 export function hasActiveIncompleteApplicationRootIds(
   id: string,
