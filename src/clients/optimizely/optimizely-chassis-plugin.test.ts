@@ -40,6 +40,7 @@ describe("[b3eacf70] Optimizely chassis-plugins", () => {
       logger: {
         info: mock.fn(),
         error: mock.fn(),
+        warn: mock.fn(),
       },
     };
 
@@ -48,15 +49,8 @@ describe("[b3eacf70] Optimizely chassis-plugins", () => {
       onReady: async () => ({ success: false }),
       close: async () => {},
     }));
-
-    try {
-      await plugin.register(context as unknown as PluginContext);
-      assert.fail("Expected error was not thrown");
-    } catch (error) {
-      assert.strictEqual(
-        error.message,
-        "[2c985bb2] Optimizely Client not ready",
-      );
-    }
+    await assert.doesNotReject(
+      plugin.register(context as unknown as PluginContext),
+    );
   });
 });

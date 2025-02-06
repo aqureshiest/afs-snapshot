@@ -45,12 +45,14 @@ export const plugin: Plugin<OptimizelyClient> = {
 
       if (!isReady || !isReady.success) {
         optimizelySDK.close();
-        throw new Error("[2c985bb2] Optimizely Client not ready");
+        context.logger.warn({
+          message: `[2c985bb2] Optimizely Client not ready: ${isReady.reason}`,
+        });
+      } else {
+        context.logger.info({
+          message: "[56c8d133] optimizely client ready",
+        });
       }
-      context.logger.info({
-        message: "[56c8d133] optimizely client ready",
-      });
-
       const client = new OptimizelyClient(context, optimizelySDK);
       plugin.instance = client;
     } else {
