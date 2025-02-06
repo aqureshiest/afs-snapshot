@@ -24,7 +24,7 @@
     }
   },
   "outputs": {
-    "*": "landing-students",
+    "*": "landing-students-primer",
     "landing_stage": { 
       "*": "landing.primer-full-refi", 
       "layout": "layout.full-refi-primer",

@@ -1,0 +1,24 @@
+{
+  {{#with @ref.actions as |actions|}}
+    "action": {
+      "type": "navigate",
+      "properties": {
+        {{! LA-1584: rather than rely on rehydration, we pull the application result
+        directly from the result of the first action. This could be tidied up to
+        make this more generalizable }}
+        "analytics": {
+          "name": "Rate Check Started",
+          "product": "slr",
+          "role": "primary",
+          "source": "rate check",
+          "application_id": "{{actions.[0].raw.application.root.id}}",
+          "primary_application_id": "{{actions.[0].id}}"
+        },
+        "goTo": "earnest/student-loan-refi/basic-info-primer/{{actions.[0].id}}"
+      }
+    },
+    {{! returning actions is not needed, but left for debugin }}
+    "result": {{{ json actions }}},
+  {{/with}}
+  "error": {{{json error}}}
+}

@@ -1,0 +1,42 @@
+[{
+  "methods": ["post"],
+  "inputs": {
+    "*": "inputs",
+    "auth": {
+      "*": "auth-artifacts",
+      "strategies": [
+        {
+          "*": "inputs/auth.neas-session",
+          "response": {
+            "*": "neas.verify-token",
+            "token": "header.idtoken"
+          },
+          "mode": "optional",
+          "authorization": []
+        }
+      ]
+    },
+    "env": {
+      "*": "inputs/env.combine",
+      "groups": [
+        "inputs/env.ui"
+      ]
+    },
+    "features": {
+      "*": "optimizely-feature.feature-flags-artifacts",
+      "flags": "optimizely-feature/flags.default",
+      "optimizelyGetFeature": "get-feature-flag"
+    }
+  },
+  "outputs": {
+    "*": "redirect.accountless-primer",
+    "actions": {
+      "*": "actions/result.results",
+      "actions": [
+        "create.with-applicant",
+        "neas.accountless-session",
+        "session"
+      ]
+    }
+  }
+}]

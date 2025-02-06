@@ -10,14 +10,21 @@ class OptimizelyMethod extends ContractExecutable<
     return "OptimizelyMethod";
   }
 
-  condition = (_, __, definition: Definition) => {
+  condition = (context, __, definition: Definition) => {
+    context.logger.info({
+      message: "===== OptimizelyMethod condition  ",
+      definition
+    });
     return Boolean(definition && definition.userId);
   };
 
   evaluate = async (context: Context, input: Input, definition: Definition) => {
     const optimizelyClient = context.loadedPlugins.optimizelyClient?.instance;
     assert(optimizelyClient, "[f4cf8448] Optimizely Client not instantiated");
-
+    context.logger.info({
+      message: "===== OptimizelyMethod evaluate",
+      definition
+    });
     let result;
     try {
       result = await optimizelyClient[definition.optimizelyMethod](
@@ -34,6 +41,7 @@ class OptimizelyMethod extends ContractExecutable<
 
       this.error(error);
     }
+    console.log('========= optimizely result', result)
     return result;
   };
 }

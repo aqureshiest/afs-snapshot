@@ -1,0 +1,37 @@
+{{log "======== feature flags" features}}
+{{#if (and application.primary.details.decision ( ne application.tag.status 'incomplete' ))}}
+"action": {{{ json (contract 'redirect_homebase') }}}
+{{else}}
+    {
+        {{#if features.rate_check_skip_landing }}
+        "action": {
+            "key": "neas-request",
+            "type": "request",
+            "properties": {
+                "manifest": "create-accountless-application-primer",
+                "method": "POST",
+                "analytics": {
+                    "name": "Server Experiment Viewed",
+                    "experimentId": 0,
+                    "experimentName": "RC_no_primer_page",
+                    "variationId": 0,
+                    "variationName": "On"
+                }
+            }
+
+        }
+        {{else}}
+        {{!-- comments --}}
+        "manifest": "{{ manifest.id }}",
+        "id": "{{request.params.id}}",
+        "stage": {{{ json (contract 'landing_stage')}}},
+        "analytics": {
+                "name": "Server Experiment Viewed",
+                "experimentId": 0,
+                "experimentName": "RC_no_primer_page",
+                "variationId": 0,
+                "variationName": "Off"
+            }
+        {{/if}}
+    }
+{{/if}}

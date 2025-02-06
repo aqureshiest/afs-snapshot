@@ -14,7 +14,11 @@
           },
         {{/if}}
         "label": {
-          "copy": {{{json (contract 'label')}}}
+          {{#if ../features.cis_person}}
+            "copy": "CIS PERSON FLAG IS ON YO"
+          {{else}}
+            "copy": {{{json (contract 'label')}}}
+          {{/if}}
         },
         "omitDay": {{{json (contract 'omitDay')}}},
         {{#if (contract "deps")}}"deps":{{{json (contract 'deps')}}},{{/if}}

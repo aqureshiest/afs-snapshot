@@ -1,9 +1,6 @@
-{{#if auth.artifacts.userId}}
-  {
-    "optimizelyMethod": "getFeatureFlags",
-    "userId": "{{{auth.artifacts.userId}}}",
-    "featureFlagKeys": {{{json @ref.flags}}}
-  }
-{{else}}
-  {}
-{{/if}}
+{{log "===== headers" request.headers.device_uuid}}
+{
+  "optimizelyMethod": "getFeatureFlags",
+  "userId": {{#if (isNull auth.artifacts.userId)}}"{{{request.headers.device_uuid}}}"{{else}}"{{auth.artifacts.userId}}"{{/if}},
+  "featureFlagKeys": {{{json @ref.flags}}}
+}
