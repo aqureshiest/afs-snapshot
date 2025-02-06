@@ -76,7 +76,7 @@ export default class CisPersonClient extends Client {
     } catch (error) {
       this.log(
         {
-          message: '[ee647d95] cis-person-client-creation-error',
+          message: "[ee647d95] cis-person-client-creation-error",
           error,
           getPersonWSDL: this.getPersonWSDL,
           id,
@@ -129,7 +129,7 @@ export default class CisPersonClient extends Client {
       if (!cisPerson[0]) {
         this.log(
           {
-            message: '[ec7690fd] Person not found',
+            message: "[ec7690fd] Person not found",
             id,
           },
           context,
@@ -150,7 +150,7 @@ export default class CisPersonClient extends Client {
     } catch (error) {
       this.log(
         {
-          message: '[92dd644f] fetch-person-error',
+          message: "[92dd644f] fetch-person-error",
           error,
           id,
         },
@@ -357,7 +357,7 @@ export default class CisPersonClient extends Client {
     } catch (error) {
       this.log(
         {
-          message: '[f1b3b1d7] get-cis-person-loans-error',
+          message: "[f1b3b1d7] get-cis-person-loans-error",
           error,
         },
         context,

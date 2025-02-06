@@ -45,11 +45,14 @@ export default {
           location: inputToDetail.address(Betty.address),
           dateOfBirth: inputToDetail.date(Betty.dob),
           phone: inputToDetail.phone(Betty.phone),
-        }
+        },
       });
 
       if (addDetailsError) {
-        context.logger.error("Application Service - Add Details Error", addDetailsError);
+        context.logger.error(
+          "Application Service - Add Details Error",
+          addDetailsError,
+        );
         res.json(ERROR_ACTION);
       }
 
@@ -59,7 +62,10 @@ export default {
         }),
       });
     } catch (creationError) {
-      context.logger.error("Application Service - Unhandled Error", creationError);
+      context.logger.error(
+        "Application Service - Unhandled Error",
+        creationError,
+      );
       res.json(ERROR_ACTION);
     }
   },

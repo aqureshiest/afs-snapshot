@@ -14,4 +14,4 @@ export type UI_Flexible_Table = {
       | "lastColumnGreenBGGreen"
       | "lastColumnGreenBGGray";
   };
-}
+};

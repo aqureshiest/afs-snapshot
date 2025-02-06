@@ -21,9 +21,9 @@ export const addDetails = async (payload: {
     (await applicationServiceClient.sendRequest(
       buildRequestBody(
         queryDefinition,
-        applicationServiceClient.eventInputTypes[queryDefinition.event]
+        applicationServiceClient.eventInputTypes[queryDefinition.event],
       ),
-      context
+      context,
     )) || {};
 
   return resp;

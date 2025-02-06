@@ -11,9 +11,9 @@ export type UI_Stage_Progress = {
   key: string;
   value: number;
   label?: string;
-}
+};
 
-export type UI_Stage<Props = (UI_Views | UI_Form)> = {
+export type UI_Stage<Props = UI_Views | UI_Form> = {
   manifest: string;
   id?: string;
   stage: {
@@ -29,7 +29,7 @@ export type UI_Stage<Props = (UI_Views | UI_Form)> = {
       pageTitle?: string;
     };
   } & Props;
-}
+};
 
 export type UI_View<Type, Def> = {
   type: "view";
@@ -37,13 +37,13 @@ export type UI_View<Type, Def> = {
     type: Type;
     definition: { key: string } & Def;
   };
-}
+};
 
 export type UI_Form = {
   type: "form";
   steps: UI_Form_Step[];
   validation?: Record<string, unknown>;
-}
+};
 
 export type UI_Form_Step_SubmitButton = {
   copy?: string;
@@ -54,15 +54,17 @@ export type UI_Form_Step_SubmitButton = {
     disclosureProps?: Record<string, unknown>;
   };
   conditional?: UI_Predicate;
-}
+};
 
-export type UI_Form_Row = {
-  type: "input"
-  definition: UI_Inputs
-} | {
-  type: "info"
-  definition: UI_Form_InfoComponents
-}
+export type UI_Form_Row =
+  | {
+      type: "input";
+      definition: UI_Inputs;
+    }
+  | {
+      type: "info";
+      definition: UI_Form_InfoComponents;
+    };
 
 export type UI_Form_Step = {
   // Properties shared with Stage
@@ -81,4 +83,4 @@ export type UI_Form_Step = {
     action: UI_Action;
     hidden?: boolean;
   };
-}
+};

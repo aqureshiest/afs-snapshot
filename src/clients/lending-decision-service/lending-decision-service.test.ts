@@ -2194,7 +2194,9 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
       };
     });
 
-    assert.doesNotThrow(async () => { await client.decisionRequest("pl", "rate-check", {}, context) });
+    assert.doesNotThrow(async () => {
+      await client.decisionRequest("pl", "rate-check", {}, context);
+    });
   });
 
   it("[2adC5C1e] should throw an error when the reponse status code is >= 400", async () => {
@@ -2205,15 +2207,17 @@ describe("[96aaf9c1] Lending Decision Service Client", () => {
         },
         response: {
           statusCode: 400,
-          statusMessage: 'Decision Request Failed'
+          statusMessage: "Decision Request Failed",
         },
       };
     });
 
     assert.rejects(
-      async () => { await client.decisionRequest("pl", "rate-check", {}, context) },
+      async () => {
+        await client.decisionRequest("pl", "rate-check", {}, context);
+      },
       Error,
-      '[3177fa74] Decision request failed: Decison Request Failed'
+      "[3177fa74] Decision request failed: Decison Request Failed",
     );
   });
 });

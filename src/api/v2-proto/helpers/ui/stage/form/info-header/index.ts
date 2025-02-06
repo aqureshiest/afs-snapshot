@@ -4,7 +4,7 @@ import { PartiallyOptional } from "../../../types/index.js";
 import { UI_Form_Row } from "../../../types/stage/index.js";
 
 export const infoHeader = (
-  definition: PartiallyOptional<UI_Form_InfoComponent_Header, "key" | "type">
+  definition: PartiallyOptional<UI_Form_InfoComponent_Header, "key" | "type">,
 ): UI_Form_Row => {
   return {
     type: "info",

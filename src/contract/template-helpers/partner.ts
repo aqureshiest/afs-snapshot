@@ -106,4 +106,4 @@ export const partnerName = function (name) {
 export const formatDiscount = function (discount: number): string {
   const positiveDiscount = Math.abs(discount);
   return `${positiveDiscount}%`;
-}
+};

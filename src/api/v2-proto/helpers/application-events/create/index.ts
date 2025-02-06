@@ -1,9 +1,9 @@
 // c8 ignore file
 import { buildRequestBody } from "../index.js";
-import httpContext from 'express-http-context';
+import httpContext from "express-http-context";
 
 export const createApplication = async (options) => {
-  const context = httpContext.get('context');
+  const context = httpContext.get("context");
   const { brand, product } = options;
   const applicationServiceClient =
     context.loadedPlugins.applicationServiceClient.instance;
@@ -24,13 +24,14 @@ export const createApplication = async (options) => {
     fields: "application { id root { id }}",
   };
 
-  const { create } = await applicationServiceClient.sendRequest(
-    buildRequestBody(
-      queryDefinition,
-      applicationServiceClient.eventInputTypes[queryDefinition.event]
-    ),
-    context
-  ) || {};
+  const { create } =
+    (await applicationServiceClient.sendRequest(
+      buildRequestBody(
+        queryDefinition,
+        applicationServiceClient.eventInputTypes[queryDefinition.event],
+      ),
+      context,
+    )) || {};
 
   const userApplicationId = create?.application?.id;
   const rootApplicationId = create?.application?.root?.id;

@@ -3,7 +3,7 @@ import type { UI_HeaderDefinition } from "../../flexible-content/header.js";
 import type { UI_Input } from "./index.js";
 
 export interface UI_Input_Checkbox extends UI_Input {
-  type: 'inputCheckbox';
+  type: "inputCheckbox";
   /** used if as the checkbox value only if text is present */
   value: unknown | Array<unknown>;
   /** if present, it renders a single checkbox */

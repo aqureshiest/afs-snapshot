@@ -10,7 +10,12 @@ type FlexibleViewFn = (opts: {
   definition: Omit<UI_View_Flexible["definition"]["definition"], "key">;
 }) => UI_Stage<UI_View_Flexible>;
 
-export const flexibleView: FlexibleViewFn = ({ manifest, id, label, definition }) => {
+export const flexibleView: FlexibleViewFn = ({
+  manifest,
+  id,
+  label,
+  definition,
+}) => {
   const key = toKebabCase(label);
   return {
     manifest,

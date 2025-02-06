@@ -23,8 +23,8 @@ const toastAction: ToastAction = ({
         type,
         message,
         icon,
-        autoDismissDelayMs
-      }
+        autoDismissDelayMs,
+      },
     },
   };
 };

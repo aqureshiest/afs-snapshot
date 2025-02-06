@@ -9,11 +9,13 @@ type Middleware_Meta = {
   endpoint: string;
   manifest: string;
   method: Glob_Method;
-}
+};
 
-const metaContext = (context: PluginContext, meta: Middleware_Meta) => (req: Request, res: Response, next: NextFunction) => {
-  httpContext.set("meta", meta);
-  next();
-}
+const metaContext =
+  (context: PluginContext, meta: Middleware_Meta) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    httpContext.set("meta", meta);
+    next();
+  };
 
 export default metaContext;

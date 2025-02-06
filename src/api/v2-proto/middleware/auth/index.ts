@@ -7,10 +7,10 @@ const authenticationMiddleware = (authOptions: unknown) => (req, res, next) => {
     // Expand this with all the auth infos
     isAuthenticated: false,
     hasSession: false,
-  }
+  };
 
   httpContext.set("auth", auth);
   next();
-}
+};
 
 export default authenticationMiddleware;

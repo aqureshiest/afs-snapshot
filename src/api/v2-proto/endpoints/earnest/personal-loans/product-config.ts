@@ -3,4 +3,4 @@ export const productConfig = {
   name: "Personal Loan",
   brand: "earnest",
   baseUrl: "/earnest/personal-loans",
-}
+};

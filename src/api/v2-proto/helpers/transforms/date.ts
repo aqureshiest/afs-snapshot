@@ -7,4 +7,4 @@ export function objToString(date) {
 
 export const dateTransforms = {
   objToString,
-}
+};

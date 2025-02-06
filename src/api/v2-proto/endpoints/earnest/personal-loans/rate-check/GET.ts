@@ -32,9 +32,10 @@ export default {
             infoHeader({
               header: {
                 copy: "Check my rates",
-                subCopy: "Select your loan amount, and desired decision to view rates.",
+                subCopy:
+                  "Select your loan amount, and desired decision to view rates.",
               },
-            })
+            }),
           ],
         },
       ],

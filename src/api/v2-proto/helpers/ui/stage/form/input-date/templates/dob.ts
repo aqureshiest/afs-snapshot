@@ -5,5 +5,5 @@ export const dob: Partial<UI_Input_Date> = {
   key: "dateOfBirth",
   label: {
     copy: "Date of birth",
-  }
-}
+  },
+};

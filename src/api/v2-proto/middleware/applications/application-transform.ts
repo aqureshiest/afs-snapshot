@@ -1,12 +1,12 @@
 // c8 ignore file
 /* ============================== *
-* Updates the application object with pre-derived values and sets the `application.me` and `role` property
-* ==============================
-* 1. application.me - the current user's application object based on the id of the request
-* 2. role - adds a readable role to the application applicant object
-* ==============================
-* 2. Application Service does not set a benefactor as the primary (though it should), so we do it here
-* ============================== */
+ * Updates the application object with pre-derived values and sets the `application.me` and `role` property
+ * ==============================
+ * 1. application.me - the current user's application object based on the id of the request
+ * 2. role - adds a readable role to the application applicant object
+ * ==============================
+ * 2. Application Service does not set a benefactor as the primary (though it should), so we do it here
+ * ============================== */
 
 const PRIMARY_ROLE = "primary";
 const COSIGNER_ROLE = "cosigner";
@@ -14,7 +14,6 @@ const COSIGNER_ROLE = "cosigner";
 export function applicationTransform(id, application) {
   const applicantIndex0 = application?.applicants?.[0];
   let transform = {}; // Object that will be spread into the application object
-
 
   if (id === application?.primary?.id) {
     // If the id matches the primary applicant, set the `me` object to the primary applicant

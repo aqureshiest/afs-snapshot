@@ -26,35 +26,38 @@ type Account = {
   balance: number;
 };
 
-export type UI_View_BankAccounts = UI_View<"BankAccounts", {
-  centered?: boolean;
-  header: {
-    asset?: UI_Asset;
-    copy: string;
-    subCopy?: string;
-  };
-  list?: UI_Flexible_List;
-  trustpilot?: boolean;
-  callouts?: CalloutsDefinition;
-  disclosure?: string | UI_FlexibleContent;
-  primaryAction: UI_ActionButton;
-  secondaryAction?: UI_ActionButton;
-  backAction?: UI_Action;
-  content?: UI_FlexibleContent;
-  plaidOptions?: {
-    linkToken: string;
-    tokenUrl?: string;
-    exchangeUrl: string;
-    onError?: UI_Action["properties"]["onError"];
-    onCompleteToast?: UI_Action["properties"]["onCompleteToast"];
-  };
-  analyticsEvents?: {
-    plaidOpened?: UI_Analytics;
-    plaidClosed?: UI_Analytics;
-    plaidSubmitted?: UI_Analytics;
-    manualOpened?: UI_Analytics;
-    manualClosed?: UI_Analytics;
-    manualSubmitted?: UI_Analytics;
-  };
-  financialAccounts?: Array<Account>;
-}>;
+export type UI_View_BankAccounts = UI_View<
+  "BankAccounts",
+  {
+    centered?: boolean;
+    header: {
+      asset?: UI_Asset;
+      copy: string;
+      subCopy?: string;
+    };
+    list?: UI_Flexible_List;
+    trustpilot?: boolean;
+    callouts?: CalloutsDefinition;
+    disclosure?: string | UI_FlexibleContent;
+    primaryAction: UI_ActionButton;
+    secondaryAction?: UI_ActionButton;
+    backAction?: UI_Action;
+    content?: UI_FlexibleContent;
+    plaidOptions?: {
+      linkToken: string;
+      tokenUrl?: string;
+      exchangeUrl: string;
+      onError?: UI_Action["properties"]["onError"];
+      onCompleteToast?: UI_Action["properties"]["onCompleteToast"];
+    };
+    analyticsEvents?: {
+      plaidOpened?: UI_Analytics;
+      plaidClosed?: UI_Analytics;
+      plaidSubmitted?: UI_Analytics;
+      manualOpened?: UI_Analytics;
+      manualClosed?: UI_Analytics;
+      manualSubmitted?: UI_Analytics;
+    };
+    financialAccounts?: Array<Account>;
+  }
+>;

@@ -32,15 +32,17 @@ export const plugin: Plugin = {
     // Fetch v2 endpoints, and register them as express routes
     if (context.env.APP_ENV !== "production") {
       const v2Endpoints = await getEndpointsFromGlob();
-      v2Endpoints.forEach(({ endpoint, method, manifest, middleware, handler }) => {
-        router[method.toLowerCase()](
-          endpoint,
-          metaContext(context, { endpoint, manifest, method }), // assigns `meta` to httpContext
-          chassisContext(context), // assigns `context` to httpContext
-          ...(middleware || []), // Endpoint specific middleware
-          handler // Express handler
-        );
-      });
+      v2Endpoints.forEach(
+        ({ endpoint, method, manifest, middleware, handler }) => {
+          router[method.toLowerCase()](
+            endpoint,
+            metaContext(context, { endpoint, manifest, method }), // assigns `meta` to httpContext
+            chassisContext(context), // assigns `context` to httpContext
+            ...(middleware || []), // Endpoint specific middleware
+            handler, // Express handler
+          );
+        },
+      );
     }
     /* ============================== *
      * END - V2 Prototype *
@@ -58,7 +60,7 @@ export const plugin: Plugin = {
           const { input, output } = Manifest.executionMiddleware(
             key,
             definition,
-            contracts
+            contracts,
           );
 
           /* ============================== *
@@ -75,26 +77,26 @@ export const plugin: Plugin = {
             if (input) {
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, input)
+                wrapAsyncHandler(context, input),
               );
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, handlers.executionErrors)
+                wrapAsyncHandler(context, handlers.executionErrors),
               );
             }
 
             if (output) {
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, output)
+                wrapAsyncHandler(context, output),
               );
               router[method.toLowerCase()](
                 path,
-                wrapAsyncHandler(context, handlers.executionErrors)
+                wrapAsyncHandler(context, handlers.executionErrors),
               );
             }
           });
-        }
+        },
       );
     });
 

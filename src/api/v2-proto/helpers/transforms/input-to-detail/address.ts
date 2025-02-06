@@ -4,7 +4,7 @@ import { UI_Input_Address } from "../../ui/types/form/inputs/address.js";
 
 export const inputAddressToDetail = (
   input: UI_Input_Address["value"] | undefined,
-  options: Pick<typings.LocationDetail, "type" | "citizenship" | "index"> = {}
+  options: Pick<typings.LocationDetail, "type" | "citizenship" | "index"> = {},
 ): typings.AddDetailInput["location"] | undefined => {
   const { street, apt, city, state, zip } = input || {};
 

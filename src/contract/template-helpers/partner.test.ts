@@ -12,7 +12,7 @@ describe("partner", () => {
       assert.strictEqual(partnerLogo("sparrow"), "logos.partnerLogoSparrow");
       assert.strictEqual(partnerLogo("splash"), "logos.partnerLogoSplash");
     });
-  
+
     it("should return the correct logo for a name in the names array", () => {
       assert.strictEqual(partnerLogo("Engine"), "logos.partnerLogoEngine");
       assert.strictEqual(partnerLogo("Gradfin"), "logos.partnerLogoGradfin");
@@ -21,7 +21,7 @@ describe("partner", () => {
       assert.strictEqual(partnerLogo("Sparrow"), "logos.partnerLogoSparrow");
       assert.strictEqual(partnerLogo("Splash"), "logos.partnerLogoSplash");
     });
-  
+
     it("should return undefined for an unknown partner", () => {
       assert.strictEqual(partnerLogo("unknown"), undefined);
     });
@@ -36,7 +36,7 @@ describe("partner", () => {
       assert.strictEqual(partnerName("sparrow"), "Sparrow");
       assert.strictEqual(partnerName("splash"), "Splash");
     });
-  
+
     it("should return the correct name for a name in the names array", () => {
       assert.strictEqual(partnerName("Engine"), "Engine");
       assert.strictEqual(partnerName("Gradfin"), "GradFin");
@@ -45,7 +45,7 @@ describe("partner", () => {
       assert.strictEqual(partnerName("Sparrow"), "Sparrow");
       assert.strictEqual(partnerName("Splash"), "Splash");
     });
-  
+
     it("should return undefined for an unknown partner", () => {
       assert.strictEqual(partnerName("unknown"), undefined);
     });

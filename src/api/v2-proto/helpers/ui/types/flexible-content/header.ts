@@ -2,8 +2,6 @@
 // import { XResponsiveCSSProps } from "@earnest/nucleus-design-system";
 import { UI_Asset } from "../asset.js";
 
-
-
 export type UI_HeaderDefinition = {
   copy: string;
   asset?: UI_Asset;

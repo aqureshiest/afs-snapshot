@@ -25,7 +25,7 @@ export type UI_Input_Label = {
   copy: string;
   subCopy?: string;
   labelAsHeader?: boolean;
-}
+};
 
 export interface UI_Input {
   key: string;
@@ -62,4 +62,4 @@ export type UI_Inputs =
   | UI_Input_Select
   | UI_Input_Semester
   | UI_Input_Ssn
-  | UI_Input_Text
+  | UI_Input_Text;

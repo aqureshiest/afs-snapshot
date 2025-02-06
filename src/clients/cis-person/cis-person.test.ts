@@ -112,7 +112,11 @@ describe("[b8dcinbp] CIS Person Client", () => {
 
       mock.method(cisPersonClient, "createCisPersonClient", mockFn);
 
-      const personFetched = await cisPersonClient.fetchPerson(context, "1111-11-1111", "123456789");
+      const personFetched = await cisPersonClient.fetchPerson(
+        context,
+        "1111-11-1111",
+        "123456789",
+      );
       assert.deepStrictEqual(personFetched, {});
 
       assert.equal(mockFn.mock.calls.length, 1);
@@ -131,7 +135,11 @@ describe("[b8dcinbp] CIS Person Client", () => {
 
       mock.method(cisPersonClient, "createCisPersonClient", mockFn);
 
-      const personFetched = await cisPersonClient.fetchPerson(context, "1111-11-1111", "123456789");
+      const personFetched = await cisPersonClient.fetchPerson(
+        context,
+        "1111-11-1111",
+        "123456789",
+      );
       assert.deepStrictEqual(personFetched, {});
       assert.equal(mockFn.mock.calls.length, 1);
     });

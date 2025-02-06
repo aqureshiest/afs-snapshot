@@ -25,7 +25,6 @@ export { default as generateModalTemplate } from "./generate-modal-template.js";
 export { partnerLogo, partnerName, formatDiscount } from "./partner.js";
 export { default as generateModalTemplateV2 } from "./generate-modal-template-v2.js";
 
-
 export function every(array: string[], condition: string, ...args: unknown[]) {
   if (array && Array.isArray(array)) {
     return array.every((item) => item === condition);

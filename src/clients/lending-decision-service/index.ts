@@ -70,13 +70,13 @@ enum TermLengths {
 }
 
 enum Product {
-  SLR = 'slr',
-  PL = 'pl',
+  SLR = "slr",
+  PL = "pl",
 }
 
 enum DecisionType {
-  RATE_CHECK = 'rate-check',
-  APPLICATION = 'application',
+  RATE_CHECK = "rate-check",
+  APPLICATION = "application",
 }
 
 export default class LendingDecisionServiceClient extends Client {
@@ -117,7 +117,9 @@ export default class LendingDecisionServiceClient extends Client {
     );
 
     if (response.statusCode && response.statusCode >= 400) {
-      throw new Error(`[3177fa74] Decision request failed: ${response.statusMessage}`)
+      throw new Error(
+        `[3177fa74] Decision request failed: ${response.statusMessage}`,
+      );
     }
 
     return results;

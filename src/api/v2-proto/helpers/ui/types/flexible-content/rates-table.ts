@@ -9,10 +9,10 @@ export type RatesData = {
   content?: UI_FlexibleContent;
   table: UI_Flexible_Table;
   analytics?: UI_Analytics;
-}
+};
 
 export type UI_Flexible_RatesTable = {
   testId?: string;
   data: RatesData[];
   defaultValue?: string;
-}
+};

@@ -36,4 +36,4 @@ export const inputPhone = (definition: Record<string, unknown> | void) => {
       ],
     },
   };
-}
+};

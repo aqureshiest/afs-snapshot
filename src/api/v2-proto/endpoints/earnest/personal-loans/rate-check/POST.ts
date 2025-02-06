@@ -21,6 +21,11 @@ export default {
     // 2. Send payload to LDS
 
     // 3. Return navigate to `rate-check-results`
-    res.json({ action: toastAction({ type: "error", message: "This POST is not yet configured" }) });
-  }
+    res.json({
+      action: toastAction({
+        type: "error",
+        message: "This POST is not yet configured",
+      }),
+    });
+  },
 };

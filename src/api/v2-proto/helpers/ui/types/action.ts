@@ -17,7 +17,7 @@ export type UI_ErrorPageDefinition = {
 };
 
 export type UI_ToastErrorDefinition = {
-  type: 'notification' | "success" | "warning" | "error";
+  type: "notification" | "success" | "warning" | "error";
   message: string;
   icon?: ReplaceWithIconProps;
   autoDismissDelayMs?: number;

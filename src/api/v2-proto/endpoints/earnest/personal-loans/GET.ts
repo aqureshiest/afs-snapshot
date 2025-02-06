@@ -15,7 +15,7 @@ export default {
   handler: async (req: Request, res: Response) => {
     const { manifest } = httpContext.get("meta");
     const context = httpContext.get("context");
-    
+
     context.logger.info("Building Page JSON - PL Primer");
 
     try {

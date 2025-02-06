@@ -6,12 +6,10 @@ import { applicationTransform } from "./application-transform.js";
 type Options = {
   query?: string;
   variables?: Record<string, unknown>;
-}
+};
 
 const getApplicationMiddleware =
-  (
-    options: Options = {}
-  ) =>
+  (options: Options = {}) =>
   async (req, res, next) => {
     const applicationId = req.params.id;
     const context = httpContext.get("context");
@@ -21,7 +19,7 @@ const getApplicationMiddleware =
         context.loadedPlugins.applicationServiceClient?.instance;
       if (!applicationServiceClient)
         throw new Error(
-          "[df9etc7f] Application Service client instance not found"
+          "[df9etc7f] Application Service client instance not found",
         );
       const { application } = await applicationServiceClient["sendRequest"](
         {
@@ -32,10 +30,13 @@ const getApplicationMiddleware =
             ...(options?.variables || {}),
           },
         },
-        context
+        context,
       );
 
-      const transformedApplication = applicationTransform(applicationId, application);
+      const transformedApplication = applicationTransform(
+        applicationId,
+        application,
+      );
 
       httpContext.set("application", transformedApplication);
     }

@@ -10,7 +10,7 @@ type School = {
   city: string;
   country: string;
   loanTypes: string[];
-}
+};
 
 export interface UI_Input_School extends UI_Input {
   type: "inputSchool";

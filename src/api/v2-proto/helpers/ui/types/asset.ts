@@ -10,7 +10,7 @@ export enum Assets {
 }
 
 type LocalAsset = {
-  type: "LocalAsset"
+  type: "LocalAsset";
   name: string;
   width?: number;
   height?: number;
@@ -19,7 +19,7 @@ type LocalAsset = {
 };
 
 type NucleusIcon = {
-  type: "NucleusIcon"
+  type: "NucleusIcon";
   center?: boolean;
 } & ReplaceWithIconProps;
 

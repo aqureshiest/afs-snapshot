@@ -4,4 +4,4 @@ export { inputDate } from "./input-date/index.js";
 export { inputPhone } from "./input-phone/index.js";
 
 // Info Components
-export {infoHeader} from "./info-header/index.js";
+export { infoHeader } from "./info-header/index.js";

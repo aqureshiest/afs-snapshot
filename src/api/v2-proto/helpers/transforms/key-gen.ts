@@ -9,4 +9,4 @@ export const keyGen = (prefix: string): string => {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return prefix ? `${prefix}-${result}` : `${result}`;
-}
+};

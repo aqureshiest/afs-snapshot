@@ -4,7 +4,7 @@ import { PartiallyOptional } from "../../../types/index.js";
 import { UI_Form_Row } from "../../../types/stage/index.js";
 
 export const inputName = (
-  definition: PartiallyOptional<UI_Input_Name, "key" | "type" | "value">
+  definition: PartiallyOptional<UI_Input_Name, "key" | "type" | "value">,
 ): UI_Form_Row => {
   return {
     type: "input",

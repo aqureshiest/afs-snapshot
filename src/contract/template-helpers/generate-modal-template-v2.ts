@@ -8,14 +8,14 @@ import {
   escapeUrlParam,
 } from "./index.js";
 
-import { Template, ButtonTemplate, } from "./generate-modal-template.js";
+import { Template, ButtonTemplate } from "./generate-modal-template.js";
 
 export default function generatePartnerModalTemplate(
   request,
   actions,
   application,
   applications,
-  env
+  env,
 ): Template {
   const hasActiveIncompleteApp = hasActiveIncompleteApplication(
     request.params.id,
@@ -28,7 +28,8 @@ export default function generatePartnerModalTemplate(
   );
 
   const identityResponse = getAction(actions, "identify");
-  const hasMonolithOrCognitoAccount = identityResponse?.statusCode && identityResponse.statusCode === 409;
+  const hasMonolithOrCognitoAccount =
+    identityResponse?.statusCode && identityResponse.statusCode === 409;
 
   const template: Template = {
     action: {
@@ -45,18 +46,18 @@ export default function generatePartnerModalTemplate(
                   hasMonolithOrCognitoAccount &&
                   !hasActiveIncompleteApp &&
                   !hasActivePostSubmissionApp
-                  ? "We found an account with this email." 
-                  : hasActivePostSubmissionApp 
-                  ? "You have a pending application with us"
-                  : "Pick up where you left off?",
+                    ? "We found an account with this email."
+                    : hasActivePostSubmissionApp
+                      ? "You have a pending application with us"
+                      : "Pick up where you left off?",
                 subCopy:
                   hasMonolithOrCognitoAccount &&
                   !hasActiveIncompleteApp &&
                   !hasActivePostSubmissionApp
-                  ? "Please log in to continue your application."
-                  : hasActivePostSubmissionApp
-                  ? `We're currently reviewing an application you submitted on ${ISODateToMMDDYYYY(hasActivePostSubmissionApp?.root?.createdAt)}. Please wait for a decision before submitting a new application.`
-                  : `You started an application with us on ${ISODateToMMDDYYYY(hasActiveIncompleteApp?.root?.createdAt)}. Would you like to continue where you left off?`,
+                    ? "Please log in to continue your application."
+                    : hasActivePostSubmissionApp
+                      ? `We're currently reviewing an application you submitted on ${ISODateToMMDDYYYY(hasActivePostSubmissionApp?.root?.createdAt)}. Please wait for a decision before submitting a new application.`
+                      : `You started an application with us on ${ISODateToMMDDYYYY(hasActiveIncompleteApp?.root?.createdAt)}. Would you like to continue where you left off?`,
                 asset: {
                   center: true,
                   type: "LocalAsset",
@@ -94,76 +95,60 @@ export default function generatePartnerModalTemplate(
     !hasActiveIncompleteApp &&
     !hasActivePostSubmissionApp
   ) {
-    buttons.componentProps.buttons.push(
-      {
-        copy: "Login",
-        action: {
-          type: "navigate",
-          properties: {
-            goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${request.params.id}`,
-            external: true,
-          },
+    buttons.componentProps.buttons.push({
+      copy: "Login",
+      action: {
+        type: "navigate",
+        properties: {
+          goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${request.params.id}`,
+          external: true,
         },
       },
-    );
-  } else if (
-    hasMonolithOrCognitoAccount &&
-    hasActiveIncompleteApp
-  ) {
-    buttons.componentProps.buttons.push(
-      {
-        copy: "Resume prior application",
-        action: {
-          type: "navigate",
-          properties: {
-            goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
-            external: true,
-          },
+    });
+  } else if (hasMonolithOrCognitoAccount && hasActiveIncompleteApp) {
+    buttons.componentProps.buttons.push({
+      copy: "Resume prior application",
+      action: {
+        type: "navigate",
+        properties: {
+          goTo: `${env.BASE_URL}/_/auth/login?targetUrl=/_/apply/resume/${hasActiveIncompleteApp?.root?.id}`,
+          external: true,
         },
       },
-    );
-  } else if (
-    hasMonolithOrCognitoAccount &&
-    hasActivePostSubmissionApp
-  ) {
-    buttons.componentProps.buttons.push(
-      {
-        copy: "View My Application Status",
-        action: {
-          type: "navigate",
-          properties: {
-            goTo: `${env.BASE_URL}/_/auth/login`,
-            external: true,
-          },
+    });
+  } else if (hasMonolithOrCognitoAccount && hasActivePostSubmissionApp) {
+    buttons.componentProps.buttons.push({
+      copy: "View My Application Status",
+      action: {
+        type: "navigate",
+        properties: {
+          goTo: `${env.BASE_URL}/_/auth/login`,
+          external: true,
         },
       },
-    );
+    });
   } else if (hasActivePostSubmissionApp) {
-    buttons.componentProps.buttons.push(
-      {
-        copy: "View My Application Status",
-        action: {
-          type: "request",
-          properties: {
-            method: "POST",
-            manifest: `send-access-email-on-resume/${hasActivePostSubmissionApp?.id}`,
-          },
+    buttons.componentProps.buttons.push({
+      copy: "View My Application Status",
+      action: {
+        type: "request",
+        properties: {
+          method: "POST",
+          manifest: `send-access-email-on-resume/${hasActivePostSubmissionApp?.id}`,
         },
       },
-    );
+    });
   } else {
-    buttons.componentProps.buttons.push(
-      {
-        copy: "Resume prior application",
-        action: {
-          type: "request",
-          properties: {
-            method: "POST",
-            manifest: `send-access-email-on-resume/${hasActiveIncompleteApp?.id}`,
-          },
+    buttons.componentProps.buttons.push({
+      copy: "Resume prior application",
+      action: {
+        type: "request",
+        properties: {
+          method: "POST",
+          manifest: `send-access-email-on-resume/${hasActiveIncompleteApp?.id}`,
         },
       },
-    );
+    });
   }
 
   // Secondary Buttons

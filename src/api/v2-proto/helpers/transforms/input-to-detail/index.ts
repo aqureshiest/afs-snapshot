@@ -10,4 +10,4 @@ export const inputToDetail = {
   email: inputEmailToDetail,
   date: inputDateToDetail,
   address: inputAddressToDetail,
-}
+};

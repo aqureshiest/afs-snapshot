@@ -22,4 +22,4 @@ export const buildRequestBody = (definition, inputTypes) => {
     }`,
     variables: { ...payload, meta: { service: "apply-flow-service" } },
   };
-}
+};
