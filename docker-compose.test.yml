@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  test:
+    image: earnest/apply-flow-service:local
+    command: npm run test
+    environment:
+      - NODE_ENV=test
+      - CI=true
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./.coverage:/usr/src/app/.coverage
+    depends_on:
+      - redis
+      - vault
+      - mountebank
+
+  mountebank:
+    environment:
+      - NODE_ENV=test
+
+  vault:
+    environment:
+      - NODE_ENV=test
+
+  redis:
+    environment:
+      - NODE_ENV=test
