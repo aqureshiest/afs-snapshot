@@ -6,29 +6,62 @@ services:
     environment:
       - NODE_ENV=development
       - DEBUG=apply-flow-service:*
+      - FORCE_COLOR=1
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+      - ./.coverage:/usr/src/app/.coverage
     ports:
       - "9229:9229"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   gateway:
     volumes:
       - ./docker/data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/data/nginx/conf.d:/etc/nginx/conf.d:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   mountebank:
     volumes:
       - ./docker/data/mountebank/imposters:/app/imposters:ro
       - ./config:/app/config:ro
       - ./fixtures:/app/fixtures:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   vault:
     volumes:
       - ./docker/data/vault:/usr/src/app/vault-data:rw
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     volumes:
       - ./docker/data/redis:/usr/local/etc/redis:rw
     ports:
       - "6379:6379"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -12,7 +12,20 @@
     "test": "npx chassis-test",
     "lint:prettify": "prettier --write '{src,test}/**/*.{js,ts}'",
     "lint:prettify:contracts": "prettier --write flows/**/*.json",
-    "pact-test": "./scripts/pact.sh"
+    "pact-test": "./scripts/pact.sh",
+    "dev": "docker compose up service",
+    "dev:setup": "./scripts/setup-dev.sh",
+    "dev:clean": "docker compose down -v",
+    "dev:debug": "docker compose run --rm -p 9229:9229 service npm run start:debug",
+    "dev:test": "docker compose -f docker-compose.test.yml run test",
+    "dev:test:watch": "docker compose -f docker-compose.test.yml run --rm test npm run test:watch",
+    "dev:logs": "docker compose logs -f",
+    "dev:shell": "docker compose exec service sh",
+    "start:debug": "npx chassis-start-watch --inspect=0.0.0.0:9229",
+    "test:watch": "npx chassis-test-watch",
+    "dev:restart": "docker compose restart service",
+    "dev:build": "docker compose build service",
+    "dev:stop": "docker compose stop"
   },
   "repository": {
     "type": "git",
